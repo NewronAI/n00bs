@@ -32,3 +32,7 @@ Source code is available in `packages/` directory. Each package is a separate pr
 ### License
 MIT
 
+<hr />
+A product of Digital India initiative by <a href="https://www.iisc.ac.in">IISc</a> | <a href="https://google.com">Google</a> | <a href="https://artpark.com">ArtPark</a> | <a href="https://newron.ai">Newron</a> 
+
+
