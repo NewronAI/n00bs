@@ -23,6 +23,11 @@ yarn dev
 
 Source code is available in `packages/` directory. Each package is a separate project with its own dependencies and build process. You can find more information about each package in its README file.
 
+### Docs
+
+- [Schema](./docs/schema/README.md)
+
+
 ### Collaborators
 
 - Shubham Shekhar
