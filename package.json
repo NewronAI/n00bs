@@ -1,0 +1,38 @@
+{
+  "name": "datasetu",
+  "version": "1.0.0",
+  "description": "Framework for Data Review on a mass scale.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "app": "packages/app"
+  },
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NewronAI/datasetu.git"
+  },
+  "keywords": [
+    "data",
+    "collection",
+    "newron",
+    "IISc",
+    "Google",
+    "ArtPark"
+  ],
+  "author": "Shubham Shekhar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NewronAI/datasetu/issues"
+  },
+  "homepage": "https://github.com/NewronAI/datasetu#readme",
+  "devDependencies": {
+    "turbo": "^1.6.3"
+  },
+  "scripts": {
+    "dev": "turbo dev"
+  }
+}
