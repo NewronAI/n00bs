@@ -10,8 +10,277 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Test {
-  id    Int    @id @default(autoincrement())
-  name  String
-  email String
+enum workflow_type {
+  QA
+  FIELD_TASK
+  RECORD_AUDIO
+  CAPTURE_PHOTOS
 }
+
+model workflow {
+  workflow_id        Int      @id @default(autoincrement())
+  name      String
+  description      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  type      workflow_type @default(QA)
+  geolocations      geo[]
+  contents      content[]
+  questions      question[]
+  task_definitions      task_definition[]
+  secret_join_code      String?
+}
+
+
+
+model geo{
+  geo_id        Int      @id @default(autoincrement())
+  workflow_id Int
+  workflow workflow @relation(fields: [workflow_id], references: [workflow_id])
+  country      String?
+  state      String?
+  city      String?
+  latitude      String?
+  longitude      String?
+  zip      String?
+  street      String?
+  address      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  contents content[]
+  workers worker[]
+}
+
+enum content_type {
+  TEXT
+  IMAGE
+  VIDEO
+  AUDIO
+  FILE
+}
+
+enum content_status {
+  UNASSIGNED
+  ASSIGNED
+}
+
+enum storage_type {
+  S3
+  GCS
+  LOCAL
+  AZURE
+  CUSTOM
+  NONE
+}
+
+model content{
+  content_id        Int      @id @default(autoincrement())
+  workflow_id Int
+  workflow workflow @relation(fields: [workflow_id], references: [workflow_id])
+  geo_id Int?
+  geo geo? @relation(fields: [geo_id], references: [geo_id])
+  data      String?
+  metadata      Json?
+  content_type      content_type @default(TEXT)
+  storage_type      storage_type @default(GCS)
+  status      content_status @default(UNASSIGNED)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tasks task[]
+}
+
+enum question_type {
+  TEXT
+  NUMBER
+  DATE
+  TIME
+  DATETIME
+  BOOLEAN
+  SELECT
+  RADIO
+  CHECKBOX
+  FILE
+  IMAGE
+  VIDEO
+  AUDIO
+  CUSTOM
+}
+
+
+model question{
+  question_id        Int      @id @default(autoincrement())
+  workflow_id Int
+  workflow workflow @relation(fields: [workflow_id], references: [workflow_id])
+  question      String
+  type     question_type @default(BOOLEAN)
+  options      String[]
+  metadata      Json?
+  correct_answer      Json? // { type : "boolean", value : true }
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  responses response[]
+  task_questions task_question[]
+}
+
+enum worker_role {
+  WORKER
+  REVIEWER
+  MANAGER
+}
+
+enum trust_level {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum worker_status {
+  ACTIVE
+  INACTIVE
+  CLOSED
+}
+
+model worker{
+  worker_id        Int      @id @default(autoincrement())
+  name      String
+  email      String @unique
+  phone      String @unique
+  role    worker_role @default(WORKER)
+  address      String?
+  metadata      Json?
+  trust_level      trust_level @default(LOW)
+  geo_id Int?
+  geo geo? @relation(fields: [geo_id], references: [geo_id])
+  payment_details      Json?
+  status      worker_status @default(ACTIVE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  rules rule[]
+  tasks task[]
+  reviews review[]
+}
+
+enum task_status {
+  UNASSIGNED
+  PENDING
+  COMPLETED
+  CLOSED
+}
+
+enum task_type {
+  TASK
+  REVIEW
+}
+
+enum task_definiton_constraints {
+  CITY_BOUND
+  STATE_BOUND
+  COUNTRY_BOUND
+  NONE
+}
+
+model task_question {
+  tast_questions_id Int @id @default(autoincrement())
+  question_id Int
+  question question @relation(fields: [question_id], references: [question_id])
+  task_definition_id Int
+  task_definition task_definition @relation(fields: [task_definition_id], references: [task_definition_id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model task_definition{
+  task_definition_id        Int      @id @default(autoincrement())
+  workflow_id Int
+  workflow workflow @relation(fields: [workflow_id], references: [workflow_id])
+  name      String
+  description      String?
+  type      task_type @default(TASK)
+  metadata      Json?
+  constraints      task_definiton_constraints @default(NONE)
+  min_workers      Int @default(3)
+  max_workers      Int @default(3)
+  task_questions task_question[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tasks task[]
+}
+
+model task{
+  task_id        Int      @id @default(autoincrement())
+  task_definition_id Int
+  task_definition task_definition @relation(fields: [task_definition_id], references: [task_definition_id])
+  worker_id Int
+  worker worker @relation(fields: [worker_id], references: [worker_id])
+  content_id Int
+  content content @relation(fields: [content_id], references: [content_id])
+  status      task_status @default(UNASSIGNED)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  responses response[]
+  review_id Int?
+  reviews review[] // Rule : If reviewers are not allowed to see previous reviews, then this will be array, else multilevel can be enabled
+}
+
+model response{
+  response_id        Int      @id @default(autoincrement())
+  task_id Int
+  question_id Int
+  question question @relation(fields: [question_id], references: [question_id])
+  answer    Json
+  answer_type    question_type @default(BOOLEAN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  task task @relation(fields: [task_id], references: [task_id])
+  storage_type      storage_type @default(NONE)
+}
+
+model review{
+  review_id        Int      @id @default(autoincrement())
+  task_id Int
+  task task @relation(fields: [task_id], references: [task_id])
+  reviewer_id Int
+  reviewer worker @relation(fields: [reviewer_id], references: [worker_id])
+  accepted      Boolean
+  comments      String?
+  successor_review_id Int? @unique // Rule : Available only on Multilevel review
+  successor_review review? @relation("parent",fields: [successor_review_id], references: [review_id])
+  predecessor_reviews review? @relation("parent")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model rule{
+  // Rule definition will be in code, here will keep the mapping, also the parameters in metadata, if applicable
+  rule_id        Int      @id @default(autoincrement())
+  worker_id Int
+  worker worker @relation(fields: [worker_id], references: [worker_id])
+  name      String
+  description      String?
+  metadata      Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
