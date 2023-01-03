@@ -18,7 +18,7 @@ enum workflow_type {
 }
 
 model workflow {
-  workflow_id        Int      @id @default(autoincrement())
+  workflow_id        String      @id @default(uuid())
   name      String
   description      String?
   createdAt DateTime @default(now())
@@ -34,8 +34,8 @@ model workflow {
 
 
 model geo{
-  geo_id        Int      @id @default(autoincrement())
-  workflow_id Int
+  geo_id        String      @id @default(uuid())
+  workflow_id String
   workflow workflow @relation(fields: [workflow_id], references: [workflow_id])
   country      String?
   state      String?
@@ -74,15 +74,15 @@ enum storage_type {
 }
 
 model content{
-  content_id        Int      @id @default(autoincrement())
-  workflow_id Int
+  content_id        String      @id @default(uuid())
+  workflow_id String
   workflow workflow @relation(fields: [workflow_id], references: [workflow_id])
-  geo_id Int?
+  geo_id String?
   geo geo? @relation(fields: [geo_id], references: [geo_id])
   data      String?
   metadata      Json?
   content_type      content_type @default(TEXT)
-  storage_type      storage_type @default(GCS)
+  storage_type      storage_type @default(NONE)
   status      content_status @default(UNASSIGNED)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -108,8 +108,8 @@ enum question_type {
 
 
 model question{
-  question_id        Int      @id @default(autoincrement())
-  workflow_id Int
+  question_id        String      @id @default(uuid())
+  workflow_id String
   workflow workflow @relation(fields: [workflow_id], references: [workflow_id])
   question      String
   type     question_type @default(BOOLEAN)
@@ -118,6 +118,7 @@ model question{
   correct_answer      Json? // { type : "boolean", value : true }
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  storage_type      storage_type @default(NONE)
   responses response[]
   task_questions task_question[]
 }
@@ -141,7 +142,7 @@ enum worker_status {
 }
 
 model worker{
-  worker_id        Int      @id @default(autoincrement())
+  worker_id        String      @id @default(uuid())
   name      String
   email      String @unique
   phone      String @unique
@@ -149,7 +150,7 @@ model worker{
   address      String?
   metadata      Json?
   trust_level      trust_level @default(LOW)
-  geo_id Int?
+  geo_id String?
   geo geo? @relation(fields: [geo_id], references: [geo_id])
   payment_details      Json?
   status      worker_status @default(ACTIVE)
@@ -180,18 +181,18 @@ enum task_definiton_constraints {
 }
 
 model task_question {
-  tast_questions_id Int @id @default(autoincrement())
-  question_id Int
+  tast_questions_id String @id @default(uuid())
+  question_id String
   question question @relation(fields: [question_id], references: [question_id])
-  task_definition_id Int
+  task_definition_id String
   task_definition task_definition @relation(fields: [task_definition_id], references: [task_definition_id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model task_definition{
-  task_definition_id        Int      @id @default(autoincrement())
-  workflow_id Int
+  task_definition_id        String      @id @default(uuid())
+  workflow_id String
   workflow workflow @relation(fields: [workflow_id], references: [workflow_id])
   name      String
   description      String?
@@ -207,12 +208,12 @@ model task_definition{
 }
 
 model task{
-  task_id        Int      @id @default(autoincrement())
-  task_definition_id Int
+  task_id        String      @id @default(uuid())
+  task_definition_id String
   task_definition task_definition @relation(fields: [task_definition_id], references: [task_definition_id])
-  worker_id Int
+  worker_id String
   worker worker @relation(fields: [worker_id], references: [worker_id])
-  content_id Int
+  content_id String
   content content @relation(fields: [content_id], references: [content_id])
   status      task_status @default(UNASSIGNED)
   createdAt DateTime @default(now())
@@ -223,27 +224,27 @@ model task{
 }
 
 model response{
-  response_id        Int      @id @default(autoincrement())
-  task_id Int
-  question_id Int
+  response_id        String      @id @default(uuid())
+  question_id String
   question question @relation(fields: [question_id], references: [question_id])
   answer    Json
   answer_type    question_type @default(BOOLEAN)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  task_id String
   task task @relation(fields: [task_id], references: [task_id])
   storage_type      storage_type @default(NONE)
 }
 
 model review{
-  review_id        Int      @id @default(autoincrement())
-  task_id Int
+  review_id        String      @id @default(uuid())
+  task_id String
   task task @relation(fields: [task_id], references: [task_id])
-  reviewer_id Int
+  reviewer_id String
   reviewer worker @relation(fields: [reviewer_id], references: [worker_id])
   accepted      Boolean
   comments      String?
-  successor_review_id Int? @unique // Rule : Available only on Multilevel review
+  successor_review_id String? @unique // Rule : Available only on Multilevel review
   successor_review review? @relation("parent",fields: [successor_review_id], references: [review_id])
   predecessor_reviews review? @relation("parent")
   createdAt DateTime @default(now())
@@ -252,8 +253,8 @@ model review{
 
 model rule{
   // Rule definition will be in code, here will keep the mapping, also the parameters in metadata, if applicable
-  rule_id        Int      @id @default(autoincrement())
-  worker_id Int
+  rule_id        String      @id @default(uuid())
+  worker_id String
   worker worker @relation(fields: [worker_id], references: [worker_id])
   name      String
   description      String?
@@ -261,8 +262,6 @@ model rule{
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
-
 
 
 

@@ -33,7 +33,7 @@ CREATE TYPE "task_definiton_constraints" AS ENUM ('CITY_BOUND', 'STATE_BOUND', '
 
 -- CreateTable
 CREATE TABLE "workflow" (
-    "workflow_id" SERIAL NOT NULL,
+    "workflow_id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -46,8 +46,8 @@ CREATE TABLE "workflow" (
 
 -- CreateTable
 CREATE TABLE "geo" (
-    "geo_id" SERIAL NOT NULL,
-    "workflow_id" INTEGER NOT NULL,
+    "geo_id" TEXT NOT NULL,
+    "workflow_id" TEXT NOT NULL,
     "country" TEXT,
     "state" TEXT,
     "city" TEXT,
@@ -64,13 +64,13 @@ CREATE TABLE "geo" (
 
 -- CreateTable
 CREATE TABLE "content" (
-    "content_id" SERIAL NOT NULL,
-    "workflow_id" INTEGER NOT NULL,
-    "geo_id" INTEGER,
+    "content_id" TEXT NOT NULL,
+    "workflow_id" TEXT NOT NULL,
+    "geo_id" TEXT,
     "data" TEXT,
     "metadata" JSONB,
     "content_type" "content_type" NOT NULL DEFAULT 'TEXT',
-    "storage_type" "storage_type" NOT NULL DEFAULT 'GCS',
+    "storage_type" "storage_type" NOT NULL DEFAULT 'NONE',
     "status" "content_status" NOT NULL DEFAULT 'UNASSIGNED',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -80,8 +80,8 @@ CREATE TABLE "content" (
 
 -- CreateTable
 CREATE TABLE "question" (
-    "question_id" SERIAL NOT NULL,
-    "workflow_id" INTEGER NOT NULL,
+    "question_id" TEXT NOT NULL,
+    "workflow_id" TEXT NOT NULL,
     "question" TEXT NOT NULL,
     "type" "question_type" NOT NULL DEFAULT 'BOOLEAN',
     "options" TEXT[],
@@ -89,13 +89,14 @@ CREATE TABLE "question" (
     "correct_answer" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "storage_type" "storage_type" NOT NULL DEFAULT 'NONE',
 
     CONSTRAINT "question_pkey" PRIMARY KEY ("question_id")
 );
 
 -- CreateTable
 CREATE TABLE "worker" (
-    "worker_id" SERIAL NOT NULL,
+    "worker_id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
@@ -103,7 +104,7 @@ CREATE TABLE "worker" (
     "address" TEXT,
     "metadata" JSONB,
     "trust_level" "trust_level" NOT NULL DEFAULT 'LOW',
-    "geo_id" INTEGER,
+    "geo_id" TEXT,
     "payment_details" JSONB,
     "status" "worker_status" NOT NULL DEFAULT 'ACTIVE',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -114,9 +115,9 @@ CREATE TABLE "worker" (
 
 -- CreateTable
 CREATE TABLE "task_question" (
-    "tast_questions_id" SERIAL NOT NULL,
-    "question_id" INTEGER NOT NULL,
-    "task_definition_id" INTEGER NOT NULL,
+    "tast_questions_id" TEXT NOT NULL,
+    "question_id" TEXT NOT NULL,
+    "task_definition_id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -125,8 +126,8 @@ CREATE TABLE "task_question" (
 
 -- CreateTable
 CREATE TABLE "task_definition" (
-    "task_definition_id" SERIAL NOT NULL,
-    "workflow_id" INTEGER NOT NULL,
+    "task_definition_id" TEXT NOT NULL,
+    "workflow_id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "type" "task_type" NOT NULL DEFAULT 'TASK',
@@ -142,10 +143,10 @@ CREATE TABLE "task_definition" (
 
 -- CreateTable
 CREATE TABLE "task" (
-    "task_id" SERIAL NOT NULL,
-    "task_definition_id" INTEGER NOT NULL,
-    "worker_id" INTEGER NOT NULL,
-    "content_id" INTEGER NOT NULL,
+    "task_id" TEXT NOT NULL,
+    "task_definition_id" TEXT NOT NULL,
+    "worker_id" TEXT NOT NULL,
+    "content_id" TEXT NOT NULL,
     "status" "task_status" NOT NULL DEFAULT 'UNASSIGNED',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -156,13 +157,13 @@ CREATE TABLE "task" (
 
 -- CreateTable
 CREATE TABLE "response" (
-    "response_id" SERIAL NOT NULL,
-    "task_id" INTEGER NOT NULL,
-    "question_id" INTEGER NOT NULL,
+    "response_id" TEXT NOT NULL,
+    "question_id" TEXT NOT NULL,
     "answer" JSONB NOT NULL,
     "answer_type" "question_type" NOT NULL DEFAULT 'BOOLEAN',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "task_id" TEXT NOT NULL,
     "storage_type" "storage_type" NOT NULL DEFAULT 'NONE',
 
     CONSTRAINT "response_pkey" PRIMARY KEY ("response_id")
@@ -170,12 +171,12 @@ CREATE TABLE "response" (
 
 -- CreateTable
 CREATE TABLE "review" (
-    "review_id" SERIAL NOT NULL,
-    "task_id" INTEGER NOT NULL,
-    "reviewer_id" INTEGER NOT NULL,
+    "review_id" TEXT NOT NULL,
+    "task_id" TEXT NOT NULL,
+    "reviewer_id" TEXT NOT NULL,
     "accepted" BOOLEAN NOT NULL,
     "comments" TEXT,
-    "successor_review_id" INTEGER,
+    "successor_review_id" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -184,8 +185,8 @@ CREATE TABLE "review" (
 
 -- CreateTable
 CREATE TABLE "rule" (
-    "rule_id" SERIAL NOT NULL,
-    "worker_id" INTEGER NOT NULL,
+    "rule_id" TEXT NOT NULL,
+    "worker_id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "metadata" JSONB,
