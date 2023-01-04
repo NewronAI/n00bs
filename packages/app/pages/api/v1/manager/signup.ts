@@ -2,10 +2,14 @@ import {NextApiRequest, NextApiResponse} from "next";
 import assertUp from "@/helpers/node/assert/assertUp";
 import assertHandler from "@/helpers/node/assert/assertHandler";
 import {db} from "@/helpers/node/db";
+import getLogger from "@/helpers/node/getLogger";
 
 const signupHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const { method } = req;
+
+    const logger = getLogger("api/v1/manager/signup.ts");
+    logger.info("Received request");
 
     try {
 
@@ -24,13 +28,18 @@ const signupHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             status : 400
         });
 
+        logger.info(`Creating manager account for ${email}`);
+
         assertUp(name && name.length < 100, {
             message : "Name is required and must be less than 100 characters",
             status : 400
         });
 
+        logger.info(`Creating manager account for ${name}`);
+
         if(contact) {
-            const contactRegex = new RegExp(/^+?[0-9]{0-3}-?[0-9]{8-12}$/);
+            logger.info("Contact is provided");
+            const contactRegex = new RegExp(/^\+?[0-9]{0,3}-?[0-9]{8,12}$/);
 
             assertUp(contact && contactRegex.test(contact), {
                 message: "Contact is required and must be less than 100 characters",
@@ -38,12 +47,15 @@ const signupHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             });
         }
 
-        assertUp(address && address.length < 200, {
-            message : "Address is required and must be less than 200 characters",
-            status : 400
-        });
+        if(address) {
+            assertUp(address && address.length < 200, {
+                message: "Address is required and must be less than 200 characters",
+                status: 400
+            });
+        }
 
-        const user = db.workflow_manager.create({
+
+        const user = await db.workflow_manager.create({
             data: {
                 email,
                 name,
@@ -51,6 +63,7 @@ const signupHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             }
         });
 
+        logger.debug(`Created manager account for ${email}`);
 
         res.status(200).json(user);
 

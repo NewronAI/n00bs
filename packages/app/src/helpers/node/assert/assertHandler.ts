@@ -1,10 +1,14 @@
 import {NextApiResponse} from "next";
+import AssertUpError from "@/interfaces/AssertUpError";
+import getLogger from "@/helpers/node/getLogger";
 
-function assertHandler(error: unknown, res?: NextApiResponse, defaultErrorCode = 500) {
+function assertHandler(error: unknown, res?: NextApiResponse, defaultErrorCode = 500) : AssertUpError | undefined {
     // Custom handler to handle custom assert/assertUp errors
 
     let statusCode = defaultErrorCode;
     let errorMessage = "";
+
+    const logger = getLogger("assert/assertHandler");
 
     let err = error as Error;
 
@@ -18,15 +22,16 @@ function assertHandler(error: unknown, res?: NextApiResponse, defaultErrorCode =
         errorMessage = err.message;
     }
 
+    logger.error(errorMessage);
+
     if (res) {
         res.status(statusCode).json({message: errorMessage});
         res.end();
-        return;
     }
     else {
         return {
-            errorMessage,
-            statusCode
+            message: errorMessage,
+            status: statusCode
         }
     }
 }

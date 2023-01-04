@@ -283,7 +283,7 @@ model workflow_manager{
   id        Int      @id @default(autoincrement())
   uuid      String   @unique @default(uuid())
   name      String
-  email      String @unique
+email      String    @unique
   phone      String? @unique
   address      String?
   metadata      Json?
