@@ -37,12 +37,16 @@ const getManagersHandler = async (req: NextApiRequest, res: NextApiResponse) => 
 
         assertUp(workflow, {
             status: 404,
+            message: "Workflow not found"
         });
 
         const managers = workflow.workflow_managers.map((manager) => {
             return {
                 email: manager.workflow_manager.email,
-                role: manager.role
+                role: manager.role,
+                uuid: manager.workflow_manager.uuid,
+                createdAt: manager.createdAt,
+                updatedAt: manager.updatedAt
             }
         });
 

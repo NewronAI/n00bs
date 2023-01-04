@@ -282,8 +282,8 @@ model rule{
 model workflow_manager{
   id        Int      @id @default(autoincrement())
   uuid      String   @unique @default(uuid())
-  name      String
-email      String    @unique
+  name      String?
+  email      String    @unique
   phone      String? @unique
   address      String?
   metadata      Json?
@@ -297,6 +297,7 @@ enum manager_role{
   ADMIN
   EDITOR
   VIEWER
+  DISABLED
 }
 
 model workflow_manager_link{
@@ -306,6 +307,8 @@ model workflow_manager_link{
   workflow_id Int
   workflow  workflow @relation(fields: [workflow_id], references: [id])
   role  manager_role @default(VIEWER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 
