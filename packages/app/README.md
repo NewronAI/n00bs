@@ -1,4 +1,4 @@
-# UpSert*
+# Pulse*
 
 Manage all your Data related public workflows in a single place.
 This project is supposed to be a Open Source replacement for [Google TaskMate](https://taskmate.google.com/).
@@ -20,7 +20,7 @@ This project is supposed to be a Open Source replacement for [Google TaskMate](h
 ### Installation
 
 #### Install yarn (ignore if you already have yarn installed)
-Upsert uses as yarn package manager. To install yarn, run the following command:
+Pulse uses as yarn package manager. To install yarn, run the following command:
 ```bash
 npm install -g yarn
 ```
@@ -35,11 +35,11 @@ yarn
 
 ### Create & local/remote DB
 
-Upsert uses postgres for its database. You can either use a local or remote database.
+Pulse uses postgres for its database. You can either use a local or remote database.
 Add connection string to .env
 
 ### Creating the schema
-Upsert uses [Prisma](https://www.prisma.io/) to manage the database schema. To create the schema, run the following command:
+Pulse uses [Prisma](https://www.prisma.io/) to manage the database schema. To create the schema, run the following command:
 
 ```bash
 prisma migrate dev

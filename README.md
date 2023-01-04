@@ -1,4 +1,4 @@
-<h1 style="text-align: center">DataSetu</h1>
+<h1 style="text-align: center">Pulse</h1>
 <p>
     This is a project to help people in the process of data collection and analysis.
 </p>
@@ -8,16 +8,8 @@
 
 ### Getting Started
 
-#### Installation
-```shell
-npm i -g yarn
-yarn
-```
+See the [Getting Started](/packages/app/README.md) guide for instructions on how to get started with Pulse.
 
-#### Running the app
-```shell
-yarn dev
-```
 
 ### Contributing
 
