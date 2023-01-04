@@ -34,5 +34,6 @@
   },
   "scripts": {
     "dev": "turbo dev"
-  }
+  },
+  "packageManager": "yarn@1.22.19"
 }

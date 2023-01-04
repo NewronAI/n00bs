@@ -284,7 +284,7 @@ model workflow_manager{
   uuid      String   @unique @default(uuid())
   name      String
   email      String @unique
-  phone      String @unique
+  phone      String? @unique
   address      String?
   metadata      Json?
   createdAt DateTime @default(now())

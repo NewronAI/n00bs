@@ -5,6 +5,8 @@ import {db} from "@/helpers/node/db";
 import {workflow_type} from "@prisma/client";
 
 import getLogger from "@/helpers/node/getLogger";
+import assertUp from "@/helpers/node/assert/assertUp";
+import assertHandler from "@/helpers/node/assert/assertHandler";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const { method } = req;
@@ -46,7 +48,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             }
         }));
 
-        assert(managerAccount, "Manager account not found");
+        assertUp(managerAccount, {
+            message : "Manager account not found",
+            status : 404
+        });
 
         const workflow = await db.workflow.create({
             data: {
@@ -64,7 +69,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
     catch (e) {
         logger.error(e);
-        res.status(500).end();
+        assertHandler(e, res);
         return;
     }
 
