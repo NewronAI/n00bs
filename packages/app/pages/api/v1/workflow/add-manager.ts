@@ -3,7 +3,6 @@ import assertHandler from "@/helpers/node/assert/assertHandler";
 import getLogger from "@/helpers/node/getLogger";
 import assertUp from "@/helpers/node/assert/assertUp";
 import {db} from "@/helpers/node/db";
-import {manager_role} from "@prisma/client";
 
 const addManagerHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
