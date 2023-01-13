@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,320 +7,127 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum workflow_type {
-  QA
-  FIELD_TASK
-  RECORD_AUDIO
-  CAPTURE_PHOTOS
+enum question_type {
+  checkbox
+  radio
+  boolean
+  text
 }
 
-model workflow {
-  id        Int      @id @default(autoincrement())
-  uuid      String      @unique @default(uuid())
+enum member_role{
+  admin
+  manager
+  associate
+  freelancer
+}
+
+enum obj_status{
+  active
+  inactive
+  deleted
+}
+
+
+
+model workflow{
+  id        Int      @default(autoincrement()) @id
+  uuid      String   @unique @default(uuid())
   name      String
-  description      String?
+  desc      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  type      workflow_type @default(QA)
-  geolocations      geo[]
-  contents      content[]
-  questions      question[]
-  task_definitions      task_definition[]
-  secret_join_code      String?
-  owner_id Int?
-  owner workflow_manager? @relation(fields: [owner_id], references: [id])
-  workflow_managers workflow_manager_link[]
-}
-
-
-
-model geo{
-  id        Int      @id @default(autoincrement())
-  uuid      String      @unique @default(uuid())
-  workflow_id Int
-  workflow workflow @relation(fields: [workflow_id], references: [id])
-  country      String?
-  state      String?
-  city      String?
-  latitude      String?
-  longitude      String?
-  zip      String?
-  street      String?
-  address      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  contents content[]
-  workers worker[]
-}
-
-enum content_type {
-  TEXT
-  IMAGE
-  VIDEO
-  AUDIO
-  FILE
-}
-
-enum content_status {
-  UNASSIGNED
-  ASSIGNED
-}
-
-enum storage_type {
-  S3
-  GCS
-  LOCAL
-  AZURE
-  CUSTOM
-  NONE
-}
-
-model content{
-  id        Int      @id @default(autoincrement())
-  uuid        String      @unique @default(uuid())
-  workflow_id Int
-  workflow workflow @relation(fields: [workflow_id], references: [id])
-  geo_id Int?
-  geo geo? @relation(fields: [geo_id], references: [id])
-  data      String?
-  metadata      Json?
-  content_type      content_type @default(TEXT)
-  storage_type      storage_type @default(NONE)
-  status      content_status @default(UNASSIGNED)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+  status    obj_status @default(active)
   tasks task[]
 }
-
-enum question_type {
-  TEXT
-  NUMBER
-  DATE
-  TIME
-  DATETIME
-  BOOLEAN
-  SELECT
-  RADIO
-  CHECKBOX
-  FILE
-  IMAGE
-  VIDEO
-  AUDIO
-  CUSTOM
-}
-
 
 model question{
-  id        Int      @id @default(autoincrement())
-  uuid        String      @unique @default(uuid())
-  workflow_id Int
-  workflow workflow @relation(fields: [workflow_id], references: [id])
-  question      String
-  type     question_type @default(BOOLEAN)
-  options      String[]
-  metadata      Json?
-  correct_answer      Json? // { type : "boolean", value : true }
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  storage_type      storage_type @default(NONE)
-  responses response[]
-  task_questions task_question[]
-}
-
-enum worker_role {
-  WORKER
-  REVIEWER
-  MANAGER
-}
-
-enum trust_level {
-  LOW
-  MEDIUM
-  HIGH
-}
-
-enum worker_status {
-  ACTIVE
-  INACTIVE
-  CLOSED
-}
-
-model worker{
-  id        Int      @id @default(autoincrement())
-  uuid      String      @unique @default(uuid())
+  id        Int      @default(autoincrement()) @id
+  uuid      String   @unique @default(uuid())
   name      String
-  email      String @unique
-  phone      String @unique
-  role    worker_role @default(WORKER)
-  address      String?
-  metadata      Json?
-  trust_level      trust_level @default(LOW)
-  geo_id Int?
-  geo geo? @relation(fields: [geo_id], references: [id])
-  payment_details      Json?
-  status      worker_status @default(ACTIVE)
+  text      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  rules rule[]
-  tasks task[]
-  reviews review[]
+  deletedAt DateTime?
+  question_type      question_type @default(boolean)
+  options   String[]
+  status    obj_status @default(active)
+  task_question task_question[]
+  task_answers task_answer[]
 }
 
-enum task_status {
-  UNASSIGNED
-  PENDING
-  COMPLETED
-  CLOSED
-  EXPIRED
-}
-
-enum task_type {
-  TASK
-  REVIEW
-}
-
-enum task_definiton_constraints {
-  CITY_BOUND
-  STATE_BOUND
-  COUNTRY_BOUND
-  NONE
-}
-
-model task_question {
-  id Int @id @default(autoincrement())
-  uuid String @unique @default(uuid())
-  question_id Int
-  question question @relation(fields: [question_id], references: [id])
-  task_definition_id Int
-  task_definition task_definition @relation(fields: [task_definition_id], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model task_definition{
-  id        Int      @id @default(autoincrement())
-  uuid      String      @unique @default(uuid())
-  workflow_id Int
-  workflow workflow @relation(fields: [workflow_id], references: [id])
+model member {
+  id        Int      @default(autoincrement()) @id
+  uuid      String   @unique @default(uuid())
   name      String
-  description      String?
-  type      task_type @default(TASK)
-  metadata      Json?
-  constraints      task_definiton_constraints @default(NONE)
-  min_workers      Int @default(3)
-  max_workers      Int @default(3)
-  task_questions task_question[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  tasks task[]
+  deletedAt DateTime?
+  email     String  @unique
+  phone     String @unique
+  role      member_role @default(freelancer)
+  status    obj_status @default(active)
+  district String?
+  state     String?
+  address   String?
+  pincode   String?
+  payment_details Json?
 }
 
 model task{
-  id        Int      @id @default(autoincrement())
-  uuid      String      @unique @default(uuid())
-  task_definition_id Int
-  task_definition task_definition @relation(fields: [task_definition_id], references: [id])
-  worker_id Int
-  worker worker @relation(fields: [worker_id], references: [id])
-  content_id Int
-  content content @relation(fields: [content_id], references: [id])
-  status      task_status @default(UNASSIGNED)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  expires_at      DateTime?
-  responses response[]
-  review_id Int?
-  reviews review[] // Rule : If reviewers are not allowed to see previous reviews, then this will be array, else multilevel can be enabled
-}
-
-model response{
-  id        Int      @id @default(autoincrement())
-  uuid      String      @unique @default(uuid())
-  question_id Int
-  question question @relation(fields: [question_id], references: [id])
-  answer    Json
-  answer_type    question_type @default(BOOLEAN)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  task_id Int
-  task task @relation(fields: [task_id], references: [id])
-  storage_type      storage_type @default(NONE)
-}
-
-model review{
-  id        Int      @id @default(autoincrement())
-  uuid      String      @unique @default(uuid())
-  task_id Int
-  task task @relation(fields: [task_id], references: [id])
-  reviewer_id Int
-  reviewer worker @relation(fields: [reviewer_id], references: [id])
-  accepted      Boolean
-  comments      String?
-  successor_review_id Int? @unique // Rule : Available only on Multilevel review
-  successor_review review? @relation("parent",fields: [successor_review_id], references: [id])
-  predecessor_reviews review? @relation("parent")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model rule{
-  // Rule definition will be in code, here will keep the mapping, also the parameters in metadata, if applicable
-  id        Int      @id @default(autoincrement())
-  uuid      String      @unique @default(uuid())
-  worker_id Int
-  worker worker @relation(fields: [worker_id], references: [id])
-  name      String
-  description      String?
-  metadata      Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model workflow_manager{
-  id        Int      @id @default(autoincrement())
+  id        Int      @default(autoincrement()) @id
   uuid      String   @unique @default(uuid())
-  name      String?
-  email      String    @unique
-  phone      String? @unique
-  address      String?
-  metadata      Json?
+  name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  owned_workflow workflow[]
-  workflow_link workflow_manager_link[]
-}
-
-enum manager_role{
-  ADMIN
-  EDITOR
-  VIEWER
-  DISABLED
-}
-
-model workflow_manager_link{
-  id Int @id @default(autoincrement())
-  workflow_manager_id Int
-  workflow_manager workflow_manager @relation(fields: [workflow_manager_id], references: [id])
+  deletedAt DateTime?
+  status    obj_status @default(active)
   workflow_id Int
   workflow  workflow @relation(fields: [workflow_id], references: [id])
-  role  manager_role @default(VIEWER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  task_question_id Int
+  task_question task_question[]
+  task_assignments task_assignment[]
+  min_assignments Int @default(3)
+  district String?
+  state     String?
 }
 
+model task_question{
+  id       Int      @default(autoincrement()) @id
+  uuid      String   @unique @default(uuid())
+  createdAt DateTime @default(now())
+  task_id Int
+  task task @relation(fields: [task_id], references: [id])
+  question_id Int
+  question question @relation(fields: [question_id], references: [id])
+}
 
+model task_assignment{
+  id        Int      @default(autoincrement()) @id
+  uuid      String   @unique @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+  status    obj_status @default(active)
+  task_definition_id Int
+  task_definitions task @relation(fields: [task_definition_id], references: [id])
+  task_answers task_answer[]
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
+model task_answer{
+  id        Int      @default(autoincrement()) @id
+  uuid      String   @unique @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+  status    obj_status @default(active)
+  task_id Int
+  task task_assignment @relation(fields: [task_id], references: [id])
+  question_id Int
+  questions question @relation(fields: [question_id], references: [id])
+  answer String
+}
 
 

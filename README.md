@@ -1,4 +1,5 @@
-<h1 style="text-align: center">Pulse</h1>
+<h1 style="text-align: center">n00bs</h1>
+NoOBS - No Obstruction Blockage Slowness
 <p>
     This is a project to help people in the process of data collection and analysis.
 </p>
@@ -8,7 +9,7 @@
 
 ### Getting Started
 
-See the [Getting Started](/packages/app/README.md) guide for instructions on how to get started with Pulse.
+See the [Getting Started](/packages/app/README.md) guide for instructions on how to get started with n00bs.
 
 
 ### Contributing
