@@ -1,6 +1,6 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
-import { question_type} from "@prisma/client";
+import {question_type} from "@prisma/client";
 
 const questionApi = new NextExpress();
 
@@ -33,3 +33,6 @@ questionApi.post(async (req, res) => {
 
     res.status(200).json(question);
 });
+
+
+export default questionApi.handler;

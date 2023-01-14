@@ -52,8 +52,9 @@ model workflow{
 model workflow_file{
   id        Int      @default(autoincrement()) @id
   uuid      String   @unique @default(uuid())
-  file_type file_type
+  file_type file_type @default(audio)
   file      String
+  file_name String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deletedAt DateTime?
@@ -61,6 +62,8 @@ model workflow_file{
   workflow  workflow   @relation(fields: [workflowId], references: [id])
   workflowId Int
   task_assignments task_assignment[]
+  district  String?
+  state     String?
 }
 
 model question{
@@ -107,7 +110,7 @@ model task{
   workflow_id Int
   workflow  workflow @relation(fields: [workflow_id], references: [id])
   task_question_id Int
-  task_question task_question[]
+  task_questions task_question[]
   task_assignments task_assignment[]
   min_assignments Int @default(3)
   district String?
