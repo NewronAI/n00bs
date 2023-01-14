@@ -27,6 +27,13 @@ enum obj_status{
   deleted
 }
 
+enum file_type{
+  image
+  video
+  audio
+  document
+}
+
 
 
 model workflow{
@@ -39,6 +46,21 @@ model workflow{
   deletedAt DateTime?
   status    obj_status @default(active)
   tasks task[]
+  workflow_items workflow_file[]
+}
+
+model workflow_file{
+  id        Int      @default(autoincrement()) @id
+  uuid      String   @unique @default(uuid())
+  file_type file_type
+  file      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+  status    obj_status @default(active)
+  workflow  workflow   @relation(fields: [workflowId], references: [id])
+  workflowId Int
+  task_assignments task_assignment[]
 }
 
 model question{
@@ -113,6 +135,8 @@ model task_assignment{
   task_definition_id Int
   task_definitions task @relation(fields: [task_definition_id], references: [id])
   task_answers task_answer[]
+  workflow_file_id Int
+  workflow_file workflow_file @relation(fields: [workflow_file_id], references: [id])
 }
 
 model task_answer{
