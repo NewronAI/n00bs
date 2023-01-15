@@ -16,7 +16,7 @@ import Head from "next/head";
 import MemberItem from "@/interfaces/MemberItem";
 import Avatar from "@/components/Avatar";
 import {SearchIcon} from "@heroicons/react/solid";
-import {obj_status} from "@prisma/client";
+import {member_role, obj_status} from "@prisma/client";
 
 
 interface MemberFetchSearch {
@@ -48,7 +48,7 @@ const Members = ( ) => {
         by: searchBy
     };
 
-    const { data, error , isValidating, isLoading } = useSWR(['/api/v1/member', searchQuery], memberFetcher);
+    const { data, error , isValidating, isLoading , mutate} = useSWR(['/api/v1/member', searchQuery], memberFetcher);
     const [open, setOpen] = useState(false);
 
     const [selectedMember, setSelectedMember] = useState<MemberItem | null>(null);
@@ -67,9 +67,40 @@ const Members = ( ) => {
         setOpen(true);
     }
 
-    const handleAddMember = () => {
+    const handleAddNewMember = () => {
         setSelectedMember(null);
         setOpen(true);
+    }
+
+    const handleAddUpdateMember = async (e : React.ChangeEvent<HTMLFormElement>) => {
+
+        e.preventDefault();
+
+        const member : MemberItem = {
+            uuid: e.target?.uuid?.value,
+            name: e.target["member-name"].value,
+            role: e.target["member-role"].value || member_role.freelancer,
+            district: e.target.district.value,
+            state: e.target.state.value,
+            status: e.target["member-status"].checked ? obj_status.active : obj_status.inactive,
+            email: e.target.email.value,
+            phone: e.target["member-phone"].value,
+            address: e.target.address.value,
+            pincode: e.target.pincode.value,
+        }
+
+        let res : MemberItem;
+        if(member.uuid) {
+            res = await axios.put('/api/v1/member', member);
+        }
+        else {
+            res = await axios.post('/api/v1/member', member);
+        }
+
+        await mutate();
+
+        setOpen(false);
+
     }
 
     console.log(error)
@@ -121,7 +152,7 @@ const Members = ( ) => {
                     </div>
 
                     <div className={""}>
-                        <button className={"btn btn-md btn-primary"} onClick={handleAddMember} type={"button"}>
+                        <button className={"btn btn-md btn-primary"} onClick={handleAddNewMember} type={"button"}>
                             Add Member
                         </button>
                     </div>
@@ -221,7 +252,7 @@ const Members = ( ) => {
                                     leaveTo="translate-x-full"
                                 >
                                     <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
-                                        <form className="flex h-full flex-col divide-y divide-gray-200 bg-base-100 shadow-xl">
+                                        <form onSubmit={handleAddUpdateMember} className="flex h-full flex-col divide-y divide-gray-200 bg-base-100 shadow-xl">
                                             <div className="h-0 flex-1 overflow-y-auto">
                                                 <div className="bg-neutral py-6 px-4 sm:px-6">
                                                     <div className="flex items-center justify-between">
@@ -259,6 +290,12 @@ const Members = ( ) => {
                                                                         placeholder={"Enter name"}
                                                                         className="input  input-bordered w-full"
                                                                     />
+                                                                    {
+                                                                        // if update, show the uuid will be present, and hence the form will be in update mode
+                                                                        selectedMember &&
+                                                                        <input type={"hidden"} name={"uuid"}
+                                                                            value={selectedMember?.uuid} />
+                                                                    }
                                                                 </div>
                                                             </div>
 
@@ -268,7 +305,7 @@ const Members = ( ) => {
                                                                         Role<span className={"text-red-500"}>*</span>
                                                                     </label>
                                                                     <div className="mt-1">
-                                                                        <select id="role" name="role" className="input  input-bordered w-full"
+                                                                        <select id="role" name="member-role" className="input  input-bordered w-full"
                                                                                 defaultValue={selectedMember ? selectedMember.role : "freelancer"}
                                                                                 disabled={selectedMember ? selectedMember.role === "admin" : false}
                                                                         >
@@ -284,9 +321,9 @@ const Members = ( ) => {
                                                                         Active
                                                                     </label>
                                                                     <div className="mt-1">
-                                                                        <input type="checkbox" name={"status"}
+                                                                        <input type="checkbox" name={"member-status"} id="status"
                                                                                className="toggle toggle-error"
-                                                                               defaultChecked={selectedMember?.status === obj_status.active}
+                                                                               defaultChecked={selectedMember?.status === obj_status.active || true}
                                                                                disabled={selectedMember ? selectedMember.role === "admin" : false}
                                                                         />
                                                                     </div>
@@ -301,7 +338,7 @@ const Members = ( ) => {
                                                                 <div className="mt-1">
                                                                     <input
                                                                         type="text"
-                                                                        name="phone"
+                                                                        name="member-phone"
                                                                         id="phone"
                                                                         defaultValue={selectedMember ? selectedMember.phone : ""}
                                                                         placeholder={"+91 1234567890"}
@@ -320,7 +357,7 @@ const Members = ( ) => {
                                                                         name="email"
                                                                         id="email"
                                                                         defaultValue={selectedMember ? selectedMember.email : ""}
-                                                                        placeholder={"+91 1234567890"}
+                                                                        placeholder={"Eg: someone@example.com"}
                                                                         className="input  input-bordered w-full"
                                                                     />
                                                                 </div>

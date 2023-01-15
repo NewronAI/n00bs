@@ -60,6 +60,7 @@ memberApi.post(async (req: NextApiRequest, res : NextApiResponse) => {
         role,
         address,
         pincode,
+        status,
         payment_details
     } = req.body;
 
@@ -83,9 +84,7 @@ memberApi.post(async (req: NextApiRequest, res : NextApiResponse) => {
         status: 400
     });
 
-    console.log("hello");
     logger.debug("Creating member");
-    logger.error(payment_details);
 
     const member = await db.member.create({
         data: {
@@ -97,9 +96,53 @@ memberApi.post(async (req: NextApiRequest, res : NextApiResponse) => {
             state,
             address,
             pincode,
+            status,
             payment_details
         }
     })
+
+    res.status(200).json(member);
+
+})
+
+memberApi.put(async (req: NextApiRequest, res: NextApiResponse) => {
+
+    let {
+        uuid,
+        name,
+        email,
+        phone,
+        district,
+        state,
+        role,
+        address,
+        pincode,
+        status,
+        payment_details
+    } = req.body;
+
+    const logger = getLogger("api/v1/member");
+
+
+    logger.debug("Updating member");
+
+    const member = await db.member.update({
+        data: {
+            name,
+            email,
+            phone,
+            role,
+            district,
+            state,
+            address,
+            pincode,
+            status,
+            payment_details
+        },
+        where: {
+            uuid : uuid
+        }
+    });
 
     res.status(200).json(member);
 
