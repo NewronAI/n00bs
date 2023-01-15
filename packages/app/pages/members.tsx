@@ -183,7 +183,7 @@ const Members = ( ) => {
                                 members.map((member, index) => {
                                     // @ts-ignore
                                     return (
-                                        <tr >
+                                        <tr key={member.uuid} >
                                             {/*<th>*/}
                                             {/*    <label>*/}
                                             {/*        <input type="checkbox" className="checkbox"/>*/}
