@@ -113,7 +113,10 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                             <label className="label">
                                 <span className="label-text">Question Name</span>
                             </label>
-                            <input name={"questionName"} type="text" placeholder="Question" className="input input-bordered" />
+                            <input name={"questionName"} type="text" placeholder="Question"
+                                   className="input input-bordered"
+                                   defaultValue={question?.name}
+                            />
                         </div>
 
                         <div className={"flex gap-4"}>
@@ -124,6 +127,7 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                                 <select name={"questionType"}
                                         className="select select-bordered w-full max-w-xs"
                                         value={questionType}
+                                        defaultValue={question?.question_type}
                                         onChange={e => changeQuestionType(e.target.value as string)}>
                                     {Object.keys(questionTypesMap).map((key) => {
                                         return <option key={key} value={key}>{questionTypesMap[key]} </option>
@@ -135,14 +139,21 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                                 <label className="label">
                                     <span className="label-text">Order</span>
                                 </label>
-                                <input type="number" name={"questionOrder"} placeholder="Order" className="input input-bordered" />
+                                <input type="number" name={"questionOrder"}
+                                       placeholder="Order"
+                                       className="input input-bordered"
+                                        defaultValue={question?.order}
+                                />
                             </div>
 
                             <div className="flex items-center mt-8">
                                 <label className="label">
                                     <span className="label-text">Required</span>
                                 </label>
-                                <input type="checkbox" name={"questionRequired"} className="toggle toggle-primary" />
+                                <input type="checkbox" name={"questionRequired"}
+                                       className="toggle toggle-primary"
+                                        defaultChecked={question?.required}
+                                />
                             </div>
 
                         </div>
@@ -154,6 +165,7 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                             <textarea className="textarea h-24 textarea-bordered"
                                       placeholder="Eg: Is the audio audible?"
                                       name={"questionText"}
+                                    defaultValue={question?.text}
                             />
                         </div>
 
