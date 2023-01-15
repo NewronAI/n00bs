@@ -69,7 +69,7 @@ const Workflows = (props : WorkflowProps) => {
                     </p>
                 </div>
 
-                <div className="divide-y divide-gray-200 overflow-hidden rounded-lg  shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0">
+                <div className="mt-8 divide-y divide-gray-200 overflow-hidden rounded-lg  shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0">
                     {allWorkflows.map((action, actionIdx) => (
                         <div
                             key={action.title}

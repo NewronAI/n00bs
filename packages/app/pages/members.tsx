@@ -59,7 +59,6 @@ const Members = ( ) => {
         e.preventDefault();
         setSearch(e.target.search.value);
         setSearchBy(e.target.searchBy.value);
-
     }
 
     const handleSelectMember = (member: MemberItem) => {
@@ -323,7 +322,7 @@ const Members = ( ) => {
                                                                     <div className="mt-1">
                                                                         <input type="checkbox" name={"member-status"} id="status"
                                                                                className="toggle toggle-error"
-                                                                               defaultChecked={selectedMember?.status === obj_status.active || true}
+                                                                               defaultChecked={selectedMember ? selectedMember?.status === obj_status.active : false}
                                                                                disabled={selectedMember ? selectedMember.role === "admin" : false}
                                                                         />
                                                                     </div>
