@@ -18,11 +18,27 @@ import Avatar from "@/components/Avatar";
 import {SearchIcon} from "@heroicons/react/solid";
 import {member_role, obj_status} from "@prisma/client";
 import CreateUpdateQuestion from "@/components/CreateUpdateQuestion";
+import QuestionItem from "@/interfaces/QuestionItem";
 
 
+const questionFetcher = async (url : string) => {
+    const res = await axios.get(url);
+    return res.data;
+}
 
-const Members = ( ) => {
 
+const QuestionPage = ( ) => {
+
+    const { data : questions, error, mutate, isLoading } = useSWR<QuestionItem[]>('/api/v1/question', questionFetcher);
+
+    if(isLoading) {
+        return <div>Loading...</div>
+    }
+
+    if(error) {
+        console.log(error);
+        return <div>Failed to load</div>
+    }
 
     return (
         <DashboardLayout currentPage={"questions"} secondaryNav={<></>}>
@@ -39,7 +55,12 @@ const Members = ( ) => {
                     </p>
                 </div>
 
-            <CreateUpdateQuestion />
+                <CreateUpdateQuestion />
+                {
+                    questions?.map((question, index) => (
+                        <CreateUpdateQuestion question={question} key={index} mutate={mutate} />
+                    ))
+                }
 
             </div>
 
@@ -48,9 +69,9 @@ const Members = ( ) => {
     );
 };
 
-Members.propTypes = {
+QuestionPage.propTypes = {
 
 };
 
 
-export default Members;
+export default QuestionPage;

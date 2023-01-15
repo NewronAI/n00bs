@@ -3,14 +3,9 @@ import PropTypes from 'prop-types';
 import clsx from "clsx";
 import {PlusIcon} from "@heroicons/react/outline";
 import {TrashIcon} from "@heroicons/react/solid";
-import {question_type} from "@prisma/client";
-
-interface CreateUpdateQuestionProps {
-    title: string;
-    description: string;
-
-
-}
+import {obj_status, question_type} from "@prisma/client";
+import QuestionItem from "@/interfaces/QuestionItem";
+import axios from "axios";
 
 type QuestionTypeMapType = {
     [key: string]: string;
@@ -23,7 +18,18 @@ const questionTypesMap : QuestionTypeMapType = {
     [question_type.text] : "Text",
 }
 
-const CreateUpdateQuestion = ({}) => {
+
+export interface CreateUpdateQuestionProps {
+    question?: QuestionItem;
+    mutate?: any;
+
+}
+
+const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
+
+    const question : QuestionItem | undefined = props?.question || undefined;
+    const mutate = props?.mutate || undefined;
+
 
     const [createQuestionCollapse, setCreateQuestionCollapse] = useState(false);
 
@@ -57,31 +63,57 @@ const CreateUpdateQuestion = ({}) => {
         setQuestionType(type);
     }
 
+    const submitQuestionForm = async (e : any) => {
+        e.preventDefault();
+        const questionName = e.target.questionName.value;
+        const questionText = e.target.questionText.value;
+        const questionType = e.target.questionType.value;
+        const questionOptions = options;
+        const questionRequired = e.target.questionRequired.checked;
+        const questionOrder = e.target.questionOrder.value;
+
+        const questionData : QuestionItem = {
+            name: questionName,
+            text: questionText,
+            question_type: questionType,
+            options: questionOptions,
+            // status: obj_status.active,
+            required: questionRequired,
+            order: questionOrder,
+        }
+
+        if (question) {
+            // Update question
+        } else {
+            // Create question
+            await axios.post("/api/v1/question", questionData);
+            mutate?.();
+            e.target.reset();
+            setCreateQuestionCollapse(false);
+        }
+    }
+
     useEffect(() => {
         changeQuestionType(question_type.boolean);
     }, [])
 
     return (
         <div>
-            <div>
+            <form onSubmit={submitQuestionForm}>
                 <div tabIndex={0}
                      className={clsx("mt-4 mx-4 collapse collapse-arrow border border-base-300 bg-base-100 rounded-box", {"collapse-open" : createQuestionCollapse, "collapse-close": !createQuestionCollapse})}>
                     <div onClick={() => setCreateQuestionCollapse(!createQuestionCollapse)}
                          className="collapse-title bg-neutral">
-                        <div className={"flex"}> <PlusIcon className={"w-5 h-5 mr-2"} /> Create New Question </div>
+                        <h3 className={"flex"}> <PlusIcon className={"w-5 h-5 mr-2"} /> { question?.name || "Create New Question"} </h3>
+                        <p className={"text-sm truncate"}>{question?.text}</p>
                     </div>
                     <div className={clsx("border border-neutral p-4 rounded-b-2xl",{"hidden": !createQuestionCollapse})}>
+
                         <div className="form-control">
                             <label className="label">
-                                <span className="label-text">Question</span>
+                                <span className="label-text">Question Name</span>
                             </label>
-                            <input type="text" placeholder="Question" className="input input-bordered" />
-                        </div>
-                        <div className="form-control">
-                            <label className="label">
-                                <span className="label-text">Description</span>
-                            </label>
-                            <textarea className="textarea h-24 textarea-bordered" placeholder="Description"></textarea>
+                            <input name={"questionName"} type="text" placeholder="Question" className="input input-bordered" />
                         </div>
 
                         <div className={"flex gap-4"}>
@@ -89,7 +121,8 @@ const CreateUpdateQuestion = ({}) => {
                                 <label className="label">
                                     <span className="label-text">Type</span>
                                 </label>
-                                <select className="select select-bordered w-full max-w-xs"
+                                <select name={"questionType"}
+                                        className="select select-bordered w-full max-w-xs"
                                         value={questionType}
                                         onChange={e => changeQuestionType(e.target.value as string)}>
                                     {Object.keys(questionTypesMap).map((key) => {
@@ -102,14 +135,14 @@ const CreateUpdateQuestion = ({}) => {
                                 <label className="label">
                                     <span className="label-text">Order</span>
                                 </label>
-                                <input type="text" placeholder="Order" className="input input-bordered" />
+                                <input type="number" name={"questionOrder"} placeholder="Order" className="input input-bordered" />
                             </div>
 
                             <div className="flex items-center mt-8">
                                 <label className="label">
                                     <span className="label-text">Required</span>
                                 </label>
-                                <input type="checkbox" className="toggle toggle-primary" />
+                                <input type="checkbox" name={"questionRequired"} className="toggle toggle-primary" />
                             </div>
 
                         </div>
@@ -118,7 +151,10 @@ const CreateUpdateQuestion = ({}) => {
                             <label className="label">
                                 <span className="label-text">Question text</span>
                             </label>
-                            <textarea className="textarea h-24 textarea-bordered" placeholder="Eg: Is the audio audible?"></textarea>
+                            <textarea className="textarea h-24 textarea-bordered"
+                                      placeholder="Eg: Is the audio audible?"
+                                      name={"questionText"}
+                            />
                         </div>
 
 
@@ -132,7 +168,7 @@ const CreateUpdateQuestion = ({}) => {
                                 {
                                     options.map((option, index) => {
                                         return (
-                                            <div className={"flex gap-4"}>
+                                            <div key={index} className={"flex gap-4"}>
                                                 <input type="text"
                                                        placeholder="Option"
                                                        className="input w-48 input-sm input-bordered"
@@ -165,7 +201,7 @@ const CreateUpdateQuestion = ({}) => {
                     </div>
                 </div>
 
-            </div>
+            </form>
         </div>
     );
 };

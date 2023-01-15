@@ -71,6 +71,8 @@ model question{
   uuid      String   @unique @default(uuid())
   name      String
   text      String
+  order     Int      @default(autoincrement())
+  required  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deletedAt DateTime?
