@@ -9,6 +9,8 @@ interface MemberItem {
     state?: string;
     address?: string;
     phone?: string;
+    pincode?: string;
+    status: string;
 }
 
 export default MemberItem;

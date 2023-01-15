@@ -33,11 +33,11 @@ memberApi.get(async (req: NextApiRequest, res: NextApiResponse) => {
                 mode: "insensitive"
             } : undefined,
             state: typeof stateStr === "string" ? {
-                equals: stateStr,
+                contains: stateStr,
                 mode: "insensitive"
             } : undefined,
             district: typeof districtStr === "string" ? {
-                equals: districtStr,
+                contains: districtStr,
                 mode: "insensitive"
             } : undefined
         },
