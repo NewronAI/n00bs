@@ -304,7 +304,7 @@ const Members = ( ) => {
                                                                         Role<span className={"text-red-500"}>*</span>
                                                                     </label>
                                                                     <div className="mt-1">
-                                                                        <select id="role" name="member-role" className="input  input-bordered w-full"
+                                                                        <select id="role" name="member-role" className="select  select-bordered w-full"
                                                                                 defaultValue={selectedMember ? selectedMember.role : "freelancer"}
                                                                                 disabled={selectedMember ? selectedMember.role === "admin" : false}
                                                                         >

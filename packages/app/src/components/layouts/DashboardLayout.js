@@ -61,7 +61,7 @@ export default function DashboardLayout({
                 <Disclosure as="nav" className="border-b border-zinc-900 bg-white dark:bg-black">
                     {({ open }) => (
                         <>
-                            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                            <div className="mx-auto max-w-7xl px-2 sm:px-4">
                                 <div className="flex h-12 justify-between">
                                     <div className="flex">
                                         <div className="flex flex-shrink-0 items-center">
