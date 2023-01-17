@@ -38,9 +38,17 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
 
     const [options, setOptions] = useState<string[]>([]);
 
-    const [questionType, setQuestionType] = useState<string>(question_type.boolean);
+    const [questionType, setQuestionType] = useState<string>(question?.question_type || question_type.boolean);
 
     const [editMode, setEditMode] = useState<boolean>(!question);
+
+    const formRef = React.createRef<HTMLFormElement>();
+
+    const handleEnableEditMode = (e: any) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setEditMode(true);
+    }
 
     const addOption = (option : string) => {
         setOptions([...options, option]);
@@ -68,7 +76,9 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
         setQuestionType(type);
     }
 
-    const cancelEdit = () => {
+    const cancelEdit = (e : any) => {
+        e.preventDefault();
+        e.stopPropagation();
         setQuestion(props?.question || undefined);
         setEditMode(!question);
         setCreateQuestionCollapse(false);
@@ -91,16 +101,25 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
             // status: obj_status.active,
             required: questionRequired,
             order: questionOrder,
+            uuid: question?.uuid || undefined,
         }
 
-        if (question) {
-            // Update question
-        } else {
-            // Create question
-            await axios.post("/api/v1/question", questionData);
-            mutate?.();
-            e.target.reset();
-            setCreateQuestionCollapse(false);
+        try {
+            if (question) {
+                // Update question
+                const res = await axios.put(`/api/v1/question/`, questionData);
+                await mutate?.();
+                setEditMode(false);
+
+            } else {
+                // Create question
+                await axios.post("/api/v1/question", questionData);
+                await mutate?.();
+                e.target.reset();
+                setCreateQuestionCollapse(false);
+            }
+        } catch (e) {
+            console.error(e);
         }
     }
 
@@ -112,26 +131,26 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
         else {
             changeQuestionType(question_type.boolean);
         }
-    }, [])
+    }, [question])
 
     return (
         <div>
-            <form onSubmit={submitQuestionForm}>
-                <div tabIndex={0}
-                     className={clsx("mt-4 mx-4 collapse collapse-arrow border  bg-base-100 rounded-box",
-                         {"collapse-open" : createQuestionCollapse, "collapse-close": !createQuestionCollapse},
-                         {"border-neutral": !!question, "border-primary": !question}
-                     )}>
-                    <div onClick={() => setCreateQuestionCollapse(!createQuestionCollapse)}
-                         className={clsx("collapse-title ", {"bg-neutral": !!question, "bg-primary text-white": !question},)}>
-                        <h3 className={"flex"}>
-                            { questionNumber ? <span className={"text-xl mr-3"}> {questionNumber}. </span>:<PlusIcon className={"w-5 h-5 mr-2"}/>}
-                            { question?.name || "Create New Question"}
-                        </h3>
-                        <p className={"text-sm truncate"}>{question?.text}</p>
-                    </div>
-                    <div className={clsx("border border-neutral p-4 rounded-b-2xl",{"hidden": !createQuestionCollapse})}>
 
+            <div tabIndex={0}
+                 className={clsx("mt-4 mx-4 collapse collapse-arrow border  bg-base-100 rounded-box",
+                     {"collapse-open" : createQuestionCollapse, "collapse-close": !createQuestionCollapse},
+                     {"border-neutral": !!question, "border-primary": !question}
+                 )}>
+                <div onClick={() => setCreateQuestionCollapse(!createQuestionCollapse)}
+                     className={clsx("collapse-title ", {"bg-neutral": !!question, "bg-primary text-white": !question},)}>
+                    <h3 className={"flex"}>
+                        { questionNumber ? <span className={"text-xl mr-3"}> {questionNumber}. </span>:<PlusIcon className={"w-5 h-5 mr-2"}/>}
+                        { question?.name || "Create New Question"}
+                    </h3>
+                    <p className={"text-sm truncate"}>{question?.text}</p>
+                </div>
+                <div className={clsx("border border-neutral p-4 rounded-b-2xl",{"hidden": !createQuestionCollapse})}>
+                    <form onSubmit={submitQuestionForm} ref={formRef}>
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Question Name</span>
@@ -140,7 +159,7 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                                    className="input input-bordered"
                                    defaultValue={question?.name}
                                    readOnly={!editMode}
-                                  required
+                                   required
                             />
                         </div>
 
@@ -167,7 +186,7 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                                 <input type="number" name={"questionOrder"}
                                        placeholder="Order"
                                        className="input input-bordered"
-                                        defaultValue={question?.order}
+                                       defaultValue={question?.order}
                                        readOnly={!editMode}
                                 />
                             </div>
@@ -178,7 +197,7 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                                 </label>
                                 <input type="checkbox" name={"questionRequired"}
                                        className="toggle toggle-primary"
-                                        defaultChecked={question?.required}
+                                       defaultChecked={question?.required}
                                        disabled={!editMode}
                                 />
                             </div>
@@ -193,7 +212,7 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                                       placeholder="Eg: Is the audio audible?"
                                       name={"questionText"}
                                       readOnly={!editMode}
-                                    defaultValue={question?.text}
+                                      defaultValue={question?.text}
                                       required
                             />
                         </div>
@@ -202,71 +221,73 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                         {
                             questionType !== question_type.text &&
                             <div className="form-control">
-                            <label className="label">
-                                <span className="label-text">Options</span>
-                            </label>
-                            <div className={"flex gap-4 flex-wrap"}>
-                                {
-                                    options.map((option, index) => {
-                                        return (
-                                            <div key={index} className={"flex gap-4"}>
-                                                <input type="text"
-                                                       placeholder="Option"
-                                                       className="input w-48 input-sm input-bordered"
-                                                       value={option}
-                                                       required
-                                                       readOnly={!editMode}
-                                                       onChange={(e) => {
-                                                           const newOptions = [...options];
-                                                           newOptions[index] = e.target.value;
-                                                           setOptions(newOptions);
-                                                       }}
-                                                />
-                                                {
-                                                    editMode &&
-                                                    <button onClick={() => removeOption(index)}
-                                                         className={"btn btn-sm btn-error"}>
-                                                    <span className={"sr-only"}>Remove</span> <TrashIcon
-                                                    className={"w-5 h-5"}/>
-                                                    </button>
-                                                }
-                                            </div>)
-                                    })
-                                }
-                                {
-                                    editMode &&
-                                    <button onClick={() => addOption("")} className={"btn btn-sm btn-primary"}>
-                                        <span className={"sr-only"}>Add</span> <PlusIcon className={"w-5 h-5"}/>
-                                    </button>
-                                }
-                            </div>
-                        </div>}
+                                <label className="label">
+                                    <span className="label-text">Options</span>
+                                </label>
+                                <div className={"flex gap-4 flex-wrap"}>
+                                    {
+                                        options.map((option, index) => {
+                                            return (
+                                                <div key={index} className={"flex gap-4"}>
+                                                    <input type="text"
+                                                           placeholder="Option"
+                                                           className="input w-48 input-sm input-bordered"
+                                                           value={option}
+                                                           required
+                                                           readOnly={!editMode}
+                                                           onChange={(e) => {
+                                                               const newOptions = [...options];
+                                                               newOptions[index] = e.target.value;
+                                                               setOptions(newOptions);
+                                                           }}
+                                                    />
+                                                    {
+                                                        editMode &&
+                                                        <button onClick={() => removeOption(index)}
+                                                                className={"btn btn-sm btn-error"}>
+                                                            <span className={"sr-only"}>Remove</span> <TrashIcon
+                                                            className={"w-5 h-5"}/>
+                                                        </button>
+                                                    }
+                                                </div>)
+                                        })
+                                    }
+                                    {
+                                        editMode &&
+                                        <button onClick={() => addOption("")} className={"btn btn-sm btn-primary"}>
+                                            <span className={"sr-only"}>Add</span> <PlusIcon className={"w-5 h-5"}/>
+                                        </button>
+                                    }
+                                </div>
+                            </div>}
 
                         <div className={"flex justify-end mt-4"}>
-                            {
-                                editMode ?
-                                    <>
-                                        <button onClick={cancelEdit} className={"w-32"}>
-                                            Cancel
-                                        </button>
-                                        <button className={"btn btn-primary w-64"}>
-                                            {!!question ? "Save changes" : "Create"}
-                                        </button>
-                                    </>
+                                {
+                                    editMode ?
+                                        <>
+                                            <button onClick={cancelEdit} className={"w-32"} >
+                                                Cancel
+                                            </button>
+                                            <button className={"btn btn-primary w-64"} type={"submit"} >
+                                                {!!question ? "Save changes" : "Create"}
+                                            </button>
+                                        </>
                                         :
-                                    <>
-                                        <button onClick={() => setEditMode(true)} className={"btn btn-secondary w-64"}>
-                                            Edit Question <PencilIcon className={" ml-2 h-4 w-4"} />
-                                        </button>
-                                    </>
-                            }
-                        </div>
+                                        <>
+                                            <button onClick={handleEnableEditMode} type={"button"} className={"btn btn-secondary w-64"} >
+                                                Edit Question <PencilIcon className={" ml-2 h-4 w-4"} />
+                                            </button>
+                                        </>
+                                }
+                            </div>
+                    </form>
 
 
-                    </div>
                 </div>
+            </div>
 
-            </form>
+
+
         </div>
     );
 };

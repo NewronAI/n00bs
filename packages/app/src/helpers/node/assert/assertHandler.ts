@@ -17,8 +17,8 @@ function assertHandler(error: unknown, res?: NextApiResponse, defaultErrorCode =
         errorMessage = parsedError.message;
         statusCode = parsedError.status;
     }
-    catch (e) {
-        let err = e as Error;
+    catch (_e) {
+        logger.error("Error parsing error message: " + err.message);
         errorMessage = err.message;
     }
 
