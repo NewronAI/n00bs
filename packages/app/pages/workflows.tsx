@@ -134,7 +134,7 @@ export const getServerSideProps = async () => {
             description: workflow.desc as string,
             iconForeground: 'text-teal-700',
             iconBackground: 'bg-teal-50',
-            href: '#',
+            href: `/${workflow.uuid}/dashboard`,
         }
         return tWorkflow;
     })

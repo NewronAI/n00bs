@@ -58,7 +58,7 @@ const QuestionPage = ( ) => {
                 <CreateUpdateQuestion />
                 {
                     questions?.map((question, index) => (
-                        <CreateUpdateQuestion question={question} key={index} mutate={mutate} />
+                        <CreateUpdateQuestion question={question} key={index} mutate={mutate} questionNumber={index+1}/>
                     ))
                 }
 
