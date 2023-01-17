@@ -10,16 +10,14 @@ const IngestFilesDoc = ({workflowUUID = "7d1b4c3d-51f6-4902-97b3-8fb9fd1e1aff"} 
 
     const [secret, setSecret] = React.useState<string>("");
 
+    const [workflowAPIURL, setWorkflowAPIURL] = React.useState<string>(`/api/v1/${workflowUUID}/public/file`);
+
     useEffect(() => {
         getPublicWorkflowAPISecret(workflowUUID).then((secret) => {
             setSecret(secret);
         });
+        setWorkflowAPIURL(`${typeof window === "object" ? window.location.origin : ""}/api/v1/${workflowUUID}/public/file`)
     }, [workflowUUID]);
-
-    const workFlowAPIURL = `${typeof window === "object" ? window.location.origin : ""}/api/v1/${workflowUUID}/public/file`;
-
-
-
 
 
     return (
@@ -42,9 +40,9 @@ const IngestFilesDoc = ({workflowUUID = "7d1b4c3d-51f6-4902-97b3-8fb9fd1e1aff"} 
                 <div className={"bg-neutral p-2 rounded-md"}>
                     <div className={"flex justify-between"}>
                         <h2>
-                            <span className={"text-secondary mr-2"}>POST </span> {workFlowAPIURL}
+                            <span className={"text-secondary mr-2"}>POST </span> {workflowAPIURL}
                         </h2>
-                        <HandleCopy text={workFlowAPIURL} />
+                        <HandleCopy text={workflowAPIURL} />
                     </div>
 
                     <div className="collapse mt-4">
