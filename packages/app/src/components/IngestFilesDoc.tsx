@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import getPublicWorkflowAPISecret from "@/helpers/getPublicWorkflowAPISecret";
 import {ClipboardIcon} from "@heroicons/react/outline";
+import HandleCopy from "@/components/HandleCopy";
 
 
 
@@ -14,6 +15,10 @@ const IngestFilesDoc = ({workflowUUID = "7d1b4c3d-51f6-4902-97b3-8fb9fd1e1aff"} 
             setSecret(secret);
         });
     }, [workflowUUID]);
+
+    const workFlowAPIURL = `${typeof window === "object" ? window.location.origin : ""}/api/v1/${workflowUUID}/public/file`;
+
+
 
 
 
@@ -37,11 +42,9 @@ const IngestFilesDoc = ({workflowUUID = "7d1b4c3d-51f6-4902-97b3-8fb9fd1e1aff"} 
                 <div className={"bg-neutral p-2 rounded-md"}>
                     <div className={"flex justify-between"}>
                         <h2>
-                            <span className={"text-secondary mr-2"}>POST </span> /api/{workflowUUID}/file
+                            <span className={"text-secondary mr-2"}>POST </span> {workFlowAPIURL}
                         </h2>
-                        <button onClick={async () => {await navigator.clipboard.writeText(`/api/${workflowUUID}/file`)}}>
-                            <ClipboardIcon className={"h-4 w-4"} />
-                        </button>
+                        <HandleCopy text={workFlowAPIURL} />
                     </div>
 
                     <div className="collapse mt-4">
@@ -53,7 +56,7 @@ const IngestFilesDoc = ({workflowUUID = "7d1b4c3d-51f6-4902-97b3-8fb9fd1e1aff"} 
                         </div>
                         <div className="collapse-content peer-checked:bg-secondary peer-checked:text-secondary-content rounded-b-lg">
                             <p>
-                                <code>
+                                <code className={"font-thin text-sm"}>
                                     <span className={"text-indigo-900"}>{"{"}</span>
                                     <br />
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"secret": "{secret}",</span> // The secret for this workflow only
@@ -85,11 +88,24 @@ const IngestFilesDoc = ({workflowUUID = "7d1b4c3d-51f6-4902-97b3-8fb9fd1e1aff"} 
                         <h3 className={"font-semibold"}>
                             Response
                         </h3>
-                        <p>
+                        <p className={"font-thin text-sm"}>
                             Status Code: <code>200</code>
                         </p>
                     </div>
+                </div>
 
+                <div className={"mt-4"}>
+                    <h3 className={"font-semibold"}>
+                        Further steps
+                    </h3>
+                    <p className={"text-sm font-thin"}>
+                        After ingesting files, you can start assigning them to people using the Assign Files. On successful assignment, the file will be moved to the "Assigned" tab.
+                        Also, the provided callback URL will be called with the file and task details.
+                    </p>
+                    <p className={"text-sm font-thin"}>
+                        <span className={"text-secondary"}>Note:&nbsp;</span>
+                        You need to have task, people and files in the workflow before you can assign files.
+                    </p>
                 </div>
             </div>
 

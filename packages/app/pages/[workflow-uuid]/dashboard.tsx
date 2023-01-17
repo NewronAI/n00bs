@@ -10,6 +10,7 @@ import {obj_status, prisma} from "@prisma/client";
 import {db} from "@/helpers/node/db";
 import WorkflowItem from "@/interfaces/WorkflowItem";
 import IngestFilesDoc from "@/components/IngestFilesDoc";
+import HandleCopy from "@/components/HandleCopy";
 
 interface DashboardProps {
     workflow: WorkflowItem;
@@ -41,9 +42,7 @@ const DashboardPage = (props : DashboardProps) => {
                         {workflowUUID}
                     </span>
 
-                        <button onClick={async () => {await navigator.clipboard.writeText(workflowUUID || "")}}>
-                            <ClipboardIcon className={"h-4 w-4"} />
-                        </button>
+                        <HandleCopy text={workflowUUID || ""} />
                     </div>
                 </div>
 
