@@ -666,6 +666,11 @@ crypt@0.0.2:
   resolved "https://registry.yarnpkg.com/crypt/-/crypt-0.0.2.tgz#88d7ff7ec0dfb86f713dc87bbb42d044d3e6c41b"
   integrity sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow==
 
+crypto-hash@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/crypto-hash/-/crypto-hash-2.0.1.tgz#46c3732e65a078ea06b8b4ae686db41216f81213"
+  integrity sha512-t4mkp7Vh6MuCZRBf0XLzBOfhkH3nW6YEAotMDSjshVQ1GffCMGdPLSr7pKH0rdXY02jTjAZ7QW2apD0buaZXcQ==
+
 css-selector-tokenizer@^0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/css-selector-tokenizer/-/css-selector-tokenizer-0.8.0.tgz#88267ef6238e64f2215ea2764b3e2cf498b845dd"

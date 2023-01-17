@@ -2,6 +2,7 @@ import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
 import {file_type} from "@prisma/client";
+import getPublicWorkflowAPISecret from "@/helpers/getPublicWorkflowAPISecret";
 
 const fileApi = new NextExpress();
 
@@ -23,6 +24,25 @@ fileApi.get(async (req, res) => {
 fileApi.post(async (req, res) => {
 
     const workflowUuid = req.query?.["workflow-uuid"] as string;
+
+    assertUp(workflowUuid, {
+        message: "Workflow UUID: Param is required. Should contain the uuid of the workflow",
+        status: 400
+    });
+
+    const secret = req.query?.secret as string;
+
+    assertUp(secret, {
+        message: "Secret: Param is required. Should contain the secret of the workflow",
+        status: 400
+    });
+
+    const calculatedSecret = await getPublicWorkflowAPISecret(workflowUuid);
+
+    assertUp(calculatedSecret === secret, {
+        message: "Secret: The secret is not valid",
+        status: 400
+    });
 
     const file = req.body.file as string;
     const fileName = req.body.fileName as string;

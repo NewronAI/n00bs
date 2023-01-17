@@ -9,6 +9,7 @@ import {NextPageContext} from "next";
 import {obj_status, prisma} from "@prisma/client";
 import {db} from "@/helpers/node/db";
 import WorkflowItem from "@/interfaces/WorkflowItem";
+import IngestFilesDoc from "@/components/IngestFilesDoc";
 
 interface DashboardProps {
     workflow: WorkflowItem;
@@ -27,27 +28,27 @@ const DashboardPage = (props : DashboardProps) => {
             </Head>
             <div>
                 <div className={"mt-2 flex justify-between"}>
-                <div className={"p-0 md:pl-4"}>
-                    <h1 className={"text-2xl font-bold"}>
-                        {workflow?.name}
-                    </h1>
-                    <p className={"font-thin text-sm"}>
-                        {workflow?.desc}
-                    </p>
-                </div>
-                <div className={"flex items-center"}>
+                    <div className={"p-0 md:pl-4"}>
+                        <h1 className={"text-2xl font-bold"}>
+                            {workflow?.name}
+                        </h1>
+                        <p className={"font-thin text-sm"}>
+                            {workflow?.desc}
+                        </p>
+                    </div>
+                    <div className={"flex items-center"}>
                     <span className={"text-sm mr-2 "}>
                         {workflowUUID}
                     </span>
 
-                    <button onClick={async () => {await navigator.clipboard.writeText(workflowUUID || "")}}>
-                        <ClipboardIcon className={"h-4 w-4"} />
-                    </button>
+                        <button onClick={async () => {await navigator.clipboard.writeText(workflowUUID || "")}}>
+                            <ClipboardIcon className={"h-4 w-4"} />
+                        </button>
+                    </div>
                 </div>
-            </div>
 
                 <div>
-
+                    <IngestFilesDoc workflowUUID={workflowUUID} />
                 </div>
             </div>
         </DashboardLayout>
