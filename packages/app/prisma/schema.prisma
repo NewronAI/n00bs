@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "cockroachdb"
   url      = env("DATABASE_URL")
 }
 
@@ -37,7 +37,7 @@ enum file_type{
 
 
 model workflow{
-  id        Int      @default(autoincrement()) @id
+  id        BigInt      @default(autoincrement()) @id
   uuid      String   @unique @default(uuid())
   name      String
   desc      String?
@@ -50,7 +50,7 @@ model workflow{
 }
 
 model workflow_file{
-  id        Int      @default(autoincrement()) @id
+  id        BigInt      @default(autoincrement()) @id
   uuid      String   @unique @default(uuid())
   file_type file_type @default(audio)
   file      String
@@ -60,18 +60,18 @@ model workflow_file{
   deletedAt DateTime?
   status    obj_status @default(active)
   workflow  workflow   @relation(fields: [workflowId], references: [id])
-  workflowId Int
+  workflowId BigInt
   task_assignments task_assignment[]
   district  String?
   state     String?
 }
 
 model question{
-  id        Int      @default(autoincrement()) @id
+  id        BigInt      @default(autoincrement()) @id
   uuid      String   @unique @default(uuid())
   name      String
   text      String
-  order     Int      @default(autoincrement())
+  order     BigInt      @default(autoincrement())
   required  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -84,7 +84,7 @@ model question{
 }
 
 model member {
-  id        Int      @default(autoincrement()) @id
+  id        BigInt      @default(autoincrement()) @id
   uuid      String   @unique @default(uuid())
   name      String
   createdAt DateTime @default(now())
@@ -102,14 +102,14 @@ model member {
 }
 
 model task{
-  id        Int      @default(autoincrement()) @id
+  id        BigInt      @default(autoincrement()) @id
   uuid      String   @unique @default(uuid())
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deletedAt DateTime?
   status    obj_status @default(active)
-  workflow_id Int
+  workflow_id BigInt
   workflow  workflow @relation(fields: [workflow_id], references: [id])
   task_question_id Int
   task_questions task_question[]
@@ -120,41 +120,41 @@ model task{
 }
 
 model task_question{
-  id       Int      @default(autoincrement()) @id
+  id       BigInt      @default(autoincrement()) @id
   uuid      String   @unique @default(uuid())
   createdAt DateTime @default(now())
-  task_id Int
+  task_id BigInt
   task task @relation(fields: [task_id], references: [id])
-  question_id Int
+  question_id BigInt
   question question @relation(fields: [question_id], references: [id])
 }
 
 model task_assignment{
-  id        Int      @default(autoincrement()) @id
+  id        BigInt      @default(autoincrement()) @id
   uuid      String   @unique @default(uuid())
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deletedAt DateTime?
   status    obj_status @default(active)
-  task_definition_id Int
+  task_definition_id BigInt
   task_definitions task @relation(fields: [task_definition_id], references: [id])
   task_answers task_answer[]
-  workflow_file_id Int
+  workflow_file_id BigInt
   workflow_file workflow_file @relation(fields: [workflow_file_id], references: [id])
 }
 
 model task_answer{
-  id        Int      @default(autoincrement()) @id
+  id        BigInt      @default(autoincrement()) @id
   uuid      String   @unique @default(uuid())
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deletedAt DateTime?
   status    obj_status @default(active)
-  task_id Int
+  task_id BigInt
   task task_assignment @relation(fields: [task_id], references: [id])
-  question_id Int
+  question_id BigInt
   questions question @relation(fields: [question_id], references: [id])
   answer String
 }

@@ -31,7 +31,7 @@ const AllFilesPage = () => {
                     <div className={"flex items-center"}>
                     </div>
                 </div>
-                <div className={"w-full h-[400px]"}>
+                <div className={"w-full h-[400px] p-4"}>
                     <AgGridReact
                         rowData={[]}
                         />

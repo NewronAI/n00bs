@@ -1,20 +1,34 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 import {NextApiRequest, NextApiResponse} from "next";
+import {obj_status} from "@prisma/client";
 
 const fileApi = new NextExpress();
+
+const pageSize = 10;
 
 fileApi.get(async (req : NextApiRequest, res : NextApiResponse) => {
     // Get all files
 
-    const start = req.query.start as unknown as number || undefined;
-    const offset = req.query.start as unknown as number || undefined;
+    const page = Number(req.query.page as string) || 0;
 
     const files = await db.workflow_file.findMany({
-        skip: start,
-        take: offset
+        skip: page * pageSize,
+        take: pageSize,
     });
-    res.status(200).json(files);
+
+    const count = await db.workflow_file.count({
+        where: {
+            status: obj_status.active
+        }
+    });
+
+    res.status(200).json({
+        data: files,
+        pages: Math.ceil(count / pageSize),
+        currentPage: page
+    })
+
 
 });
 
