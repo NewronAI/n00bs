@@ -37,7 +37,8 @@ enum file_type{
 
 
 model workflow{
-  id        BigInt      @default(autoincrement()) @id
+  id        BigInt   @id @default(sequence())
+
   uuid      String   @unique @default(uuid())
   name      String
   desc      String?
@@ -50,7 +51,8 @@ model workflow{
 }
 
 model workflow_file{
-  id        BigInt      @default(autoincrement()) @id
+  id        BigInt   @id @default(sequence())
+
   uuid      String   @unique @default(uuid())
   file_type file_type @default(audio)
   file      String
@@ -67,7 +69,8 @@ model workflow_file{
 }
 
 model question{
-  id        BigInt      @default(autoincrement()) @id
+  id        BigInt   @id @default(sequence())
+
   uuid      String   @unique @default(uuid())
   name      String
   text      String
@@ -84,7 +87,8 @@ model question{
 }
 
 model member {
-  id        BigInt      @default(autoincrement()) @id
+  id        BigInt   @id @default(sequence())
+
   uuid      String   @unique @default(uuid())
   name      String
   createdAt DateTime @default(now())
@@ -102,7 +106,8 @@ model member {
 }
 
 model task{
-  id        BigInt      @default(autoincrement()) @id
+  id        BigInt   @id @default(sequence())
+
   uuid      String   @unique @default(uuid())
   name      String
   createdAt DateTime @default(now())
@@ -130,7 +135,8 @@ model task_question{
 }
 
 model task_assignment{
-  id        BigInt      @default(autoincrement()) @id
+  id        BigInt   @id @default(sequence())
+
   uuid      String   @unique @default(uuid())
   name      String
   createdAt DateTime @default(now())
@@ -145,7 +151,8 @@ model task_assignment{
 }
 
 model task_answer{
-  id        BigInt      @default(autoincrement()) @id
+  id        BigInt   @id @default(sequence())
+
   uuid      String   @unique @default(uuid())
   name      String
   createdAt DateTime @default(now())

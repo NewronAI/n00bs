@@ -2,6 +2,10 @@ import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import {SWRConfig} from "swr";
 
+// @ts-ignore for now because of cockroachdb
+BigInt.prototype.toJSON = function() {
+    return this.toString();
+}
 
 export default function App({ Component, pageProps }: AppProps) {
   return <SWRConfig value={{
