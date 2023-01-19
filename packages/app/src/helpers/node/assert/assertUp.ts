@@ -1,6 +1,11 @@
 import assert from "assert";
 
-function assertUp (truthy : unknown, error : object) : asserts truthy {
+interface ErrorObject {
+    message : string;
+    status : number;
+}
+
+function assertUp (truthy : unknown, error : ErrorObject) : asserts truthy {
     return assert(truthy, JSON.stringify(error));
 }
 
