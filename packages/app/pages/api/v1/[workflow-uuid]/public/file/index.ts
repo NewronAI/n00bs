@@ -16,7 +16,7 @@ fileApi.post(async (req: NextApiRequest, res: NextApiResponse) => {
         status: 400
     });
 
-    const secret = req.query?.secret as string;
+    const secret = req.body?.secret as string;
 
     assertUp(secret, {
         message: "Secret: Param is required. Should contain the secret of the workflow",
@@ -24,6 +24,8 @@ fileApi.post(async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     const calculatedSecret = await getPublicWorkflowAPISecret(workflowUuid);
+
+    console.log("Secret: ", secret, calculatedSecret);
 
     assertUp(calculatedSecret === secret, {
         message: "Secret: The secret is not valid",

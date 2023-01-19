@@ -6,11 +6,29 @@ import workflow from "../api/v1/workflow";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import {useRouter} from "next/router";
 import {AgGridReact} from "ag-grid-react";
+import useSWR from "swr";
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 const AllFilesPage = () => {
 
     const router = useRouter();
     const workflowUUID = router.query["workflow-uuid"] as string;
+
+    const [currentPage, setCurrentPage] = React.useState(0);
+
+    const {data, error, isLoading} = useSWR(`/api/v1/${workflowUUID}/file?page=${currentPage}`, (url) => fetch(url).then(res => res.json()));
+
+    const files = data?.data || [];
+    console.log(files);
+
+    if(error) {
+        return <div>Error fetching</div>
+    }
+
+    if(isLoading) {
+        return <div>Loading...</div>
+    }
 
 
     return (
@@ -31,9 +49,17 @@ const AllFilesPage = () => {
                     <div className={"flex items-center"}>
                     </div>
                 </div>
-                <div className={"w-full h-[400px] p-4"}>
+                <div className={"w-full h-[500px] p-4 ag-theme-alpine-dark"}>
                     <AgGridReact
-                        rowData={[]}
+                        rowData={files}
+                        suppressMenuHide={true}
+                        columnDefs={[
+    {headerName: "File Name", field: "file_name", sortable: true, filter: true},
+    {headerName: "File Type", field: "file_type", sortable: true, filter: true},
+    {headerName: "File Path", field: "file", sortable: true, filter: true},
+    {headerName: "File Status", field: "status", sortable: true, filter: true},
+    {headerName: "File UUID", field: "uuid", sortable: true, filter: true},
+]}
                         />
                 </div>
             </div>

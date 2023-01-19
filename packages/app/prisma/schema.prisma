@@ -63,6 +63,7 @@ model workflow_file{
   status    obj_status @default(active)
   workflow  workflow   @relation(fields: [workflowId], references: [id])
   workflowId BigInt
+  file_duration Int?
   task_assignments task_assignment[]
   district  String?
   state     String?

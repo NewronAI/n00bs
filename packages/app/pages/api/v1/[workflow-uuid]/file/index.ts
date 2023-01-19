@@ -11,24 +11,41 @@ fileApi.get(async (req : NextApiRequest, res : NextApiResponse) => {
     // Get all files
 
     const page = Number(req.query.page as string) || 0;
+    const workflowUuid = req.query?.["workflow-uuid"] as string;
 
     const files = await db.workflow_file.findMany({
         skip: page * pageSize,
         take: pageSize,
     });
 
+    // const count = await db.workflow.count({
+    //     where : {
+    //         uuid : workflowUuid,
+    //         workflow_items : {
+    //
+    //         }
+    //     }
+    // });
+
+
     const count = await db.workflow_file.count({
         where: {
             status: obj_status.active
+
         }
     });
 
     res.status(200).json({
         data: files,
-        pages: Math.ceil(count / pageSize),
-        currentPage: page
-    })
-
+        pageInfo: {
+            currentPage: page,
+            pageSize: pageSize,
+            totalPages: Math.ceil(count / pageSize),
+            totalItems: count,
+            nextAvailable: page < Math.ceil(count / pageSize),
+            prevAvailable: page > 0
+        }
+    });
 
 });
 
