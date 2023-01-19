@@ -18,22 +18,15 @@ fileApi.get(async (req : NextApiRequest, res : NextApiResponse) => {
         take: pageSize,
     });
 
-    // const count = await db.workflow.count({
-    //     where : {
-    //         uuid : workflowUuid,
-    //         workflow_items : {
-    //
-    //         }
-    //     }
-    // });
-
-
     const count = await db.workflow_file.count({
         where: {
-            status: obj_status.active
-
+            status: obj_status.active,
+            workflow: {
+                uuid: workflowUuid
+            }
         }
     });
+
 
     res.status(200).json({
         data: files,

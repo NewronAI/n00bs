@@ -3,7 +3,7 @@ import {NextApiRequest, NextApiResponse} from "next";
 import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
 import getLogger from "@/helpers/node/getLogger";
-import {member_role} from "@prisma/client";
+import {member_role, obj_status} from "@prisma/client";
 
 const memberApi = new NextExpress();
 
@@ -39,7 +39,10 @@ memberApi.get(async (req: NextApiRequest, res: NextApiResponse) => {
             district: typeof districtStr === "string" ? {
                 contains: districtStr,
                 mode: "insensitive"
-            } : undefined
+            } : undefined,
+            status : {
+                not : obj_status.deleted
+            }
         },
         skip: offsetNum,
         take: limitNum

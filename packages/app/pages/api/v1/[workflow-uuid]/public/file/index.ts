@@ -35,6 +35,7 @@ fileApi.post(async (req: NextApiRequest, res: NextApiResponse) => {
     const file = req.body.file as string;
     const fileName = req.body.fileName as string;
     const fileType = req.body.fileType as file_type;
+    const fileDuration = req.body.fileSize as number;
 
     assertUp(file, {
         message: "File: Param is required. Should contain the url of the file",
@@ -55,6 +56,7 @@ fileApi.post(async (req: NextApiRequest, res: NextApiResponse) => {
             file_name : fileName,
             file,
             file_type : fileType,
+            file_duration : fileDuration,
             workflow: {
                 connect: {
                     uuid: workflowUuid

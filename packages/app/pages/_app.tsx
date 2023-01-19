@@ -9,7 +9,7 @@ BigInt.prototype.toJSON = function() {
 
 export default function App({ Component, pageProps }: AppProps) {
   return <SWRConfig value={{
-      refreshInterval: 3000,
+      refreshInterval: 30000,
       fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
   }}>
       <Component {...pageProps} />
