@@ -60,7 +60,6 @@ model workflow{
 
 model workflow_file{
   id        Int   @id @default(autoincrement())
-
   uuid      String   @unique @default(uuid())
   file_type file_type @default(audio)
   file      String
@@ -75,6 +74,8 @@ model workflow_file{
   task_assignments task_assignment[]
   district  String?
   state     String?
+  vendor    String?
+  metadata Json?
 }
 
 model question{
