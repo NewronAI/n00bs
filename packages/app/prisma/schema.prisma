@@ -46,8 +46,7 @@ enum task_status{
 
 model workflow{
   id        Int   @id @default(autoincrement())
-
-  uuid      String   @unique @default(uuid())
+  uuid      String   @unique @default(uuid()) @db.Char(36)
   name      String
   desc      String?
   createdAt DateTime @default(now())
@@ -60,28 +59,27 @@ model workflow{
 
 model workflow_file{
   id        Int   @id @default(autoincrement())
-  uuid      String   @unique @default(uuid())
-  file_type file_type @default(audio)
-  file      String
+  uuid      String   @unique @default(uuid()) @db.Char(36)
   file_name String
+  file      String
+  file_type file_type @default(audio)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deletedAt DateTime?
   status    obj_status @default(active)
-  workflow  workflow   @relation(fields: [workflowId], references: [id])
-  workflowId Int
+  workflow  workflow   @relation(fields: [workflow_id], references: [id])
+  workflow_id Int
   file_duration Int?
   task_assignments task_assignment[]
   district  String?
   state     String?
   vendor    String?
-  metadata Json?
+  metadata  Json?
 }
 
 model question{
   id        Int   @id @default(autoincrement())
-
-  uuid      String   @unique @default(uuid())
+  uuid      String   @unique @default(uuid()) @db.Char(36)
   name      String
   text      String
   order     Int      @default(autoincrement())
@@ -98,8 +96,7 @@ model question{
 
 model member {
   id        Int   @id @default(autoincrement())
-
-  uuid      String   @unique @default(uuid())
+  uuid      String   @unique @default(uuid()) @db.Char(36)
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -108,17 +105,19 @@ model member {
   phone     String @unique
   role      member_role @default(freelancer)
   status    obj_status @default(active)
-  district String?
+  district  String?
   state     String?
   address   String?
   pincode   String?
   payment_details Json?
+  assignments task_assignment[] @relation("assignee")
+  reviews   task_assignment[] @relation("reviewer")
+  task_answers task_answer[]
 }
 
 model task{
   id        Int   @id @default(autoincrement())
-
-  uuid      String   @unique @default(uuid())
+  uuid      String   @unique @default(uuid()) @db.Char(36)
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -126,53 +125,60 @@ model task{
   status    obj_status @default(active)
   workflow_id Int
   workflow  workflow @relation(fields: [workflow_id], references: [id])
-  task_question_id Int
+  question_id Int
   task_questions task_question[]
   task_assignments task_assignment[]
   min_assignments Int @default(3)
-  district String?
+  district  String?
   state     String?
 }
 
 model task_question{
   id       Int      @default(autoincrement()) @id
-  uuid      String   @unique @default(uuid())
+  uuid      String   @unique @default(uuid()) @db.Char(36)
   createdAt DateTime @default(now())
-  task_id Int
-  task task @relation(fields: [task_id], references: [id])
+  task_id   Int
+  task      task @relation(fields: [task_id], references: [id])
   question_id Int
-  question question @relation(fields: [question_id], references: [id])
+  questions  question @relation(fields: [question_id], references: [id])
 }
 
 model task_assignment{
   id        Int   @id @default(autoincrement())
-
-  uuid      String   @unique @default(uuid())
+  uuid      String   @unique @default(uuid()) @db.Char(36)
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   status    task_status @default(pending)
-  task_definition_id Int
-  task_definitions task @relation(fields: [task_definition_id], references: [id])
-  task_answers task_answer[]
+  task_id Int
+  task task @relation(fields: [task_id], references: [id])
+  assignee_id Int
+  assignee member @relation(name: "assignee", fields: [assignee_id], references: [id])
   workflow_file_id Int
   workflow_file workflow_file @relation(fields: [workflow_file_id], references: [id])
+  task_answers task_answer[]
+  review_rating Int?
+  review_comments String?
+  reviewer_id Int?
+  reviewer member? @relation(name: "reviewer", fields: [reviewer_id], references: [id])
 }
 
 model task_answer{
   id        Int   @id @default(autoincrement())
-
-  uuid      String   @unique @default(uuid())
+  uuid      String   @unique @default(uuid()) @db.Char(36)
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deletedAt DateTime?
   status    obj_status @default(active)
-  task_id Int
-  task task_assignment @relation(fields: [task_id], references: [id])
+  task_assignment_id Int
+  task_assigment task_assignment @relation(fields: [task_assignment_id], references: [id])
+  member_id Int
+  members member @relation(fields: [member_id], references: [id])
   question_id Int
   questions question @relation(fields: [question_id], references: [id])
   answer String
+
 }
 
 

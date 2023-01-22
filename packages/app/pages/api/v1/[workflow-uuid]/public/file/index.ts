@@ -1,7 +1,7 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
-import {file_type} from "@prisma/client";
+import {file_type, Prisma} from "@prisma/client";
 import {NextApiRequest, NextApiResponse} from "next";
 import getPublicWorkflowAPISecret from "@/helpers/getPublicWorkflowAPISecret";
 
@@ -18,6 +18,8 @@ fileApi.post(async (req: NextApiRequest, res: NextApiResponse) => {
 
     const secret = req.body?.secret as string;
 
+    const data = req.body.data as Prisma.workflow_fileSelect[];
+
     assertUp(secret, {
         message: "Secret: Param is required. Should contain the secret of the workflow",
         status: 400
@@ -32,37 +34,46 @@ fileApi.post(async (req: NextApiRequest, res: NextApiResponse) => {
         status: 400
     });
 
-    const file = req.body.file as string;
-    const fileName = req.body.fileName as string;
-    const fileType = req.body.fileType as file_type;
-    const fileDuration = req.body.fileSize as number;
 
-    assertUp(file, {
-        message: "File: Param is required. Should contain the url of the file",
-        status: 400
-    });
+    for(const item of data) {
+        const file = item
+        const fileName = item.file_name;
+        const fileType = item.file_type;
 
-    assertUp(fileName, {
-        message: "File Name: Param is required. Should contain the name of the file",
-        status: 400
-    });
+        assertUp(file, {
+            message: "File: Param is required. Should contain the url of the file",
+            status: 400
+        });
 
-    assertUp(fileType, {
-        message: "File Type: Param is required. Should contain the type of the file",
-    });
+        assertUp(fileName, {
+            message: "File Name: Param is required. Should contain the name of the file",
+            status: 400
+        });
 
-    const newFile = await db.workflow_file.create({
-        data: {
-            file_name : fileName,
-            file,
-            file_type : fileType,
-            file_duration : fileDuration,
-            workflow: {
-                connect: {
-                    uuid: workflowUuid
-                }
-            },
+        assertUp(fileType, {
+            message: "File Type: Param is required. Should contain the type of the file",
+            status: 400
+        });
+    }
+
+    const workflowId = (await db.workflow.findFirst({
+        where: {
+            uuid: workflowUuid
         }
+    }))?.id;
+
+    assertUp(workflowId, {
+        message: "Workflow not found",
+        status: 404
+    });
+
+    // @ts-ignore
+    const newFile = await db.workflow_file.createMany({data: data.map(item => {
+            return {
+                ...item,
+                workflow_id: workflowId,
+            }
+        })
     });
 
     res.status(200).json(newFile);
