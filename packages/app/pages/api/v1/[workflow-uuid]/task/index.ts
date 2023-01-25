@@ -1,7 +1,7 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
-import {task} from "@prisma/client";
+import {Prisma, task} from "@prisma/client";
 
 const taskApi = new NextExpress();
 
@@ -29,7 +29,8 @@ taskApi.get(async (req, res) => {
 taskApi.put(async (req, res) => {
 
     const workflowUUID = req.query["workflow-uuid"] as string;
-    const task = req.body as task;
+    const fileUUID = req.query["uuid"] as string;
+    const task = req.body.data as Prisma.taskUpdateInput;
 
     const workflow = await db.workflow.findFirst({
         where: {
@@ -44,15 +45,12 @@ taskApi.put(async (req, res) => {
 
     const updatedTask = await db.task.update({
         where: {
-            uuid: task.uuid
+            uuid: fileUUID
         },
-        data: {
-            ...task
-        }
+        data: task
     });
 
     res.status(200).json(updatedTask);
-
 
 });
 
