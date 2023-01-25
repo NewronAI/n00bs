@@ -16,6 +16,11 @@ fileApi.get(async (req : NextApiRequest, res : NextApiResponse) => {
     const files = await db.workflow_file.findMany({
         skip: page * pageSize,
         take: pageSize,
+        where: {
+            workflow: {
+                uuid: workflowUuid
+            }
+        }
     });
 
     const count = await db.workflow_file.count({

@@ -22,7 +22,16 @@ unassignedFilesApi.get(async (req, res) => {
         message: "Workflow not found"
     });
 
-    const unassignedFiles = await db.$queryRaw``
+    // As per Srikant and Team, One workflow can have only One task
+    const unassignedFiles = await db.$queryRaw`
+        SELECT workflow_file.*, count(task_assignment.task_id) FROM workflow_file
+            INNER JOIN workflow ON workflow.uuid = ${workflowUUID}
+            LEFT JOIN task_assignment ON workflow_file.id = task_assignment.workflow_file_id
+        GROUP BY workflow_file.id, task_assignment.task_id
+        HAVING COUNT(task_assignment.task_id) < (SELECT task.min_assignments FROM task
+            INNER JOIN workflow ON workflow.uuid = ${workflowUUID}
+            AND task.workflow_id = workflow.id LIMIT 1)
+        ORDER BY workflow_file.id, task_assignment.task_id;`;
 
     res.status(200).json(unassignedFiles);
 
