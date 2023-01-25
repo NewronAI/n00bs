@@ -125,7 +125,6 @@ model task{
   status    obj_status @default(active)
   workflow_id Int
   workflow  workflow @relation(fields: [workflow_id], references: [id])
-  question_id Int // mistake- will be removed
   task_questions task_question[]
   task_assignments task_assignment[]
   min_assignments Int @default(3)
