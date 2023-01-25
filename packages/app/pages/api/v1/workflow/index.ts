@@ -39,20 +39,21 @@ workflowApi.post(async (req, res) => {
 
     // also add a default task
 
-    const task = await db.task.create({
+    await db.task.create({
         data: {
             name: "Default Task",
             workflow: {
                 connect: {
                     id: workflow.id
                 }
-            },
-            question_id: 0
+            }
         }
     });
 
     res.status(200).json(workflow);
 
 })
+
+
 
 export default workflowApi.handler;
