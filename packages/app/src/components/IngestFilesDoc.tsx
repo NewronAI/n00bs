@@ -59,20 +59,33 @@ const IngestFilesDoc = ({workflowUUID = "7d1b4c3d-51f6-4902-97b3-8fb9fd1e1aff"} 
                                     <br />
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"secret": "{secret}",</span> // The secret for this workflow only
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"name": "file name",</span> // required
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>data: &#91;</span>
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"file_type": "file type",</span> // one of: "image", "video", "audio", "document"
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&#123;</span>
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"file": "file url",</span> // url of the file (required)
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"file_name": "file name",</span> // required
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"district": "district name",</span> // optional
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"file_type": "file type",</span> // one of: "image", "video", "audio", "document"
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"state": "state name",</span> // optional
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"file": "file url",</span> // url of the file (required)
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"metadata": {"{"}</span><br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"key": "value",</span> // metadata key value pairs
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"file_duration": "file duration",</span> // Duration of file // optional
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>{"}"}</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"district": "district name",</span> // optional
+                                    <br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"state": "state name",</span> // optional
+                                    <br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"vendor": "vendor name",</span> // optional
+                                    <br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"metadata": &#123;</span> //optional
+                                    <br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"key": "value",</span> // metadata key value pairs
+                                    <br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&#125;</span>
+                                    <br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>{"}"}</span>
+                                    <br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&#93;</span>
                                     <br />
 
 
