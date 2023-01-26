@@ -17,3 +17,5 @@ yarn-error.log*
 
 # Turborepo
 .turbo
+
+*/.DS_Store

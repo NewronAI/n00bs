@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react';
+import React, { Fragment, useState } from 'react';
 
 import PropTypes from 'prop-types';
 import useSWR from 'swr';
@@ -15,8 +15,13 @@ import DashboardLayout from '@/components/layouts/DashboardLayout';
 import Head from "next/head";
 import MemberItem from "@/interfaces/MemberItem";
 import Avatar from "@/components/Avatar";
-import {SearchIcon} from "@heroicons/react/solid";
-import {member_role, obj_status} from "@prisma/client";
+import { SearchIcon } from "@heroicons/react/solid";
+import { member_role, obj_status } from "@prisma/client";
+import Loader from '@/components/Loader';
+
+
+
+
 
 
 interface MemberFetchSearch {
@@ -25,7 +30,7 @@ interface MemberFetchSearch {
 }
 
 
-const memberFetcher = async ([ url, query ] : [ string, MemberFetchSearch]) => {
+const memberFetcher = async ([url, query]: [string, MemberFetchSearch]) => {
     const urlParams = new URLSearchParams();
     console.log(query);
     if (query.search) {
@@ -37,23 +42,23 @@ const memberFetcher = async ([ url, query ] : [ string, MemberFetchSearch]) => {
     return res.data;
 }
 
-const Members = ( ) => {
+const Members = () => {
 
     const [search, setSearch] = useState('');
     const [searchBy, setSearchBy] = useState('district');
 
 
-    const searchQuery : MemberFetchSearch = {
+    const searchQuery: MemberFetchSearch = {
         search: search,
         by: searchBy
     };
 
-    const { data, error , isValidating, isLoading , mutate} = useSWR(['/api/v1/member', searchQuery], memberFetcher);
+    const { data, error, isValidating, isLoading, mutate } = useSWR(['/api/v1/member', searchQuery], memberFetcher);
     const [open, setOpen] = useState(false);
 
     const [selectedMember, setSelectedMember] = useState<MemberItem | null>(null);
 
-    const members = data as MemberItem[];
+    const members = data as MemberItem[] || [];
 
     const handleSearch = (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -71,11 +76,11 @@ const Members = ( ) => {
         setOpen(true);
     }
 
-    const handleAddUpdateMember = async (e : React.ChangeEvent<HTMLFormElement>) => {
+    const handleAddUpdateMember = async (e: React.ChangeEvent<HTMLFormElement>) => {
 
         e.preventDefault();
 
-        const member : MemberItem = {
+        const member: MemberItem = {
             uuid: e.target?.uuid?.value,
             name: e.target["member-name"].value,
             role: e.target["member-role"].value || member_role.freelancer,
@@ -88,8 +93,8 @@ const Members = ( ) => {
             pincode: e.target.pincode.value,
         }
 
-        let res : MemberItem;
-        if(member.uuid) {
+        let res: MemberItem;
+        if (member.uuid) {
             res = await axios.put('/api/v1/member', member);
         }
         else {
@@ -104,7 +109,8 @@ const Members = ( ) => {
 
     console.log(error)
     if (error) return <div>failed to load</div>
-    if (isLoading) return <div>loading...</div>
+    // if (isLoading) return < ClipLoader size={50} color={'#123abc'}  />
+    
 
 
     return (
@@ -112,6 +118,8 @@ const Members = ( ) => {
             <Head>
                 <title>Members</title>
             </Head>
+
+          <Loader isLoading={isLoading}>
             <div className={"mt-2"}>
                 <div className={"p-0 md:pl-4 sr-only"}>
                     <h1 className={"text-2xl font-bold"}>
@@ -125,38 +133,38 @@ const Members = ( ) => {
                 <form onSubmit={handleSearch}>
                     <div className={"w-full flex gap-4 mb-2"}>
 
-                    <div className={"flex grow"}>
-                        <input type="search"
+                        <div className={"flex grow"}>
+                            <input type="search"
                                 className={"input input-md w-full "}
                                 placeholder={"Search members"}
                                 name={"search"}
-                               autoComplete={"off"}
+                                autoComplete={"off"}
 
-                        />
+                            />
+                        </div>
+                        <div className={""}>
+                            <select className={"input input-md w-full"} name={"searchBy"} defaultValue={"district"}>
+                                <option value={"district"}>Filter by District</option>
+                                <option value={"state"}>Filter by State</option>
+                                <option value={"name"}>Filter by Name</option>
+                            </select>
+
+                        </div>
+
+                        <div className={""}>
+                            <button className={"btn btn-md btn-secondary"} type={"submit"}>
+                                <SearchIcon className={"h-5 w-5"} />
+                                <span className={"sr-only"}>Search</span>
+                            </button>
+                        </div>
+
+                        <div className={""}>
+                            <button className={"btn btn-md btn-primary"} onClick={handleAddNewMember} type={"button"}>
+                                Add Member
+                            </button>
+                        </div>
+
                     </div>
-                    <div className={""}>
-                        <select className={"input input-md w-full"} name={"searchBy"} defaultValue={"district"}>
-                            <option value={"district"}>Filter by District</option>
-                            <option value={"state"}>Filter by State</option>
-                            <option value={"name"}>Filter by Name</option>
-                        </select>
-
-                    </div>
-
-                    <div className={""}>
-                        <button className={"btn btn-md btn-secondary"} type={"submit"}>
-                            <SearchIcon className={"h-5 w-5"} />
-                            <span className={"sr-only"}>Search</span>
-                        </button>
-                    </div>
-
-                    <div className={""}>
-                        <button className={"btn btn-md btn-primary"} onClick={handleAddNewMember} type={"button"}>
-                            Add Member
-                        </button>
-                    </div>
-
-                </div>
                 </form>
 
                 <div className={"w-full min-w-96 h-[600px] dark-theme"}>
@@ -179,50 +187,50 @@ const Members = ( ) => {
                             </thead>
                             <tbody>
 
-                            {
-                                members.map((member, index) => {
-                                    // @ts-ignore
-                                    return (
-                                        <tr key={member.uuid} >
-                                            {/*<th>*/}
-                                            {/*    <label>*/}
-                                            {/*        <input type="checkbox" className="checkbox"/>*/}
-                                            {/*    </label>*/}
-                                            {/*</th>*/}
-                                            <td onClick={() => handleSelectMember(member)} className={"cursor-pointer"}>
-                                                <div className="flex items-center space-x-3">
-                                                    <div className="avatar">
-                                                        <div className="mask mask-squircle w-12 h-12">
-                                                            {/*@ts-ignore*/}
-                                                            <Avatar email={member.email || member.name} size={12} />
+                                {
+                                    members.map((member, index) => {
+                                        // @ts-ignore
+                                        return (
+                                            <tr key={member.uuid} >
+                                                {/*<th>*/}
+                                                {/*    <label>*/}
+                                                {/*        <input type="checkbox" className="checkbox"/>*/}
+                                                {/*    </label>*/}
+                                                {/*</th>*/}
+                                                <td onClick={() => handleSelectMember(member)} className={"cursor-pointer"}>
+                                                    <div className="flex items-center space-x-3">
+                                                        <div className="avatar">
+                                                            <div className="mask mask-squircle w-12 h-12">
+                                                                {/*@ts-ignore*/}
+                                                                <Avatar email={member.email || member.name} size={12} />
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <div className="font-bold">{member.name}</div>
+                                                            <div className="text-sm opacity-50">{member.role}</div>
                                                         </div>
                                                     </div>
-                                                    <div>
-                                                        <div className="font-bold">{member.name}</div>
-                                                        <div className="text-sm opacity-50">{member.role}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span className={clsx("badge capitalize", {"badge-success" : member.status === obj_status.active, "badge-warning" : member.status === obj_status.inactive})}>
-                                                    {member.status}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                {member.district}, {member.state}
-                                            </td>
-                                            <td>
-                                                <a href={`tel:${member.phone}`} className="text-sm opacity-50">{member.phone}</a>
-                                                <br/>
-                                                <a href={`mailto:${member.email}`} className="text-sm opacity-50">{member.email}</a>
-                                            </td>
-                                            <td>
-                                                <div className="text-sm opacity-50">{member.address}</div>
-                                                <span className="badge badge-ghost badge-sm">{member.pincode}</span>
-                                            </td>
-                                        </tr>)
-                                })
-                            }
+                                                </td>
+                                                <td>
+                                                    <span className={clsx("badge capitalize", { "badge-success": member.status === obj_status.active, "badge-warning": member.status === obj_status.inactive })}>
+                                                        {member.status}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    {member.district}, {member.state}
+                                                </td>
+                                                <td>
+                                                    <a href={`tel:${member.phone}`} className="text-sm opacity-50">{member.phone}</a>
+                                                    <br />
+                                                    <a href={`mailto:${member.email}`} className="text-sm opacity-50">{member.email}</a>
+                                                </td>
+                                                <td>
+                                                    <div className="text-sm opacity-50">{member.address}</div>
+                                                    <span className="badge badge-ghost badge-sm">{member.pincode}</span>
+                                                </td>
+                                            </tr>)
+                                    })
+                                }
 
                             </tbody>
 
@@ -305,8 +313,8 @@ const Members = ( ) => {
                                                                     </label>
                                                                     <div className="mt-1">
                                                                         <select id="role" name="member-role" className="select  select-bordered w-full"
-                                                                                defaultValue={selectedMember ? selectedMember.role : "freelancer"}
-                                                                                disabled={selectedMember ? selectedMember.role === "admin" : false}
+                                                                            defaultValue={selectedMember ? selectedMember.role : "freelancer"}
+                                                                            disabled={selectedMember ? selectedMember.role === "admin" : false}
                                                                         >
                                                                             <option value={"freelancer"}>Freelancer</option>
                                                                             <option value={"associate"}>Associate</option>
@@ -321,9 +329,9 @@ const Members = ( ) => {
                                                                     </label>
                                                                     <div className="mt-1">
                                                                         <input type="checkbox" name={"member-status"} id="status"
-                                                                               className="toggle toggle-error"
-                                                                               defaultChecked={selectedMember ? selectedMember?.status === obj_status.active : false}
-                                                                               disabled={selectedMember ? selectedMember.role === "admin" : false}
+                                                                            className="toggle toggle-error"
+                                                                            defaultChecked={selectedMember ? selectedMember?.status === obj_status.active : false}
+                                                                            disabled={selectedMember ? selectedMember.role === "admin" : false}
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -451,6 +459,7 @@ const Members = ( ) => {
                     </div>
                 </Dialog>
             </Transition.Root>
+        </Loader>
 
         </DashboardLayout>
     );
