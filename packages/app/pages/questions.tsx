@@ -10,7 +10,6 @@ import {
     LinkIcon, PlusIcon, QuestionMarkCircleIcon, XIcon
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
-
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 import Head from "next/head";
 import MemberItem from "@/interfaces/MemberItem";
@@ -20,6 +19,9 @@ import {member_role, obj_status} from "@prisma/client";
 import CreateUpdateQuestion from "@/components/CreateUpdateQuestion";
 import QuestionItem from "@/interfaces/QuestionItem";
 
+import { ClipLoader } from 'react-spinners';
+
+import Loader from '@/components/Loader';
 
 const questionFetcher = async (url : string) => {
     const res = await axios.get(url);
@@ -31,10 +33,6 @@ const QuestionPage = ( ) => {
 
     const { data : questions, error, mutate, isLoading } = useSWR<QuestionItem[]>('/api/v1/question', questionFetcher);
 
-    if(isLoading) {
-        return <div>Loading...</div>
-    }
-
     if(error) {
         console.log(error);
         return <div>Failed to load</div>
@@ -42,9 +40,11 @@ const QuestionPage = ( ) => {
 
     return (
         <DashboardLayout currentPage={"questions"} secondaryNav={<></>}>
+           <Loader isLoading={isLoading}>
             <Head>
                 <title>Questions</title>
             </Head>
+            
             <div className={"mt-2"}>
                 <div className={"p-0 md:pl-4"}>
                     <h1 className={"text-2xl font-bold"}>
@@ -61,8 +61,8 @@ const QuestionPage = ( ) => {
                         <CreateUpdateQuestion question={question} key={index} mutate={mutate} questionNumber={index+1}/>
                     ))
                 }
-
             </div>
+            </Loader>
 
 
         </DashboardLayout>

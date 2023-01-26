@@ -1,4 +1,4 @@
-import React, {ReactPropTypes} from 'react';
+import React, { ReactPropTypes } from 'react';
 import PropTypes from 'prop-types';
 import useSWR from 'swr';
 import axios from 'axios';
@@ -9,7 +9,7 @@ import {
     BeakerIcon
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
-import {db} from "@/helpers/node/db";
+import { db } from "@/helpers/node/db";
 
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 import Head from "next/head";
@@ -24,7 +24,7 @@ interface WorkflowItems {
     icon?: any;
 }
 
-const actions : WorkflowItems[] = [
+const actions: WorkflowItems[] = [
     {
         title: 'Create & View Members',
         href: '/members',
@@ -46,11 +46,11 @@ const actions : WorkflowItems[] = [
 interface WorkflowProps {
     workflows: WorkflowItems[];
 }
-const Workflows = (props : WorkflowProps) => {
+const Workflows = (props: WorkflowProps) => {
 
-    const workflows : WorkflowItems[] = props?.workflows as WorkflowItems[];
+    const workflows: WorkflowItems[] = props?.workflows as WorkflowItems[];
 
-    const allWorkflows : WorkflowItems[] = [...workflows, ...actions];
+    const allWorkflows: WorkflowItems[] = [...workflows, ...actions];
 
     return (
         <DashboardLayout currentPage={"workflows"} secondaryNav={<></>}>
@@ -82,15 +82,15 @@ const Workflows = (props : WorkflowProps) => {
                             )}
                         >
                             <div>
-            <span
-                className={clsx(
-                    action.iconBackground,
-                    action.iconForeground,
-                    'rounded-lg inline-flex p-3 ring-4 ring-white bg-opacity-15'
-                )}
-            >
-              {action.icon ? <action.icon className="h-6 w-6" aria-hidden="true"/> : <BeakerIcon className="h-6 w-6" aria-hidden="true"/>}
-            </span>
+                                <span
+                                    className={clsx(
+                                        action.iconBackground,
+                                        action.iconForeground,
+                                        'rounded-lg inline-flex p-3 ring-4 ring-white bg-opacity-15'
+                                    )}
+                                >
+                                    {action.icon ? <action.icon className="h-6 w-6" aria-hidden="true" /> : <BeakerIcon className="h-6 w-6" aria-hidden="true" />}
+                                </span>
                             </div>
                             <div className="mt-8">
                                 <h3 className="text-lg font-medium">
@@ -108,10 +108,10 @@ const Workflows = (props : WorkflowProps) => {
                                 className="pointer-events-none absolute top-6 right-6 text-gray-300 group-hover:text-gray-400"
                                 aria-hidden="true"
                             >
-            <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M20 4h1a1 1 0 00-1-1v1zm-1 12a1 1 0 102 0h-2zM8 3a1 1 0 000 2V3zM3.293 19.293a1 1 0 101.414 1.414l-1.414-1.414zM19 4v12h2V4h-2zm1-1H8v2h12V3zm-.707.293l-16 16 1.414 1.414 16-16-1.414-1.414z" />
-            </svg>
-          </span>
+                                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M20 4h1a1 1 0 00-1-1v1zm-1 12a1 1 0 102 0h-2zM8 3a1 1 0 000 2V3zM3.293 19.293a1 1 0 101.414 1.414l-1.414-1.414zM19 4v12h2V4h-2zm1-1H8v2h12V3zm-.707.293l-16 16 1.414 1.414 16-16-1.414-1.414z" />
+                                </svg>
+                            </span>
                         </div>
                     ))}
                 </div>
@@ -128,8 +128,8 @@ export const getServerSideProps = async () => {
 
     const workflows = await db.workflow.findMany();
 
-    const modeledWorkflows : WorkflowItems[] = workflows.map((workflow) => {
-        const tWorkflow : WorkflowItems = {
+    const modeledWorkflows: WorkflowItems[] = workflows.map((workflow) => {
+        const tWorkflow: WorkflowItems = {
             title: workflow.name,
             description: workflow.desc as string,
             iconForeground: 'text-teal-700',
@@ -141,7 +141,7 @@ export const getServerSideProps = async () => {
 
     return {
         props: {
-            workflows : modeledWorkflows
+            workflows: modeledWorkflows
         }
     }
 }
