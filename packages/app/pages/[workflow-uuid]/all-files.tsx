@@ -54,12 +54,14 @@ const AllFilesPage = () => {
                     <div className={"flex items-center"}>
                     </div>
                 </div>
-                <div className={"w-full h-[500px] p-4 ag-theme-alpine-dark"}>
+                <div className={"w-full h-[760px] p-4 ag-theme-alpine-dark"}>
                     <AgGridReact
                         rowData={files}
+                        pagination={true}
+                        paginationPageSize={15}
                         suppressMenuHide={true}
                         columnDefs={[
-    {headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 66,},
+    {headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 70,},
     {headerName: "State", field: "state", sortable: true, filter: true, width: 130,},
     {headerName: "District", field: "district", sortable: true, filter: true, width: 130,},
     {headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 300},
