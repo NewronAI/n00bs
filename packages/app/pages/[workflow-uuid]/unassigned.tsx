@@ -9,8 +9,6 @@ import { AgGridReact } from "ag-grid-react";
 import useSWR from "swr";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import {NextPageContext} from "next";
-import {db} from "@/helpers/node/db";
 import moment from "moment";
 import FileTypeRenderer from '@/components/renderer/FileTypeRenderer';
 import DateFromNowRenderer from '@/components/renderer/DateFromNowRenderer';
