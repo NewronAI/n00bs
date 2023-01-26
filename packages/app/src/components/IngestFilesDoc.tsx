@@ -57,29 +57,29 @@ const IngestFilesDoc = ({workflowUUID = "7d1b4c3d-51f6-4902-97b3-8fb9fd1e1aff"} 
                                 <code className={"font-thin text-sm"}>
                                     <span className={"text-indigo-900"}>{"{"}</span>
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"secret": "{secret}",</span> // The secret for this workflow only
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;secret&quot: &quot{secret}&quot,</span> // The secret for this workflow only
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>data: &#91;</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;data&quot;: &#91;</span>
                                     <br />
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&#123;</span>
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"file_name": "file name",</span> // required
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;file_name&quot;: &quot;file name&quot;,</span> // required
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"file_type": "file type",</span> // one of: "image", "video", "audio", "document"
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;file_type&quot;: &quot;file type&quot;,</span> // one of: &quot;image&quot;, &quot;video&quot;, &quot;audio&quot;, &quot;document&quot;
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"file": "file url",</span> // url of the file (required)
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;file&quot;: &quot;file url&quot;,</span> // url of the file (required)
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"file_duration": "file duration",</span> // Duration of file // optional
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;file_duration&quot;: &quot;file duration&quot;,</span> // Duration of file // optional
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"district": "district name",</span> // optional
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;district&quot;: &quot;district name&quot;,</span> // optional
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"state": "state name",</span> // optional
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;state&quot;: &quot;state name&quot;,</span> // optional
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"vendor": "vendor name",</span> // optional
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;vendor&quot;: &quot;vendor name&quot;,</span> // optional
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"metadata": &#123;</span> //optional
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;metadata&quot;: &#123;</span> //optional
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>"key": "value",</span> // metadata key value pairs
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;key&quot;: &quot;value&quot;,</span> // metadata key value pairs
                                     <br />
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&#125;</span>
                                     <br />
@@ -110,7 +110,7 @@ const IngestFilesDoc = ({workflowUUID = "7d1b4c3d-51f6-4902-97b3-8fb9fd1e1aff"} 
                         Further steps
                     </h3>
                     <p className={"text-sm font-thin"}>
-                        After ingesting files, you can start assigning them to people using the Assign Files. On successful assignment, the file will be moved to the "Assigned" tab.
+                        After ingesting files, you can start assigning them to people using the Assign Files. On successful assignment, the file will be moved to the &quot;Assigned&quot; tab.
                         Also, the provided callback URL will be called with the file and task details.
                     </p>
                     <p className={"text-sm font-thin"}>
