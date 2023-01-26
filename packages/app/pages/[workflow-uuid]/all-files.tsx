@@ -9,8 +9,10 @@ import {AgGridReact} from "ag-grid-react";
 import useSWR from "swr";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-
+import UrlRenderer from '@/components/renderer/UrlRenderer'
 import { ClipLoader } from 'react-spinners';
+import FileTypeRenderer from '@/components/renderer/FileTypeRenderer';
+import DateFromNowRenderer from '../../src/components/renderer/DateFromNowRenderer';
 
 const AllFilesPage = () => {
 
@@ -57,11 +59,15 @@ const AllFilesPage = () => {
                         rowData={files}
                         suppressMenuHide={true}
                         columnDefs={[
-    {headerName: "File Name", field: "file_name", sortable: true, filter: true},
-    {headerName: "File Type", field: "file_type", sortable: true, filter: true},
-    {headerName: "File Path", field: "file", sortable: true, filter: true},
-    {headerName: "File Status", field: "status", sortable: true, filter: true},
+    {headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 66,},
+    {headerName: "State", field: "state", sortable: true, filter: true, width: 130,},
+    {headerName: "District", field: "district", sortable: true, filter: true, width: 130,},
+    {headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 300},
+    {headerName: "File Path", field: "file", sortable: true, filter: true, cellRenderer: UrlRenderer },
+    {headerName: "File Duration", field: "file_duration", sortable: true, filter: true, width: 135},
     {headerName: "File UUID", field: "uuid", sortable: true, filter: true},
+    {headerName: "Created", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
+    {headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 110},
 ]}
                         />
                 </div>
