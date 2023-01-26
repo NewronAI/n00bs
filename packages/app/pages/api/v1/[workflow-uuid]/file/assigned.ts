@@ -6,7 +6,7 @@ const assignedFilesAPI = new NextExpress();
 
 assignedFilesAPI.get(async (req, res) => {
 
-    const workflowUUID = req.query.workflowUuid as string;
+    const workflowUUID = req.query["workflow-uuid"] as string;
 
     const workflow = await db.workflow.findFirst({
         where: {
