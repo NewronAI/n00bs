@@ -7,7 +7,6 @@ type FileTypeRendererProps = {
 }
 
 const FileTypeRenderer = ({value} : FileTypeRendererProps) => {
-    console.log(value)
     return <div className='p-2'>
     {(() => {
         switch(value) {
