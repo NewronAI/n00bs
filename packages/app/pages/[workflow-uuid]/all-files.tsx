@@ -67,6 +67,7 @@ const AllFilesPage = () => {
     {headerName: "File Duration", field: "file_duration", sortable: true, filter: true, width: 135},
     {headerName: "File UUID", field: "uuid", sortable: true, filter: true},
     {headerName: "Created", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
+    {headerName: "Recieved", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
     {headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 110},
 ]}
                         />

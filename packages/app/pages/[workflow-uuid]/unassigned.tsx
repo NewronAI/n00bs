@@ -25,9 +25,9 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
     const workflowUUID = router.query["workflow-uuid"] as string;
 
     const {data, error, isLoading} = useSWR(`/api/v1/${workflowUUID}/file/unassigned`, (url) => fetch(url).then(res => res.json()));
-
+    console.log(data);
     const files = data || [];
-    console.log(files);
+    
 
     if(error) {
         return <div>Error fetching</div>
