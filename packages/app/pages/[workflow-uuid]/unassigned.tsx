@@ -13,6 +13,8 @@ import {NextPageContext} from "next";
 import {db} from "@/helpers/node/db";
 import moment from "moment";
 
+import { ClipLoader } from 'react-spinners';
+
 interface UnassignedFilesPageProps {
     files : any[]
 }
@@ -31,8 +33,10 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
         return <div>Error fetching</div>
     }
 
-    if(isLoading) {
-        return <div>Loading...</div>
+    if (isLoading) {
+        return <div className="flex items-center justify-center h-screen">
+            <ClipLoader size={50} color={'#123abc'}  />
+        </div>;
     }
 
 

@@ -10,6 +10,8 @@ import useSWR from "swr";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
+import { ClipLoader } from 'react-spinners';
+
 const AllFilesPage = () => {
 
     const router = useRouter();
@@ -26,10 +28,11 @@ const AllFilesPage = () => {
         return <div>Error fetching</div>
     }
 
-    if(isLoading) {
-        return <div>Loading...</div>
+    if (isLoading) {
+        return <div className="flex items-center justify-center h-screen">
+            <ClipLoader size={50} color={'#123abc'}  />
+        </div>;
     }
-
 
     return (
         <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"all files"} workflowUUID={workflowUUID}/> }>

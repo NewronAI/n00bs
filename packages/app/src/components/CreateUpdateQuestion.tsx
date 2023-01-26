@@ -286,8 +286,6 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                 </div>
             </div>
 
-
-
         </div>
     );
 };
