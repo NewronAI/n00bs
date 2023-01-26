@@ -64,6 +64,7 @@ model workflow_file{
   file      String
   file_type file_type @default(audio)
   createdAt DateTime @default(now())
+  receivedAt DateTime? @default(now())
   updatedAt DateTime @updatedAt
   deletedAt DateTime?
   status    obj_status @default(active)
