@@ -20,7 +20,12 @@ openTasksApi.get(async (req, res) => {
             task: true,
             workflow_file: true,
             assignee: true
-        }
+        },
+        orderBy: [
+            {
+                createdAt: "desc"
+            }
+        ]
     });
 
     res.status(200).json(tasks);
