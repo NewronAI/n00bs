@@ -58,10 +58,12 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                     <div className={"flex items-center"}>
                     </div>
                 </div>
-                <div className={"w-full h-[600px] p-4 ag-theme-alpine-dark"}>
+                <div className={"w-full h-[760px] p-4 ag-theme-alpine-dark"}>
                     <AgGridReact
                         rowData={files}
                         suppressMenuHide={true}
+                        pagination={true}
+                        paginationPageSize={15}
                         columnDefs={[
                             {headerName: "File Name", field: "file_name", sortable: true, filter: true},
                             {headerName: "File Type", field: "file_type", sortable: true, filter: true},

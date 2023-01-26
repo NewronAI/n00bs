@@ -43,8 +43,6 @@ unassignedFilesApi.get(async (req, res) => {
 
 
 
-    console.log(unassignedFiles);
-
     res.status(200).json(unassignedFiles);
 
 });
