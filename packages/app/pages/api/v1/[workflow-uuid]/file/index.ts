@@ -2,6 +2,7 @@ import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 import {NextApiRequest, NextApiResponse} from "next";
 import {obj_status} from "@prisma/client";
+import assertUp from "@/helpers/node/assert/assertUp";
 
 const fileApi = new NextExpress();
 
@@ -53,6 +54,11 @@ fileApi.get(async (req : NextApiRequest, res : NextApiResponse) => {
 
     const workflowUuid = req.query?.["workflow-uuid"] as string;
 
+    assertUp(workflowUuid, {
+        status: 400,
+        message: "Workflow UUID is required"
+    });
+
     const files = await db.workflow_file.findMany({
         where: {
             workflow: {
@@ -60,6 +66,8 @@ fileApi.get(async (req : NextApiRequest, res : NextApiResponse) => {
             }
         }
     });
+
+    console.log(files);
 
     res.status(200).json(files);
 

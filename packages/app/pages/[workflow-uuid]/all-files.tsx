@@ -23,7 +23,7 @@ const AllFilesPage = () => {
 
     const {data, error, isLoading} = useSWR(`/api/v1/${workflowUUID}/file?page=${currentPage}`, (url) => fetch(url).then(res => res.json()));
 
-    const files = data?.data || [];
+    const files = data || [];
     console.log(data);
 
     if(error) {
