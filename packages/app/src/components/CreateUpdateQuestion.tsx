@@ -7,6 +7,8 @@ import {obj_status, question_type} from "@prisma/client";
 import QuestionItem from "@/interfaces/QuestionItem";
 import axios from "axios";
 
+import BtnSpinner from '@/components/BtnSpinner'
+
 type QuestionTypeMapType = {
     [key: string]: string;
 }
@@ -43,6 +45,8 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
     const [editMode, setEditMode] = useState<boolean>(!question);
 
     const formRef = React.createRef<HTMLFormElement>();
+
+    const [loading,setLoading]=useState(false);
 
     const handleEnableEditMode = (e: any) => {
         e.preventDefault();
@@ -107,13 +111,17 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
         try {
             if (question) {
                 // Update question
+                setLoading(true);
                 const res = await axios.put(`/api/v1/question/`, questionData);
+                setLoading(false);
                 await mutate?.();
                 setEditMode(false);
 
             } else {
                 // Create question
+                setLoading(true);
                 await axios.post("/api/v1/question", questionData);
+                setLoading(false);
                 await mutate?.();
                 e.target.reset();
                 setCreateQuestionCollapse(false);
@@ -137,12 +145,12 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
         <div>
 
             <div tabIndex={0}
-                 className={clsx("mt-4 mx-4 collapse collapse-arrow border  bg-base-100 rounded-box",
-                     {"collapse-open" : createQuestionCollapse, "collapse-close": !createQuestionCollapse},
-                     {"border-neutral": !!question, "border-primary": !question}
-                 )}>
+                className={clsx("mt-4 mx-4 collapse collapse-arrow border  bg-base-100 rounded-box",
+                    {"collapse-open" : createQuestionCollapse, "collapse-close": !createQuestionCollapse},
+                    {"border-neutral": !!question, "border-primary": !question}
+                )}>
                 <div onClick={() => setCreateQuestionCollapse(!createQuestionCollapse)}
-                     className={clsx("collapse-title ", {"bg-neutral": !!question, "bg-primary text-white": !question},)}>
+                    className={clsx("collapse-title ", {"bg-neutral": !!question, "bg-primary text-white": !question},)}>
                     <h3 className={"flex"}>
                         { questionNumber ? <span className={"text-xl mr-3"}> {questionNumber}. </span>:<PlusIcon className={"w-5 h-5 mr-2"}/>}
                         { question?.name || "Create New Question"}
@@ -156,10 +164,10 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                                 <span className="label-text">Question Name</span>
                             </label>
                             <input name={"questionName"} type="text" placeholder="Question"
-                                   className="input input-bordered"
-                                   defaultValue={question?.name}
-                                   readOnly={!editMode}
-                                   required
+                                className="input input-bordered"
+                                defaultValue={question?.name}
+                                readOnly={!editMode}
+                                required
                             />
                         </div>
 
@@ -184,10 +192,10 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                                     <span className="label-text">Order</span>
                                 </label>
                                 <input type="number" name={"questionOrder"}
-                                       placeholder="Order"
-                                       className="input input-bordered"
-                                       defaultValue={question?.order}
-                                       readOnly={!editMode}
+                                    placeholder="Order"
+                                    className="input input-bordered"
+                                    defaultValue={question?.order}
+                                    readOnly={!editMode}
                                 />
                             </div>
 
@@ -196,9 +204,9 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                                     <span className="label-text">Required</span>
                                 </label>
                                 <input type="checkbox" name={"questionRequired"}
-                                       className="toggle toggle-primary"
-                                       defaultChecked={question?.required}
-                                       disabled={!editMode}
+                                    className="toggle toggle-primary"
+                                    defaultChecked={question?.required}
+                                    disabled={!editMode}
                                 />
                             </div>
 
@@ -209,14 +217,13 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                                 <span className="label-text">Question text</span>
                             </label>
                             <textarea className="textarea h-24 textarea-bordered"
-                                      placeholder="Eg: Is the audio audible?"
-                                      name={"questionText"}
-                                      readOnly={!editMode}
-                                      defaultValue={question?.text}
-                                      required
+                                    placeholder="Eg: Is the audio audible?"
+                                    name={"questionText"}
+                                    readOnly={!editMode}
+                                    defaultValue={question?.text}
+                                    required
                             />
                         </div>
-
 
                         {
                             questionType !== question_type.text &&
@@ -230,16 +237,16 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                                             return (
                                                 <div key={index} className={"flex gap-4"}>
                                                     <input type="text"
-                                                           placeholder="Option"
-                                                           className="input w-48 input-sm input-bordered"
-                                                           value={option}
-                                                           required
-                                                           readOnly={!editMode}
-                                                           onChange={(e) => {
-                                                               const newOptions = [...options];
-                                                               newOptions[index] = e.target.value;
-                                                               setOptions(newOptions);
-                                                           }}
+                                                        placeholder="Option"
+                                                        className="input w-48 input-sm input-bordered"
+                                                        value={option}
+                                                        required
+                                                        readOnly={!editMode}
+                                                        onChange={(e) => {
+                                                        const newOptions = [...options];
+                                                        newOptions[index] = e.target.value;
+                                                        setOptions(newOptions);
+                                                        }}
                                                     />
                                                     {
                                                         editMode &&
@@ -268,8 +275,9 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                                             <button onClick={cancelEdit} className={"w-32"} >
                                                 Cancel
                                             </button>
-                                            <button className={"btn btn-primary w-64"} type={"submit"} >
-                                                {!!question ? "Save changes" : "Create"}
+                                            <button className={"btn btn-primary w-64"} type={"submit"} disabled={loading} >
+                                                {/* {!!question ? "Save changes" : "Create"} */}
+                                                {loading ? <BtnSpinner/> : !!question ? "Save changes" : "Create"}
                                             </button>
                                         </>
                                         :
