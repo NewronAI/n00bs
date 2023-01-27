@@ -126,7 +126,7 @@ const Members = () => {
                 <title>Members</title>
             </Head>
 
-          <Loader isLoading={isLoading}>
+        <Loader isLoading={isLoading}>
             <div className={"mt-2"}>
                 <div className={"p-0 md:pl-4 sr-only"}>
                     <h1 className={"text-2xl font-bold"}>
