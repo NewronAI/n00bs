@@ -19,7 +19,8 @@ import {member_role, obj_status} from "@prisma/client";
 import CreateUpdateQuestion from "@/components/CreateUpdateQuestion";
 import QuestionItem from "@/interfaces/QuestionItem";
 
-import { ClipLoader } from 'react-spinners';
+
+
 
 import Loader from '@/components/Loader';
 
@@ -40,7 +41,7 @@ const QuestionPage = ( ) => {
 
     return (
         <DashboardLayout currentPage={"questions"} secondaryNav={<></>}>
-           <Loader isLoading={isLoading}>
+        <Loader isLoading={isLoading}>
             <Head>
                 <title>Questions</title>
             </Head>
@@ -55,7 +56,7 @@ const QuestionPage = ( ) => {
                     </p>
                 </div>
 
-                <CreateUpdateQuestion />
+                <CreateUpdateQuestion /> 
                 {
                     questions?.map((question, index) => (
                         <CreateUpdateQuestion question={question} key={index} mutate={mutate} questionNumber={index+1}/>

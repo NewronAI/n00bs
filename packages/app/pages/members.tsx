@@ -17,9 +17,10 @@ import MemberItem from "@/interfaces/MemberItem";
 import Avatar from "@/components/Avatar";
 import { SearchIcon } from "@heroicons/react/solid";
 import { member_role, obj_status } from "@prisma/client";
+
+
 import Loader from '@/components/Loader';
-
-
+import {PulseLoader} from 'react-spinners';
 
 
 
@@ -60,6 +61,8 @@ const Members = () => {
 
     const members = data as MemberItem[] || [];
 
+    const [saving,setSaving]=useState(false);
+
     const handleSearch = (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
         setSearch(e.target.search.value);
@@ -95,10 +98,14 @@ const Members = () => {
 
         let res: MemberItem;
         if (member.uuid) {
+            setSaving(true);
             res = await axios.put('/api/v1/member', member);
+            setSaving(false)
         }
         else {
+            setSaving(true);
             res = await axios.post('/api/v1/member', member);
+            setSaving(false)
         }
 
         await mutate();
@@ -447,8 +454,9 @@ const Members = () => {
                                                 <button
                                                     type="submit"
                                                     className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                    disabled={saving}
                                                 >
-                                                    Save
+                                                    Save{saving && <PulseLoader color="#36d7b7" size={5} />}
                                                 </button>
                                             </div>
                                         </form>
