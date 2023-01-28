@@ -42,7 +42,7 @@ const Modal = ({open, onClose ,afterLeave = onClose, title, description, childre
                             {
                                 title &&
                                 <Dialog.Title as="h3" className="text-lg font-medium leading-6">
-                                  {title}
+                                {title}
                                 </Dialog.Title>
                             }
                             {

@@ -127,7 +127,7 @@ const Members = () => {
                 <title>Members</title>
             </Head>
 
-          <Loader isLoading={isLoading}>
+        <Loader isLoading={isLoading}>
             <div className={"mt-2"}>
                 <div className={"p-0 md:pl-4 sr-only"}>
                     <h1 className={"text-2xl font-bold"}>
@@ -304,6 +304,8 @@ const Members = () => {
                                                                         id="user-name"
                                                                         placeholder={"Enter name"}
                                                                         className="input  input-bordered w-full"
+                                                                        required
+                                                                        
                                                                     />
                                                                     {
                                                                         // if update, show the uuid will be present, and hence the form will be in update mode
@@ -320,7 +322,7 @@ const Members = () => {
                                                                         Role<span className={"text-red-500"}>*</span>
                                                                     </label>
                                                                     <div className="mt-1">
-                                                                        <select id="role" name="member-role" className="select  select-bordered w-full"
+                                                                        <select  required id="role" name="member-role" className="select  select-bordered w-full"
                                                                             defaultValue={selectedMember ? selectedMember.role : "freelancer"}
                                                                             disabled={selectedMember ? selectedMember.role === "admin" : false}
                                                                         >
@@ -358,6 +360,7 @@ const Members = () => {
                                                                         defaultValue={selectedMember ? selectedMember.phone : ""}
                                                                         placeholder={"+91 1234567890"}
                                                                         className="input  input-bordered w-full"
+                                                                        required
                                                                     />
                                                                 </div>
                                                             </div>
@@ -374,6 +377,7 @@ const Members = () => {
                                                                         defaultValue={selectedMember ? selectedMember.email : ""}
                                                                         placeholder={"Eg: someone@example.com"}
                                                                         className="input  input-bordered w-full"
+                                                                        required
                                                                     />
                                                                 </div>
                                                             </div>
@@ -391,6 +395,7 @@ const Members = () => {
                                                                         defaultValue={selectedMember ? selectedMember.district : ""}
                                                                         placeholder={"Eg. Bangalore"}
                                                                         className="input  input-bordered w-full"
+                                                                        required
                                                                     />
                                                                 </div>
                                                             </div>
@@ -422,6 +427,7 @@ const Members = () => {
                                                                         defaultValue={selectedMember ? selectedMember.pincode : ""}
                                                                         placeholder={"Eg. 560001"}
                                                                         className="input  input-bordered w-full"
+
                                                                     />
                                                                 </div>
                                                             </div>
@@ -457,8 +463,19 @@ const Members = () => {
                                                     className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                                     disabled={saving}
                                                 >
-                                                    Save{saving && <PulseLoader color="#36d7b7" size={5} />}
+                                                    {/* {saving && <PulseLoader className='inline-flex justify-center' color="#36d7b7" size={5} />}
+                                                    Save   */}
+                                                    <div className="relative">
+                                                        <p className='text-center'> Save</p>
+                                                        {saving && <PulseLoader className='absolute top-0 left-0 mx-auto' color="#36d7b7" size={6} />}
+
+                                                    </div>
+                                                    
                                                 </button>
+                                                
+
+
+
                                             </div>
                                         </form>
                                     </Dialog.Panel>
