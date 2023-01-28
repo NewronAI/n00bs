@@ -45,18 +45,15 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
     }
 
     const handleClick = () => {
-       
         if(!gridRef.current){
             return null;
         }
-
+        
         if(gridRef.current.api.getSelectedRows().length === 0) {
             //Todo
             console.log("Please select some task")
             return
         }
-        
-
     }
 
     return (
