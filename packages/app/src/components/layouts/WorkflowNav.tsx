@@ -13,7 +13,7 @@ const navigation = [
     { name: 'Dashboard', href: '/dashboard' },
     { name: 'All Files', href: '/all-files' },
     { name: 'Unassigned Files', href: '/unassigned'  },
-    // { name: 'Assigned Files', href: '/assigned' },
+    { name: 'Assigned Files', href: '/assigned' },
     { name: 'Tasks', href: '/tasks' },
     { name: 'Open Jobs', href: '/jobs' },
     { name: 'Completed Jobs', href: '/completed-jobs' },
