@@ -47,10 +47,10 @@ const Tasks = (props: TaskFilesPage) => {
         </div>;
     }
 
-  const handleDelete=(e)=>{
+  const handleDelete=(e: any)=>{
     console.log(e)
   }
-  const handleUpdate=(e)=>{
+  const handleUpdate=(e: any)=>{
     console.log(e)
   }
 
@@ -94,7 +94,7 @@ const Tasks = (props: TaskFilesPage) => {
                             { headerName: 'Email', field: 'assignee.email' },
                             { headerName: 'district', field: 'assignee.district' },
                             { headerName: 'State', field: 'assignee.state' },
-                            { headerName: 'Action', field: 'button',cellRendererFramework: (params)=> <div>
+                            { headerName: 'Action', field: 'button',cellRendererFramework: (params: any)=> <div>
                                 <button onClick={handleDelete} className={"btn btn-sm btn-ghost"}>Delete</button>
                                 <button className={"btn btn-sm btn-ghost "}>Edit</button>
                                 </div>}
