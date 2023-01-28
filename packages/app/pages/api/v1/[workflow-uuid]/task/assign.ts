@@ -11,9 +11,8 @@ assignTaskApi.post(async (req, res) => {
     // not required rn later can be used for verification
 
     const workflowUUID = req.query["workflow-uuid"] as string;
-    // const taskUUID = req.query["task-uuid"] as string;
-    const assigneeUUID = req.query["assignee-uuid"] as string;
-    const workflowFileUUID = req.query["workflow-file-uuid"] as string;
+    const assigneeUUID = req.body["assignee-uuid"] as string;
+    const workflowFileUUIDs = req.body["workflow-file-uuids"] as string[];
 
     assertUp(workflowUUID, {
         status: 400,
@@ -25,9 +24,9 @@ assignTaskApi.post(async (req, res) => {
         message: "assignee-uuid: Param is required. Should contain the uuid of the assignee"
     });
 
-    assertUp(workflowFileUUID, {
+    assertUp(workflowFileUUIDs.length, {
         status: 400,
-        message: "workflow-file-uuid: Param is required. Should contain the uuid of the workflow file"
+        message: "workflow-file-uuids: Param is required. Should contain the list of uuid of the workflow file(s)"
     });
 
 
@@ -55,29 +54,55 @@ assignTaskApi.post(async (req, res) => {
         message: "Assignee not found"
     });
 
-    const workflowFile = await db.workflow_file.findFirst({
+    const workflowFiles = await db.workflow_file.findMany({
         where: {
-            uuid: workflowFileUUID
+            uuid: {
+                in: workflowFileUUIDs
+            }
+        },
+        select: {
+            id: true,
+            uuid: true
         }
     });
 
-    assertUp(workflowFile, {
+    assertUp(workflowFiles.length === workflowFileUUIDs.length, {
         status: 404,
-        message: "Workflow file not found"
+        message: "Some workflow files not found"
     });
 
+    const workflowFileIds : number[] = workflowFiles.map((wf) => wf.id);
 
+    const workflowFilesMap = new Map<string, number>(workflowFiles.map((wf) => [wf.uuid, wf.id]));
 
-    const status = await db.task_assignment.create({
-      data: {
-        name: "New Task",
+    // don't make duplicate assignment for same task, assignee and workflow file
+
+    const existingAssignments = await db.task_assignment.findMany({
+        where: {
+            task_id: task.id,
+            assignee_id: assignee.id,
+            workflow_file_id: {
+                in : workflowFileIds
+            }
+        }
+    });
+
+    const existingAssignmentsMap = new Map<string, number>(existingAssignments.map((ea) => [ea.workflow_file_id.toString(), ea.id]));
+
+    const newAssignments = workflowFileIds.filter((wfId) => !existingAssignmentsMap.has(wfId.toString()));
+
+    const newAssignmentsData = newAssignments.map((wfId) => ({
         task_id: task.id,
         assignee_id: assignee.id,
-        workflow_file_id: workflowFile.id
-      }
+        workflow_file_id: wfId,
+        name: "New Assignment"
+    }));
+
+    const newAssignmentsResult = await db.task_assignment.createMany({
+        data: newAssignmentsData
     });
 
-    res.status(200).json(status);
+    res.status(200).json(newAssignmentsResult);
 
 });
 
@@ -85,7 +110,6 @@ assignTaskApi.post(async (req, res) => {
 
 assignTaskApi.put(async (req, res) => {
     // API to update the task assignment and reassign the task to another assignee
-
 
     const task_assignmentUUID = req.query["task-assignment-uuid"] as string;
     const assigneeUUID = req.query["assignee-uuid"] as string;

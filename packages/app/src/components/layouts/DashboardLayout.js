@@ -25,6 +25,7 @@ const navigation = [
 const userNavigation = [
     // { name: 'Your Profile', href: '#' },
     // { name: 'Settings', href: '#' },
+    ...navigation,
     { name: 'Sign out', href: '/api/auth/logout' },
 ]
 
@@ -82,7 +83,7 @@ export default function DashboardLayout({
                                                         item.name.toLowerCase() === currentPage
                                                             ? 'border-indigo-500 text-zinc-800 dark:text-zinc-100'
                                                             : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:border-gray-300 hover:text-zinc-700',
-                                                        'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium'
+                                                        'inline-flex items-center px-1 pt-1 border-b-2 text-normal font-medium'
                                                     )}
                                                     aria-current={item.name === currentPage ? 'page' : undefined}
                                                 >

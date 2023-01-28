@@ -13,7 +13,7 @@ const navigation = [
     { name: 'Dashboard', href: '/dashboard' },
     { name: 'All Files', href: '/all-files' },
     { name: 'Unassigned Files', href: '/unassigned'  },
-    { name: 'Assigned Files', href: '/assigned' },
+    // { name: 'Assigned Files', href: '/assigned' },
     { name: 'Tasks', href: '/tasks' },
     { name: 'Open Jobs', href: '/jobs' },
     { name: 'Completed Jobs', href: '/completed-jobs' },
@@ -31,9 +31,9 @@ const WorkflowNav = (props : WorkflowNavProps) => {
                     href={`/${workflowUUID}${item.href}`}
                     className={clsx(
                         item.name.toLowerCase() === currentPage
-                            ? 'border-indigo-500 text-zinc-800 dark:text-zinc-100'
-                            : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:border-gray-300 hover:text-zinc-700',
-                        'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium'
+                            ? 'border-indigo-500 text-zinc-500 dark:text-zinc-100'
+                            : 'border-transparent text-zinc-300 dark:text-zinc-200 hover:border-gray-300 hover:text-zinc-700',
+                        'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-thin'
                     )}
                     aria-current={item.name === currentPage ? 'page' : undefined}
                 >
