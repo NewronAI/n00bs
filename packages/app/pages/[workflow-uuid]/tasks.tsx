@@ -9,6 +9,8 @@ import moment from "moment/moment";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import useSWR from "swr";
+import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
+import {member_role} from "@prisma/client";
 
 const Tasks = () => {
 
@@ -56,5 +58,6 @@ const Tasks = () => {
     );
 };
 
+export const getServerSideProps = withAuthorizedPageAccess({}, member_role.manager);
 
 export default Tasks;

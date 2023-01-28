@@ -23,6 +23,7 @@ import QuestionItem from "@/interfaces/QuestionItem";
 
 
 import Loader from '@/components/Loader';
+import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 
 const questionFetcher = async (url : string) => {
     const res = await axios.get(url);
@@ -74,5 +75,7 @@ QuestionPage.propTypes = {
 
 };
 
+
+export const getServerSideProps = withAuthorizedPageAccess({}, member_role.manager);
 
 export default QuestionPage;

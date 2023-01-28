@@ -35,7 +35,7 @@ export default function Home() {
                             <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
                                 noOBS stands for No OBS (Obstruction , Blockage and Slowness). We are here to help you get rid of all the obstacles in your way.
                             </p>
-                            <Link href={"/workflows"}>
+                            <Link href={"/api/auth/login"}>
                                 <button className={"mt-4 w-40 md:w-52 btn btn-primary normal-case rounded-lg  font-semibold text-base md:text-lg"}>
                                     Dive in Now 🚀
                                 </button>

@@ -13,6 +13,8 @@ import { db } from "@/helpers/node/db";
 
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 import Head from "next/head";
+import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
+import {member_role} from "@prisma/client";
 
 interface WorkflowItems {
     uuid?: string;
@@ -124,26 +126,28 @@ Workflows.propTypes = {
 
 };
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = withAuthorizedPageAccess({
+    getServerSideProps: async () => {
 
-    const workflows = await db.workflow.findMany();
+        const workflows = await db.workflow.findMany();
+        const modeledWorkflows: WorkflowItems[] = workflows.map((workflow) => {
+            const tWorkflow: WorkflowItems = {
+                title: workflow.name,
+                description: workflow.desc as string,
+                iconForeground: 'text-teal-700',
+                iconBackground: 'bg-teal-50',
+                href: `/${workflow.uuid}/dashboard`,
+            }
+            return tWorkflow;
+        })
 
-    const modeledWorkflows: WorkflowItems[] = workflows.map((workflow) => {
-        const tWorkflow: WorkflowItems = {
-            title: workflow.name,
-            description: workflow.desc as string,
-            iconForeground: 'text-teal-700',
-            iconBackground: 'bg-teal-50',
-            href: `/${workflow.uuid}/dashboard`,
+        return {
+            props: {
+                workflows: modeledWorkflows
+            }
         }
-        return tWorkflow;
-    })
 
-    return {
-        props: {
-            workflows: modeledWorkflows
-        }
     }
-}
+}, member_role.associate);
 
 export default Workflows;

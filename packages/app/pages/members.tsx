@@ -21,6 +21,7 @@ import { member_role, obj_status } from "@prisma/client";
 
 import Loader from '@/components/Loader';
 import {PulseLoader} from 'react-spinners';
+import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 
 
 
@@ -476,6 +477,9 @@ const Members = () => {
 Members.propTypes = {
 
 };
+
+
+export const getServerSideProps = withAuthorizedPageAccess({}, member_role.manager);
 
 
 export default Members;

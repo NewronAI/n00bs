@@ -1,16 +1,13 @@
 import React from 'react';
 import Head from "next/head";
-import CreateUpdateQuestion from "@/components/CreateUpdateQuestion";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import WorkflowNav from "@/components/layouts/WorkflowNav";
-import {useRouter} from "next/router";
-import {ClipboardIcon} from "@heroicons/react/outline";
-import {NextPageContext} from "next";
-import {obj_status, prisma} from "@prisma/client";
+import {member_role, obj_status, prisma} from "@prisma/client";
 import {db} from "@/helpers/node/db";
 import WorkflowItem from "@/interfaces/WorkflowItem";
 import IngestFilesDoc from "@/components/IngestFilesDoc";
 import HandleCopy from "@/components/HandleCopy";
+import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 
 interface DashboardProps {
     workflow: WorkflowItem;
@@ -55,27 +52,29 @@ const DashboardPage = (props : DashboardProps) => {
 };
 
 
-export const getServerSideProps = async (context: NextPageContext) => {
-    const uuid = context.query["workflow-uuid"] as string;
+export const getServerSideProps = withAuthorizedPageAccess({
+    getServerSideProps: async (context: any) => {
 
-    const workflow = await db.workflow.findFirst({
-        where: {
-            uuid,
-            status: obj_status.active
-        },
-        select: {
-            name: true,
-            desc: true,
-            uuid: true,
-        }
-    });
+        const uuid = context.query["workflow-uuid"] as string;
 
-    return {
-        props: {
-            workflow
+        const workflow = await db.workflow.findFirst({
+            where: {
+                uuid,
+                status: obj_status.active
+            },
+            select: {
+                name: true,
+                desc: true,
+                uuid: true,
+            }
+        });
+
+        return {
+            props: {
+                workflow
+            }
         }
     }
-}
-
+}, member_role.manager);
 
 export default DashboardPage;

@@ -18,10 +18,11 @@ import UrlRenderer from '@/components/renderer/UrlRenderer'
 
 import { ClipLoader } from 'react-spinners';
 import { Dialog, Transition } from "@headlessui/react";
-import {Prisma} from "@prisma/client";
+import {member_role, Prisma} from "@prisma/client";
 import Modal from "@/components/Modal";
 import axios from "axios";
 import Loader from "@/components/Loader";
+import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 
 interface UnassignedFilesPageProps {
     files : any[]
@@ -283,5 +284,7 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
         </DashboardLayout>
     );
 };
+
+export const getServerSideProps = withAuthorizedPageAccess({}, member_role.associate);
 
 export default UnassignedFilesPage;

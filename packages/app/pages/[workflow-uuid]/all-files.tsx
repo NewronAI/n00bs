@@ -13,6 +13,8 @@ import UrlRenderer from '@/components/renderer/UrlRenderer'
 import { ClipLoader } from 'react-spinners';
 import FileTypeRenderer from '@/components/renderer/FileTypeRenderer';
 import DateFromNowRenderer from '../../src/components/renderer/DateFromNowRenderer';
+import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
+import {member_role} from "@prisma/client";
 
 const AllFilesPage = () => {
 
@@ -78,5 +80,7 @@ const AllFilesPage = () => {
         </DashboardLayout>
     );
 };
+
+export const getServerSideProps = withAuthorizedPageAccess({}, member_role.associate);
 
 export default AllFilesPage;
