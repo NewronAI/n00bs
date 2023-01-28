@@ -1,8 +1,6 @@
 import React, {Fragment, useRef} from 'react';
 import WorkflowNav from "@/components/layouts/WorkflowNav";
 import Head from "next/head";
-import HandleCopy from "@/components/HandleCopy";
-import workflow from "../api/v1/workflow";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import {useRouter} from "next/router";
 import { AgGridReact } from "ag-grid-react";
@@ -23,6 +21,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import {Prisma} from "@prisma/client";
 import Modal from "@/components/Modal";
 import axios from "axios";
+import Loader from "@/components/Loader";
 
 interface UnassignedFilesPageProps {
     files : any[]
@@ -58,21 +57,13 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
     const [selectedRegionsCount, setSelectedRegionsCount] = React.useState<number>(0);
 
     const workflowUUID = router.query["workflow-uuid"] as string;
-    const {data, error, isLoading} = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/file/unassigned`, (url) => fetch(url).then(res => res.json()));
+    const {data, error, isLoading, mutate} = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/file/unassigned`, (url) => fetch(url).then(res => res.json()));
     const files = data || [];
 
     const {data : members, error : membersError, isLoading : membersLoading} = useSWR<Prisma.memberSelect[]>(`/api/v1/member`, (url) => fetch(url).then(res => res.json()));
 
-
-
     if(error) {
         return <div>Error fetching</div>
-    }
-
-    if (isLoading) {
-        return <div className="flex items-center justify-center h-screen">
-            <ClipLoader size={50} color={'#123abc'}  />
-        </div>;
     }
 
     const handleDialogClose = () => {
@@ -126,13 +117,13 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
 
         const selectedMemberUUID : string = selectedMembers[0].uuid;
 
-        console.log(selectedMemberUUID);
 
         try {
             await axios.post(`/api/v1/${workflowUUID}/task/assign`, {
                 "workflow-file-uuids": selectedRows.map((row) => row.uuid),
                 "assignee-uuid": selectedMemberUUID,
             });
+            await mutate();
         } catch (e) {
 
         }
@@ -172,54 +163,56 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                             Click on the member to select the account on which you want to assign the files.
                         </p>
                     </div>
-                    <div className="mt-2 flex flex-col h-60 ag-theme-balham-dark">
-                        <AgGridReact
-                            rowData={members}
-                            suppressMenuHide={true}
-                            pagination={true}
-                            ref={memberGridRef}
-                            rowSelection='single'
-                            paginationPageSize={6}
-                            columnDefs={[
-                                {
-                                    headerName: "Name",
-                                    field: "name",
-                                    sortable: true,
-                                    filter: true,
-                                },
-                                {
-                                    headerName: "District",
-                                    field: "district",
-                                    sortable: true,
-                                    filter: true,
-                                },
-                                {
-                                    headerName: "State",
-                                    field: "state",
-                                    sortable: true,
-                                    filter: true,
-                                },
-                                {
-                                    headerName: "Phone",
-                                    field: "phone",
-                                    sortable: true,
-                                    filter: true,
-                                },
-                                {
-                                    headerName: "Role",
-                                    field: "role",
-                                    sortable: true,
-                                    filter: true,
-                                },
-                                {
-                                    headerName: "Email",
-                                    field: "email",
-                                    sortable: true,
-                                    filter: true,
-                                }
-                            ]}
-                        />
-                    </div>
+                    <Loader isLoading={membersLoading}>
+                        <div className="mt-2 flex flex-col h-60 ag-theme-balham-dark">
+                            <AgGridReact
+                                rowData={members}
+                                suppressMenuHide={true}
+                                pagination={true}
+                                ref={memberGridRef}
+                                rowSelection='single'
+                                paginationPageSize={6}
+                                columnDefs={[
+                                    {
+                                        headerName: "Name",
+                                        field: "name",
+                                        sortable: true,
+                                        filter: true,
+                                    },
+                                    {
+                                        headerName: "District",
+                                        field: "district",
+                                        sortable: true,
+                                        filter: true,
+                                    },
+                                    {
+                                        headerName: "State",
+                                        field: "state",
+                                        sortable: true,
+                                        filter: true,
+                                    },
+                                    {
+                                        headerName: "Phone",
+                                        field: "phone",
+                                        sortable: true,
+                                        filter: true,
+                                    },
+                                    {
+                                        headerName: "Role",
+                                        field: "role",
+                                        sortable: true,
+                                        filter: true,
+                                    },
+                                    {
+                                        headerName: "Email",
+                                        field: "email",
+                                        sortable: true,
+                                        filter: true,
+                                    }
+                                ]}
+                            />
+                        </div>
+                    </Loader>
                     <div className={"flex justify-between mt-4 btn-group"}>
                         <div className={"text-sm text-error"}>
                             {assignModalError}
@@ -259,7 +252,8 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                         </button>
                     </div>
                 </div>
-                <div className={"w-full h-[760px] p-4 ag-theme-alpine-dark"}>
+                <Loader isLoading={isLoading}>
+                    <div className={"w-full h-[760px] p-4 ag-theme-alpine-dark"}>
                     <AgGridReact
                         rowData={files}
                         suppressMenuHide={true}
@@ -284,6 +278,7 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                         ]}
                     />
                 </div>
+                </Loader>
             </div>
         </DashboardLayout>
     );
