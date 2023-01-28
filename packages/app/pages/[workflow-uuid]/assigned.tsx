@@ -13,7 +13,7 @@ import Loader from "@/components/Loader";
 import { useRouter } from 'next/router';
 import DateFromNowRenderer from '@/components/renderer/DateFromNowRenderer';
 import 'ag-grid-enterprise';
-import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
+import {RowGroupingModule} from '@ag-grid-enterprise/row-grouping';
 import UrlRenderer from '@/components/renderer/UrlRenderer'
 
 interface assignedFilesPageProps {
