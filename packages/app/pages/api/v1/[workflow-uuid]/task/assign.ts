@@ -116,12 +116,12 @@ assignTaskApi.put(async (req, res) => {
 
     assertUp(task_assignmentUUID, {
         status: 400,
-        message: "Task Assignment UUID: Param is required. Should contain the uuid of the task assignment"
+        message: "task-assignment-uuid: Param is required. Should contain the uuid of the task assignment"
     });
 
     assertUp(assigneeUUID, {
         status: 400,
-        message: "Assignee UUID: Param is required. Should contain the uuid of the assignee"
+        message: "assignee-uuid: Param is required. Should contain the uuid of the assignee"
     });
 
     const task_assignment = await db.task_assignment.findFirst({
