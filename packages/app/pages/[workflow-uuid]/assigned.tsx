@@ -13,7 +13,6 @@ import Loader from "@/components/Loader";
 import { useRouter } from 'next/router';
 import DateFromNowRenderer from '@/components/renderer/DateFromNowRenderer';
 import 'ag-grid-enterprise';
-import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
 import UrlRenderer from '@/components/renderer/UrlRenderer'
 
 interface assignedFilesPageProps {
@@ -28,7 +27,7 @@ const AssignedFilesPage = (props: assignedFilesPageProps) => {
 
     const {data, error, isLoading, mutate} = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/file/assigned`, (url) => fetch(url).then(res => res.json()));
     const files = data || [];
-    console.log(files)
+    // console.log(files)
 
   return (
     <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"assigned files"} workflowUUID={workflowUUID} />} >
@@ -57,7 +56,7 @@ const AssignedFilesPage = (props: assignedFilesPageProps) => {
                               paginationPageSize={15}
                               groupDefaultExpanded={1}
                               animateRows={true}
-                              modules={[RowGroupingModule]}
+                              // modules={[RowGroupingModule]}
                               columnDefs={[
                                 {headerName: "File Name", field: "file_name", rowGroup: true, hide: true, sortable: true, filter: true, width: 400},
                                 {headerName: "File District", field: "district", sortable: true, filter: true, width: 150},
