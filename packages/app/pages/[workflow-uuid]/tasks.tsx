@@ -8,14 +8,17 @@ import { AgGridReact } from "ag-grid-react";
 import moment from "moment/moment";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
+import 'ag-grid-community/styles/ag-theme-balham.min.css';
 import useSWR from "swr";
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
-import {member_role} from "@prisma/client";
 import Loader from '@/components/Loader';
 import { ClipLoader } from 'react-spinners';
 import Modal from "@/components/Modal";
 import axios from 'axios';
+import {member_role, Prisma} from "@prisma/client";
 import DateFromNowRenderer from '@/components/renderer/DateFromNowRenderer';
+import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact'
+
 
 interface TaskFilesPage {
     file: any;
@@ -25,6 +28,7 @@ interface TaskFilesPage {
 const Tasks = (props: TaskFilesPage) => {
 
     const gridRef = useRef<AgGridReact>(null)
+    const memberGridRef = useRef<AgGridReactType>(null);
 
     const [assignModalError, setAssignModalError] = React.useState<string | null>(null);
 
@@ -38,6 +42,8 @@ const Tasks = (props: TaskFilesPage) => {
     const { data, error, isLoading, mutate } = useSWR(`/api/v1/${workflowUUID}/task/all`, (url) => fetch(url).then(res => res.json()));
     console.log(data);
     const task = data || [];
+
+    const {data : members, error : membersError, isLoading : membersLoading} = useSWR<Prisma.memberSelect[]>(`/api/v1/member`, (url) => fetch(url).then(res => res.json()));
 
     const defaultColDef = useMemo(() => ({
         sortable: true,
@@ -54,14 +60,45 @@ const Tasks = (props: TaskFilesPage) => {
         </div>;
     }
 
-    const handleModalDelete = (data: any) => {
-        setAssignDialogOpenDelete(true);
-        setDelData(data)
+    const handleReassign = async () => {
+
+        if(!memberGridRef.current){
+            setAssignModalError("Something went wrong. Page not loaded properly");
+            return null;
+        }
+
+        const selectedMembers = memberGridRef.current?.api.getSelectedRows();
+
+        if(selectedMembers.length === 0) {
+            setAssignModalError("Please select some member | task");
+            return null;
+        }
+
+        setAssignModalError(null);
+
+        const selectedMemberUUID : string = selectedMembers[0].uuid;
+
+        try {
+            await axios.put(`/api/v1/${workflowUUID}/task/assign`, null, {
+                params: {
+                    "task-assignment-uuid": delData.uuid,
+                    "assignee-uuid": selectedMemberUUID,
+                }
+            });
+            await mutate();
+            setAssignDialogOpenEdit(false);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     const handleDelete = async () => {
         try {
-            await axios.delete(`/api/v1/${workflowUUID}/task/assign?task-assignment-uuid=${delData.uuid}`)
+            await axios.delete(`/api/v1/${workflowUUID}/task/assign`, {
+                params : {
+                    "task-assignment-uuid": delData.uuid
+                } 
+            })
             await mutate()
             setAssignDialogOpenDelete(false)
         }
@@ -70,10 +107,20 @@ const Tasks = (props: TaskFilesPage) => {
         }
     }
 
-    const handleDeleteDialogClose = () => {
-        setAssignDialogOpenDelete(false)
+    const handleModalDelete = (data: any) => {
+        setAssignDialogOpenDelete(true);
+        setDelData(data)
     }
 
+    const handleDialogClose = () => {
+        setAssignDialogOpenDelete(false)
+        setAssignDialogOpenEdit(false)
+    }
+
+    const handleReassignModal = (data: any) => {
+        setAssignDialogOpenEdit(true)
+        setDelData(data)
+    }
 
     return (
         <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"tasks"} workflowUUID={workflowUUID} />}>
@@ -91,12 +138,10 @@ const Tasks = (props: TaskFilesPage) => {
                             Tasks assigned to different users.
                         </p>
                     </div>
-
                     <div className={"flex items-center"}>
                     </div>
-
                 </div>
-                <div className={"w-full h-[760px] p-4 ag-theme-alpine-dark"}>
+                <div className={"w-full h-[760px] p-4  ag-theme-alpine-dark"}>
                     <AgGridReact
                         rowData={task}
                         defaultColDef={defaultColDef}
@@ -105,8 +150,8 @@ const Tasks = (props: TaskFilesPage) => {
                         columnDefs={[
                             { headerName: 'Action', field: 'button', cellRenderer: ({data}: {data: any} ) => {
                                 return (
-                                  <div className='btn-group'>
-                                        <button className='btn btn-xs btn-secondary' >Reassign</button>
+                                  <div className='btn-group'> 
+                                        <button className='btn btn-xs btn-secondary' onClick={() => handleReassignModal(data)} >Reassign</button>
                                       <button className='btn btn-xs btn-error' onClick={() => handleModalDelete(data)} >Delete</button>
                                   </div>
                                 )
@@ -125,7 +170,7 @@ const Tasks = (props: TaskFilesPage) => {
                 </div>
             </div>
             <Modal open={assignDialogOpenDelete}
-                   onClose={handleDeleteDialogClose}
+                   onClose={handleDialogClose}
             >
                 <div>
                     <h2 className='pb-2'>Are you sure you want to delete this assignment?</h2>
@@ -145,18 +190,89 @@ const Tasks = (props: TaskFilesPage) => {
                         <h2>File Location: </h2>
                         <h2>{delData?.workflow_file?.district}, {delData?.workflow_file?.state}</h2>
                     </div>
-                   
                    <div className='flex justify-end'>
                     <div className='btn-group'>
-                        <button className='btn btn-sm btn-primary' onClick={handleDeleteDialogClose} >No</button>
+                        <button className='btn btn-sm btn-primary' onClick={handleDialogClose} >No</button>
                         <button className='btn btn-sm btn-error' onClick={handleDelete} >yes</button>
                     </div>
                     </div>
                 </div>
             </Modal>
-
-            {/* <pre>{JSON.stringify(task, null, 2)}</pre> */}
-
+            <Modal open={assignDialogOpenEdit}
+                   onClose={handleDialogClose}
+            >
+                <div className="flex flex-col">
+                    <div className="flex flex-col mt-4">
+                        <label className="block text-sm font-medium ">Assign to</label>
+                        <p className={"text-sm font-thin"}>
+                            Click on the member to select the account on which you want to assign the files.
+                        </p>
+                    </div>
+                    <Loader isLoading={membersLoading}>
+                        <div className="mt-2 flex flex-col h-60 ag-theme-balham-dark">
+                            <AgGridReact
+                                rowData={members}
+                                suppressMenuHide={true}
+                                pagination={true}
+                                ref={memberGridRef}
+                                rowSelection='single'
+                                paginationPageSize={6}
+                                columnDefs={[
+                                    {
+                                        headerName: "Name",
+                                        field: "name",
+                                        sortable: true,
+                                        filter: true,
+                                    },
+                                    {
+                                        headerName: "District",
+                                        field: "district",
+                                        sortable: true,
+                                        filter: true,
+                                    },
+                                    {
+                                        headerName: "State",
+                                        field: "state",
+                                        sortable: true,
+                                        filter: true,
+                                    },
+                                    {
+                                        headerName: "Phone",
+                                        field: "phone",
+                                        sortable: true,
+                                        filter: true,
+                                    },
+                                    {
+                                        headerName: "Role",
+                                        field: "role",
+                                        sortable: true,
+                                        filter: true,
+                                    },
+                                    {
+                                        headerName: "Email",
+                                        field: "email",
+                                        sortable: true,
+                                        filter: true,
+                                    }
+                                ]}
+                            />
+                        </div>
+                    </Loader>
+                    <div className={"flex justify-between mt-4 btn-group"}>
+                        <div className={"text-sm text-error"}>
+                            {assignModalError}
+                        </div>
+                        <div>
+                            <button className={"btn btn-sm btn-ghost"} onClick={handleDialogClose} >
+                                Cancel
+                            </button>
+                            <button className={"btn btn-sm px-8 btn-primary"} onClick={handleReassign} >
+                                Assign
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </Modal>
         </DashboardLayout>
     );
 };
