@@ -58,10 +58,10 @@ const AssignedFilesPage = (props: assignedFilesPageProps) => {
                               animateRows={true}
                               // modules={[RowGroupingModule]}
                               columnDefs={[
-                                {headerName: "File Name", field: "file_name", rowGroup: true, hide: true, sortable: true, filter: true, width: 400},
-                                {headerName: "File District", field: "district", sortable: true, filter: true, width: 150},
-                                {headerName: "File State", field: "state", sortable: true, filter: true, width: 150},
-                                {headerName: "Member Name", field: "memeber_name", sortable: true, filter: true, width: 150},
+                                  {headerName: "File State", field: "state", rowGroup: true,hide: true, sortable: true, filter: true, width: 150},
+                                  {headerName: "File District", field: "district", rowGroup: true,hide: true, sortable: true, filter: true, width: 150},
+                                  {headerName: "File Name", field: "file_name", rowGroup: true, sortable: true, filter: true, width: 400},
+                                  {headerName: "Member Name", field: "memeber_name", sortable: true, filter: true, width: 150},
                                 {headerName: "Member State", field: "member_district", sortable: true, filter: true, width: 150},
                                 {headerName: "Member State", field: "member_state", sortable: true, filter: true, width: 150},
                                 {headerName: "Phone No.", field: "member_phone", sortable: true, filter: true, width: 150},
