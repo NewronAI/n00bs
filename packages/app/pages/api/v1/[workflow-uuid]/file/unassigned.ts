@@ -38,7 +38,7 @@ unassignedFilesApi.get(async (req, res) => {
         GROUP BY workflow_file.id, task_assignment.task_id
         HAVING COUNT(task_assignment.task_id) < (SELECT task.min_assignments FROM task
             INNER JOIN workflow ON workflow.id = ${workflowId}
-            AND task.workflow_id = workflow.id LIMIT 1)
+            AND task.workflow_id = workflow.id ORDER BY task.id LIMIT 1)
         ORDER BY workflow_file.id, task_assignment.task_id;`;
 
 
