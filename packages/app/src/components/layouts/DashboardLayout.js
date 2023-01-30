@@ -1,17 +1,10 @@
 import {Fragment, Suspense, useEffect} from 'react';
 import {Disclosure, Menu, Transition} from '@headlessui/react';
 import {MenuIcon as Bars3Icon, XIcon as XMarkIcon,} from '@heroicons/react/outline';
-// import {useUser} from "@auth0/nextjs-auth0";
-// import setup from "../../setup";
-// import Avatar from "@newron/common/components/Avatar";
-// import dynamic from "next/dynamic";
 import clsx from "clsx";
 import Link from "next/link";
-import useSwrImmutable from "swr/immutable";
 import Avatar from "@/components/Avatar";
-// import {getFetcher} from "../../src/fetchers";
-// import { useDispatch, useSelector } from "react-redux";
-// import {setUserDetails} from "../../slices/userSlice";
+import {useUser} from "@auth0/nextjs-auth0/client";
 
 // import ThemeSelector from "../ThemeSelector";
 
@@ -36,8 +29,8 @@ export default function DashboardLayout({
                                             secondaryNav,
                                         }) {
 
-    // const {user} = useUser();
-    // const email = user?.email || "sample@exampl";
+    const {user} = useUser();
+    const email = user?.email || "sample@exampl";
     //
     // const {data : userData ,error} = useSwrImmutable( "/api/v1/get-user-details" ,getFetcher);
     // const dispatch = useDispatch();
@@ -101,7 +94,7 @@ export default function DashboardLayout({
                                             <div>
                                                 <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                                                     <span className="sr-only">Open user menu</span>
-                                                    <Avatar size={28} className={"rounded-full"} />
+                                                    <Avatar size={28} className={"rounded-full"} email={email} />
                                                 </Menu.Button>
                                             </div>
                                             <Transition
