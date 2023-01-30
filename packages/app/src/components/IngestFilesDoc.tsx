@@ -57,7 +57,7 @@ const IngestFilesDoc = ({workflowUUID = "7d1b4c3d-51f6-4902-97b3-8fb9fd1e1aff"} 
                                 <code className={"font-thin text-sm"}>
                                     <span className={"text-indigo-900"}>{"{"}</span>
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;secret&quot: &quot{secret}&quot,</span> {"// The secret for this workflow only"}
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;secret&quot;: &quot;{secret}&quot;,</span> {"// The secret for this workflow only"}
                                     <br />
                                     &nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;data&quot;: &#91;</span>
                                     <br />
@@ -65,7 +65,7 @@ const IngestFilesDoc = ({workflowUUID = "7d1b4c3d-51f6-4902-97b3-8fb9fd1e1aff"} 
                                     <br />
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;file_name&quot;: &quot;file name&quot;,</span> {"// required"}
                                     <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;file_type&quot;: &quot;file type&quot;,</span> {"// one of: &quot;image&quot;, &quot;video&quot;, &quot;audio&quot;, &quot;document&quot;"}
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;file_type&quot;: &quot;file type&quot;,</span> {"// one of: 'image', 'video', 'audio', 'document'"}
                                     <br />
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className={"text-indigo-900"}>&quot;file&quot;: &quot;file url&quot;,</span> {"// url of the file (required)"}
                                     <br />
