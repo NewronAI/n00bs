@@ -120,6 +120,7 @@ assignTaskApi.put(async (req, res) => {
     });
 
     assertUp(assigneeUUID, {
+
         status: 400,
         message: "assignee-uuid: Param is required. Should contain the uuid of the assignee"
     });

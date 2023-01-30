@@ -23,6 +23,8 @@ import Modal from "@/components/Modal";
 import axios from "axios";
 import Loader from "@/components/Loader";
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
+import FileAssignmentCountRenderer from "@/components/renderer/FileAssignmentCountRenderer";
+import {Tooltip} from "react-tooltip";
 
 interface UnassignedFilesPageProps {
     files : any[]
@@ -234,9 +236,10 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
             <div>
                 <div className={"mt-2 flex justify-between"}>
                     <div className={"p-0 md:pl-4"}>
-                        <h1 className={"text-xl font-semibold"}>
+                        <h1 id={"unass"} className={"text-xl font-semibold"}>
                             Unassigned Files
                         </h1>
+                        <Tooltip anchorId={"unass"} content={"hello"}/>
                         <p className={"font-thin text-sm"}>
                             All the files uploaded to the workflow, which are not assigned to any user.
                         </p>
@@ -267,6 +270,7 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                             {headerName: "Select", checkboxSelection: true, width: 80},
                             {headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 70},
                             {headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 400},
+                            {headerName: "Assignments", field: "assignment_count", sortable: true, filter: true, cellRenderer: FileAssignmentCountRenderer, width: 170},
                             {headerName: "File Path", field: "file", sortable: true, filter: true, width: 500, cellRenderer: UrlRenderer},
                             // {headerName: "File Status", field: "status", sortable: true, filter: true, width: 120},
                             // {headerName: "File UUID", field: "uuid", sortable: true, filter: true, width: 330},

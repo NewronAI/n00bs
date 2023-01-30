@@ -32,7 +32,7 @@ unassignedFilesApi.get(async (req, res) => {
     console.log(workflowUUID,workflowId);
 
     // As per Srikant and Team, One workflow can have only One task
-    const unassignedFiles = await db.$queryRaw`SELECT workflow_file.*, count(task_assignment.task_id) FROM workflow_file
+    const unassignedFiles = await db.$queryRaw`SELECT workflow_file.*, count(task_assignment.task_id) as assignment_count FROM workflow_file
             INNER JOIN workflow ON workflow.id = ${workflowId}
             LEFT JOIN task_assignment ON workflow_file.id = task_assignment.workflow_file_id
         GROUP BY workflow_file.id, task_assignment.task_id
