@@ -31,6 +31,7 @@ questionWorkflowApi.get(async (req, res) => {
         SELECT question.* FROM question
         INNER JOIN task_question ON task_question.question_id = question.id
         AND task_question.task_id = ${task.id}
+        ORDER BY question.order ASC
     `
 
     res.status(200).json(questions);
