@@ -91,7 +91,7 @@ const AddQuestionToWorkflow = () => {
                 <div className="space-y-1">
                     <h3 className="text-lg font-medium leading-6 ">Questions</h3>
                     <p className="max-w-2xl text-sm text-gray-400">
-                        Questions are the building blocks of your workflows. You can add questions to your workflows by clicking the "Add Question" button.
+                        Questions are the building blocks of your workflows. You can add questions to your workflows by clicking the &rdquo;Add Question&ldquo; button.
                     </p>
                 </div>
                 {
