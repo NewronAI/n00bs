@@ -34,7 +34,6 @@ dashboardStatsApi.get(async (req, res) => {
                      AND task.workflow_id = workflow.id ORDER BY task.id LIMIT 1))
     `) as TotalAssignments[];
 
-    console.log(assignedFilesCount);
 
     const assignedJobsCount = await db.task_assignment.count({
         where: {

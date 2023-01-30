@@ -1,13 +1,11 @@
 import React from 'react'
 import clsx from "clsx";
-import { Switch } from '@headlessui/react';
 import WorkflowNav from "@/components/layouts/WorkflowNav";
 import Head from "next/head";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import {useRouter} from "next/router";
-import {useUser} from "@auth0/nextjs-auth0/client";
-import Avatar from "@/components/Avatar";
 import ProfileSettingsTab from "@/components/ProfileSettingsTab";
+import AddQuestionToWorkflow from "@/components/AddQuestionToWorkflow";
 
 
 const tabs = [
@@ -17,7 +15,7 @@ const tabs = [
 const SettingsPage = () => {
 
     const router = useRouter();
-    const [selectedTab, setSelectedTab] = React.useState(tabs[1].id)
+    const [selectedTab, setSelectedTab] = React.useState(tabs[0].id)
     const workflowUUID = router.query["workflow-uuid"] as string;
 
 
@@ -79,8 +77,7 @@ const SettingsPage = () => {
 
                                         switch (selectedTab) {
                                             case "questions":
-                                                return <div className="mt-10">
-                                                </div>
+                                                return <AddQuestionToWorkflow />
                                             case "profile":
                                                 return <ProfileSettingsTab />
                                         }

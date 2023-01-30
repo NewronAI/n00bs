@@ -6,12 +6,24 @@ const addQuestionAPI = new NextExpress();
 
 addQuestionAPI.post(async (req,res) => {
 
-    const taskUUID = req.query["task-uuid"] as string;
+    const workflowUUID = req.query["workflow-uuid"] as string;
     const questionUUID = req.query["question-uuid"] as string;
+
+    assertUp(workflowUUID, {
+        status: 400,
+        message: "workflow-uuid not provided"
+    });
+
+    assertUp(questionUUID, {
+        status: 400,
+        message: "question-uuid not provided"
+    });
 
     const task = await db.task.findFirst({
         where: {
-            uuid: taskUUID
+            workflow : {
+                uuid: workflowUUID
+            }
         }
     });
 
@@ -45,12 +57,14 @@ addQuestionAPI.post(async (req,res) => {
 
 addQuestionAPI.delete(async (req,res) => {
 
-        const taskUUID = req.query["task-uuid"] as string;
+        const workflowUUID = req.query["workflow-uuid"] as string;
         const questionUUID = req.query["question-uuid"] as string;
 
         const task = await db.task.findFirst({
             where: {
-                uuid: taskUUID
+                workflow : {
+                    uuid: workflowUUID
+                }
             }
         });
 
@@ -92,8 +106,6 @@ addQuestionAPI.delete(async (req,res) => {
         res.status(200).json(status);
 
 });
-
-
 
 
 export default addQuestionAPI.handler;

@@ -1,7 +1,7 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
-import {file_type, Prisma} from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import {NextApiRequest, NextApiResponse} from "next";
 import getPublicWorkflowAPISecret from "@/helpers/getPublicWorkflowAPISecret";
 

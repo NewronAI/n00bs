@@ -12,7 +12,7 @@ type ModalProps = {
 
 }
 
-const Modal = ({open, onClose ,afterLeave = onClose, title, description, children}: ModalProps) => {
+const Modal = ({open, onClose ,afterLeave, title, description, children}: ModalProps) => {
     return (
         <Transition.Root show={open} as={Fragment} afterLeave={afterLeave} appear>
             <Dialog as="div" className="relative z-10" onClose={onClose}>
