@@ -18,6 +18,7 @@ const navigation = [
     { name: 'Open Jobs', href: '/jobs' },
     { name: 'Completed Jobs', href: '/completed-jobs' },
     { name: 'Workers', href: '/workers'},
+    { name: 'Settings', href: '/settings'},
 ];
 
 const WorkflowNav = (props : WorkflowNavProps) => {

@@ -19,6 +19,7 @@ const Avatar = ({email, size, className}) => {
 Avatar.propTypes = {
     email: PropTypes.string,
     size: PropTypes.number,
+    className: PropTypes.string
 };
 
 export default Avatar;

@@ -2,6 +2,7 @@ import '../styles/globals.css'
 import 'react-tooltip/dist/react-tooltip.css'
 import type { AppProps } from 'next/app'
 import {SWRConfig} from "swr";
+import {UserProvider} from "@auth0/nextjs-auth0/client";
 
 // @ts-ignore for now because of cockroachdb
 BigInt.prototype.toJSON = function() {
@@ -13,6 +14,8 @@ export default function App({ Component, pageProps }: AppProps) {
       refreshInterval: 30000,
       fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
   }}>
-      <Component {...pageProps} />
+      <UserProvider>
+        <Component {...pageProps} />
+      </UserProvider>
   </SWRConfig>
 }
