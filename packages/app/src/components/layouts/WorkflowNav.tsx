@@ -14,9 +14,9 @@ const navigation = [
     { name: 'All Files', href: '/all-files' },
     { name: 'Unassigned Files', href: '/unassigned'  },
     { name: 'Assigned Files', href: '/assigned' },
-    { name: 'Tasks', href: '/tasks' },
-    { name: 'Open Jobs', href: '/jobs' },
-    { name: 'Completed Jobs', href: '/completed-jobs' },
+    { name: 'Jobs', href: '/jobs' },
+    // { name: 'Open Jobs', href: '/jobs' },
+    // { name: 'Completed Jobs', href: '/completed-jobs' },
     { name: 'Workers', href: '/workers'},
     { name: 'Settings', href: '/settings'},
 ];
