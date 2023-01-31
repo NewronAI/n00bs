@@ -84,7 +84,7 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
     }
 
     const handleInitiateAssign = () => {
-       
+
         if(!fileGridRef.current){
             return null;
         }
