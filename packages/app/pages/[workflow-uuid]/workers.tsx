@@ -86,8 +86,7 @@ if (isLoading) {
       <div className={"w-full h-[760px] p-4 ag-theme-alpine-dark"}>
         <AgGridReact
           rowData={member}
-          animateRows={true}
-          rowSelection='multiple'
+          pagination={true}
           columnDefs={[
             { headerName: 'id', field: 'id', sortable: true, filter: true, },
             { headerName: 'Name', field: 'name', sortable: true, filter: true, },
