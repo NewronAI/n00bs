@@ -341,7 +341,7 @@ const Members = () => {
                                                                         <input type="checkbox" name={"member-status"} id="status"
                                                                             className="toggle toggle-error"
                                                                             defaultChecked={selectedMember ? selectedMember?.status === obj_status.active : false}
-                                                                            disabled={selectedMember ? selectedMember.role === "admin" : false}
+                                                                            disabled={selectedMember ? selectedMember?.status === obj_status.active && selectedMember.role === "admin" : true}
                                                                         />
                                                                     </div>
                                                                 </div>
