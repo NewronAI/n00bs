@@ -15,6 +15,7 @@ import FileTypeRenderer from '@/components/renderer/FileTypeRenderer';
 import DateFromNowRenderer from '../../src/components/renderer/DateFromNowRenderer';
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import {member_role} from "@prisma/client";
+import 'ag-grid-enterprise';
 
 const AllFilesPage = () => {
 
@@ -63,16 +64,16 @@ const AllFilesPage = () => {
                         paginationPageSize={15}
                         suppressMenuHide={true}
                         columnDefs={[
-    {headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 70,},
-    {headerName: "State", field: "state", sortable: true, filter: true, width: 130,},
-    {headerName: "District", field: "district", sortable: true, filter: true, width: 130,},
+    {headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 100,},
+    {headerName: "State", field: "state", sortable: true, filter: true,rowGroup:true, hide: true, width: 130,},
+    {headerName: "District", field: "district", sortable: true, rowGroup: true, hide: true, filter: true, width: 150,},
+    {headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150},
     {headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 300},
     {headerName: "File Path", field: "file", sortable: true, filter: true, cellRenderer: UrlRenderer },
     {headerName: "File Duration", field: "file_duration", sortable: true, filter: true, width: 135},
     {headerName: "File UUID", field: "uuid", sortable: true, filter: true},
     {headerName: "Created", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
-    {headerName: "Recieved", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
-    {headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 110},
+    {headerName: "Received", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
 ]}
                         />
                 </div>

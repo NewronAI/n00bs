@@ -12,6 +12,7 @@ import moment from "moment";
 import FileTypeRenderer from '@/components/renderer/FileTypeRenderer';
 import DateFromNowRenderer from '@/components/renderer/DateFromNowRenderer';
 import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact'
+import 'ag-grid-enterprise';
 
 import UrlRenderer from '@/components/renderer/UrlRenderer'
 
@@ -236,10 +237,9 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
             <div>
                 <div className={"mt-2 flex justify-between"}>
                     <div className={"p-0 md:pl-4"}>
-                        <h1 id={"unass"} className={"text-xl font-semibold"}>
+                        <h1 id={""} className={"text-xl font-semibold"}>
                             Unassigned Files
                         </h1>
-                        <Tooltip anchorId={"unass"} content={"hello"}/>
                         <p className={"font-thin text-sm"}>
                             All the files uploaded to the workflow, which are not assigned to any user.
                         </p>
@@ -264,11 +264,12 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                         suppressMenuHide={true}
                         pagination={true}
                         ref={fileGridRef}
+                        groupSelectsChildren={true}
                         rowSelection='multiple'
                         paginationPageSize={15}
                         columnDefs={[
-                            {headerName: "Select", checkboxSelection: true, width: 80},
-                            {headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 70},
+                            {headerName: "", checkboxSelection: true, width: 80, headerCheckboxSelection: true, headerCheckboxSelectionFilteredOnly: true},
+                            {headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 100},
                             {headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 400},
                             {headerName: "Assignments", field: "assignment_count", sortable: true, filter: true, cellRenderer: FileAssignmentCountRenderer, width: 170},
                             {headerName: "File Path", field: "file", sortable: true, filter: true, width: 500, cellRenderer: UrlRenderer},
@@ -277,8 +278,8 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                             {headerName: "File Duration", field: "file_duration", sortable: true, filter: true, valueFormatter: (params) => {
                                 return `${moment.duration(params.value,"second").asMinutes().toFixed(2)} mins`;
                             }, width: 150},
-                            {headerName: "District", field: "district", sortable: true, filter: true,},
-                            {headerName: "State", field: "state", sortable: true, filter: true,},
+                            {headerName: "State", field: "state", sortable: true, filter: true,rowGroup: true},
+                            {headerName: "District", field: "district", sortable: true, filter: true,rowGroup: true,},
                             {headerName: "Created at", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120},
                             {headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130},
                         ]}

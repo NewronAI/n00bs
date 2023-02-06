@@ -5,6 +5,7 @@ import axios from "axios";
 import {Tooltip} from "react-tooltip";
 import {IdentificationIcon} from "@heroicons/react/outline";
 
+
 type FileAssignmentCountRendererProps = {
     value: number| string;
     data: any;
@@ -63,7 +64,7 @@ const FileAssignmentCountRenderer = ({value,data, workflowUUID} : FileAssignment
                 }
             </div>
             <Tooltip anchorId={tooltipId}
-                     isOpen={tooltipOpen}
+                     isOpen={tooltipOpen && assignedTo.length > 0}
                      float={true} variant={"dark"}
                      place={"right"}
                      // clickable={true}
@@ -72,9 +73,6 @@ const FileAssignmentCountRenderer = ({value,data, workflowUUID} : FileAssignment
                      events={["hover"]}
             >
                 {
-                    assignedTo.length === 0 ?
-                        <span className={"text-xs"}>Unassigned</span> :
-
                     <div className={"flex flex-col text-xs"}>
                         {assignedTo.map((member, i) => (
                             <div key={i} >
