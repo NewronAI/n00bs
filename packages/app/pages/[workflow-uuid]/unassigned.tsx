@@ -264,20 +264,23 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                         suppressMenuHide={true}
                         pagination={true}
                         ref={fileGridRef}
+                        rowGroupPanelShow={"onlyWhenGrouping"}
+                        pivotMode={false}
+                        pivotPanelShow={"always"}
                         groupSelectsChildren={true}
                         rowSelection='multiple'
                         paginationPageSize={15}
                         columnDefs={[
                             {headerName: "", checkboxSelection: true, width: 80, headerCheckboxSelection: true, headerCheckboxSelectionFilteredOnly: true},
                             {headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 100},
+                            {headerName: "File Duration", field: "file_duration", sortable: true, filter: true, valueFormatter: (params) => {
+                                return `${moment.duration(params.value,"second").asSeconds().toFixed(1)} secs`;
+                            }, width: 150},
                             {headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 400},
                             {headerName: "Assignments", field: "assignment_count", sortable: true, filter: true, cellRenderer: FileAssignmentCountRenderer, width: 170},
                             {headerName: "File Path", field: "file", sortable: true, filter: true, width: 500, cellRenderer: UrlRenderer},
                             // {headerName: "File Status", field: "status", sortable: true, filter: true, width: 120},
                             // {headerName: "File UUID", field: "uuid", sortable: true, filter: true, width: 330},
-                            {headerName: "File Duration", field: "file_duration", sortable: true, filter: true, valueFormatter: (params) => {
-                                return `${moment.duration(params.value,"second").asMinutes().toFixed(2)} mins`;
-                            }, width: 150},
                             {headerName: "State", field: "state", sortable: true, filter: true,rowGroup: true},
                             {headerName: "District", field: "district", sortable: true, filter: true,rowGroup: true,},
                             {headerName: "Created at", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120},

@@ -10,6 +10,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from "ag-grid-react";
 import axios from 'axios'
+import RatingRenderer from "@/components/renderer/RatingRenderer";
 
 
 
@@ -51,7 +52,7 @@ function Workers() {
 
   const workflowUUID = router.query["workflow-uuid"] as string;
 
-  const { data, error,  isLoading, } = useSWR(['/api/v1/member', searchQuery], memberFetcher);
+  const { data, error,  isLoading, } = useSWR([`/api/v1/${workflowUUID}/workers`, searchQuery], memberFetcher);
   console.log(data);
   const member = data || [];
 
@@ -92,6 +93,8 @@ if (isLoading) {
             { headerName: 'Name', field: 'name', sortable: true, filter: true, },
             { headerName: 'Email', field: 'email', sortable: true, filter: true, },
             { headerName: 'Phone No.', field: 'phone', sortable: true, filter: true, },
+            { headerName: 'Total Assignments', field: 'task_counts', sortable: true, filter: true, },
+            { headerName: 'Rating', field: 'rating', sortable: true, filter: true,cellRenderer: RatingRenderer },
             { headerName: 'Role', field: 'role', sortable: true, filter: true, },
             { headerName: 'Status', field: 'status', sortable: true, filter: true, },
             { headerName: 'CreatedAt', field: 'createdAt', sortable: true, filter: true, },
