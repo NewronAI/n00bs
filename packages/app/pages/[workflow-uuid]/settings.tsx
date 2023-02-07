@@ -6,11 +6,12 @@ import DashboardLayout from "@/components/layouts/DashboardLayout";
 import {useRouter} from "next/router";
 import ProfileSettingsTab from "@/components/ProfileSettingsTab";
 import AddQuestionToWorkflow from "@/components/AddQuestionToWorkflow";
-
+import IngestFilesDoc from "@/components/IngestFilesDoc";
 
 const tabs = [
     {id: "questions" ,name: 'Questions', },
     {id: "profile", name: 'Profile'},
+    {id: "files", name: 'Files'},
 ]
 const SettingsPage = () => {
 
@@ -23,13 +24,13 @@ const SettingsPage = () => {
     return (
         <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"settings"} workflowUUID={workflowUUID} />} >
             <Head>
-                <title>Settings</title>
+                <title>Settings & Docs</title>
             </Head>
             <main className="flex-1">
                 <div className="relative mx-auto max-w-6xl md:px-8 xl:px-0">
                     <div className="pt-10 pb-16">
                         <div className="px-4 sm:px-6 md:px-0">
-                            <h1 className="text-3xl font-bold tracking-tight ">Settings</h1>
+                            <h1 className="text-3xl font-bold tracking-tight ">Settings & Docs</h1>
                         </div>
                         <div className="px-4 sm:px-6 md:px-0">
                             <div className="py-6">
@@ -80,6 +81,8 @@ const SettingsPage = () => {
                                                 return <AddQuestionToWorkflow />
                                             case "profile":
                                                 return <ProfileSettingsTab />
+                                            case "files":
+                                                return <IngestFilesDoc workflowUUID={workflowUUID} />
                                         }
 
                                     })()

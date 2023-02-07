@@ -14,171 +14,198 @@ enum question_type {
   text
 }
 
-enum member_role{
+enum member_role {
   admin
   manager
   associate
   freelancer
 }
 
-enum obj_status{
+enum obj_status {
   active
   inactive
   deleted
 }
 
-enum file_type{
+enum file_type {
   image
   video
   audio
   document
 }
 
-enum task_status{
+enum task_status {
   pending
   in_progress
   completed
   cancelled
 }
 
-
-
-
-model workflow{
-  id        Int   @id @default(autoincrement())
-  uuid      String   @unique @default(uuid()) @db.Char(36)
-  name      String
-  desc      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
-  status    obj_status @default(active)
-  tasks task[]
+model workflow {
+  id             Int             @id @default(autoincrement())
+  uuid           String          @unique @default(uuid()) @db.Char(36)
+  name           String
+  desc           String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  deletedAt      DateTime?
+  status         obj_status      @default(active)
+  tasks          task[]
   workflow_items workflow_file[]
+  webhooks       webhook[]
 }
 
-model workflow_file{
-  id        Int   @id @default(autoincrement())
-  uuid      String   @unique @default(uuid()) @db.Char(36)
-  file_name String
-  file      String
-  file_type file_type @default(audio)
-  createdAt DateTime @default(now())
-  receivedAt DateTime? @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
-  status    obj_status @default(active)
-  workflow  workflow   @relation(fields: [workflow_id], references: [id])
-  workflow_id Int
-  file_duration Int?
+model workflow_file {
+  id               Int               @id @default(autoincrement())
+  uuid             String            @unique @default(uuid()) @db.Char(36)
+  file_name        String
+  file             String
+  file_type        file_type         @default(audio)
+  createdAt        DateTime          @default(now())
+  receivedAt       DateTime?         @default(now())
+  updatedAt        DateTime          @updatedAt
+  deletedAt        DateTime?
+  status           obj_status        @default(active)
+  workflow         workflow          @relation(fields: [workflow_id], references: [id])
+  workflow_id      Int
+  file_duration    Int?
   task_assignments task_assignment[]
-  district  String?
-  state     String?
-  vendor    String?
-  metadata  Json?
+  district         String?
+  state            String?
+  vendor           String?
+  metadata         Json?
 }
 
-model question{
-  id        Int   @id @default(autoincrement())
-  uuid      String   @unique @default(uuid()) @db.Char(36)
-  name      String
-  text      String
-  order     Int      @default(autoincrement())
-  required  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
-  question_type      question_type @default(boolean)
-  options   String[]
-  status    obj_status @default(active)
+model question {
+  id            Int             @id @default(autoincrement())
+  uuid          String          @unique @default(uuid()) @db.Char(36)
+  name          String
+  text          String
+  order         Int             @default(autoincrement())
+  required      Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  deletedAt     DateTime?
+  question_type question_type   @default(boolean)
+  options       String[]
+  status        obj_status      @default(active)
   task_question task_question[]
-  task_answers task_answer[]
+  task_answers  task_answer[]
 }
 
 model member {
-  id        Int   @id @default(autoincrement())
-  uuid      String   @unique @default(uuid()) @db.Char(36)
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
-  email     String  @unique
-  phone     String @unique
-  role      member_role @default(freelancer)
-  status    obj_status @default(active)
-  district  String?
-  state     String?
-  address   String?
-  pincode   String?
+  id              Int               @id @default(autoincrement())
+  uuid            String            @unique @default(uuid()) @db.Char(36)
+  name            String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime?
+  email           String            @unique @default(uuid()) @db.VarChar(255)
+  phone           String            @unique
+  role            member_role       @default(freelancer)
+  status          obj_status        @default(active)
+  district        String?
+  state           String?
+  address         String?
+  pincode         String?
   payment_details Json?
-  assignments task_assignment[] @relation("assignee")
-  reviews   task_assignment[] @relation("reviewer")
-  task_answers task_answer[]
+  assignments     task_assignment[] @relation("assignee")
+  reviews         task_assignment[] @relation("reviewer")
 }
 
-model task{
-  id        Int   @id @default(autoincrement())
-  uuid      String   @unique @default(uuid()) @db.Char(36)
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
-  status    obj_status @default(active)
-  workflow_id Int
-  workflow  workflow @relation(fields: [workflow_id], references: [id])
-  task_questions task_question[]
+model task {
+  id               Int               @id @default(autoincrement())
+  uuid             String            @unique @default(uuid()) @db.Char(36)
+  name             String
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  deletedAt        DateTime?
+  status           obj_status        @default(active)
+  workflow_id      Int
+  workflow         workflow          @relation(fields: [workflow_id], references: [id])
+  task_questions   task_question[]
   task_assignments task_assignment[]
-  min_assignments Int @default(3)
-  district  String?
-  state     String?
+  min_assignments  Int               @default(3)
+  district         String?
+  state            String?
 }
 
-model task_question{
-  id       Int      @default(autoincrement()) @id
-  uuid      String   @unique @default(uuid()) @db.Char(36)
-  createdAt DateTime @default(now())
-  task_id   Int
-  task      task @relation(fields: [task_id], references: [id])
+model task_question {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique @default(uuid()) @db.Char(36)
+  createdAt   DateTime @default(now())
+  task_id     Int
+  task        task     @relation(fields: [task_id], references: [id])
   question_id Int
-  questions  question @relation(fields: [question_id], references: [id])
+  questions   question @relation(fields: [question_id], references: [id])
 }
 
-model task_assignment{
-  id        Int   @id @default(autoincrement())
-  uuid      String   @unique @default(uuid()) @db.Char(36)
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  status    task_status @default(pending)
-  task_id Int
-  task task @relation(fields: [task_id], references: [id])
-  assignee_id Int
-  assignee member @relation(name: "assignee", fields: [assignee_id], references: [id])
+model task_assignment {
+  id               Int           @id @default(autoincrement())
+  uuid             String        @unique @default(uuid()) @db.Char(36)
+  name             String
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  status           task_status   @default(pending)
+  task_id          Int
+  task             task          @relation(fields: [task_id], references: [id])
+  assignee_id      Int
+  assignee         member        @relation(name: "assignee", fields: [assignee_id], references: [id])
   workflow_file_id Int
-  workflow_file workflow_file @relation(fields: [workflow_file_id], references: [id])
-  task_answers task_answer[]
-  review_rating Int?
-  review_comments String?
-  reviewer_id Int?
-  reviewer member? @relation(name: "reviewer", fields: [reviewer_id], references: [id])
+  workflow_file    workflow_file @relation(fields: [workflow_file_id], references: [id])
+  task_answers     task_answer[]
+  review_rating    Int?
+  review_comments  String?
+  reviewer_id      Int?
+  reviewer         member?       @relation(name: "reviewer", fields: [reviewer_id], references: [id])
 }
 
-model task_answer{
-  id        Int   @id @default(autoincrement())
-  uuid      String   @unique @default(uuid()) @db.Char(36)
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
-  status    obj_status @default(active)
+model task_answer {
+  id                 Int             @id @default(autoincrement())
+  uuid               String          @unique @default(uuid()) @db.Char(36)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
   task_assignment_id Int
-  task_assigment task_assignment @relation(fields: [task_assignment_id], references: [id])
-  member_id Int
-  members member @relation(fields: [member_id], references: [id])
-  question_id Int
-  questions question @relation(fields: [question_id], references: [id])
-  answer String
-
+  task_assigment     task_assignment @relation(fields: [task_assignment_id], references: [id])
+  question_id        Int
+  question           question        @relation(fields: [question_id], references: [id])
+  answer             String
 }
 
+enum events {
+  task_created
+  task_updated
+  task_deleted
+  task_assignment_created
+  task_assignment_updated
+  task_assignment_deleted
+  task_assignment_reviewed
+  workflow_created
+  workflow_updated
+  workflow_deleted
+  workflow_file_created
+  workflow_file_updated
+  workflow_file_deleted
+  question_created
+  question_updated
+  question_deleted
+  member_created
+  member_updated
+  member_deleted
+}
 
+model webhook {
+  id          Int        @id @default(autoincrement())
+  uuid        String     @unique @default(uuid()) @db.Char(36)
+  name        String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deletedAt   DateTime?
+  status      obj_status @default(active)
+  url         String
+  method      String
+  headers     Json?
+  events      String[]
+  workflow    workflow?  @relation(fields: [workflow_id], references: [id])
+  workflow_id Int?
+}
