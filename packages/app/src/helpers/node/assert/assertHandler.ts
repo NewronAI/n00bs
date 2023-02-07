@@ -1,6 +1,7 @@
 import {NextApiResponse} from "next";
 import AssertUpError from "@/interfaces/AssertUpError";
 import getLogger from "@/helpers/node/getLogger";
+import * as process from "process";
 
 function assertHandler(error: unknown, res?: NextApiResponse, defaultErrorCode = 500) : AssertUpError | undefined {
     // Custom handler to handle custom assert/assertUp errors
@@ -23,6 +24,10 @@ function assertHandler(error: unknown, res?: NextApiResponse, defaultErrorCode =
     }
 
     logger.error(errorMessage);
+
+    const prismaErrorRegex = /prisma/gi;
+
+    process.env.NODE_ENV === "production" && prismaErrorRegex.test(errorMessage) && (statusCode = 500, errorMessage = "Internal Server Error");
 
     if (res) {
         res.status(statusCode).json({message: errorMessage});
