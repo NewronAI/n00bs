@@ -1,10 +1,5 @@
-import PropTypes from 'prop-types';
-import React, {Key, SyntheticEvent, useMemo} from 'react';
-import clsx from "clsx";
-import ProfileSettingsTab from "@/components/ProfileSettingsTab";
-import Avatar from "@/components/Avatar";
+import React, {Key, SyntheticEvent} from 'react';
 import useSWR from "swr";
-import {useRouter} from "next/router";
 import Loader from "@/components/Loader";
 import {events, Prisma} from "@prisma/client";
 import Modal from "@/components/Modal";

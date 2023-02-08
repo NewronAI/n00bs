@@ -159,12 +159,12 @@ const Jobs = (props: TaskFilesPage) => {
                               },
                             { headerName: 'Task Name', field: 'task.name' },
                             { headerName: 'Created At', field: 'createdAt', cellRenderer: DateFromNowRenderer },
-                            { headerName: 'district', field: 'workflow_file.district' },
-                            { headerName: 'State', field: 'workflow_file.state' },
+                            { headerName: 'File District', field: 'workflow_file.district' },
+                            { headerName: 'File State', field: 'workflow_file.state' },
                             { headerName: 'Name', field: 'assignee.name' },
                             { headerName: 'Email', field: 'assignee.email' },
-                            { headerName: 'district', field: 'assignee.district' },
-                            { headerName: 'State', field: 'assignee.state' },
+                            { headerName: 'Member District', field: 'assignee.district' },
+                            { headerName: 'Member State', field: 'assignee.state' },
                         ]}
                     />
                 </div>
