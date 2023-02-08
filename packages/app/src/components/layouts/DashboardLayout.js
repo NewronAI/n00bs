@@ -207,7 +207,7 @@ export default function DashboardLayout({
                         </div>
                     </header>*/}
                     <main>
-                        <div className="mx-auto max-w-[1900px]">
+                        <div className="mx-auto max-w-[1550px]">
                             {/* Replace with your content */}
                             {
                                 children
