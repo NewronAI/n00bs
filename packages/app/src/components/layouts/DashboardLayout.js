@@ -61,9 +61,9 @@ export default function DashboardLayout({
                                         <div className="flex flex-shrink-0 items-center">
                                             <Link href={"/"}>
                                             <h1 className={"text-3xl tracking-wider font-bold"}>
-                                        <span className={"text-gradient "}>
-                                            noOBS
-                                        </span>
+                                                <span className={"text-secondary "}>
+                                                    noOBS
+                                                </span>
                                             </h1>
                                             </Link>
                                         </div>
@@ -75,7 +75,7 @@ export default function DashboardLayout({
                                                     className={clsx(
                                                         item.name.toLowerCase() === currentPage
                                                             ? 'border-indigo-500 text-zinc-800 dark:text-zinc-100'
-                                                            : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:border-gray-300 hover:text-zinc-700',
+                                                            : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:border-gray-300 hover:text-zinc-200',
                                                         'inline-flex items-center px-1 pt-1 border-b-2 text-normal font-medium'
                                                     )}
                                                     aria-current={item.name === currentPage ? 'page' : undefined}

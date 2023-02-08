@@ -34,7 +34,7 @@ const WorkflowNav = (props : WorkflowNavProps) => {
                     className={clsx(
                         item.name.toLowerCase() === currentPage
                             ? 'border-indigo-500 text-zinc-500 dark:text-zinc-100'
-                            : 'border-transparent text-zinc-300 dark:text-zinc-200 hover:border-gray-300 hover:text-zinc-700',
+                            : 'border-transparent text-zinc-300 dark:text-zinc-200 hover:border-gray-300 hover:text-zinc-100',
                         'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-thin'
                     )}
                     aria-current={item.name === currentPage ? 'page' : undefined}
