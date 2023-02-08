@@ -6,9 +6,10 @@ import Avatar from "@/components/Avatar";
 import useSWR from "swr";
 import {useRouter} from "next/router";
 import Loader from "@/components/Loader";
-import {Prisma} from "@prisma/client";
+import {events, Prisma} from "@prisma/client";
 import Modal from "@/components/Modal";
 import axios from "axios";
+import _ from "lodash";
 
 type AddWebhookProps = {
     workflowUUID: string
@@ -154,6 +155,72 @@ const AddWebhook = ( props : AddWebhookProps ) => {
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div className={"flex flex-col gap-2 px-5 mt-4"}>
+
+                        <div>
+                            <label htmlFor="name" className="block text-sm font-medium ">
+                                Webhook Name*
+                            </label>
+                            <div className="mt-1">
+                                <input className={"input w-full"} type="text" name="name" id="name" required/>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label htmlFor="url" className="block text-sm font-medium ">
+                                Webhook URL*
+                            </label>
+                            <div className="mt-1">
+                                <input className={"input w-full"} type="text" name="url" id="url" required/>
+                            </div>
+                        </div>
+
+                       <div className={"flex w-full gap-2"}>
+                            <div className={"w-1/2"}>
+                                <label htmlFor="method" className="block text-sm font-medium ">
+                                    Method*
+                                </label>
+                                <div className="mt-1">
+                                    <select className={"select w-full"} name="method" id="method" required>
+                                        <option value="POST">POST</option>
+                                        <option value="GET">GET</option>
+                                        <option value="PUT">PUT</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className={"w-1/2"}>
+                                <label htmlFor="Event" className="block text-sm font-medium ">
+                                    Event*
+                                </label>
+                                <div className="mt-1">
+                                    <select className={"select w-full"} name="event" id="event" required>
+                                        {
+                                            Object.keys(events).map((event) => {
+                                                let event_name = event.split("_").join(" ");
+                                                return <option value={event}>{_.capitalize(event_name)}</option>
+                                            })
+                                        }
+                                    </select>
+                                    <div>
+                                        <p className="text-xs text-warning px-4 mt-2">
+                                            Note: Not all events are implemented yet.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                       </div>
+
+                        <div>
+                            <label htmlFor="body" className="block text-sm font-medium ">
+                                Secret (optional, will be sent in the header)
+                            </label>
+                            <div className="mt-1">
+                                <input className={"input w-full"} type="text" name="secret" id="secret"/>
+                            </div>
+                        </div>
+
                     </div>
 
 
