@@ -1,9 +1,14 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
+import webhookHandler from "@/helpers/node/webhookHandler";
+import {events} from "@prisma/client";
+import getLogger from "@/helpers/node/getLogger";
 
 const assignTaskApi = new NextExpress();
 
+
+const logger = getLogger('assignTaskApi');
 
 assignTaskApi.post(async (req, res) => {
 
@@ -101,6 +106,12 @@ assignTaskApi.post(async (req, res) => {
     const newAssignmentsResult = await db.task_assignment.createMany({
         data: newAssignmentsData
     });
+
+    console.log("====================================");
+     await webhookHandler(events.task_assignment_created, workflowUUID, newAssignmentsResult)
+    //     .then(() => {
+    //     console.log("Webhook triggered");
+    // });
 
     res.status(200).json(newAssignmentsResult);
 

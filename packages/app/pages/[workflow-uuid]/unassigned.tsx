@@ -121,7 +121,6 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
 
         const selectedMemberUUID : string = selectedMembers[0].uuid;
 
-
         try {
             await axios.post(`/api/v1/${workflowUUID}/task/assign`, {
                 "workflow-file-uuids": selectedRows.map((row) => row.uuid),
@@ -177,6 +176,7 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                                 ref={memberGridRef}
                                 rowSelection='single'
                                 paginationPageSize={6}
+                                groupDefaultExpanded={2}
                                 columnDefs={[
                                     {
                                         headerName: "Name",
