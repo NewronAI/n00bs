@@ -107,11 +107,9 @@ assignTaskApi.post(async (req, res) => {
         data: newAssignmentsData
     });
 
-    console.log("====================================");
-     await webhookHandler(events.task_assignment_created, workflowUUID, newAssignmentsResult)
-    //     .then(() => {
-    //     console.log("Webhook triggered");
-    // });
+     webhookHandler(events.task_assignment_created, workflowUUID, newAssignmentsResult).then(() => {
+        console.log("Webhook triggered");
+    });
 
     res.status(200).json(newAssignmentsResult);
 
