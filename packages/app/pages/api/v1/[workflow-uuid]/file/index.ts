@@ -1,7 +1,6 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 import {NextApiRequest, NextApiResponse} from "next";
-import {obj_status} from "@prisma/client";
 import assertUp from "@/helpers/node/assert/assertUp";
 
 const fileApi = new NextExpress();

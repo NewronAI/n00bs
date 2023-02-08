@@ -1,25 +1,11 @@
-import React, {Fragment, useState} from 'react';
-
-import PropTypes from 'prop-types';
+import React from 'react';
 import useSWR from 'swr';
 import axios from 'axios';
-
-import { Dialog, Transition } from '@headlessui/react'
-
-import {
-    LinkIcon, PlusIcon, QuestionMarkCircleIcon, XIcon
-} from '@heroicons/react/outline';
-import clsx from 'clsx';
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 import Head from "next/head";
-import MemberItem from "@/interfaces/MemberItem";
-import Avatar from "@/components/Avatar";
-import {SearchIcon} from "@heroicons/react/solid";
-import {member_role, obj_status} from "@prisma/client";
+import {member_role} from "@prisma/client";
 import CreateUpdateQuestion from "@/components/CreateUpdateQuestion";
 import QuestionItem from "@/interfaces/QuestionItem";
-
-
 
 
 import Loader from '@/components/Loader';

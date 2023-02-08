@@ -1,16 +1,16 @@
-import React, { useRef } from 'react'
+import React, {useRef} from 'react'
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.min.css';
 import 'ag-grid-community/styles/ag-theme-balham.min.css';
-import { AgGridReact } from "ag-grid-react";
-import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact'
+import {AgGridReact} from "ag-grid-react";
+import {AgGridReact as AgGridReactType} from 'ag-grid-react/lib/agGridReact'
 import useSWR from "swr";
 import WorkflowNav from "@/components/layouts/WorkflowNav";
 import Head from "next/head";
 import {Prisma} from "@prisma/client";
 import Loader from "@/components/Loader";
-import { useRouter } from 'next/router';
+import {useRouter} from 'next/router';
 import DateFromNowRenderer from '@/components/renderer/DateFromNowRenderer';
 import 'ag-grid-enterprise';
 import UrlRenderer from '@/components/renderer/UrlRenderer'

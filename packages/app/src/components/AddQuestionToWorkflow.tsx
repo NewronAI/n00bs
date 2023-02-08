@@ -1,7 +1,4 @@
 import React, {Key, SyntheticEvent, useMemo} from 'react';
-import clsx from "clsx";
-import ProfileSettingsTab from "@/components/ProfileSettingsTab";
-import Avatar from "@/components/Avatar";
 import useSWR from "swr";
 import {useRouter} from "next/router";
 import Loader from "@/components/Loader";

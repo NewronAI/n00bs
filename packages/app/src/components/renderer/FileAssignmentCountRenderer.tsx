@@ -1,5 +1,4 @@
 import React, {useRef} from 'react';
-import PropTypes from 'prop-types';
 import {Prisma} from "@prisma/client";
 import axios from "axios";
 import {Tooltip} from "react-tooltip";

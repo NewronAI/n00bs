@@ -1,7 +1,6 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
-import {Prisma} from "@prisma/client";
 
 const unassignedFilesApi = new NextExpress();
 

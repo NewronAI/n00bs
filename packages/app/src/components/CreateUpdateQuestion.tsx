@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
 import clsx from "clsx";
 import {PencilIcon, PlusIcon} from "@heroicons/react/outline";
 import {TrashIcon} from "@heroicons/react/solid";
-import {obj_status, question_type} from "@prisma/client";
+import {question_type} from "@prisma/client";
 import QuestionItem from "@/interfaces/QuestionItem";
 import axios from "axios";
 

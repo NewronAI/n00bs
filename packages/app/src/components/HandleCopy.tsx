@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {ClipboardIcon} from "@heroicons/react/outline";
 
 interface HandleCopyProps {

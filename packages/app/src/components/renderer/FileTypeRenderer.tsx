@@ -1,6 +1,6 @@
 import React from 'react'
-import { PhotographIcon, VolumeUpIcon, VideoCameraIcon, DocumentIcon } from '@heroicons/react/outline'
-import { file_type } from '@prisma/client';
+import {DocumentIcon, PhotographIcon, VideoCameraIcon, VolumeUpIcon} from '@heroicons/react/outline'
+import {file_type} from '@prisma/client';
 
 type FileTypeRendererProps = {
     value: file_type

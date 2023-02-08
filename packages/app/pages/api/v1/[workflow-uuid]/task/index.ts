@@ -1,7 +1,7 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
-import {Prisma, task} from "@prisma/client";
+import {Prisma} from "@prisma/client";
 
 const taskApi = new NextExpress();
 

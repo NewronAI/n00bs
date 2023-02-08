@@ -1,14 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import clsx from "clsx";
 import useSWRImmutable from "swr/immutable";
 import {Prisma} from "@prisma/client";
 import {
-    ChartSquareBarIcon, CogIcon,
-    CollectionIcon,
+    ChartSquareBarIcon,
+    CogIcon,
     DocumentDuplicateIcon,
     DocumentIcon,
-    DocumentTextIcon, UserGroupIcon, ViewBoardsIcon
+    DocumentTextIcon,
+    UserGroupIcon,
+    ViewBoardsIcon
 } from "@heroicons/react/outline";
 
 export interface WorkflowNavProps {

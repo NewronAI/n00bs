@@ -1,5 +1,4 @@
 import React, {Fragment} from 'react';
-import PropTypes from 'prop-types';
 import {Dialog, Transition} from "@headlessui/react";
 
 type ModalProps = {

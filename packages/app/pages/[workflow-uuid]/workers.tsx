@@ -1,20 +1,17 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
 import WorkflowNav from "@/components/layouts/WorkflowNav";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import { useRouter } from 'next/router';
+import {useRouter} from 'next/router';
 import Head from "next/head";
-import { ClipLoader } from 'react-spinners';
 import useSWR from "swr";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { AgGridReact } from "ag-grid-react";
+import {AgGridReact} from "ag-grid-react";
 import axios from 'axios'
 import RatingRenderer from "@/components/renderer/RatingRenderer";
 import DateFromNowRenderer from "@/components/renderer/DateFromNowRenderer";
 import Loader from "@/components/Loader";
-
-
 
 
 interface MemberFetchSearch {

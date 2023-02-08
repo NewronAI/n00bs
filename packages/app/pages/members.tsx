@@ -1,29 +1,23 @@
-import React, { Fragment, useState } from 'react';
-
-import PropTypes from 'prop-types';
+import React, {Fragment, useState} from 'react';
 import useSWR from 'swr';
 import axios from 'axios';
 
-import { Dialog, Transition } from '@headlessui/react'
+import {Dialog, Transition} from '@headlessui/react'
 
-import {
-    LinkIcon, PlusIcon, QuestionMarkCircleIcon, XIcon
-} from '@heroicons/react/outline';
+import {XIcon} from '@heroicons/react/outline';
 import clsx from 'clsx';
 
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 import Head from "next/head";
 import MemberItem from "@/interfaces/MemberItem";
 import Avatar from "@/components/Avatar";
-import { SearchIcon } from "@heroicons/react/solid";
-import { member_role, obj_status } from "@prisma/client";
+import {SearchIcon} from "@heroicons/react/solid";
+import {member_role, obj_status} from "@prisma/client";
 
 
 import Loader from '@/components/Loader';
 import {PulseLoader} from 'react-spinners';
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
-
-
 
 
 interface MemberFetchSearch {

@@ -1,15 +1,8 @@
-import React, { ReactPropTypes } from 'react';
-import PropTypes from 'prop-types';
-import useSWR from 'swr';
-import axios from 'axios';
+import React from 'react';
 
-import {
-    UsersIcon,
-    QuestionMarkCircleIcon,
-    BeakerIcon
-} from '@heroicons/react/outline';
+import {BeakerIcon, QuestionMarkCircleIcon, UsersIcon} from '@heroicons/react/outline';
 import clsx from 'clsx';
-import { db } from "@/helpers/node/db";
+import {db} from "@/helpers/node/db";
 
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 import Head from "next/head";

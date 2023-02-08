@@ -1,8 +1,6 @@
 import React from 'react';
 import WorkflowNav from "@/components/layouts/WorkflowNav";
 import Head from "next/head";
-import HandleCopy from "@/components/HandleCopy";
-import workflow from "../api/v1/workflow";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import {useRouter} from "next/router";
 import {AgGridReact} from "ag-grid-react";
@@ -10,7 +8,6 @@ import useSWR from "swr";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import UrlRenderer from '@/components/renderer/UrlRenderer'
-import { ClipLoader } from 'react-spinners';
 import FileTypeRenderer from '@/components/renderer/FileTypeRenderer';
 import DateFromNowRenderer from '../../src/components/renderer/DateFromNowRenderer';
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";

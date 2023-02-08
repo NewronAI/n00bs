@@ -1,23 +1,20 @@
-import React, { useMemo, useRef } from 'react';
-import PropTypes from 'prop-types';
-import { useRouter } from "next/router";
+import React, {useMemo, useRef} from 'react';
+import {useRouter} from "next/router";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import WorkflowNav from "@/components/layouts/WorkflowNav";
 import Head from "next/head";
-import { AgGridReact } from "ag-grid-react";
-import moment from "moment/moment";
+import {AgGridReact} from "ag-grid-react";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'ag-grid-community/styles/ag-theme-balham.min.css';
 import useSWR from "swr";
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import Loader from '@/components/Loader';
-import { ClipLoader } from 'react-spinners';
 import Modal from "@/components/Modal";
 import axios from 'axios';
 import {member_role, Prisma} from "@prisma/client";
 import DateFromNowRenderer from '@/components/renderer/DateFromNowRenderer';
-import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact'
+import {AgGridReact as AgGridReactType} from 'ag-grid-react/lib/agGridReact'
 
 
 interface TaskFilesPage {

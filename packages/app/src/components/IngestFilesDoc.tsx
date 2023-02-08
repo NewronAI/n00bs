@@ -1,9 +1,6 @@
 import React, {useEffect} from 'react';
-import PropTypes from 'prop-types';
 import getPublicWorkflowAPISecret from "@/helpers/getPublicWorkflowAPISecret";
-import {ClipboardIcon} from "@heroicons/react/outline";
 import HandleCopy from "@/components/HandleCopy";
-
 
 
 const IngestFilesDoc = ({workflowUUID = "7d1b4c3d-51f6-4902-97b3-8fb9fd1e1aff"} : {workflowUUID?: string}) => {
