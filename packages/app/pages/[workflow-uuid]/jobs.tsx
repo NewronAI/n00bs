@@ -50,15 +50,7 @@ const Jobs = (props: TaskFilesPage) => {
         filter: true
     }), []);
 
-    if (error) {
-        return <div>Error fetching</div>
-    }
 
-    if (isLoading) {
-        return <div className="flex items-center justify-center h-screen">
-            <ClipLoader size={50} color={'#123abc'} />
-        </div>;
-    }
 
     const handleReassign = async () => {
 
@@ -122,6 +114,10 @@ const Jobs = (props: TaskFilesPage) => {
         setDelData(data)
     }
 
+    if (error) {
+        return <div>Error fetching</div>
+    }
+
     return (
         <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"jobs"} workflowUUID={workflowUUID} />}>
             <Head>
@@ -141,6 +137,7 @@ const Jobs = (props: TaskFilesPage) => {
                     <div className={"flex items-center"}>
                     </div>
                 </div>
+                <Loader isLoading={isLoading} >
                 <div className={"w-full h-[760px] p-4  ag-theme-alpine-dark"}>
                     <AgGridReact
                         rowData={task}
@@ -168,6 +165,7 @@ const Jobs = (props: TaskFilesPage) => {
                         ]}
                     />
                 </div>
+                </Loader>
             </div>
             <Modal open={assignDialogOpenDelete}
                    onClose={handleDialogClose}
