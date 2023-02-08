@@ -203,7 +203,7 @@ const AddWebhook = ( props : AddWebhookProps ) => {
                                         {
                                             Object.keys(events).map((event) => {
                                                 let event_name = event.split("_").join(" ");
-                                                return <option value={event}>{_.capitalize(event_name)}</option>
+                                                return <option key={event} value={event}>{_.capitalize(event_name)}</option>
                                             })
                                         }
                                     </select>
