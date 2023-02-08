@@ -86,11 +86,11 @@ const DashboardPage = (props: DashboardProps) => {
                         </div>
 
                         <div className='grid grid-cols-4 gap-7 justify-center items-center mt-10 border-hidden'>
-                            <div className='text-center rounded-xl text-3xl bg-black p-7 shadow-xl'>{file.filesCount}<p className='text-lg font-bold'>Total Files</p></div>
-                            <div className='text-center rounded-xl text-3xl bg-black p-7 shadow-xl'>{file.assignedFilesCount}<p className='text-lg font-bold'>Total Assigned Files</p></div>
-                            <div className='text-center rounded-xl text-3xl bg-black p-7 shadow-xl'>{file.assignedJobsCount}<p className='text-lg font-bold'>Total Assigned Jobs</p></div>
-                            <div className='text-center rounded-xl text-3xl bg-black p-7 shadow-xl'>{file.pendingJobsCount}<p className='text-lg font-bold'>Total Pending Jobs</p></div>
-                            <div className='text-center rounded-xl text-3xl bg-black p-7 shadow-xl '>{file.completedJobsCount}<p className='text-lg font-bold'>Total Completed Jobs</p></div>
+                            <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.filesCount}<p className='text-lg font-bold'>Total Files</p></div>
+                            <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.assignedFilesCount}<p className='text-lg font-bold'>Total Assigned Files</p></div>
+                            <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.assignedJobsCount}<p className='text-lg font-bold'>Total Assigned Jobs</p></div>
+                            <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.pendingJobsCount}<p className='text-lg font-bold'>Total Pending Jobs</p></div>
+                            <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.completedJobsCount}<p className='text-lg font-bold'>Total Completed Jobs</p></div>
                         </div>
                     </div>
                 }

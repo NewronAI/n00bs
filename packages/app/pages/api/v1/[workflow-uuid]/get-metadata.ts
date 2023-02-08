@@ -21,3 +21,5 @@ getWorkFlowMetadata.get(async (req, res) => {
 
     res.status(200).json(workflowMetadata);
 });
+
+export default getWorkFlowMetadata.handler;

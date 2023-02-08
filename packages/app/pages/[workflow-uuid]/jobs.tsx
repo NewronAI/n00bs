@@ -123,7 +123,7 @@ const Jobs = (props: TaskFilesPage) => {
     }
 
     return (
-        <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"tasks"} workflowUUID={workflowUUID} />}>
+        <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"jobs"} workflowUUID={workflowUUID} />}>
             <Head>
                 <title>Tasks</title>
             </Head>

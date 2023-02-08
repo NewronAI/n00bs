@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from "clsx";
+import useSWRImmutable from "swr/immutable";
+import {Prisma} from "@prisma/client";
 
 export interface WorkflowNavProps {
     currentPage?: string;
@@ -25,8 +27,18 @@ const WorkflowNav = (props : WorkflowNavProps) => {
 
     const { currentPage, workflowUUID } = props;
 
+    const {data : workflow} = useSWRImmutable<Prisma.workflowSelect>(`/api/v1/${workflowUUID}/get-metadata`);
+
     return (
         <div className="hidden sm:flex sm:space-x-8">
+
+            <div>
+                <h3 className="inline-flex items-center px-1 pt-1  text-sm font-semibold">
+                    {workflow?.name}
+                </h3>
+
+            </div>
+
             {navigation.map((item) => (
                 <a
                     key={item.name}
