@@ -7,10 +7,12 @@ import {useRouter} from "next/router";
 import ProfileSettingsTab from "@/components/ProfileSettingsTab";
 import AddQuestionToWorkflow from "@/components/AddQuestionToWorkflow";
 import IngestFilesDoc from "@/components/IngestFilesDoc";
+import AddWebhook from "@/components/AddWebhook";
 
 const tabs = [
-    {id: "questions" ,name: 'Questions', },
     {id: "profile", name: 'Profile'},
+    {id: "questions" ,name: 'Questions', },
+    {id: "webhooks", name: 'Webhooks'},
     {id: "files", name: 'Files'},
 ]
 const SettingsPage = () => {
@@ -43,7 +45,7 @@ const SettingsPage = () => {
                                         id="selected-tab"
                                         name="selected-tab"
                                         onChange={(e) => setSelectedTab(e.target.value)}
-                                        className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-purple-500 focus:outline-none focus:ring-purple-500 sm:text-sm"
+                                        className="select w-full text-xl pl-2 -ml-3"
                                         defaultValue={tabs[0].id}
                                     >
                                         {tabs.map((tab) => (
@@ -83,6 +85,8 @@ const SettingsPage = () => {
                                                 return <ProfileSettingsTab />
                                             case "files":
                                                 return <IngestFilesDoc workflowUUID={workflowUUID} />
+                                            case "webhooks":
+                                                return <AddWebhook workflowUUID={workflowUUID} />
                                         }
 
                                     })()

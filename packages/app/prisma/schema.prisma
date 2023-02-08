@@ -194,18 +194,25 @@ enum events {
   member_deleted
 }
 
+enum request_method {
+  GET
+  POST
+  PUT
+}
+
 model webhook {
-  id          Int        @id @default(autoincrement())
-  uuid        String     @unique @default(uuid()) @db.Char(36)
+  id          Int            @id @default(autoincrement())
+  uuid        String         @unique @default(uuid()) @db.Char(36)
   name        String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
   deletedAt   DateTime?
-  status      obj_status @default(active)
+  status      obj_status     @default(active)
   url         String
-  method      String
+  method      request_method @default(POST)
+  secret      String?        @db.VarChar(255)
   headers     Json?
-  events      String[]
-  workflow    workflow?  @relation(fields: [workflow_id], references: [id])
+  event       events
+  workflow    workflow?      @relation(fields: [workflow_id], references: [id])
   workflow_id Int?
 }

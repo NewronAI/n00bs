@@ -135,7 +135,7 @@ const AddQuestionToWorkflow = () => {
 
             <div className="mt-10 divide-y divide-gray-200">
                 <div className="space-y-1">
-                    <button className={"btn w-full btn-primary"} onClick={toggleAddQuestionModal} >
+                    <button className={"btn w-full btn-secondary"} onClick={toggleAddQuestionModal} >
                         Import More Question
                     </button>
                 </div>

@@ -11,6 +11,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from "ag-grid-react";
 import axios from 'axios'
 import RatingRenderer from "@/components/renderer/RatingRenderer";
+import DateFromNowRenderer from "@/components/renderer/DateFromNowRenderer";
 
 
 
@@ -89,17 +90,14 @@ if (isLoading) {
           rowData={member}
           pagination={true}
           columnDefs={[
-            { headerName: 'id', field: 'id', sortable: true, filter: true, },
             { headerName: 'Name', field: 'name', sortable: true, filter: true, },
             { headerName: 'Email', field: 'email', sortable: true, filter: true, },
             { headerName: 'Phone No.', field: 'phone', sortable: true, filter: true, },
-            { headerName: 'Total Assignments', field: 'task_counts', sortable: true, filter: true, },
+            { headerName: 'Total Assignments', field: 'task_counts', sortable: true, filter: true },
             { headerName: 'Rating', field: 'rating', sortable: true, filter: true,cellRenderer: RatingRenderer },
             { headerName: 'Role', field: 'role', sortable: true, filter: true, },
             { headerName: 'Status', field: 'status', sortable: true, filter: true, },
-            { headerName: 'CreatedAt', field: 'createdAt', sortable: true, filter: true, },
-            { headerName: 'UpdatedAt', field: 'updatedAt', sortable: true, filter: true, },
-
+            { headerName: 'Added on', field: 'createdAt', sortable: true, filter: true, cellRenderer: DateFromNowRenderer},
             { headerName: 'District', field: 'district', sortable: true, filter: true, },
             { headerName: 'District', field: 'district', sortable: true, filter: true, },
             { headerName: 'State', field: 'state', sortable: true, filter: true, },

@@ -4,11 +4,21 @@ import { ClipLoader } from 'react-spinners';
 
 type LoaderProps={
     isLoading:boolean;
+    error: string;
     children:string|JSX.Element|JSX.Element[];
 }
 
 
-function Loader({ children, isLoading } :LoaderProps) { 
+function Loader({ children, isLoading , error} :LoaderProps) {
+
+    if (error && !isLoading) {
+        return (
+            <div className="flex items-center justify-center h-[200px]">
+                <h1 className="text-2xl font-semibold text-gray-700">Error loading data : {error}</h1>
+            </div>
+        )
+
+    }
 
     if (isLoading) {
         return (
