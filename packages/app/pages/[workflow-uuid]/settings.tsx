@@ -13,7 +13,7 @@ const tabs = [
     {id: "profile", name: 'Profile'},
     {id: "questions" ,name: 'Questions', },
     {id: "webhooks", name: 'Webhooks'},
-    {id: "files", name: 'Files'},
+    {id: "docs", name: 'Workflow Docs'},
 ]
 const SettingsPage = () => {
 
@@ -26,13 +26,13 @@ const SettingsPage = () => {
     return (
         <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"settings"} workflowUUID={workflowUUID} />} >
             <Head>
-                <title>Settings & Docs</title>
+                <title>Settings</title>
             </Head>
             <main className="flex-1">
                 <div className="relative mx-auto max-w-6xl md:px-8 xl:px-0">
                     <div className="pt-10 pb-16">
                         <div className="px-4 sm:px-6 md:px-0">
-                            <h1 className="text-3xl font-bold tracking-tight ">Settings & Docs</h1>
+                            <h1 className="text-3xl font-bold tracking-tight ">Settings</h1>
                         </div>
                         <div className="px-4 sm:px-6 md:px-0">
                             <div className="py-6">
@@ -62,8 +62,8 @@ const SettingsPage = () => {
                                                     onClick={() => setSelectedTab(tab.id)}
                                                     className={clsx(
                                                         selectedTab === tab.id
-                                                            ? 'border-purple-500 text-purple-600'
-                                                            : 'border-transparent text-gray-400 hover:border-gray-300 hover:text-gray-700',
+                                                            ? 'border-secondary text-secondary'
+                                                            : 'border-transparent text-gray-400 hover:border-gray-300 hover:text-gray-200',
                                                         'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'
                                                     )}
                                                 >
@@ -83,7 +83,7 @@ const SettingsPage = () => {
                                                 return <AddQuestionToWorkflow />
                                             case "profile":
                                                 return <ProfileSettingsTab />
-                                            case "files":
+                                            case "docs":
                                                 return <IngestFilesDoc workflowUUID={workflowUUID} />
                                             case "webhooks":
                                                 return <AddWebhook workflowUUID={workflowUUID} />
