@@ -41,6 +41,33 @@ enum task_status {
   cancelled
 }
 
+enum events {
+  task_created
+  task_updated
+  task_deleted
+  task_assignment_created
+  task_assignment_updated
+  task_assignment_deleted
+  task_assignment_reviewed
+  workflow_created
+  workflow_updated
+  workflow_deleted
+  workflow_file_created
+  workflow_file_updated
+  workflow_file_deleted
+  question_created
+  question_updated
+  question_deleted
+  member_created
+  member_updated
+  member_deleted
+}
+
+enum request_method {
+  POST
+  PUT
+}
+
 model workflow {
   id             Int             @id @default(autoincrement())
   uuid           String          @unique @default(uuid()) @db.Char(36)
@@ -170,34 +197,6 @@ model task_answer {
   question_id        Int
   question           question        @relation(fields: [question_id], references: [id])
   answer             String
-}
-
-enum events {
-  task_created
-  task_updated
-  task_deleted
-  task_assignment_created
-  task_assignment_updated
-  task_assignment_deleted
-  task_assignment_reviewed
-  workflow_created
-  workflow_updated
-  workflow_deleted
-  workflow_file_created
-  workflow_file_updated
-  workflow_file_deleted
-  question_created
-  question_updated
-  question_deleted
-  member_created
-  member_updated
-  member_deleted
-}
-
-enum request_method {
-  GET
-  POST
-  PUT
 }
 
 model webhook {

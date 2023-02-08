@@ -190,7 +190,6 @@ const AddWebhook = ( props : AddWebhookProps ) => {
                                 <div className="mt-1">
                                     <select className={"select w-full"} name="method" id="method" required>
                                         <option value="POST">POST</option>
-                                        <option value="GET">GET</option>
                                         <option value="PUT">PUT</option>
                                     </select>
                                 </div>
