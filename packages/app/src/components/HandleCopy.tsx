@@ -1,5 +1,5 @@
 import React from 'react';
-import {ClipboardIcon} from "@heroicons/react/outline";
+import {CheckIcon, ClipboardIcon} from "@heroicons/react/outline";
 
 interface HandleCopyProps {
     text: string;
@@ -22,7 +22,7 @@ const HandleCopy = (props : HandleCopyProps) => {
     return (
         <button onClick={handleCopy} disabled={copied}>
             {
-                copied ? <span className={"text-primary"}>Copied</span> : <ClipboardIcon className={"h-4 w-4"} />
+                copied ? <CheckIcon className={"h-4 w-4 text-green-500"} /> : <ClipboardIcon className={"h-4 w-4"} />
             }
         </button>
     );

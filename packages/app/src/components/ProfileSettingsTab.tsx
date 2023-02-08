@@ -8,7 +8,7 @@ const ProfileSettingsTab = () => {
 
     return (
         <div>
-            <div className="mt-10 divide-y divide-gray-200">
+            <div className="mt-10 divide-y divide-gray-600">
                 <div className="space-y-1">
                     <h3 className="text-lg font-medium leading-6 ">Profile</h3>
                     <p className="max-w-2xl text-sm text-gray-400">
@@ -16,7 +16,7 @@ const ProfileSettingsTab = () => {
                     </p>
                 </div>
                 <div className="mt-6">
-                    <dl className="divide-y divide-gray-200">
+                    <dl className="divide-y divide-gray-600">
                         <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
                             <dt className="text-sm font-medium text-gray-400">Name</dt>
                             <dd className="mt-1 flex text-sm  sm:col-span-2 sm:mt-0">
@@ -82,7 +82,7 @@ const ProfileSettingsTab = () => {
                 </div>
             </div>
 
-            <div className="mt-10 divide-y divide-gray-200">
+            <div className="mt-10 divide-y divide-gray-600">
                 <div className="space-y-1">
                     <h3 className="text-lg font-medium leading-6 ">Account</h3>
                     <p className="max-w-2xl text-sm text-gray-400">
@@ -90,7 +90,7 @@ const ProfileSettingsTab = () => {
                     </p>
                 </div>
                 <div className="mt-6">
-                    <dl className="divide-y divide-gray-200">
+                    <dl className="divide-y divide-gray-600">
                         <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
                             <dt className="text-sm font-medium text-gray-400">Language</dt>
                             <dd className="mt-1 flex text-sm  sm:col-span-2 sm:mt-0">

@@ -92,7 +92,7 @@ const AddWebhook = ( props : AddWebhookProps ) => {
 
     return (
         <div>
-            <div className="mt-10 divide-y divide-gray-200">
+            <div className="mt-10">
                 <div className="space-y-1">
                     <h3 className="text-lg font-medium leading-6 ">Webhooks</h3>
                     <p className="max-w-2xl text-sm text-gray-400">
@@ -106,7 +106,7 @@ const AddWebhook = ( props : AddWebhookProps ) => {
                                 webhooks?.map((webhook) => {
                                     const uuid = webhook.uuid as unknown as Key;
                                     return (
-                                        <dl key={uuid} className="divide-y divide-gray-200">
+                                        <dl key={uuid} className="">
                                             <div className="py-4 flex justify-between sm:gap-4 sm:py-5">
                                                 <dt className="text-sm font-medium text-gray-400">{webhook.name}</dt>
                                                 <dd className="mt-1 flex text-sm  sm:col-span-2 sm:mt-0">

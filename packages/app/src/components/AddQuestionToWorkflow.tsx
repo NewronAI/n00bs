@@ -84,7 +84,7 @@ const AddQuestionToWorkflow = () => {
 
     return (
         <div>
-            <div className="mt-10 divide-y divide-gray-200">
+            <div className="mt-10 ">
                 <div className="space-y-1">
                     <h3 className="text-lg font-medium leading-6 ">Questions</h3>
                     <p className="max-w-2xl text-sm text-gray-400">
@@ -98,7 +98,7 @@ const AddQuestionToWorkflow = () => {
                                 questions?.map((question) => {
                                     const uuid = question.uuid as unknown as Key;
                                     return (
-                                        <dl key={uuid} className="divide-y divide-gray-200">
+                                        <dl key={uuid} className="divide-y divide-gray-600">
                                             <div className="py-4 flex justify-between sm:gap-4 sm:py-5">
                                                 <dt className="text-sm font-medium text-gray-400">{question.name}</dt>
                                                 <dd className="mt-1 flex text-sm  sm:col-span-2 sm:mt-0">
