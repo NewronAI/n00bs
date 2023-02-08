@@ -4,7 +4,7 @@ import { ClipLoader } from 'react-spinners';
 
 type LoaderProps={
     isLoading:boolean;
-    error: string;
+    error?: string;
     children:string|JSX.Element|JSX.Element[];
 }
 
