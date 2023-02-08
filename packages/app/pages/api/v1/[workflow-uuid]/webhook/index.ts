@@ -18,8 +18,7 @@ webhookManagementAPI.get(async (req, res) => {
         where: {
             workflow: {
                 uuid: workflowUUID
-            },
-            // status: obj_status.active,
+            }
         }
     });
 
@@ -83,5 +82,24 @@ webhookManagementAPI.post(async (req, res) => {
 
 })
 
+
+webhookManagementAPI.delete(async (req, res) => {
+
+    const webhookUUID = req.query["webhook-uuid"] as string;
+
+    assertUp(webhookUUID, {
+        status: 400,
+        message: "webhook-uuid: Param is required. Should contain the uuid of the webhook"
+    });
+
+    const webhook = await db.webhook.delete({
+        where: {
+            uuid: webhookUUID
+        }
+    });
+
+    res.status(200).json(webhook);
+
+});
 
 export default webhookManagementAPI.handler;

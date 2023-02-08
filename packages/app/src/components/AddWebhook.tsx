@@ -35,22 +35,32 @@ const AddWebhook = ( props : AddWebhookProps ) => {
 
     const toggleDeleteConfirmationModal = () => setDeleteConfirmationModalOpen(!deleteConfirmationModalOpen);
 
-    const handleAddQuestion = async (e : React.SyntheticEvent) => {
+    const handleAddWebhook = async (e : React.SyntheticEvent) => {
         e.preventDefault();
-        console.log("Adding question to workflow")
-        const questionUUID = (e.target as HTMLFormElement)["question"]?.value;
 
-        if(!questionUUID) {
-            console.log("No question selected");
-            return;
-        }
+        const target = e.target as typeof e.target & {
+            name: { value: string };
+            url: { value: string };
+            method: { value: string };
+            event: { value: string };
+            secret: { value: string };
+        };
+
+        const name = target.name.value;
+        const url = target.url.value;
+        const method = target.method.value;
+        const event = target.event.value;
+        const secret = target.secret.value;
+
 
         setModifyingWebhook(true);
         try {
-            await axios.post(`/api/v1/${workflowUUID}/task/question`, null, {
-                params: {
-                    "question-uuid": questionUUID
-                }
+            await axios.post(`/api/v1/${workflowUUID}/webhook`, {
+                name,
+                url,
+                method,
+                event,
+                secret
             });
             await mutate();
             toggleAddWebhookModal();
@@ -71,9 +81,9 @@ const AddWebhook = ( props : AddWebhookProps ) => {
 
         setModifyingWebhook(true);
         try {
-            await axios.delete(`/api/v1/${workflowUUID}/task/question`, {
+            await axios.delete(`/api/v1/${workflowUUID}/webhook`, {
                 params: {
-                    "question-uuid": deleteConfirmationModalWebhookUUID
+                    "webhook-uuid": deleteConfirmationModalWebhookUUID
                 }
             });
             await mutate();
@@ -141,7 +151,7 @@ const AddWebhook = ( props : AddWebhookProps ) => {
                 </div>
             </div>
             <Modal open={addWebhookModalOpen} onClose={toggleAddWebhookModal}>
-                <form onSubmit={handleAddQuestion}>
+                <form onSubmit={handleAddWebhook}>
                     <div className="px-4 pt-2 pb-2 sm:p-2 sm:pb-2">
                         <div className="sm:flex sm:items-start">
                             <div className=" text-center sm:mt-0 sm:ml-4 sm:text-left">
@@ -191,7 +201,7 @@ const AddWebhook = ( props : AddWebhookProps ) => {
                                 </div>
                             </div>
                             <div className={"w-1/2"}>
-                                <label htmlFor="Event" className="block text-sm font-medium ">
+                                <label htmlFor="event" className="block text-sm font-medium ">
                                     Event*
                                 </label>
                                 <div className="mt-1">
@@ -213,7 +223,7 @@ const AddWebhook = ( props : AddWebhookProps ) => {
                        </div>
 
                         <div>
-                            <label htmlFor="body" className="block text-sm font-medium ">
+                            <label htmlFor="secret" className="block text-sm font-medium ">
                                 Secret (optional, will be sent in the header)
                             </label>
                             <div className="mt-1">
