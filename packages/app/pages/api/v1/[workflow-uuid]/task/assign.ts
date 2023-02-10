@@ -3,12 +3,12 @@ import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
 import webhookHandler from "@/helpers/node/webhookHandler";
 import {events} from "@prisma/client";
-import getLogger from "@/helpers/node/getLogger";
+// import getLogger from "@/helpers/node/getLogger";
 
 const assignTaskApi = new NextExpress();
 
 
-const logger = getLogger('assignTaskApi');
+// const logger = getLogger('assignTaskApi');
 
 assignTaskApi.post(async (req, res) => {
 
@@ -39,6 +39,13 @@ assignTaskApi.post(async (req, res) => {
         where: {
             workflow :{
                 uuid: workflowUUID
+            }
+        },
+        include: {
+            task_questions: {
+                include: {
+                    questions: true
+                }
             }
         }
     });
@@ -78,7 +85,7 @@ assignTaskApi.post(async (req, res) => {
 
     const workflowFileIds : number[] = workflowFiles.map((wf) => wf.id);
 
-    const workflowFilesMap = new Map<string, number>(workflowFiles.map((wf) => [wf.uuid, wf.id]));
+    // const workflowFilesMap = new Map<string, number>(workflowFiles.map((wf) => [wf.uuid, wf.id]));
 
     // don't make duplicate assignment for same task, assignee and workflow file
 
@@ -103,11 +110,56 @@ assignTaskApi.post(async (req, res) => {
         name: "New Assignment"
     }));
 
-    const newAssignmentsResult = await db.task_assignment.createMany({
-        data: newAssignmentsData
+    const newAssignmentsResult = await db.$transaction(
+        newAssignmentsData.map(ass => db.task_assignment.create({data: ass}))
+    );
+
+    console.log(newAssignmentsResult);
+    const newAssignmentIds = newAssignmentsResult.map(ass => ass.id);
+
+    const workflow = await db.workflow.findFirst({
+        where: {
+            uuid: workflowUUID
+        }
     });
 
-     webhookHandler(events.task_assignment_created, workflowUUID, newAssignmentsResult).then(() => {
+    assertUp(workflow, {
+        status: 404,
+        message: "Task created but workflow not found, this should not happen"
+    });
+
+
+    const taskAssignments = await db.task_assignment.findMany({
+        where: {
+            task_id: task.id,
+            workflow_file_id: {
+                in: newAssignmentIds
+            }
+        },
+        include: {
+            assignee: true,
+        }
+    });
+
+    assertUp(taskAssignments.length, {
+        status: 404,
+        message: "Task created but task assignment not found, this should not happen"
+    });
+
+     webhookHandler(events.task_assignment_created, workflowUUID, {
+         workflow,
+         task: {
+             uuid: task.uuid,
+             title: task.name,
+             createdAt: task.createdAt,
+             district: task.district,
+             state: task.state,
+             minReqAssignmentsPerFile: task.min_assignments,
+         },
+         questions: task.task_questions.map((taskQuestion) => taskQuestion.questions),
+        taskAssignments
+
+     }).then(() => {
         console.log("Webhook triggered");
     });
 
