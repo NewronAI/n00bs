@@ -1,0 +1,810 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "noOObs Public API",
+    "description": "noOObs Public API",
+    "contact": {
+      "name": "Shubham Shekhar",
+      "url": "https://newron.ai",
+      "email": "shubham@newron.ai"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://datasetu.vercel.app",
+      "description": "Production Server"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Local Server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Public Controller",
+      "description": "Public APIs"
+    }
+  ],
+  "paths": {
+    "/api/v1/{workflow-uuid}/public/answer": {
+      "post": {
+        "tags": [
+          "Public Controller"
+        ],
+        "summary": "Answer a question",
+        "description": "Answer a question for a workflow question",
+        "operationId": "answersAPI",
+        "parameters": [
+          {
+            "name": "workflow-uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnswerRequest"
+              }
+            }
+          },
+          "description": "Answer Request",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnswerResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{worlflow-uuid}/public/assignment/get-all": {
+      "get": {
+        "tags": [
+          "Public Controller"
+        ],
+        "summary": "Get all assignments",
+        "description": "Get all assignments for a workflow",
+        "operationId": "getAllAssignmentsApi",
+        "parameters": [
+          {
+            "name": "workflow-uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "secret",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignmentsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{workflow-uuid}/public/file": {
+      "post": {
+        "tags": [
+          "Public Controller"
+        ],
+        "summary": "Upload a file",
+        "description": "Upload a file for a workflow",
+        "operationId": "fileApi",
+        "parameters": [
+          {
+            "name": "workflow-uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddFileRequest"
+              }
+            }
+          },
+          "description": "Answer Request",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnswerResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{worlflow-uuid}/public/stats/dashboard": {
+      "get": {
+        "tags": [
+          "Public Controller"
+        ],
+        "summary": "Get dashboard stats",
+        "description": "Get dashboard stats for a workflow",
+        "operationId": "dashboardStatsApi",
+        "parameters": [
+          {
+            "name": "workflow-uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardStatsResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FileTypes": {
+        "type": "string",
+        "enum": [
+          "image",
+          "video",
+          "audio",
+          "document"
+        ]
+      },
+      "Assignee": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Assignee ID"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "Assignee UUID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Assignee Name"
+          },
+          "email": {
+            "type": "string",
+            "description": "Assignee Email"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Assignee Phone"
+          },
+          "role": {
+            "type": "string",
+            "description": "Assignee Role"
+          },
+          "status": {
+            "type": "string",
+            "description": "Assignee Status"
+          },
+          "district": {
+            "type": "string",
+            "description": "Assignee District"
+          },
+          "state": {
+            "type": "string",
+            "description": "Assignee State"
+          },
+          "address": {
+            "type": "string",
+            "description": "Assignee Address"
+          },
+          "pincode": {
+            "type": "string",
+            "description": "Assignee Pincode"
+          },
+          "payment_details": {
+            "type": "string",
+            "description": "Assignee Payment Details"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Assignee Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Assignee Updated At"
+          },
+          "deleted_at": {
+            "type": "string",
+            "description": "Assignee Deleted At"
+          }
+        },
+        "required": [
+          "id",
+          "uuid",
+          "name",
+          "email",
+          "phone",
+          "role",
+          "status",
+          "district",
+          "state",
+          "address",
+          "pincode",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "Question": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Question ID"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "Question UUID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Question Name"
+          },
+          "text": {
+            "type": "string",
+            "description": "Question Text"
+          },
+          "order": {
+            "type": "integer",
+            "description": "Question Order"
+          },
+          "question_type": {
+            "type": "string",
+            "description": "Question Type"
+          },
+          "options": {
+            "type": "array",
+            "description": "Question Options",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "Question Status"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Question Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Question Updated At"
+          },
+          "deleted_at": {
+            "type": "string",
+            "description": "Question Deleted At"
+          }
+        },
+        "required": [
+          "id",
+          "uuid",
+          "name",
+          "text",
+          "order",
+          "question_type",
+          "options",
+          "status",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "WorkflowFile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Workflow File ID"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "Workflow File UUID"
+          },
+          "file_name": {
+            "type": "string",
+            "description": "Workflow File Name"
+          },
+          "file": {
+            "type": "string",
+            "description": "Workflow File URL"
+          },
+          "file_type": {
+            "$ref": "#/components/schemas/FileTypes"
+          },
+          "status": {
+            "type": "string",
+            "description": "Workflow File Status"
+          },
+          "workflow_id": {
+            "type": "integer",
+            "description": "Workflow ID"
+          },
+          "file_duration": {
+            "type": "integer",
+            "description": "Workflow File Duration"
+          },
+          "district": {
+            "type": "string",
+            "description": "Workflow File Belonging District"
+          },
+          "state": {
+            "type": "string",
+            "description": "Workflow File Belonging State"
+          },
+          "vendor": {
+            "type": "string",
+            "description": "Workflow File Belonging Vendor"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Workflow File Metadata"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Workflow File Created At"
+          },
+          "received_at": {
+            "type": "string",
+            "description": "Workflow File Received At"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Workflow File Updated At"
+          },
+          "deleted_at": {
+            "type": "string",
+            "description": "Workflow File Deleted At"
+          }
+        },
+        "required": [
+          "id",
+          "uuid",
+          "file_name",
+          "file",
+          "file_type",
+          "status",
+          "workflow_id",
+          "created_at",
+          "received_at",
+          "updated_at"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "readOnly": true,
+            "description": "Error Message"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "AddFileRequest": {
+        "type": "object",
+        "properties": {
+          "secret": {
+            "type": "string",
+            "description": "Secret Key"
+          },
+          "data": {
+            "type": "object",
+            "description": "File Data",
+            "properties": {
+              "file_name": {
+                "type": "string",
+                "description": "File Name"
+              },
+              "file_type": {
+                "$ref": "#/components/schemas/FileTypes"
+              },
+              "file": {
+                "type": "string",
+                "description": "File URL"
+              },
+              "file_duration": {
+                "type": "integer",
+                "description": "File Duration"
+              },
+              "district": {
+                "type": "string",
+                "description": "File Belonging District"
+              },
+              "state": {
+                "type": "string",
+                "description": "File Belonging State"
+              },
+              "vendor": {
+                "type": "string",
+                "description": "File Belonging Vendor"
+              },
+              "metadata": {
+                "type": "object",
+                "description": "File Metadata"
+              }
+            },
+            "required": [
+              "file_name",
+              "file_type",
+              "file"
+            ]
+          }
+        }
+      },
+      "AnswerRequest": {
+        "type": "object",
+        "properties": {
+          "secret": {
+            "type": "string",
+            "description": "Secret Key"
+          },
+          "data": {
+            "type": "object",
+            "description": "Answer Data",
+            "properties": {
+              "task_assignment_uuid": {
+                "type": "string",
+                "description": "Task Assignment UUID"
+              },
+              "responses": {
+                "type": "array",
+                "description": "Responses",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "question_uuid": {
+                      "type": "string",
+                      "description": "Question UUID"
+                    },
+                    "answer": {
+                      "type": "string",
+                      "description": "Answer"
+                    }
+                  },
+                  "required": [
+                    "question_uuid",
+                    "answer"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "task_assignment_uuid",
+              "responses"
+            ]
+          }
+        },
+        "required": [
+          "secret",
+          "data"
+        ]
+      },
+      "AnswerResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Submitted Answer Count"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "AssignmentsResponse": {
+        "type": "object",
+        "properties": {
+          "workflow": {
+            "type": "object",
+            "description": "Workflow",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "Workflow ID"
+              },
+              "uuid": {
+                "type": "string",
+                "description": "Workflow UUID"
+              },
+              "name": {
+                "type": "string",
+                "description": "Workflow Name"
+              },
+              "desc": {
+                "type": "string",
+                "description": "Workflow Description"
+              },
+              "created_at": {
+                "type": "string",
+                "description": "Workflow Created At"
+              },
+              "updated_at": {
+                "type": "string",
+                "description": "Workflow Updated At"
+              },
+              "deleted_at": {
+                "type": "string",
+                "description": "Workflow Deleted At"
+              },
+              "status": {
+                "type": "string",
+                "description": "Workflow Status"
+              }
+            },
+            "required": [
+              "id",
+              "uuid",
+              "name",
+              "description",
+              "created_at",
+              "updated_at",
+              "status"
+            ]
+          },
+          "task": {
+            "type": "object",
+            "description": "Task",
+            "properties": {
+              "uuid": {
+                "type": "string",
+                "description": "Task UUID"
+              },
+              "title": {
+                "type": "string",
+                "description": "Task Title"
+              },
+              "created_at": {
+                "type": "string",
+                "description": "Task Created At"
+              },
+              "district": {
+                "type": "string",
+                "description": "Assigned District"
+              },
+              "state": {
+                "type": "string",
+                "description": "Assigned State"
+              },
+              "minReqAssignmentsPerFile": {
+                "type": "integer",
+                "description": "Minimum Required Assignments Per File"
+              }
+            },
+            "required": [
+              "uuid",
+              "title",
+              "created_at",
+              "minReqAssignmentsPerFile"
+            ]
+          },
+          "questions": {
+            "type": "array",
+            "description": "Questions",
+            "items": {
+              "$ref": "#/components/schemas/Question"
+            }
+          },
+          "task_assignments": {
+            "type": "array",
+            "description": "Task Assignments",
+            "items": {
+              "type": "object",
+              "properties": {
+                "task_assignment_uuid": {
+                  "type": "string",
+                  "description": "Task Assignment UUID"
+                },
+                "task_assignment_createdAt": {
+                  "type": "string",
+                  "description": "Task Assignment Created At"
+                },
+                "workflow_file": {
+                  "$ref": "#/components/schemas/WorkflowFile"
+                },
+                "assignee": {
+                  "$ref": "#/components/schemas/Assignee"
+                }
+              }
+            }
+          }
+        }
+      },
+      "DashboardStatsResponse": {
+        "type": "object",
+        "description": "Dashboard Stats Response",
+        "properties": {
+          "filesCount": {
+            "type": "integer",
+            "readOnly": true,
+            "description": "Files Count"
+          },
+          "assignedFilesCount": {
+            "type": "integer",
+            "readOnly": true,
+            "description": "Assigned Files Count"
+          },
+          "assignedJobsCount": {
+            "type": "integer",
+            "readOnly": true,
+            "description": "Assigned Jobs Count"
+          },
+          "pendingJobsCount": {
+            "type": "integer",
+            "readOnly": true,
+            "description": "Pending Jobs Count"
+          },
+          "completedJobsCount": {
+            "type": "integer",
+            "readOnly": true,
+            "description": "Completed Jobs Count"
+          }
+        },
+        "required": [
+          "filesCount",
+          "assignedFilesCount",
+          "assignedJobsCount",
+          "pendingJobsCount",
+          "completedJobsCount"
+        ]
+      }
+    }
+  }
+}
