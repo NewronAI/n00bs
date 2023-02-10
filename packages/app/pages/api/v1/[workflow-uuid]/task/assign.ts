@@ -157,7 +157,7 @@ assignTaskApi.post(async (req, res) => {
              minReqAssignmentsPerFile: task.min_assignments,
          },
          questions: task.task_questions.map((taskQuestion) => taskQuestion.questions),
-        taskAssignments
+        "task_assignments":  taskAssignments
 
      }).then(() => {
         console.log("Webhook triggered");
