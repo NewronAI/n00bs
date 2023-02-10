@@ -17,6 +17,17 @@ getAllAssignmentsApi.get(async (req, res) => {
 
     const secret = req.query.secret as string;
 
+    const workflow = await db.workflow.findFirst({
+        where: {
+            uuid: workflowUUID
+        }
+    });
+
+    assertUp(workflow, {
+        status: 404,
+        message: `workflow: workflow not found with uuid ${workflowUUID}`
+    });
+
     assertUp(secret, {
         status: 400,
         message: "secret: Query Param is required. Should contain the secret of the workflow"
@@ -63,6 +74,7 @@ getAllAssignmentsApi.get(async (req, res) => {
     });
 
     const dataToSend = {
+        workflow,
         task: {
             uuid: task.uuid,
             title: task.name,
@@ -71,6 +83,7 @@ getAllAssignmentsApi.get(async (req, res) => {
             state: task.state,
             minReqAssignmentsPerFile: task.min_assignments,
         },
+        questions: task.task_questions.map((taskQuestion) => taskQuestion.questions),
         task_assignments: taskAssignments.map((taskAssignment) => {
             return {
                 task_assignment_uuid: taskAssignment.uuid,
@@ -79,7 +92,6 @@ getAllAssignmentsApi.get(async (req, res) => {
                 assignee: taskAssignment.assignee,
             }
         }),
-        questions: task.task_questions.map((taskQuestion) => taskQuestion.questions),
     }
 
     res.json(dataToSend);
