@@ -91,16 +91,29 @@ const Members = () => {
             pincode: e.target.pincode.value,
         }
 
-        let res: MemberItem;
+
         if (member.uuid) {
             setSaving(true);
-            res = await axios.put('/api/v1/member', member);
-            setSaving(false)
+            try {
+                await axios.put('/api/v1/member', member);
+            }
+            catch (e) {
+                console.error(e);
+            }finally {
+                setSaving(false)
+            }
         }
         else {
             setSaving(true);
-            res = await axios.post('/api/v1/member', member);
-            setSaving(false)
+            try {
+                // Creating new member
+                await axios.post('/api/v1/member', member);
+            }
+            catch (e) {
+                console.error(e);
+            }finally {
+                setSaving(false)
+            }
         }
 
         await mutate();
@@ -334,8 +347,8 @@ const Members = () => {
                                                                     <div className="mt-1">
                                                                         <input type="checkbox" name={"member-status"} id="status"
                                                                             className="toggle toggle-error"
-                                                                            defaultChecked={selectedMember ? selectedMember?.status === obj_status.active : false}
-                                                                            disabled={selectedMember ? selectedMember?.status === obj_status.active && selectedMember.role === "admin" : true}
+                                                                            defaultChecked={selectedMember ? selectedMember?.status === obj_status.active : true}
+                                                                            disabled={selectedMember ? selectedMember?.status === obj_status.active && selectedMember.role === "admin" : false}
                                                                         />
                                                                     </div>
                                                                 </div>
