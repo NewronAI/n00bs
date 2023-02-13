@@ -110,11 +110,12 @@ assignTaskApi.post(async (req, res) => {
         name: "New Assignment"
     }));
 
+    console.log(newAssignmentsData.length);
+
     const newAssignmentsResult = await db.$transaction(
-        newAssignmentsData.map(ass => db.task_assignment.create({data: ass}))
+        newAssignmentsData.map((assignmentData) => db.task_assignment.create({data: assignmentData}))
     );
 
-    console.log(newAssignmentsResult);
     const newAssignmentIds = newAssignmentsResult.map(ass => ass.id);
 
     const workflow = await db.workflow.findFirst({
@@ -132,7 +133,7 @@ assignTaskApi.post(async (req, res) => {
     const taskAssignments = await db.task_assignment.findMany({
         where: {
             task_id: task.id,
-            workflow_file_id: {
+            id: {
                 in: newAssignmentIds
             }
         },
