@@ -139,6 +139,7 @@ assignTaskApi.post(async (req, res) => {
         },
         include: {
             assignee: true,
+            workflow_file: true
         }
     });
 
