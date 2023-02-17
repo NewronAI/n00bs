@@ -107,13 +107,15 @@ assignTaskApi.post(async (req, res) => {
         task_id: task.id,
         assignee_id: assignee.id,
         workflow_file_id: wfId,
-        name: "New Assignment"
+        name: `Task Assignment for ${assignee.name} for ${task.name}`
     }));
 
     console.log(newAssignmentsData.length);
 
     const newAssignmentsResult = await db.$transaction(
-        newAssignmentsData.map((assignmentData) => db.task_assignment.create({data: assignmentData}))
+        newAssignmentsData.map((assignmentData) => db.task_assignment.create({
+            data: assignmentData
+        }))
     );
 
     const newAssignmentIds = newAssignmentsResult.map(ass => ass.id);

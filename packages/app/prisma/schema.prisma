@@ -175,6 +175,8 @@ model task_assignment {
   review_comments  String?
   reviewer_id      Int?
   reviewer         member?       @relation(name: "reviewer", fields: [reviewer_id], references: [id])
+
+  @@unique([assignee_id, workflow_file_id, task_id])
 }
 
 model task_answer {
