@@ -94,7 +94,7 @@ publicAnswerApi.post(async (req, res) => {
     for(const response of responses) {
         const question = await db.question.findFirst({
             where: {
-                uuid: response.question_uuid
+                uuid: response.question_uuid.trim()
             }
         });
 
