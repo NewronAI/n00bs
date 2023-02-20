@@ -65,7 +65,7 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                 columnDefs: [
                     { header: "Question" , field: 'question.text' },
                     { header: "Answer", field: 'answer' },
-                    { createdAt: "Answered At", field: 'createdAt'}
+                    { createdAt: "Answered At", field: 'createdAt', cellRenderer: DateFromNowRenderer}
                 ],
                 defaultColDef: {
                     flex: 1,
