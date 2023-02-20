@@ -38,6 +38,8 @@ enum task_status {
   pending
   in_progress
   completed
+  accepted
+  rejected
   cancelled
 }
 

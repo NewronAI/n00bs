@@ -2,6 +2,7 @@ import NextExpress from "@/helpers/node/NextExpress";
 import assertUp from "@/helpers/node/assert/assertUp";
 import getPublicWorkflowAPISecret from "@/helpers/getPublicWorkflowAPISecret";
 import {db} from "@/helpers/node/db";
+import {task_status} from "@prisma/client";
 
 const publicAnswerApi = new NextExpress();
 
@@ -106,15 +107,26 @@ publicAnswerApi.post(async (req, res) => {
         questionIds.push(question.id);
     }
 
-    const writeStatus = await db.task_answer.createMany({
-        data: responses.map((response, i) => {
-            return {
-                task_assignment_id: taskAssignment.id,
-                question_id: questionIds[i],
-                answer: response.answer
+
+    const [writeStatus] = await db.$transaction([
+        db.task_answer.createMany({
+            data: responses.map((response, i) => {
+                return {
+                    task_assignment_id: taskAssignment.id,
+                    question_id: questionIds[i],
+                    answer: response.answer
+                }
+            })
+        }),
+        db.task_assignment.update({
+            where: {
+                id: taskAssignment.id
+            },
+            data: {
+                status: task_status.in_progress
             }
         })
-    });
+    ]);
 
     res.status(200).json(writeStatus);
 
