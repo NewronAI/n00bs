@@ -1,4 +1,4 @@
-import React, {useMemo, useRef} from 'react';
+import React, {useCallback, useMemo, useRef} from 'react';
 import WorkflowNav from "@/components/layouts/WorkflowNav";
 import Head from "next/head";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
@@ -21,6 +21,7 @@ import axios from "axios";
 import Loader from "@/components/Loader";
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import FileAssignmentCountRenderer from "@/components/renderer/FileAssignmentCountRenderer";
+import RatingRenderer from "@/components/renderer/RatingRenderer";
 
 interface UnassignedFilesPageProps {
     files : any[]
@@ -51,24 +52,45 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
     const {data, error, isLoading, mutate} = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer`);
     const files = data || [];
 
+    const defaultColDef = useMemo(() => {
+        return {
+            flex: 1,
+        };
+    }, []);
+
     const detailCellRendererParams = useMemo(() => {
+        console.log("detailCellRendererParams")
         return {
             detailGridOptions: {
                 columnDefs: [
-                    { field: 'callId' },
-                    { field: 'direction' },
-                    { field: 'number', minWidth: 150 },
-                    { field: 'duration', valueFormatter: "x.toLocaleString() + 's'" },
-                    { field: 'switchCode', minWidth: 150 },
+                    { header: "Question" , field: 'question.text' },
+                    { header: "Answer", field: 'answer' },
+                    { createdAt: "Answered At", field: 'createdAt'}
                 ],
                 defaultColDef: {
                     flex: 1,
                 },
             },
             getDetailRowData: function (params: any) {
-                params.successCallback(params.data.callRecords);
+                console.log(params.data)
+                params.successCallback(params.data.task_answers);
             },
         };
+    }, []);
+
+    const isRowMaster = useMemo(() => {
+        return (dataItem: any) => {
+            console.log({dataItem})
+            return dataItem ? dataItem.task_answers?.length > 0 : false;
+        };
+    }, []);
+
+    const onFirstDataRendered = useCallback((params: any) => {
+        // arbitrarily expand a row for presentational purposes
+        setTimeout(function () {
+            // @ts-ignore
+            fileGridRef.current.api.getDisplayedRowAtIndex(0).setExpanded(true);
+        }, 0);
     }, []);
 
 
@@ -79,9 +101,9 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
 
 
     return (
-        <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"unassigned files"} workflowUUID={workflowUUID}/> }>
+        <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"answers"} workflowUUID={workflowUUID}/> }>
             <Head>
-                <title>Unassigned Files</title>
+                <title>Answered Files</title>
             </Head>
 
             <div>
@@ -106,15 +128,42 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                             pagination={true}
                             ref={fileGridRef}
                             masterDetail={true}
-                            isRowMaster={(data) => data.children.length > 0}
-                            detailCellRenderer={detailCellRendererParams}
-                            rowGroupPanelShow={"onlyWhenGrouping"}
+                            isRowMaster={isRowMaster}
+                            detailCellRendererParams={detailCellRendererParams}
+                            // rowGroupPanelShow={"onlyWhenGrouping"}
+                            onFirstDataRendered={onFirstDataRendered}
                             pivotMode={false}
-                            pivotPanelShow={"always"}
-                            groupSelectsChildren={true}
-                            rowSelection='multiple'
+                            defaultColDef={defaultColDef}
                             paginationPageSize={15}
-                            // columnDefs={}
+                            columnDefs={[
+                                {
+                                    headerName: "File",
+                                    field: "workflow_file.file_name",
+                                    cellRenderer: 'agGroupCellRenderer'
+                                },
+                                {
+                                    headerName: "District",
+                                    field: "workflow_file.district",
+                                },
+                                {
+                                    headerName: "Assigned To",
+                                    field: "assignee.name",
+                                },
+                                {
+                                    headerName: "Ph. No",
+                                    field: "assignee.phone",
+                                },
+                                {
+                                    headerName: "Rating",
+                                    field: "rating",
+                                    cellRenderer: RatingRenderer
+                                },
+                                {
+                                    headerName: "Comment",
+                                    field: "review_comment",
+                                }
+
+                            ]}
                         />
                 </div>
                 </Loader>

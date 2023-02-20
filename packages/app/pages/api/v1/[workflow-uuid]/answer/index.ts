@@ -3,13 +3,14 @@ import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
 import {task_status} from "@prisma/client";
 
+
 const answersAPI = new NextExpress();
 
 answersAPI.get(async (req, res) => {
 
     const workflowUUID = req.query["workflow-uuid"] as string;
 
-    const taskAssignment = await db.task_assignment.findFirst({
+    const taskAssignment = await db.task_assignment.findMany({
         where: {
             task: {
                 workflow: {
@@ -24,6 +25,7 @@ answersAPI.get(async (req, res) => {
                     question: true
                 }
             },
+            workflow_file: true,
             assignee: true
         }
     });
