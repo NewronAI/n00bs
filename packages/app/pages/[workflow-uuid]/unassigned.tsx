@@ -22,6 +22,7 @@ import Loader from "@/components/Loader";
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import FileAssignmentCountRenderer from "@/components/renderer/FileAssignmentCountRenderer";
 import FilenameRenderer from "@/components/renderer/FilenameRenderer";
+import fileDurationFormatter from "@/helpers/react/fileDurationFormatter";
 
 interface UnassignedFilesPageProps {
     files : any[]
@@ -270,10 +271,8 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                         paginationPageSize={15}
                         columnDefs={[
                             {headerName: "", checkboxSelection: true, width: 80, headerCheckboxSelection: true, headerCheckboxSelectionFilteredOnly: true},
+                            {headerName: "File Duration", field: "file_duration", sortable: true, filter: true, aggFunc: 'sum' , valueFormatter: fileDurationFormatter, width: 150},
                             {headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 100},
-                            {headerName: "File Duration", field: "file_duration", sortable: true, filter: true, valueFormatter: (params) => {
-                                return `${moment.duration(params.value,"second").asSeconds().toFixed(1)} secs`;
-                            }, width: 150},
                             {headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 400, cellRenderer: FilenameRenderer, tooltipField: "file_name"},
                             {headerName: "Assignments", field: "assignment_count", sortable: true, filter: true, cellRenderer: FileAssignmentCountRenderer, width: 170},
                             {headerName: "File Path", field: "file", sortable: true, filter: true, width: 500, cellRenderer: UrlRenderer},
