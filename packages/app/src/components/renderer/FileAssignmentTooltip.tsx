@@ -1,6 +1,8 @@
+// noinspection ES6UnusedImports
+
 import React, {useEffect, useMemo, useRef} from 'react';
 import {ITooltipParams} from "ag-grid-community";
-import {ITooltipReactComp} from "ag-grid-react";
+import {ITooltipReactComp as _} from "ag-grid-react";
 import {Prisma} from "@prisma/client";
 import axios from "axios";
 
