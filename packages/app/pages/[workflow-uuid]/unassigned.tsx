@@ -20,9 +20,10 @@ import Modal from "@/components/Modal";
 import axios from "axios";
 import Loader from "@/components/Loader";
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
-import FileAssignmentCountRenderer from "@/components/renderer/FileAssignmentCountRenderer";
 import FilenameRenderer from "@/components/renderer/FilenameRenderer";
 import fileDurationFormatter from "@/helpers/react/fileDurationFormatter";
+import FileAssignmentTooltip from "@/components/renderer/FileAssignmentTooltip";
+import {ITooltipParams} from "ag-grid-community";
 
 interface UnassignedFilesPageProps {
     files : any[]
@@ -274,7 +275,9 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                             {headerName: "File Duration", field: "file_duration", sortable: true, filter: true, aggFunc: 'sum' , valueFormatter: fileDurationFormatter, width: 150},
                             {headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 100},
                             {headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 400, cellRenderer: FilenameRenderer, tooltipField: "file_name"},
-                            {headerName: "Assignments", field: "assignment_count", sortable: true, filter: true, cellRenderer: FileAssignmentCountRenderer, width: 170},
+                            {headerName: "Assignments", field: "assignment_count", sortable: true, filter: true, width: 170,
+                                tooltipField: "assignment_count",
+                                tooltipComponent: (props : ITooltipParams) => (<FileAssignmentTooltip {...props} workflowUUID={workflowUUID} />)},
                             {headerName: "File Path", field: "file", sortable: true, filter: true, width: 500, cellRenderer: UrlRenderer},
                             // {headerName: "File Status", field: "status", sortable: true, filter: true, width: 120},
                             // {headerName: "File UUID", field: "uuid", sortable: true, filter: true, width: 330},
