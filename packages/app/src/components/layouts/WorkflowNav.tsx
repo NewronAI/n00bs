@@ -25,10 +25,10 @@ const navigation = [
     { name: 'All Files', href: '/all-files', icon: <DocumentDuplicateIcon className="h-5" aria-hidden="true" /> },
     { name: 'Unassigned Files', href: '/unassigned', icon: <DocumentIcon className="h-5" aria-hidden="true" />  },
     { name: 'Assigned Files', href: '/assigned', icon: <DocumentTextIcon className="h-5" aria-hidden="true" />  },
-    { name: 'Jobs', href: '/jobs' , icon: <ViewBoardsIcon className="h-5" aria-hidden="true" />  },
+    { name: 'Tasks', href: '/tasks' , icon: <ViewBoardsIcon className="h-5" aria-hidden="true" />  },
     { name: 'Answers', href: '/answers' , icon: <AnnotationIcon className="h-5" aria-hidden="true" />  },
-    // { name: 'Open Jobs', href: '/jobs' },
-    // { name: 'Completed Jobs', href: '/completed-jobs' },
+    // { name: 'Open Tasks', href: '/jobs' },
+    // { name: 'Completed Tasks', href: '/completed-jobs' },
     { name: 'Workers', href: '/workers', icon: <UserGroupIcon className="h-5" aria-hidden="true" />},
     { name: 'Settings', href: '/settings', icon: <CogIcon className="h-5" aria-hidden="true" />},
 ];

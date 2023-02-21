@@ -22,7 +22,7 @@ interface TaskFilesPage {
     defaultColDef: boolean;
 }
 
-const Jobs = (props: TaskFilesPage) => {
+const Tasks = (props: TaskFilesPage) => {
 
     const gridRef = useRef<AgGridReact>(null)
     const memberGridRef = useRef<AgGridReactType>(null);
@@ -274,4 +274,4 @@ const Jobs = (props: TaskFilesPage) => {
 
 export const getServerSideProps = withAuthorizedPageAccess({}, member_role.manager);
 
-export default Jobs;
+export default Tasks;

@@ -14,6 +14,8 @@ import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import {member_role} from "@prisma/client";
 import 'ag-grid-enterprise';
 import Loader from "@/components/Loader";
+import LongTextRenderer from "@/components/renderer/FilenameRenderer";
+import FilenameRenderer from "@/components/renderer/FilenameRenderer";
 
 const AllFilesPage = () => {
 
@@ -54,6 +56,7 @@ const AllFilesPage = () => {
                         <AgGridReact
                             rowData={files}
                             pagination={true}
+                            groupDefaultExpanded={1}
                             paginationPageSize={15}
                             suppressMenuHide={true}
                             columnDefs={[
@@ -61,7 +64,7 @@ const AllFilesPage = () => {
                                 {headerName: "State", field: "state", sortable: true, filter: true,rowGroup:true, hide: true, width: 130,},
                                 {headerName: "District", field: "district", sortable: true, rowGroup: true, hide: true, filter: true, width: 150,},
                                 {headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150},
-                                {headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 300},
+                                {headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 300, tooltipField: "file_name", cellRenderer: FilenameRenderer},
                                 {headerName: "File Path", field: "file", sortable: true, filter: true, cellRenderer: UrlRenderer },
                                 {headerName: "File Duration", field: "file_duration", sortable: true, filter: true, width: 135},
                                 {headerName: "File UUID", field: "uuid", sortable: true, filter: true},
