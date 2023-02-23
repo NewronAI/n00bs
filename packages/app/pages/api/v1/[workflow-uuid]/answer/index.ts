@@ -10,27 +10,47 @@ answersAPI.get(async (req, res) => {
 
     const workflowUUID = req.query["workflow-uuid"] as string;
 
-    const taskAssignment = await db.task_assignment.findMany({
+    // const taskAssignment = await db.task_assignment.findMany({
+    //     where: {
+    //         task: {
+    //             workflow: {
+    //                 uuid: workflowUUID
+    //             }
+    //         },
+    //         status: task_status.in_progress
+    //     },
+    //     include: {
+    //         task_answers: {
+    //             include: {
+    //                 question: true
+    //             }
+    //         },
+    //         workflow_file: true,
+    //         assignee: true
+    //     }
+    // });
+
+    const taskAssignmentResponses = await db.workflow_file.findMany({
         where: {
-            task: {
-                workflow: {
-                    uuid: workflowUUID
-                }
-            },
-            status: task_status.in_progress
+            workflow: {
+                uuid: workflowUUID
+            }
         },
         include: {
-            task_answers: {
+            task_assignments: {
                 include: {
-                    question: true
+                    task_answers: {
+                        include: {
+                            question: true
+                        }
+                    },
+                    assignee: true
                 }
-            },
-            workflow_file: true,
-            assignee: true
+            }
         }
-    });
+    })
 
-    res.status(200).json(taskAssignment);
+    res.status(200).json(taskAssignmentResponses);
 
 });
 
