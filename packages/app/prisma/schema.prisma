@@ -169,7 +169,7 @@ model task_assignment {
   task_id          Int
   task             task          @relation(fields: [task_id], references: [id])
   assignee_id      Int
-  assignee         member        @relation(name: "assignee", fields: [assignee_id], references: [id])
+  assignee         member        @relation(name: "assignee", fields: [assignee_id], references: [id], onDelete: Cascade)
   workflow_file_id Int
   workflow_file    workflow_file @relation(fields: [workflow_file_id], references: [id])
   task_answers     task_answer[]
@@ -187,7 +187,7 @@ model task_answer {
   createdAt          DateTime        @default(now())
   updatedAt          DateTime        @updatedAt
   task_assignment_id Int
-  task_assigment     task_assignment @relation(fields: [task_assignment_id], references: [id])
+  task_assigment     task_assignment @relation(fields: [task_assignment_id], references: [id], onDelete: Cascade)
   question_id        Int
   question           question        @relation(fields: [question_id], references: [id])
   answer             String
