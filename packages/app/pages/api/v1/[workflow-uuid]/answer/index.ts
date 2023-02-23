@@ -56,9 +56,30 @@ answersAPI.get(async (req, res) => {
                 }
             }
         }
-    })
+    });
 
-    res.status(200).json(taskAssignmentResponses);
+    const processedTaskAssignmentResponses = taskAssignmentResponses.map((taskAssignmentResponse) => {
+       const newTaskAssignmentResponse = {
+              ...taskAssignmentResponse,
+                task_assignments: taskAssignmentResponse.task_assignments.map((taskAssignment) => {
+                    const processedTaskAnswer = new Map<string, string>();
+
+                    taskAssignment.task_answers.forEach((taskAnswer) => {
+                        processedTaskAnswer.set(taskAnswer.question.uuid, taskAnswer.answer);
+                    });
+
+                    console.log(processedTaskAnswer);
+
+                    return {
+                        ...taskAssignment,
+                        task_answers: Object.fromEntries(processedTaskAnswer)
+                    }
+                })
+       }
+       return newTaskAssignmentResponse;
+    });
+
+    res.status(200).json(processedTaskAssignmentResponses);
 
 });
 
