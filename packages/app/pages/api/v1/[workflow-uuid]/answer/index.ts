@@ -35,6 +35,11 @@ answersAPI.get(async (req, res) => {
             workflow: {
                 uuid: workflowUUID
             },
+            task_assignments: {
+                some: {
+                    status: task_status.in_progress,
+                }
+            }
         },
         include: {
             task_assignments: {
@@ -47,7 +52,7 @@ answersAPI.get(async (req, res) => {
                     assignee: true
                 },
                 where: {
-                    status: task_status.in_progress,
+                    status: task_status.in_progress
                 }
             }
         }
