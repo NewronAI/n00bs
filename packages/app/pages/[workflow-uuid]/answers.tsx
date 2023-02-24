@@ -15,6 +15,7 @@ import {member_role, Prisma} from "@prisma/client";
 import Loader from "@/components/Loader";
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import RatingRenderer from "@/components/renderer/RatingRenderer";
+import useSWRImmutable from 'swr/immutable';
 
 interface UnassignedFilesPageProps {
     files : any[]
@@ -45,6 +46,9 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
     const {data, error, isLoading, mutate} = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer`);
     const files = data || [];
 
+    const {data: questionData, error: questionFetchError, isLoading: questionFetchLoading} = useSWRImmutable(`/api/v1/${workflowUUID}/question`)
+    console.log(questionData)
+
     const defaultColDef = useMemo(() => {
         return {
             flex: 1,
@@ -53,28 +57,41 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
 
     const detailCellRendererParams = useMemo(() => {
         console.log("detailCellRendererParams")
+
+        const staticColumnDefs = [
+            { headerName: "Assignee Name" , field: 'assignee.name' },
+            { headerName: "Assignee Ph. No" , field: 'assignee.phone'},
+            { headerName: "Answer At", field: 'createdAt', cellRenderer: DateFromNowRenderer},
+        ]
+
+        const dynamicColumnDef = questionData?.map((question : any) => {
+            return  { headerName: question.name, field: `task_answers.${question.uuid}`}
+        })
+ 
+        const colDef = [
+            ...staticColumnDefs,
+            ...dynamicColumnDef,
+             ...[{ headerName: "Rating", field: "rating", cellRenderer: RatingRenderer }]
+            ];
+
         return {
             detailGridOptions: {
-                columnDefs: [
-                    { header: "Question" , field: 'question.text' },
-                    { header: "Answer", field: 'answer' },
-                    { createdAt: "Answered At", field: 'createdAt', cellRenderer: DateFromNowRenderer}
-                ],
+                columnDefs: colDef,
                 defaultColDef: {
                     flex: 1,
                 },
             },
             getDetailRowData: function (params: any) {
                 console.log(params.data)
-                params.successCallback(params.data.task_answers);
+                params.successCallback(params.data.task_assignments);
             },
         };
-    }, []);
+    }, [questionData]);
 
     const isRowMaster = useMemo(() => {
         return (dataItem: any) => {
             console.log({dataItem})
-            return dataItem ? dataItem.task_answers?.length > 0 : false;
+            return dataItem ? dataItem.task_assignments?.length > 0 : false;
         };
     }, []);
 
@@ -131,31 +148,13 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                             columnDefs={[
                                 {
                                     headerName: "File",
-                                    field: "workflow_file.file_name",
+                                    field: "file_name",
                                     cellRenderer: 'agGroupCellRenderer'
                                 },
                                 {
                                     headerName: "District",
-                                    field: "workflow_file.district",
+                                    field: "district",
                                 },
-                                {
-                                    headerName: "Assigned To",
-                                    field: "assignee.name",
-                                },
-                                {
-                                    headerName: "Ph. No",
-                                    field: "assignee.phone",
-                                },
-                                {
-                                    headerName: "Rating",
-                                    field: "rating",
-                                    cellRenderer: RatingRenderer
-                                },
-                                {
-                                    headerName: "Comment",
-                                    field: "review_comment",
-                                }
-
                             ]}
                         />
                 </div>

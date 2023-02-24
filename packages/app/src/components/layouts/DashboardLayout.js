@@ -52,7 +52,7 @@ export default function DashboardLayout({
         ```
       */}
             <div className="min-h-full">
-                <Disclosure as="nav" className="border-b border-zinc-900 bg-white dark:bg-black">
+                <Disclosure as="nav" className="border-b border-zinc-900">
                     {({ open }) => (
                         <>
                             <div className="mx-auto max-w-[1550px] px-2 sm:px-4">
