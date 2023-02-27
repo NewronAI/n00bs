@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import WorkflowNav from "@/components/layouts/WorkflowNav";
 import Head from "next/head";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
@@ -36,11 +36,15 @@ function getSelectedRegionsCount(selectedRows : {district : string}[]) {
     return selectedRegionsMap.size;
 }
 
-
 const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
 
     const fileGridRef = useRef<AgGridReactType>(null);
     const router = useRouter();
+    const [taskRatings, setTaskRatings] = useState(new Map<string, number>())
+
+    const updatedLocalRating = (uuid: string, rating : number) => {
+        setTaskRatings((prev: Map<string,number>) => prev.set(uuid, rating));
+    }
 
     const workflowUUID = router.query["workflow-uuid"] as string;
     const {data, error, isLoading, mutate} = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer`);
@@ -66,12 +70,17 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
 
         const dynamicColumnDef = questionData?.map((question : any) => {
             return  { headerName: question.name, field: `task_answers.${question.uuid}`}
-        })
+        }) || [];
  
         const colDef = [
             ...staticColumnDefs,
-            ...dynamicColumnDef,
-             ...[{ headerName: "Rating", field: "rating", cellRenderer: RatingRenderer }]
+            ...dynamicColumnDef, 
+             ...[{ headerName: "Rating", field: "rating", cellRenderer: (props: any) => (<RatingRenderer onRatingChange={(rating,data) => {
+                updatedLocalRating(data.uuid,rating)
+                console.log(data.uuid,rating)
+                console.log(taskRatings.get(data.uuid))
+            }}
+            {...props} oldRating={(data: { uuid: string; }) => taskRatings.get(data.uuid)}/>) }]
             ];
 
         return {
