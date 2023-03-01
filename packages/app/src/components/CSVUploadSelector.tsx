@@ -1,30 +1,21 @@
 import { ExclamationCircleIcon } from "@heroicons/react/outline";
-import Papa from "papaparse";
+import Papa, {ParseStepResult} from "papaparse";
 import React, { useMemo, useState } from "react";
 import axios from "axios";
 
 interface ImportDataProps {
-    projectSlug: string;
     onCancel: () => void;
-    onDatasetImported: () => void;
+    onDatasetImported: (data : any) => void;
+    requiredFields?: string[];
 }
 
-const ImportData: React.FC<ImportDataProps> = ({ projectSlug, onCancel, onDatasetImported }) => {
-    const [allHeaders, setAllHeaders] = useState<string[]>([]);
-    const [inputHeaders, setInputHeaders] = useState<string[]>([]);
-    const [outputHeaders, setOutputHeaders] = useState<string[]>([]);
+const ImportData: React.FC<ImportDataProps> = ({ onCancel, onDatasetImported, requiredFields }) => {
+
 
     const [fileDetails, setFileDetails] = useState<{ name: string; size: number } | null>(null);
 
-    const inputOptions = useMemo(
-        () => allHeaders.filter((header) => !outputHeaders.includes(header)).map((header) => ({ value: header, label: header })),
-        [allHeaders, outputHeaders]
-    );
+    const dataRef = React.useRef<any>(null);
 
-    const outputOptions = useMemo(
-        () => allHeaders.filter((header) => !inputHeaders.includes(header)).map((header) => ({ value: header, label: header })),
-        [allHeaders, inputHeaders]
-    );
 
     const [creatingStatus, setCreatingStatus] = useState<{
         isCreating: boolean;
@@ -45,9 +36,6 @@ const ImportData: React.FC<ImportDataProps> = ({ projectSlug, onCancel, onDatase
                 error: null,
             });
 
-            setInputHeaders([]);
-            setOutputHeaders([]);
-            setAllHeaders([]);
 
             setFileDetails({
                 name: file.name,
@@ -56,8 +44,20 @@ const ImportData: React.FC<ImportDataProps> = ({ projectSlug, onCancel, onDatase
 
             Papa.parse(file, {
                 header: true,
-                step: function (results: any) {
-                    setAllHeaders(results.meta.fields);
+                step: function (results: ParseStepResult<any>) {
+                    requiredFields?.forEach((field) => {
+                        if (!results.meta.fields?.includes(field)) {
+                            setCreatingStatus({
+                                isCreating: false,
+                                message: "",
+                                error: `Missing required field: ${field}`,
+                            });
+                        }
+                    });
+
+                },
+                complete: function (results: any) {
+                    dataRef.current = results;
                 },
                 error(error: Error) {
                     setCreatingStatus({
@@ -79,24 +79,24 @@ const ImportData: React.FC<ImportDataProps> = ({ projectSlug, onCancel, onDatase
             return;
         }
 
+        requiredFields?.forEach((field) => {
+            if (!dataRef.current.meta.fields?.includes(field)) {
+                setCreatingStatus({
+                    isCreating: false,
+                    message: "",
+                    error: `Missing required field: ${field}`,
+                });
+            }
+        });
+
         try {
-            const requestBody: { [key: string]: any } = {};
-            const formData = new FormData();
 
-            formData.append("file", form.file?.files?.[0]);
-            formData.append("inputFields", JSON.stringify(inputHeaders));
-            formData.append("outputFields", JSON.stringify(outputHeaders));
-
-            formData.forEach((value, key) => {
-                requestBody[key] = value;
-            });
 
             setCreatingStatus({ isCreating: true, message: "", error: null });
-
-            await axios.post(`${projectSlug}/import-data`, formData);
-
             setCreatingStatus({ isCreating: false, message: "Dataset has been imported successfully.", error: null });
-            onDatasetImported();
+
+            onDatasetImported(dataRef.current.data);
+            
         } catch (e) {
             setCreatingStatus({ isCreating: false, message: "", error: "Something went wrong. Please try again later." });
             console.log(e);
@@ -104,10 +104,10 @@ const ImportData: React.FC<ImportDataProps> = ({ projectSlug, onCancel, onDatase
     };
 
     return (
-        <form onSubmit={onSubmit} className={"w-full max-h-full p-6 flex flex-col divide-y divide-gray-200 bg-white overflow-auto"}>
+        <form onSubmit={onSubmit} className={"w-full max-h-full p-6 flex flex-col divide-y divide-gray-200 overflow-auto"}>
             <div className={"space-y-6 pb-6"}>
                 <div className={"space-y-2"}>
-                    <label htmlFor={"projectName"} className={"block text-red-700 font-medium"}>
+                    <label htmlFor={"projectName"} className={"block text-secondary font-medium"}>
                         Import from file
                     </label>
 
@@ -131,7 +131,7 @@ const ImportData: React.FC<ImportDataProps> = ({ projectSlug, onCancel, onDatase
                             </svg>
 
                             <div className={"text-sm text-gray-500"}>
-                                <label htmlFor={"file-upload"} className={"relative text-red-500 font-medium bg-white cursor-pointer"}>
+                                <label htmlFor={"file-upload"} className={"relative text-secondary font-medium  cursor-pointer"}>
                                     <span>Upload a file</span>
                                     <input
                                         id={"file-upload"}
@@ -152,7 +152,7 @@ const ImportData: React.FC<ImportDataProps> = ({ projectSlug, onCancel, onDatase
 
                 {fileDetails && (
                     <div className={"space-y-2"}>
-                        <label htmlFor={"projectName"} className={"block text-red-700 font-medium"}>
+                        <label htmlFor={"projectName"} className={"block text-secondary font-medium"}>
                             File details
                         </label>
 
@@ -168,28 +168,21 @@ const ImportData: React.FC<ImportDataProps> = ({ projectSlug, onCancel, onDatase
                 <div className={"space-y-2"}>
                     {creatingStatus.error ? (
                         <div className={"flex items-center gap-2"}>
-                            <ExclamationCircleIcon className={"w-5 h-5 text-red-500"} aria-hidden="true" />
-                            <p className={"text-sm text-red-500"}>{creatingStatus.error}</p>
+                            <ExclamationCircleIcon className={"w-5 h-5 text-secondary"} aria-hidden="true" />
+                            <p className={"text-sm text-secondary"}>{creatingStatus.error}</p>
                         </div>
                     ) : creatingStatus.isCreating ? (
                         <div className={"flex items-center gap-2"}>
-                            <svg className={"animate-spin w-5 h-5 text-red-500"} xmlns={"http://www.w3.org/2000/svg"} fill={"none"} viewBox={"0 0 24 24"}>
+                            <svg className={"animate-spin w-5 h-5 text-secondary"} xmlns={"http://www.w3.org/2000/svg"} fill={"none"} viewBox={"0 0 24 24"}>
                                 <circle className={"opacity-25"} cx={"12"} cy={"12"} r={"10"} stroke={"currentColor"} strokeWidth={"4"}></circle>
                                 <path className={"opacity-75"} fill={"currentColor"} d={"M4 12a8 8 0 018-8v8H4z"}></path>
                             </svg>
-                            <p className={"text-sm text-red-500"}>Creating...</p>
+                            <p className={"text-sm text-secondary"}>Creating...</p>
                         </div>
                     ) : (
                         <></>
                     )}
 
-                    {allHeaders.length > 0 ? (
-                        <p className={"text-sm text-gray-500"}>
-                            Selected {inputHeaders.length} input fields and {outputHeaders.length} output fields. Minimum 1 field required for each.
-                        </p>
-                    ) : (
-                        <></>
-                    )}
                 </div>
             </div>
 
@@ -206,7 +199,7 @@ const ImportData: React.FC<ImportDataProps> = ({ projectSlug, onCancel, onDatase
                 <button
                     type={"submit"}
                     className={
-                        "py-2 px-4 text-sm text-white font-medium flex justify-center bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                        "py-2 px-4 text-sm text-black font-medium flex justify-center bg-secondary border border-transparent rounded-md shadow-sm hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                     }
                 >
                     Import Data

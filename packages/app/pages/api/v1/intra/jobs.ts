@@ -1,5 +1,6 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
+import assertUp from "@/helpers/node/assert/assertUp";
 
 const intraJobsAPI = new NextExpress();
 
@@ -9,19 +10,31 @@ intraJobsAPI.get(async (req, res) => {
     res.status(200).json(jobs);
 });
 
-// intraJobsAPI.post(async (req, res) => {
-//     // Create a new job
-//     const jobName = req.body.name as string;
-//     const jobDescription = req.body.description as string;
-//
-//     const job = await db.intra_pair_job.create({
-//         data: {
-//             name: jobName,
-//             description: jobDescription,
-//
-//         }
-//     });
-//
-//     res.status(200).json(job);
-// });
+intraJobsAPI.post(async (req, res) => {
+    // Create a new job
+    const data = req.body.data;
+    const fileName: string = req.body.fileName;
 
+
+
+    assertUp(typeof data === "object" && data.length > 0, {
+        status : 400,
+        message: "Data must not be empty"
+    });
+
+    assertUp(fileName, {
+        status: 400,
+        message : "fileName is required in body"
+    });
+
+    const results = db.$transaction(async (tx) => {
+
+
+    });
+
+
+
+    res.status(200).json({});
+});
+
+export default intraJobsAPI.handler;
