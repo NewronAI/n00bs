@@ -32,7 +32,7 @@ const RatingRenderer = ({value, data, oldRating, onRatingChange} : RatingRendere
                     for(let i = 0; i < 5; i++) {
                          (
                              stars.push(<input type="radio" onClick={handleOnRatingChange(i+1)} key={i} value={i} name={data.name} className={clsx("mask mask-star-2",
-                                    {"bg-orange-300": old && i < old, "bg-orange-400": i < rating, "bg-zinc-200 opacity-20": !rating})}
+                                    {"bg-orange-300": old !== null && i < old, "bg-orange-400": i < rating, "bg-zinc-200 opacity-20": !rating && !old})}
                                                disabled={disabled} checked={(i+1) === Math.floor(Number(value))} />)
                         )
                     }

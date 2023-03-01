@@ -16,6 +16,7 @@ import Loader from "@/components/Loader";
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import RatingRenderer from "@/components/renderer/RatingRenderer";
 import useSWRImmutable from 'swr/immutable';
+import axios from 'axios';
 
 interface UnassignedFilesPageProps {
     files : any[]
@@ -77,8 +78,6 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
             ...dynamicColumnDef, 
              ...[{ headerName: "Rating", field: "rating", cellRenderer: (props: any) => (<RatingRenderer onRatingChange={(rating,data) => {
                 updatedLocalRating(data.uuid,rating)
-                console.log(data.uuid,rating)
-                console.log(taskRatings.get(data.uuid))
             }}
             {...props} oldRating={(data: { uuid: string; }) => taskRatings.get(data.uuid)}/>) }]
             ];
@@ -112,7 +111,16 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
         }, 0);
     }, []);
 
-
+    const handleRate = () => {
+        console.log(taskRatings)
+        axios.post(`/api/v1/${workflowUUID}/review_answers`, Array.from(taskRatings))
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(error => {
+          console.error(error)
+        })
+    }
 
     if(error) {
         return <div>Error fetching</div>
@@ -136,7 +144,9 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                         </p>
                     </div>
                     <div className={"flex items-center mr-5 btn-group"}>
-
+                        <button className="btn" onClick={handleRate}>
+                            Rate
+                        </button>
                     </div>
                 </div>
                 <Loader isLoading={isLoading}>
