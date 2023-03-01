@@ -24,6 +24,7 @@ review_answers.post(async (req, res) => {
         message: "task-assignment-uuid: Body Param is required. Should contain the uuid of the task assignment"
     });
 
+    // @ts-ignore
     for (const [key, value] of taskRatings) {
         const status = value >= 3 ? task_status.accepted : task_status.rejected
         try{

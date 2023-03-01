@@ -120,12 +120,14 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
         .catch(error => {
           console.error(error)
         })
+        setTaskRatings(new Map<string, number>())
     }
 
     if(error) {
         return <div>Error fetching</div>
     }
 
+    console.log(taskRatings.size)
 
     return (
         <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"answers"} workflowUUID={workflowUUID}/> }>
@@ -144,8 +146,8 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                         </p>
                     </div>
                     <div className={"flex items-center mr-5 btn-group"}>
-                        <button className="btn" onClick={handleRate}>
-                            Rate
+                        <button className="btn btn-primary" onClick={handleRate}>
+                            Save Changes
                         </button>
                     </div>
                 </div>
