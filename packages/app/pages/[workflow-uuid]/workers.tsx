@@ -88,7 +88,7 @@ function Workers() {
                             { headerName: 'Email', field: 'email', sortable: true, filter: true, },
                             { headerName: 'Phone No.', field: 'phone', sortable: true, filter: true, },
                             { headerName: 'Total Assignments', field: 'task_counts', sortable: true, filter: true },
-                            { headerName: 'Rating', field: 'rating', sortable: true, filter: true,cellRenderer: RatingRenderer },
+                            //{ headerName: 'Rating', field: 'rating', sortable: true, filter: true,cellRenderer: RatingRenderer },
                             { headerName: 'Role', field: 'role', sortable: true, filter: true, },
                             { headerName: 'Status', field: 'status', sortable: true, filter: true, },
                             { headerName: 'Added on', field: 'createdAt', sortable: true, filter: true, cellRenderer: DateFromNowRenderer},

@@ -55,7 +55,7 @@ const WorkflowNav = (props : WorkflowNavProps) => {
                     href={`/${workflowUUID}${item.href}`}
                     className={clsx(
                         item.name.toLowerCase() === currentPage
-                            ? 'border-indigo-500 text-zinc-500 dark:text-zinc-100'
+                            ? 'border-indigo-500 text-zinc-200 dark:text-zinc-100'
                             : 'border-transparent text-zinc-300 dark:text-zinc-200 hover:border-gray-300 hover:text-zinc-100',
                         'inline-flex items-center pt-1 pb-1 border-b-2 text-sm font-thin flex gap-1'
                     )}

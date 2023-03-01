@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import WorkflowNav from "@/components/layouts/WorkflowNav";
 import Head from "next/head";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
@@ -15,6 +15,8 @@ import {member_role, Prisma} from "@prisma/client";
 import Loader from "@/components/Loader";
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import RatingRenderer from "@/components/renderer/RatingRenderer";
+import useSWRImmutable from 'swr/immutable';
+import axios from 'axios';
 
 interface UnassignedFilesPageProps {
     files : any[]
@@ -35,15 +37,22 @@ function getSelectedRegionsCount(selectedRows : {district : string}[]) {
     return selectedRegionsMap.size;
 }
 
-
 const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
 
     const fileGridRef = useRef<AgGridReactType>(null);
     const router = useRouter();
+    const [taskRatings, setTaskRatings] = useState(new Map<string, number>())
+
+    const updatedLocalRating = (uuid: string, rating : number) => {
+        setTaskRatings((prev: Map<string,number>) => prev.set(uuid, rating));
+    }
 
     const workflowUUID = router.query["workflow-uuid"] as string;
     const {data, error, isLoading, mutate} = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer`);
     const files = data || [];
+
+    const {data: questionData, error: questionFetchError, isLoading: questionFetchLoading} = useSWRImmutable(`/api/v1/${workflowUUID}/question`)
+    console.log(questionData)
 
     const defaultColDef = useMemo(() => {
         return {
@@ -53,28 +62,44 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
 
     const detailCellRendererParams = useMemo(() => {
         console.log("detailCellRendererParams")
+
+        const staticColumnDefs = [
+            { headerName: "Assignee Name" , field: 'assignee.name' },
+            { headerName: "Assignee Ph. No" , field: 'assignee.phone'},
+            { headerName: "Answer At", field: 'createdAt', cellRenderer: DateFromNowRenderer},
+        ]
+
+        const dynamicColumnDef = questionData?.map((question : any) => {
+            return  { headerName: question.name, field: `task_answers.${question.uuid}`}
+        }) || [];
+ 
+        const colDef = [
+            ...staticColumnDefs,
+            ...dynamicColumnDef, 
+             ...[{ headerName: "Rating", field: "rating", cellRenderer: (props: any) => (<RatingRenderer onRatingChange={(rating,data) => {
+                updatedLocalRating(data.uuid,rating)
+            }}
+            {...props} oldRating={(data: { uuid: string; }) => taskRatings.get(data.uuid)}/>) }]
+            ];
+
         return {
             detailGridOptions: {
-                columnDefs: [
-                    { header: "Question" , field: 'question.text' },
-                    { header: "Answer", field: 'answer' },
-                    { createdAt: "Answered At", field: 'createdAt', cellRenderer: DateFromNowRenderer}
-                ],
+                columnDefs: colDef,
                 defaultColDef: {
                     flex: 1,
                 },
             },
             getDetailRowData: function (params: any) {
                 console.log(params.data)
-                params.successCallback(params.data.task_answers);
+                params.successCallback(params.data.task_assignments);
             },
         };
-    }, []);
+    }, [questionData]);
 
     const isRowMaster = useMemo(() => {
         return (dataItem: any) => {
             console.log({dataItem})
-            return dataItem ? dataItem.task_answers?.length > 0 : false;
+            return dataItem ? dataItem.task_assignments?.length > 0 : false;
         };
     }, []);
 
@@ -86,12 +111,23 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
         }, 0);
     }, []);
 
-
+    const handleRate = () => {
+        console.log(taskRatings)
+        axios.post(`/api/v1/${workflowUUID}/review_answers`, Array.from(taskRatings))
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(error => {
+          console.error(error)
+        })
+        setTaskRatings(new Map<string, number>())
+    }
 
     if(error) {
         return <div>Error fetching</div>
     }
 
+    console.log(taskRatings.size)
 
     return (
         <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"answers"} workflowUUID={workflowUUID}/> }>
@@ -110,7 +146,9 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                         </p>
                     </div>
                     <div className={"flex items-center mr-5 btn-group"}>
-
+                        <button className="btn btn-primary" onClick={handleRate}>
+                            Save Changes
+                        </button>
                     </div>
                 </div>
                 <Loader isLoading={isLoading}>
@@ -131,31 +169,13 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                             columnDefs={[
                                 {
                                     headerName: "File",
-                                    field: "workflow_file.file_name",
+                                    field: "file_name",
                                     cellRenderer: 'agGroupCellRenderer'
                                 },
                                 {
                                     headerName: "District",
-                                    field: "workflow_file.district",
+                                    field: "district",
                                 },
-                                {
-                                    headerName: "Assigned To",
-                                    field: "assignee.name",
-                                },
-                                {
-                                    headerName: "Ph. No",
-                                    field: "assignee.phone",
-                                },
-                                {
-                                    headerName: "Rating",
-                                    field: "rating",
-                                    cellRenderer: RatingRenderer
-                                },
-                                {
-                                    headerName: "Comment",
-                                    field: "review_comment",
-                                }
-
                             ]}
                         />
                 </div>
