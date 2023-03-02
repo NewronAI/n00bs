@@ -36,6 +36,7 @@ const AllFilesPage = () => {
             <Head>
                 <title>All Files</title>
             </Head>
+
             <div>
                 <div className={"mt-2 flex justify-between"}>
                     <div className={"p-0 md:pl-4"}>

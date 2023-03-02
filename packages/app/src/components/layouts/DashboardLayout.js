@@ -1,10 +1,10 @@
-import {Fragment} from 'react';
-import {Disclosure, Menu, Transition} from '@headlessui/react';
-import {MenuIcon as Bars3Icon, XIcon as XMarkIcon,} from '@heroicons/react/outline';
+import { Fragment } from 'react';
+import { Disclosure, Menu, Transition } from '@headlessui/react';
+import { MenuIcon as Bars3Icon, XIcon as XMarkIcon, } from '@heroicons/react/outline';
 import clsx from "clsx";
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
-import {useUser} from "@auth0/nextjs-auth0/client";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 // import ThemeSelector from "../ThemeSelector";
 
@@ -12,7 +12,7 @@ import {useUser} from "@auth0/nextjs-auth0/client";
 
 const navigation = [
     { name: 'Workflows', href: '/workflows' },
-    { name: 'Members', href: '/members'  },
+    { name: 'Members', href: '/members' },
     { name: 'Questions', href: '/questions' },
 ]
 const userNavigation = [
@@ -24,12 +24,12 @@ const userNavigation = [
 
 
 export default function DashboardLayout({
-                                            children,
-                                            currentPage,
-                                            secondaryNav,
-                                        }) {
+    children,
+    currentPage,
+    secondaryNav,
+}) {
 
-    const {user} = useUser();
+    const { user } = useUser();
     const email = user?.email || "sample@exampl";
     //
     // const {data : userData ,error} = useSwrImmutable( "/api/v1/get-user-details" ,getFetcher);
@@ -60,11 +60,11 @@ export default function DashboardLayout({
                                     <div className="flex">
                                         <div className="flex flex-shrink-0 items-center">
                                             <Link href={"/"}>
-                                            <h1 className={"text-3xl tracking-wider font-bold"}>
-                                                <span className={"text-secondary "}>
-                                                    noOBS
-                                                </span>
-                                            </h1>
+                                                <h1 className={"text-3xl tracking-wider font-bold"}>
+                                                    <span className={"text-secondary "}>
+                                                        noOBS
+                                                    </span>
+                                                </h1>
                                             </Link>
                                         </div>
                                         <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
@@ -88,7 +88,7 @@ export default function DashboardLayout({
                                     </div>
 
                                     <div className="hidden sm:ml-6 sm:flex sm:items-center">
-                                            {/*<ThemeSelector />*/}
+                                        {/*<ThemeSelector />*/}
                                         {/* Profile dropdown */}
                                         <Menu as="div" className="relative ml-3">
                                             <div>
@@ -138,11 +138,7 @@ export default function DashboardLayout({
                                         </Disclosure.Button>
                                     </div>
                                 </div>
-                                <div>
-                                    {
-                                        secondaryNav
-                                    }
-                                </div>
+
 
                             </div>
 
@@ -206,8 +202,13 @@ export default function DashboardLayout({
                             <h1 className="text-xl font-bold leading-6 pl-0">{currentPage}</h1>
                         </div>
                     </header>*/}
-                    <main>
-                        <div className="mx-auto max-w-[1550px]">
+                    <main className="flex">
+                        <div className='flex w-64 h-screen'>
+                            {
+                                secondaryNav
+                            }
+                        </div>
+                        <div className="mx-auto max-w-[1350px]">
                             {/* Replace with your content */}
                             {
                                 children
