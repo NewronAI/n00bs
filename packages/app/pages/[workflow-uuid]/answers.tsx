@@ -19,6 +19,7 @@ import useSWRImmutable from 'swr/immutable';
 import axios from 'axios';
 import clsx from "clsx";
 import UrlRenderer from "@/components/renderer/UrlRenderer";
+import {toast} from "react-toastify";
 
 interface UnassignedFilesPageProps {
     files : any[]
@@ -38,6 +39,8 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
     const workflowUUID = router.query["workflow-uuid"] as string;
     const {data, error, isLoading, mutate} = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer`);
     const files = data || [];
+
+    const [updatingReview, setUpdatingReviews] = useState(false);
 
     const {data: questionData, error: questionFetchError, isLoading: questionFetchLoading} = useSWRImmutable(`/api/v1/${workflowUUID}/question`)
     console.log(questionData)
@@ -101,14 +104,21 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
 
     const handleRate = () => {
         console.log(taskRatings)
+        setUpdatingReviews(true);
         axios.post(`/api/v1/${workflowUUID}/review_answers`, Array.from(taskRatings))
         .then(response => {
-          mutate().then(() => {
-              console.log("files updated");
-          })
+            setUpdatingReviews(false);
+              mutate().then(() => {
+                  console.log("files updated");
+                  toast("Review Posted",{type: "success"});
+
+              });
+
         })
         .catch(error => {
-          console.error(error)
+          console.error(error);
+            setUpdatingReviews(false);
+          toast("Error posting review",{type: "error"});
         })
         setTaskRatings(new Map<string, number>())
     }
@@ -120,8 +130,8 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
     console.log(taskRatings.size)
 
     const ActionItem = () => <div>
-        <button className={clsx("btn", {"btn-secondary" : taskRatings.size > 1, })} disabled={taskRatings.size < 1} onClick={handleRate}>
-            Save Changes
+        <button className={clsx("btn", {"btn-secondary" : true})} onClick={handleRate}>
+            {updatingReview ? "Saving. . ." : "Save Changes"}
         </button>
     </div>
 
