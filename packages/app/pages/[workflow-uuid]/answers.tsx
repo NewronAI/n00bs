@@ -17,25 +17,14 @@ import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import RatingRenderer from "@/components/renderer/RatingRenderer";
 import useSWRImmutable from 'swr/immutable';
 import axios from 'axios';
+import clsx from "clsx";
+import UrlRenderer from "@/components/renderer/UrlRenderer";
+import {toast} from "react-toastify";
 
 interface UnassignedFilesPageProps {
     files : any[]
 }
 
-function getSelectedRegionsCount(selectedRows : {district : string}[]) {
-    const selectedRegionsMap = new Map<string,number>();
-
-    selectedRows.forEach((row) => {
-        if(selectedRegionsMap.has(row.district)){
-            const prevCount = selectedRegionsMap.get(row.district) || 0;
-            selectedRegionsMap.set(row.district, prevCount + 1);
-        } else {
-            selectedRegionsMap.set(row.district, 1);
-        }
-    });
-
-    return selectedRegionsMap.size;
-}
 
 const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
 
@@ -51,6 +40,8 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
     const {data, error, isLoading, mutate} = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer`);
     const files = data || [];
 
+    const [updatingReview, setUpdatingReviews] = useState(false);
+
     const {data: questionData, error: questionFetchError, isLoading: questionFetchLoading} = useSWRImmutable(`/api/v1/${workflowUUID}/question`)
     console.log(questionData)
 
@@ -64,9 +55,9 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
         console.log("detailCellRendererParams")
 
         const staticColumnDefs = [
-            { headerName: "Assignee Name" , field: 'assignee.name' },
+            { headerName: "Assignee Name" , field: 'assignee.name', tooltipField: 'assignee.name', tooltipEnable: true},
             { headerName: "Assignee Ph. No" , field: 'assignee.phone'},
-            { headerName: "Answer At", field: 'createdAt', cellRenderer: DateFromNowRenderer},
+            { headerName: "Answered At", field: 'createdAt', cellRenderer: DateFromNowRenderer},
         ]
 
         const dynamicColumnDef = questionData?.map((question : any) => {
@@ -113,19 +104,36 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
 
     const handleRate = () => {
         console.log(taskRatings)
+        setUpdatingReviews(true);
         axios.post(`/api/v1/${workflowUUID}/review_answers`, Array.from(taskRatings))
         .then(response => {
-          console.log(response.data)
+            setUpdatingReviews(false);
+              mutate().then(() => {
+                  console.log("files updated");
+                  toast("Review Posted",{type: "success"});
+
+              });
+
         })
         .catch(error => {
-          console.error(error)
+          console.error(error);
+            setUpdatingReviews(false);
+          toast("Error posting review",{type: "error"});
         })
+        setTaskRatings(new Map<string, number>())
     }
 
     if(error) {
         return <div>Error fetching</div>
     }
 
+    console.log(taskRatings.size)
+
+    const ActionItem = () => <div>
+        <button className={clsx("btn", {"btn-secondary" : true})} onClick={handleRate}>
+            {updatingReview ? "Saving. . ." : "Save Changes"}
+        </button>
+    </div>
 
     return (
         <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"answers"} workflowUUID={workflowUUID}/> }>
@@ -144,9 +152,7 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                         </p>
                     </div>
                     <div className={"flex items-center mr-5 btn-group"}>
-                        <button className="btn" onClick={handleRate}>
-                            Rate
-                        </button>
+                        <ActionItem/>
                     </div>
                 </div>
                 <Loader isLoading={isLoading}>
@@ -159,8 +165,11 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                             masterDetail={true}
                             isRowMaster={isRowMaster}
                             detailCellRendererParams={detailCellRendererParams}
+                            detailRowAutoHeight={true}
+                            detailRowHeight={250}
                             // rowGroupPanelShow={"onlyWhenGrouping"}
                             onFirstDataRendered={onFirstDataRendered}
+                            groupDefaultExpanded={1}
                             pivotMode={false}
                             defaultColDef={defaultColDef}
                             paginationPageSize={15}
@@ -168,16 +177,37 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                                 {
                                     headerName: "File",
                                     field: "file_name",
-                                    cellRenderer: 'agGroupCellRenderer'
+                                    cellRenderer: 'agGroupCellRenderer',
+                                    tooltipField: 'file_name',
+                                    headerTooltip: "Good Work",
+
                                 },
                                 {
                                     headerName: "District",
                                     field: "district",
                                 },
+                                {
+                                    headerName: "State",
+                                    field: "state",
+                                },
+                                {
+                                    headerName: "File",
+                                    field: "file",
+                                    cellRenderer: UrlRenderer
+                                },
+                                {
+                                    headerName: "Created At",
+                                    field: "createdAt",
+                                    cellRenderer: DateFromNowRenderer
+                                }
                             ]}
                         />
                 </div>
+                    <div className={"flex justify-end p-3"}>
+                    <ActionItem />
+                    </div>
                 </Loader>
+
             </div>
         </DashboardLayout>
     );

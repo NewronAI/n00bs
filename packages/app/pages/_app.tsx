@@ -3,6 +3,8 @@ import 'react-tooltip/dist/react-tooltip.css'
 import type {AppProps} from 'next/app'
 import {SWRConfig} from "swr";
 import {UserProvider} from "@auth0/nextjs-auth0/client";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 // @ts-ignore for now because of cockroachdb
 BigInt.prototype.toJSON = function() {
@@ -16,6 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }}>
       <UserProvider>
         <Component {...pageProps} />
+          <ToastContainer />
       </UserProvider>
   </SWRConfig>
 }
