@@ -26,6 +26,11 @@ memberApi.get(async (req: NextApiRequest, res: NextApiResponse) => {
     let nameStr = name ? name as string : undefined;
 
 
+    stateStr = stateStr?.trim();
+    districtStr = districtStr?.trim();
+    nameStr = nameStr?.trim();
+
+
     const members = await db.member.findMany({
         where: {
             name: typeof nameStr === "string" ? {
@@ -52,6 +57,20 @@ memberApi.get(async (req: NextApiRequest, res: NextApiResponse) => {
 
 })
 
+type MemberCreateBody = {
+    name: string,
+    email: string,
+    phone: string,
+    district: string,
+    state: string,
+    role: member_role,
+    address: string,
+    pincode: string,
+    status: obj_status,
+    payment_details: string
+
+}
+
 memberApi.post(async (req: NextApiRequest, res : NextApiResponse) => {
 
     let {
@@ -65,9 +84,11 @@ memberApi.post(async (req: NextApiRequest, res : NextApiResponse) => {
         pincode,
         status,
         payment_details
-    } = req.body;
+    } = req.body as MemberCreateBody;
 
     const logger = getLogger("api/v1/member");
+
+
 
     role = role as string as member_role;
     role = role || member_role.freelancer;
@@ -89,6 +110,15 @@ memberApi.post(async (req: NextApiRequest, res : NextApiResponse) => {
 
     logger.debug("Creating member");
 
+    name = name?.trim();
+    email = email?.trim();
+    phone = phone?.trim();
+    district = district?.trim();
+    state = state?.trim();
+    address = address?.trim();
+    pincode = pincode?.trim();
+    payment_details = payment_details?.trim();
+
     const member = await db.member.create({
         data: {
             name,
@@ -108,6 +138,21 @@ memberApi.post(async (req: NextApiRequest, res : NextApiResponse) => {
 
 })
 
+type MemberUpdateBody = {
+    uuid: string,
+    name?: string,
+    email?: string,
+    phone?: string,
+    district?: string,
+    state?: string,
+    role?: member_role,
+    address?: string,
+    pincode?: string,
+    status?: obj_status,
+    payment_details?: string
+
+}
+
 memberApi.put(async (req: NextApiRequest, res: NextApiResponse) => {
 
     let {
@@ -126,6 +171,14 @@ memberApi.put(async (req: NextApiRequest, res: NextApiResponse) => {
 
     const logger = getLogger("api/v1/member");
 
+    assertUp(uuid, {
+        message: "body: uuid is required",
+        status: 400
+    });
+
+    uuid = uuid?.trim();
+    email = email?.trim();
+    phone = phone?.trim();
 
     logger.debug("Updating member");
 

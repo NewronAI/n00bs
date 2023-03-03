@@ -3,6 +3,7 @@ import clsx from "clsx";
 import useSWRImmutable from "swr/immutable";
 import { Prisma } from "@prisma/client";
 import {
+    AnnotationIcon,
     ChartSquareBarIcon,
     CogIcon,
     DocumentDuplicateIcon,
@@ -30,6 +31,7 @@ const navigation = [
             { name: 'Assigned Files', href: '/assigned', icon: <DocumentIcon className="h-5" aria-hidden="true" /> , current: false},
         ]
     },
+    { name: 'Answers', href: '/answers' , icon: <AnnotationIcon className="h-5" aria-hidden="true" />  },
     { name: 'Jobs', href: '/jobs', icon: <ViewBoardsIcon className="h-5" aria-hidden="true" />, },
     // { name: 'Open Jobs', href: '/jobs' },
     // { name: 'Completed Jobs', href: '/completed-jobs' },
@@ -44,7 +46,7 @@ const WorkflowNav = (props: WorkflowNavProps) => {
 
     const { data: workflow } = useSWRImmutable<Prisma.workflowSelect>(`/api/v1/${workflowUUID}/get-metadata`);
 
-    function classNames(...classes) {
+    function classNames(...classes : any) {
         return classes.filter(Boolean).join(' ')
     }
 
@@ -91,7 +93,7 @@ const WorkflowNav = (props: WorkflowNavProps) => {
                                 <a
                                     href={`/${workflowUUID}${item.href}`}
                                     className={classNames(
-                                        item.current
+                                        item.name.toLowerCase() === currentPage
                                             ? ' text-gray-300'
                                             : 'text-gray-300  hover:bg-gray-50 hover:text-gray-900',
                                         'group flex w-full items-center rounded-md py-2 pl-7 pr-2 text-sm font-medium'
@@ -106,7 +108,7 @@ const WorkflowNav = (props: WorkflowNavProps) => {
                                     <>
                                         <Disclosure.Button
                                             className={classNames(
-                                                item.current
+                                                item.name.toLowerCase() === currentPage
                                                     ? 'bg-gray-100 text-gray-900'
                                                     : ' text-gray-300 hover:bg-gray-50 hover:text-gray-900',
                                                 'group flex w-full items-center rounded-md py-2 pr-2 text-left text-sm font-medium focus:outline-none focus:ring-2'

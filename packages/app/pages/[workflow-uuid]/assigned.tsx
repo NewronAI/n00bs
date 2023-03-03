@@ -14,6 +14,7 @@ import {useRouter} from 'next/router';
 import DateFromNowRenderer from '@/components/renderer/DateFromNowRenderer';
 import 'ag-grid-enterprise';
 import UrlRenderer from '@/components/renderer/UrlRenderer'
+import FilenameRenderer from "@/components/renderer/FilenameRenderer";
 
 interface assignedFilesPageProps {
     files: any[];
@@ -60,7 +61,7 @@ const AssignedFilesPage = (props: assignedFilesPageProps) => {
                               columnDefs={[
                                   {headerName: "File State", field: "state", rowGroup: true,hide: true, sortable: true, filter: true, width: 150},
                                   {headerName: "File District", field: "district", rowGroup: true,hide: true, sortable: true, filter: true, width: 150},
-                                  {headerName: "File Name", field: "file_name", rowGroup: true, sortable: true, filter: true, width: 400},
+                                  {headerName: "File Name", field: "file_name", rowGroup: true, sortable: true, filter: true, width: 400, cellRenderer: FilenameRenderer, tooltipField: "file_name"},
                                   {headerName: "Member Name", field: "memeber_name", sortable: true, filter: true, width: 150},
                                 {headerName: "Member State", field: "member_district", sortable: true, filter: true, width: 150},
                                 {headerName: "Member State", field: "member_state", sortable: true, filter: true, width: 150},
