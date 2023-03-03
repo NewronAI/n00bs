@@ -20,7 +20,10 @@ import Modal from "@/components/Modal";
 import axios from "axios";
 import Loader from "@/components/Loader";
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
-import FileAssignmentCountRenderer from "@/components/renderer/FileAssignmentCountRenderer";
+import FilenameRenderer from "@/components/renderer/FilenameRenderer";
+import fileDurationFormatter from "@/helpers/react/fileDurationFormatter";
+import FileAssignmentTooltip from "@/components/renderer/FileAssignmentTooltip";
+import {ITooltipParams} from "ag-grid-community";
 
 interface UnassignedFilesPageProps {
     files : any[]
@@ -54,6 +57,8 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
     const [assignDialogOpen, setAssignDialogOpen] = React.useState<boolean>(false);
 
     const [selectedRegionsCount, setSelectedRegionsCount] = React.useState<number>(0);
+
+    const [selectionCount, setSelectionCount] = React.useState<number>(0);
 
     const workflowUUID = router.query["workflow-uuid"] as string;
     const {data, error, isLoading, mutate} = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/file/unassigned`, (url) => fetch(url).then(res => res.json()));
@@ -239,14 +244,10 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                             All the files uploaded to the workflow, which are not assigned to any user.
                         </p>
                     </div>
-                    <div className={"flex items-center mr-5 btn-group"}>
-
-                        <button onClick={handleDeselectAll} className='btn btn-sm btn-error px-5'>
-                            Deselect All
-                        </button>
-                        <button onClick={handleSelectAll} className='btn btn-sm btn-primary px-5'>
-                            Select All
-                        </button>
+                    <div className={"flex items-center mr-5 btn-group gap-2"}>
+                        <div>
+                            Selected Files: <span className={"font-semibold"}>{selectionCount}</span>
+                        </div>
                         <button onClick={handleInitiateAssign} className='btn btn-sm btn-secondary px-5'>
                             Assign
                         </button>
@@ -258,21 +259,25 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                         rowData={files}
                         suppressMenuHide={true}
                         pagination={true}
+                        groupDefaultExpanded={1}
                         ref={fileGridRef}
                         rowGroupPanelShow={"onlyWhenGrouping"}
                         pivotMode={false}
                         pivotPanelShow={"always"}
                         groupSelectsChildren={true}
+                        onSelectionChanged={() => {
+                            setSelectionCount(fileGridRef.current?.api.getSelectedRows().length || 0);
+                        }}
                         rowSelection='multiple'
                         paginationPageSize={15}
                         columnDefs={[
                             {headerName: "", checkboxSelection: true, width: 80, headerCheckboxSelection: true, headerCheckboxSelectionFilteredOnly: true},
+                            {headerName: "File Duration", field: "file_duration", sortable: true, filter: true, aggFunc: 'sum' , valueFormatter: fileDurationFormatter, width: 150},
                             {headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 100},
-                            {headerName: "File Duration", field: "file_duration", sortable: true, filter: true, valueFormatter: (params) => {
-                                return `${moment.duration(params.value,"second").asSeconds().toFixed(1)} secs`;
-                            }, width: 150},
-                            {headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 400},
-                            {headerName: "Assignments", field: "assignment_count", sortable: true, filter: true, cellRenderer: FileAssignmentCountRenderer, width: 170},
+                            {headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 400, cellRenderer: FilenameRenderer, tooltipField: "file_name"},
+                            {headerName: "Assignments", field: "assignment_count", sortable: true, filter: true, width: 170,
+                                tooltipField: "assignment_count",
+                                tooltipComponent: (props : ITooltipParams) => (<FileAssignmentTooltip {...props} workflowUUID={workflowUUID} />)},
                             {headerName: "File Path", field: "file", sortable: true, filter: true, width: 500, cellRenderer: UrlRenderer},
                             // {headerName: "File Status", field: "status", sortable: true, filter: true, width: 120},
                             // {headerName: "File UUID", field: "uuid", sortable: true, filter: true, width: 330},

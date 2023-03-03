@@ -3,6 +3,7 @@ import clsx from "clsx";
 import useSWRImmutable from "swr/immutable";
 import { Prisma } from "@prisma/client";
 import {
+    AnnotationIcon,
     ChartSquareBarIcon,
     CogIcon,
     DocumentDuplicateIcon,
@@ -43,7 +44,6 @@ const WorkflowNav = (props: WorkflowNavProps) => {
 
 
     const { data: workflow } = useSWRImmutable<Prisma.workflowSelect>(`/api/v1/${workflowUUID}/get-metadata`);
-
 
 
 
