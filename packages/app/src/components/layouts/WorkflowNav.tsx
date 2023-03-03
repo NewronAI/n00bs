@@ -22,19 +22,19 @@ export interface WorkflowNavProps {
 
 
 const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: <ChartSquareBarIcon className="h-5" aria-hidden="true" />, current: false,},
+    { name: 'Dashboard', href: '/dashboard', icon: <ChartSquareBarIcon className="h-5" aria-hidden="true" />, current: false, },
     {
-        name: 'Files', href: '/all-files', icon: <DocumentDuplicateIcon className="h-5" aria-hidden="true" />, current: false, children: [
-            { name: 'All Files', href: '/unassigned', icon: <DocumentIcon className="h-5" aria-hidden="true" />, current: false },
-            { name: 'Unassigned Files', href: '/unassigned', icon: <DocumentIcon className="h-5" aria-hidden="true" />, current: false },
-            { name: 'Assigned Files', href: '/assigned', icon: <DocumentIcon className="h-5" aria-hidden="true" /> , current: false},
+        name: 'Files', href: '/all-files', icon: <DocumentDuplicateIcon className="h-5" aria-hidden="true" />, children: [
+            { name: 'All Files', href: '/unassigned', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
+            { name: 'Unassigned Files', href: '/unassigned', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
+            { name: 'Assigned Files', href: '/assigned', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
         ]
     },
-    { name: 'Jobs', href: '/jobs', icon: <ViewBoardsIcon className="h-5" aria-hidden="true" />, },
+    { name: 'Jobs', href: '/jobs', icon: <ViewBoardsIcon className="h-5" aria-hidden="true" />, current: false, },
     // { name: 'Open Jobs', href: '/jobs' },
     // { name: 'Completed Jobs', href: '/completed-jobs' },
-    { name: 'Workers', href: '/workers', icon: <UserGroupIcon className="h-5" aria-hidden="true" />, },
-    { name: 'Settings', href: '/settings', icon: <CogIcon className="h-5" aria-hidden="true" /> },
+    { name: 'Workers', href: '/workers', icon: <UserGroupIcon className="h-5" aria-hidden="true" />, current: false, },
+    { name: 'Settings', href: '/settings', icon: <CogIcon className="h-5" aria-hidden="true" />, current: false, },
 ];
 
 const WorkflowNav = (props: WorkflowNavProps) => {
@@ -44,9 +44,7 @@ const WorkflowNav = (props: WorkflowNavProps) => {
 
     const { data: workflow } = useSWRImmutable<Prisma.workflowSelect>(`/api/v1/${workflowUUID}/get-metadata`);
 
-    function classNames(...classes) {
-        return classes.filter(Boolean).join(' ')
-    }
+
 
 
     return (
@@ -90,7 +88,7 @@ const WorkflowNav = (props: WorkflowNavProps) => {
                             <div key={item.name}>
                                 <a
                                     href={`/${workflowUUID}${item.href}`}
-                                    className={classNames(
+                                    className={clsx(
                                         item.current
                                             ? ' text-gray-300'
                                             : 'text-gray-300  hover:bg-gray-50 hover:text-gray-900',
@@ -105,7 +103,7 @@ const WorkflowNav = (props: WorkflowNavProps) => {
                                 {({ open }) => (
                                     <>
                                         <Disclosure.Button
-                                            className={classNames(
+                                            className={clsx(
                                                 item.current
                                                     ? 'bg-gray-100 text-gray-900'
                                                     : ' text-gray-300 hover:bg-gray-50 hover:text-gray-900',
@@ -113,7 +111,7 @@ const WorkflowNav = (props: WorkflowNavProps) => {
                                             )}
                                         >
                                             <svg
-                                                className={classNames(
+                                                className={clsx(
                                                     open ? 'rotate-90 text-gray-400' : 'text-gray-300',
                                                     'mr-2 h-5 w-5 flex-shrink-0 transform transition-colors duration-150 ease-in-out group-hover:text-gray-400'
                                                 )}
@@ -129,8 +127,8 @@ const WorkflowNav = (props: WorkflowNavProps) => {
                                                 <Disclosure.Button
                                                     key={subItem.name}
                                                     as="a"
-                                                    href={`/${workflowUUID}${item.href}`}
-                                                    className="group flex w-full items-center rounded-md py-2 pl-10 pr-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                                    href={`/${workflowUUID}${subItem.href}`}
+                                                    className="group flex w-full items-center rounded-md py-2 pl-10 pr-2 text-sm font-medium text-gray-300 hover:bg-gray-50 hover:text-gray-900"
                                                 >
                                                     {subItem.name}
                                                 </Disclosure.Button>

@@ -35,5 +35,8 @@
   "scripts": {
     "dev": "turbo dev"
   },
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "yarn@1.22.19",
+  "dependencies": {
+    "clsx": "^1.2.1"
+  }
 }

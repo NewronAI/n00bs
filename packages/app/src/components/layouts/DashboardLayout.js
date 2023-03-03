@@ -202,8 +202,8 @@ export default function DashboardLayout({
                             <h1 className="text-xl font-bold leading-6 pl-0">{currentPage}</h1>
                         </div>
                     </header>*/}
-                    <main className="flex">
-                        <div className='flex h-screen'>
+                    <main className="flex md:w-auto">
+                        <div className='flex h-screen md:w-auto'>
                             {
                                 secondaryNav
                             }
