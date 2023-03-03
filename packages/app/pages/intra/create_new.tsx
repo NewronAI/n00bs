@@ -1,7 +1,8 @@
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import FilesUploadSelector from "@/components/CSVUploadSelector";
 import {useRouter} from "next/router";
-import {data} from "autoprefixer";
+import axios from "axios";
+import intraCreateDataTransformer from "@/transformers/intraCreateDataTransformer";
 
 const CreateNewIntraPair = () => {
 
@@ -11,7 +12,32 @@ const CreateNewIntraPair = () => {
         router.push("/intra");
     }
 
-    const onDatasetImported = (d : any) => {
+    const onDatasetImported = async (d : any, fileName? : string) => {
+
+        try {
+
+            await axios.post("/api/v1/intra/jobs", {
+                fileName,
+                data: d
+            });
+
+            return {
+                isCreating: false,
+                message: "Successfully created new Intra Pair task",
+                error: null
+            }
+
+        } catch (e) {
+            console.log(e);
+            return {
+                // @ts-ignore
+                error: e.response ? e.response?.data?.message : e?.message || "Unknown error",
+                isCreating: false,
+                message: "Failed to create new Intra Pair task",
+            }
+
+        }
+
 
     }
 
@@ -30,9 +56,10 @@ const CreateNewIntraPair = () => {
 
                 <div className={"flex justify-center"}>
                     <div className={" w-full"}>
-                        <FilesUploadSelector  onCancel={onCancel}
+                        <FilesUploadSelector onCancel={onCancel}
                                               onDatasetImported={onDatasetImported}
-                                              requiredFields={["Audio 2", "Cosine similarity", "Reference sample", "Audio link"]}/>
+                                              transformHeader={intraCreateDataTransformer}
+                                              requiredFields={["file_name", "cosine_similarity", "is_reference", "file"]}/>
                     </div>
                 </div>
             </div>

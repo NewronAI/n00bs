@@ -114,24 +114,25 @@ model question {
 }
 
 model member {
-  id                    Int                         @id @default(autoincrement())
-  uuid                  String                      @unique @default(uuid()) @db.Char(36)
-  name                  String
-  createdAt             DateTime                    @default(now())
-  updatedAt             DateTime                    @updatedAt
-  deletedAt             DateTime?
-  email                 String                      @unique @default(uuid()) @db.VarChar(255)
-  phone                 String                      @unique
-  role                  member_role                 @default(freelancer)
-  status                obj_status                  @default(active)
-  district              String?
-  state                 String?
-  address               String?
-  pincode               String?
-  payment_details       Json?
-  assignments           task_assignment[]           @relation("assignee")
-  reviews               task_assignment[]           @relation("reviewer")
-  intra_job_assignments intra_pair_job_assignment[]
+  id                Int               @id @default(autoincrement())
+  uuid              String            @unique @default(uuid()) @db.Char(36)
+  name              String
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  deletedAt         DateTime?
+  email             String            @unique @default(uuid()) @db.VarChar(255)
+  phone             String            @unique
+  role              member_role       @default(freelancer)
+  status            obj_status        @default(active)
+  district          String?
+  state             String?
+  address           String?
+  pincode           String?
+  payment_details   Json?
+  assignments       task_assignment[] @relation("assignee")
+  reviews           task_assignment[] @relation("reviewer")
+  intra_creator_of  intra_pair_job[]  @relation("intra_created_by")
+  intra_assignee_of intra_pair_job[]  @relation("intra_assignee")
 }
 
 model task {
@@ -213,19 +214,22 @@ model webhook {
 }
 
 model intra_pair_job {
-  id                         Int                         @id @default(autoincrement())
-  uuid                       String                      @unique @default(uuid()) @db.Char(36)
-  name                       String
-  createdAt                  DateTime                    @default(now())
-  updatedAt                  DateTime                    @updatedAt
-  deletedAt                  DateTime?
-  status                     obj_status                  @default(active)
-  method                     request_method              @default(POST)
-  secret                     String?                     @db.VarChar(255)
-  headers                    Json?
-  intra_pair_files           intra_pair_file[]
-  intra_pair_job_assignments intra_pair_job_assignment[]
-  group_size                 Int                         @default(6)
+  id               Int               @id @default(autoincrement())
+  uuid             String            @unique @default(uuid()) @db.Char(36)
+  name             String            @unique
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  deletedAt        DateTime?
+  status           obj_status        @default(active)
+  method           request_method    @default(POST)
+  secret           String?           @db.VarChar(255)
+  headers          Json?
+  intra_pair_files intra_pair_file[]
+  group_size       Int               @default(6)
+  created_by_id    Int
+  created_by       member            @relation(name: "intra_created_by", fields: [created_by_id], references: [id])
+  assigned_to_id   Int
+  assigned_to      member            @relation(name: "intra_assignee", fields: [assigned_to_id], references: [id])
 }
 
 model intra_pair_job_questions {
@@ -253,24 +257,6 @@ model intra_pair_file {
   cosine_score      Float?
   is_reference      Boolean         @default(false)
   is_similar        Boolean?
-  intra_pair_job    intra_pair_job? @relation(fields: [intra_pair_job_id], references: [id])
+  intra_pair_job    intra_pair_job? @relation(fields: [intra_pair_job_id], references: [id], onDelete: Cascade)
   intra_pair_job_id Int
-}
-
-model intra_pair_job_assignment {
-  id                Int            @id @default(autoincrement())
-  uuid              String         @unique @default(uuid()) @db.Char(36)
-  name              String
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
-  status            task_status    @default(pending)
-  intra_pair_job_id Int
-  intra_pair_job    intra_pair_job @relation(fields: [intra_pair_job_id], references: [id])
-  assignee_id       Int
-  assignee          member         @relation(fields: [assignee_id], references: [id])
-  workflow_file_id  Int
-  review_rating     Int?
-  review_comments   String?
-
-  @@unique([assignee_id, workflow_file_id, intra_pair_job_id])
 }

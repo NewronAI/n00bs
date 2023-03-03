@@ -1,15 +1,23 @@
 import { ExclamationCircleIcon } from "@heroicons/react/outline";
-import Papa, {ParseStepResult} from "papaparse";
-import React, { useMemo, useState } from "react";
-import axios from "axios";
+import Papa, {ParseResult} from "papaparse";
+import React, { useState } from "react";
+
 
 interface ImportDataProps {
     onCancel: () => void;
-    onDatasetImported: (data : any) => void;
+    onDatasetImported?: (data : any, fileName?: string) => Promise<ExportStatus>;
     requiredFields?: string[];
+    transformHeader?: (header: string, index: number) => string
+    transform?: (value: any, field: string) => any
 }
 
-const ImportData: React.FC<ImportDataProps> = ({ onCancel, onDatasetImported, requiredFields }) => {
+export type ExportStatus = {
+    isCreating: boolean;
+    message: string,
+    error: string | null
+}
+
+const ImportData: React.FC<ImportDataProps> = ({ onCancel, onDatasetImported, requiredFields, transformHeader }) => {
 
 
     const [fileDetails, setFileDetails] = useState<{ name: string; size: number } | null>(null);
@@ -17,11 +25,7 @@ const ImportData: React.FC<ImportDataProps> = ({ onCancel, onDatasetImported, re
     const dataRef = React.useRef<any>(null);
 
 
-    const [creatingStatus, setCreatingStatus] = useState<{
-        isCreating: boolean;
-        message: string;
-        error: string | null;
-    }>({
+    const [creatingStatus, setCreatingStatus] = useState<ExportStatus>({
         isCreating: false,
         message: "Creating mission...",
         error: null,
@@ -44,7 +48,18 @@ const ImportData: React.FC<ImportDataProps> = ({ onCancel, onDatasetImported, re
 
             Papa.parse(file, {
                 header: true,
-                step: function (results: ParseStepResult<any>) {
+                skipEmptyLines: true,
+                dynamicTyping: true,
+                transformHeader: transformHeader,
+                complete: function (results: ParseResult<any>) {
+                    if(results.errors.length){
+                        setCreatingStatus({
+                            isCreating: false,
+                            message: "",
+                            error: `Error while parsing the file. Please check the file format and try again. Error: ${results.errors[0].message}}`,
+                        });
+                    }
+
                     requiredFields?.forEach((field) => {
                         if (!results.meta.fields?.includes(field)) {
                             setCreatingStatus({
@@ -55,9 +70,8 @@ const ImportData: React.FC<ImportDataProps> = ({ onCancel, onDatasetImported, re
                         }
                     });
 
-                },
-                complete: function (results: any) {
                     dataRef.current = results;
+
                 },
                 error(error: Error) {
                     setCreatingStatus({
@@ -91,12 +105,16 @@ const ImportData: React.FC<ImportDataProps> = ({ onCancel, onDatasetImported, re
 
         try {
 
-
             setCreatingStatus({ isCreating: true, message: "", error: null });
             setCreatingStatus({ isCreating: false, message: "Dataset has been imported successfully.", error: null });
 
-            onDatasetImported(dataRef.current.data);
-            
+            if(onDatasetImported){
+                console.log("onDatasetImported",dataRef.current);
+                setCreatingStatus({ isCreating: true, message: "Creating mission...", error: null });
+                const status = await onDatasetImported(dataRef.current.data, fileDetails?.name);
+                setCreatingStatus(status);
+            }
+
         } catch (e) {
             setCreatingStatus({ isCreating: false, message: "", error: "Something went wrong. Please try again later." });
             console.log(e);
