@@ -1,6 +1,7 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
+import {Prisma} from "@prisma/client";
 
 const intraJobsAPI = new NextExpress();
 
@@ -27,14 +28,29 @@ intraJobsAPI.post(async (req, res) => {
         message : "fileName is required in body"
     });
 
-    const results = db.$transaction(async (tx) => {
+        const results = db.$transaction(async (tx) => {
+            const job = await tx.intra_pair_job.create({
+                data: {
+                    name: fileName,
+                }
+            });
 
+            const files = await tx.intra_pair_file.createMany({
+                data: data.map((pair : Prisma.intra_pair_fileCreateInput ) => {
+                    return {
+                        intra_pair_job_id: job.id,
+                        ...pair
+                    }
+                })
+            });
 
+            return {
+                job,
+                files
+            }
     });
 
-
-
-    res.status(200).json({});
+    res.status(200).json(results);
 });
 
 export default intraJobsAPI.handler;

@@ -220,11 +220,9 @@ model intra_pair_job {
   updatedAt                  DateTime                    @updatedAt
   deletedAt                  DateTime?
   status                     obj_status                  @default(active)
-  url                        String
   method                     request_method              @default(POST)
   secret                     String?                     @db.VarChar(255)
   headers                    Json?
-  event                      events
   intra_pair_files           intra_pair_file[]
   intra_pair_job_assignments intra_pair_job_assignment[]
   group_size                 Int                         @default(6)
