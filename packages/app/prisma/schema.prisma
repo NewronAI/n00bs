@@ -220,16 +220,14 @@ model intra_pair_job {
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
   deletedAt        DateTime?
-  status           obj_status        @default(active)
-  method           request_method    @default(POST)
+  status           task_status       @default(pending)
   secret           String?           @db.VarChar(255)
-  headers          Json?
   intra_pair_files intra_pair_file[]
   group_size       Int               @default(6)
   created_by_id    Int
   created_by       member            @relation(name: "intra_created_by", fields: [created_by_id], references: [id])
-  assigned_to_id   Int
-  assigned_to      member            @relation(name: "intra_assignee", fields: [assigned_to_id], references: [id])
+  assigned_to_id   Int?
+  assigned_to      member?           @relation(name: "intra_assignee", fields: [assigned_to_id], references: [id])
 }
 
 model intra_pair_job_questions {

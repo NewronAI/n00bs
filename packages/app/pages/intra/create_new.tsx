@@ -21,6 +21,8 @@ const CreateNewIntraPair = () => {
                 data: d
             });
 
+            await router.push("/intra/intra-tasks");
+
             return {
                 isCreating: false,
                 message: "Successfully created new Intra Pair task",

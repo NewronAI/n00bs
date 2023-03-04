@@ -1,7 +1,7 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
-import {Prisma} from "@prisma/client";
+import {Prisma, task_status} from "@prisma/client";
 import {getSession} from "@auth0/nextjs-auth0";
 
 const intraJobsAPI = new NextExpress();
@@ -9,13 +9,19 @@ const intraJobsAPI = new NextExpress();
 intraJobsAPI.get(async (req, res) => {
     // Get all jobs
 
-    const data = await db.$queryRaw`
-    SELECT *, COUNT(files.id) as files_count, COUNT(assignment) FROM intra_pair_job job
-    LEFT JOIN intra_pair_file files ON files.job_id = job.id
-    LEFT JOIN intra_pair_job_assignemnt assignment ON assignment.job_id = job.id
-    GROUP BY job.id
-    `
+    const data = await db.$queryRaw`SELECT job.*, COUNT(files.id) as files_count,  
+        created_by.name as created_by_name, created_by.email as created_by_email,
+        assignee.name as assignee_name, assignee.email as assignee_email,
+        assignee.uuid as assignee_uuid
+    FROM intra_pair_job job
+    LEFT JOIN intra_pair_file files ON files.intra_pair_job_id = job.id
+    LEFT JOIN member created_by ON created_by.id = job.created_by_id
+    LEFT JOIN member assignee ON assignee.id = job.assigned_to_id
+    GROUP BY job.id, created_by.id, assignee.id
+    ORDER BY job.id DESC
+    `;
 
+    console.log(data);
     res.json(data);
 
 });
@@ -60,7 +66,7 @@ intraJobsAPI.post(async (req, res) => {
             const job = await tx.intra_pair_job.create({
                 data: {
                     name: fileName,
-                    created_by : {
+                    created_by: {
                         connect: {
                             email
                         }
@@ -68,7 +74,6 @@ intraJobsAPI.post(async (req, res) => {
                 }
             });
 
-            console.log(job);
 
             try{
                 const files = await tx.intra_pair_file.createMany({

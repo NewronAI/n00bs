@@ -12,16 +12,14 @@ import DateFromNowRenderer from "@/components/renderer/DateFromNowRenderer";
 import Loader from "@/components/Loader";
 import React, {useRef} from "react";
 import useSWR from "swr";
-import Link from "next/link";
 
-
-const LinkRenderer = ({value,data} : {value: string, data: any}) => (<Link href={`/intra/${data.uuid}/files`}>
-    {value}
-</Link>);
 
 const CreateNewIntraPair = () => {
 
-    const {data: intraJobData, error: intraJobError, isLoading: intraJobIsLoading} = useSWR<any>(`/api/v1/intra/jobs`);
+    const intraJobUuid = useRouter().query["intra-job-uuid"] as string;
+
+    const {data: intraJobData, error: intraJobError, isLoading: intraJobIsLoading} = useSWR<any>(`/api/v1/intra/${intraJobUuid}/files`);
+
 
     return (
         <DashboardLayout currentPage={"intra check"} secondaryNav={<></>}>
@@ -29,10 +27,10 @@ const CreateNewIntraPair = () => {
             <div>
                 <div className={"pl-4"}>
                     <h1 className={"text-xl font-semibold"}>
-                        Listing all Intra Pair Tasks
+                        List of files for Intra Pair Task
                     </h1>
                     <p>
-                        Here you can see all the tasks that are currently in the system.
+                        Here you can see all the files that are currently in the system.
                     </p>
                 </div>
 
@@ -49,13 +47,13 @@ const CreateNewIntraPair = () => {
                                 groupDefaultExpanded={1}
                                 animateRows={true}
                                 columnDefs={[
-                                    {headerName: "Name", field: "name", sortable: true, filter: true, resizable: true, cellRenderer: LinkRenderer},
+                                    {headerName: "File Name", field: "file_name", sortable: true, filter: true, resizable: true},
+                                    {headerName: "Url", field: "file", sortable: true, filter: true, resizable: true, cellRenderer: UrlRenderer},
                                     {headerName: "Status", field: "status", sortable: true, filter: true, resizable: true},
-                                    {headerName: "Files", field: "files_count", sortable: true, filter: true, resizable: true, },
-                                    {headerName: "Created By", field: "created_by_name", sortable: true, filter: true, resizable: true},
-                                    {headerName: "Created By", field: "created_by_email", sortable: true, filter: true, resizable: true},
                                     {headerName: "Created At", field: "createdAt", sortable: true, filter: true, resizable: true, cellRenderer: DateFromNowRenderer},
-                                    {headerName: "Assigned To", field: "assignedTo", sortable: true, filter: true, resizable: true},
+                                    {headerName: "Is Reference", field: "is_reference", sortable: true, filter: true, resizable: true},
+                                    {headerName: "Is Similar", field: "is_similar", sortable: true, filter: true, resizable: true},
+                                    {headerName: "UUID", field: "uuid", sortable: true, filter: true, resizable: true},
 
                                 ]} />
                         </div>
