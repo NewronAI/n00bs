@@ -4,6 +4,8 @@ import clsx from "clsx";
 import {PlayIcon} from "@heroicons/react/solid";
 import {useRouter} from "next/router";
 import useSWR from "swr";
+import Link from "next/link";
+import Head from "next/head";
 
 const sampleAudios = [
     {
@@ -30,12 +32,11 @@ const Examine = (props: any) => {
     const {data, error, isLoading} = useSWR(`/api/v1/intra/${intraJobUuid}/job`);
 
     const referenceAudioTagRefs = useRef<HTMLAudioElement[]>([]);
-    const subjectAudioTagRefs = useRef<HTMLAudioElement[]>([]);
+    const subjectAudioTagRef = useRef<HTMLAudioElement>(null);
 
     const files = data?.intra_pair_files || [];
     const assignedTo = data?.assigned_to || [];
     const createdBy = data?.created_by || [];
-
     const groupSize = data?.group_size || 0;
 
     const referenceAudios = useMemo(() => {
@@ -52,9 +53,7 @@ const Examine = (props: any) => {
             audioTagRef.pause();
         });
 
-        subjectAudioTagRefs.current.forEach((audioTagRef) => {
-            audioTagRef.pause();
-        });
+        subjectAudioTagRef.current?.pause();
 
         referenceAudioTagRefs.current[index].play().then(() => {
             console.log("played");
@@ -63,13 +62,19 @@ const Examine = (props: any) => {
     }
 
 
-    console.log(referenceAudioTagRefs);
-
     if (error) return <div>failed to load</div>
     if (isLoading) return <div>loading...</div>
 
     return (
         <div className={"flex justify-center items-center py-4"}>
+            <Head>
+                <title>
+                    Intra Job :
+                    {
+                        data.name
+                    }
+                </title>
+            </Head>
             <div className="max-w-md">
                 <div>
                     <div>
@@ -90,9 +95,9 @@ const Examine = (props: any) => {
                                 </div>
                                 <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-t border-r border-b border-gray-200 bg-white">
                                     <div className="flex-1 truncate px-4 py-2 text-sm">
-                                        <a href={referenceAudio.href} className="font-medium text-gray-900 hover:text-gray-600 truncate">
+                                        <Link target={'__blank'} href={referenceAudio.file} className="font-medium text-gray-900 hover:text-gray-600 truncate">
                                             {referenceAudio.file_name}
-                                        </a>
+                                        </Link>
                                     </div>
                                     <audio src={referenceAudio.file} ref={(r) => {
                                         // @ts-ignore
@@ -119,9 +124,11 @@ const Examine = (props: any) => {
                         </div>
                         <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-t border-r border-b border-gray-200 bg-white">
                             <div className="flex-1 truncate px-4 py-2 text-sm">
-                                <a href={"#"} className="font-medium text-gray-900 hover:text-gray-600">
-                                    Subject Audio
-                                </a>
+                                <Link target={"__blank"} href={subjectAudios[0].file} className="font-medium text-gray-900 hover:text-gray-600">
+                                    {
+                                        subjectAudios[0].file_name
+                                    }
+                                </Link>
                             </div>
                         </div>
                     </li>
