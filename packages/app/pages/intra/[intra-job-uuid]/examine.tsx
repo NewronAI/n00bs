@@ -9,6 +9,7 @@ import Head from "next/head";
 import intraFileLogic from "@/helpers/react/intraFileLogic";
 import axios from "axios";
 import {toast} from "react-toastify";
+import Loader from "@/components/Loader";
 
 const sampleAudios = [
     {
@@ -120,7 +121,7 @@ const Examine = (props: any) => {
 
 
     if (error) return <div>failed to load</div>
-    if (isLoading) return <div>loading...</div>
+    if (isLoading) return <Loader isLoading={true} ><></></Loader>
 
     return (
         <div className={"flex justify-center items-center py-4"}>
@@ -203,7 +204,9 @@ const Examine = (props: any) => {
                         </li>}
                 </div>
 
-                <form onSubmit={onSubmitHandler} ref={formRef}>
+                {
+                    currentFile &&
+                    <form onSubmit={onSubmitHandler} ref={formRef}>
                     <h2 className={"text-lg py-4"}>
                         <span className={"font-bold"}>Questions</span>
                     </h2>
@@ -250,7 +253,7 @@ const Examine = (props: any) => {
                             Next
                         </button>
                     </div>
-                </form>
+                </form>}
             </div>
         </div>
     );
