@@ -12,6 +12,8 @@ import DateFromNowRenderer from "@/components/renderer/DateFromNowRenderer";
 import Loader from "@/components/Loader";
 import React, {useRef} from "react";
 import useSWR from "swr";
+import Head from "next/head";
+import Link from "next/link";
 
 
 const CreateNewIntraPair = () => {
@@ -24,16 +26,27 @@ const CreateNewIntraPair = () => {
     return (
         <DashboardLayout currentPage={"intra check"} secondaryNav={<></>}>
 
-            <div>
-                <div className={"pl-4"}>
-                    <h1 className={"text-xl font-semibold"}>
-                        List of files for Intra Pair Task
-                    </h1>
-                    <p>
-                        Here you can see all the files that are currently in the system.
-                    </p>
-                </div>
+            <Head>
+                <title>Files for Intra Pair Task</title>
+            </Head>
 
+            <div>
+
+                <div className={"flex justify-between items-center"}>
+                    <div className={"pl-4"}>
+                        <h1 className={"text-xl font-semibold"}>
+                            List of files for Intra Pair Task
+                        </h1>
+                        <p>
+                            Here you can see all the files that are currently in the system.
+                        </p>
+                    </div>
+                    <div>
+                        <Link href={`/intra/${intraJobUuid}/examine`}>
+                            <button className={"btn btn-secondary  btn-md "}>Exam Link</button>
+                        </Link>
+                    </div>
+                </div>
 
                 <div>
                     <Loader isLoading={intraJobIsLoading} error={(!intraJobData) && !intraJobIsLoading ? "Failed to load data" : undefined}>

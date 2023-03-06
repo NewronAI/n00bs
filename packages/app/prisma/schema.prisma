@@ -228,6 +228,8 @@ model intra_pair_job {
   created_by       member            @relation(name: "intra_created_by", fields: [created_by_id], references: [id])
   assigned_to_id   Int?
   assigned_to      member?           @relation(name: "intra_assignee", fields: [assigned_to_id], references: [id])
+  current_index    Int               @default(-1)
+  threshold        Float             @default(0.0)
 }
 
 model intra_pair_job_questions {
@@ -236,25 +238,32 @@ model intra_pair_job_questions {
   questions   question @relation(fields: [question_id], references: [id])
 }
 
+enum confidence_level {
+  low
+  medium
+  high
+}
+
 model intra_pair_file {
-  id                Int             @id @default(autoincrement())
-  uuid              String          @unique @default(uuid()) @db.Char(36)
+  id                Int              @id @default(autoincrement())
+  uuid              String           @unique @default(uuid()) @db.Char(36)
   file_name         String
   file              String
-  file_type         file_type       @default(audio)
-  createdAt         DateTime        @default(now())
-  receivedAt        DateTime?       @default(now())
-  updatedAt         DateTime        @updatedAt
+  file_type         file_type        @default(audio)
+  createdAt         DateTime         @default(now())
+  receivedAt        DateTime?        @default(now())
+  updatedAt         DateTime         @updatedAt
   deletedAt         DateTime?
-  status            obj_status      @default(active)
+  status            obj_status       @default(active)
   file_duration     Float?
   district          String?
   state             String?
   vendor            String?
   metadata          Json?
   cosine_score      Float?
-  is_reference      Boolean         @default(false)
+  is_reference      Boolean          @default(false)
   is_similar        Boolean?
-  intra_pair_job    intra_pair_job? @relation(fields: [intra_pair_job_id], references: [id], onDelete: Cascade)
+  confidence        confidence_level @default(low)
+  intra_pair_job    intra_pair_job?  @relation(fields: [intra_pair_job_id], references: [id], onDelete: Cascade)
   intra_pair_job_id Int
 }
