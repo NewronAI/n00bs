@@ -4,7 +4,9 @@ import { MenuIcon as Bars3Icon, XIcon as XMarkIcon, } from '@heroicons/react/out
 import clsx from "clsx";
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import {useUser} from "@auth0/nextjs-auth0/client";
+import Head from "next/head";
+import {capitalize} from "lodash";
 
 // import ThemeSelector from "../ThemeSelector";
 
@@ -14,7 +16,9 @@ const navigation = [
     { name: 'Workflows', href: '/workflows' },
     { name: 'Members', href: '/members' },
     { name: 'Questions', href: '/questions' },
+    { name: 'Intra Check', href: '/intra' },
 ]
+
 const userNavigation = [
     // { name: 'Your Profile', href: '#' },
     // { name: 'Settings', href: '#' },
@@ -51,6 +55,13 @@ export default function DashboardLayout({
         <body class="h-full">
         ```
       */}
+            <Head>
+                <title>
+                    {
+                        capitalize(currentPage)
+                    }
+                </title>
+            </Head>
             <div className="min-h-full">
                 <Disclosure as="nav" className="border-b border-zinc-900">
                     {({ open }) => (

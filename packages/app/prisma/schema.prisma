@@ -96,40 +96,43 @@ model workflow_file {
 }
 
 model question {
-  id            Int             @id @default(autoincrement())
-  uuid          String          @unique @default(uuid()) @db.Char(36)
-  name          String
-  text          String
-  order         Int             @default(autoincrement())
-  required      Boolean         @default(true)
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  deletedAt     DateTime?
-  question_type question_type   @default(boolean)
-  options       String[]
-  status        obj_status      @default(active)
-  task_question task_question[]
-  task_answers  task_answer[]
+  id                  Int                        @id @default(autoincrement())
+  uuid                String                     @unique @default(uuid()) @db.Char(36)
+  name                String
+  text                String
+  order               Int                        @default(autoincrement())
+  required            Boolean                    @default(true)
+  createdAt           DateTime                   @default(now())
+  updatedAt           DateTime                   @updatedAt
+  deletedAt           DateTime?
+  question_type       question_type              @default(boolean)
+  options             String[]
+  status              obj_status                 @default(active)
+  task_question       task_question[]
+  task_answers        task_answer[]
+  intra_job_questions intra_pair_job_questions[]
 }
 
 model member {
-  id              Int               @id @default(autoincrement())
-  uuid            String            @unique @default(uuid()) @db.Char(36)
-  name            String
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  deletedAt       DateTime?
-  email           String            @unique @default(uuid()) @db.VarChar(255)
-  phone           String            @unique
-  role            member_role       @default(freelancer)
-  status          obj_status        @default(active)
-  district        String?
-  state           String?
-  address         String?
-  pincode         String?
-  payment_details Json?
-  assignments     task_assignment[] @relation("assignee")
-  reviews         task_assignment[] @relation("reviewer")
+  id                Int               @id @default(autoincrement())
+  uuid              String            @unique @default(uuid()) @db.Char(36)
+  name              String
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  deletedAt         DateTime?
+  email             String            @unique @default(uuid()) @db.VarChar(255)
+  phone             String            @unique
+  role              member_role       @default(freelancer)
+  status            obj_status        @default(active)
+  district          String?
+  state             String?
+  address           String?
+  pincode           String?
+  payment_details   Json?
+  assignments       task_assignment[] @relation("assignee")
+  reviews           task_assignment[] @relation("reviewer")
+  intra_creator_of  intra_pair_job[]  @relation("intra_created_by")
+  intra_assignee_of intra_pair_job[]  @relation("intra_assignee")
 }
 
 model task {
@@ -208,4 +211,59 @@ model webhook {
   event       events
   workflow    workflow?      @relation(fields: [workflow_id], references: [id])
   workflow_id Int?
+}
+
+model intra_pair_job {
+  id               Int               @id @default(autoincrement())
+  uuid             String            @unique @default(uuid()) @db.Char(36)
+  name             String            @unique
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  deletedAt        DateTime?
+  status           task_status       @default(pending)
+  secret           String?           @db.VarChar(255)
+  intra_pair_files intra_pair_file[]
+  group_size       Int               @default(6)
+  created_by_id    Int
+  created_by       member            @relation(name: "intra_created_by", fields: [created_by_id], references: [id])
+  assigned_to_id   Int?
+  assigned_to      member?           @relation(name: "intra_assignee", fields: [assigned_to_id], references: [id])
+  current_index    Int               @default(-1)
+  threshold        Float             @default(0.0)
+}
+
+model intra_pair_job_questions {
+  id          Int      @id @default(autoincrement())
+  question_id Int
+  questions   question @relation(fields: [question_id], references: [id])
+}
+
+enum confidence_level {
+  low
+  medium
+  high
+}
+
+model intra_pair_file {
+  id                Int              @id @default(autoincrement())
+  uuid              String           @unique @default(uuid()) @db.Char(36)
+  file_name         String
+  file              String
+  file_type         file_type        @default(audio)
+  createdAt         DateTime         @default(now())
+  receivedAt        DateTime?        @default(now())
+  updatedAt         DateTime         @updatedAt
+  deletedAt         DateTime?
+  status            obj_status       @default(active)
+  file_duration     Float?
+  district          String?
+  state             String?
+  vendor            String?
+  metadata          Json?
+  cosine_score      Float?
+  is_reference      Boolean          @default(false)
+  is_similar        Boolean?
+  confidence        confidence_level @default(low)
+  intra_pair_job    intra_pair_job?  @relation(fields: [intra_pair_job_id], references: [id], onDelete: Cascade)
+  intra_pair_job_id Int
 }
