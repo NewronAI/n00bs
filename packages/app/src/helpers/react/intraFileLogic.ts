@@ -45,6 +45,10 @@ const findCurrentIndex = (files : any[], groupSize : number ) => {
                 }
             }
         }
+        else {
+            console.log("isGroupEvaluated",isGroupEvaluated);
+            return -1;
+        }
 
     }
 
@@ -53,11 +57,23 @@ const intraFileLogic = (files : any[], groupSize : number ) => {
 
     const currentIndex = findCurrentIndex(files, groupSize);
 
-    if(currentIndex === null || currentIndex === undefined) {
+    if(currentIndex === null || currentIndex === undefined || currentIndex === -1) {
         return null;
     }
 
     return files[currentIndex];
 
 };
+
+export const isThresholdFound = (files : any[], groupSize : number ) => {
+
+        const currentIndex = findCurrentIndex(files, groupSize);
+
+        if(currentIndex === -1) {
+            return true;
+        }
+
+        return false;
+}
+
 export default intraFileLogic;

@@ -2,7 +2,7 @@
 const transformationMap = new Map<string,string>();
 transformationMap.set("Audio 2", "file_name");
 transformationMap.set("Audio link", "file");
-transformationMap.set("Cosine similarity", "cosine_similarity");
+transformationMap.set("Cosine similarity", "cosine_score");
 transformationMap.set("Reference sample", "is_reference");
 
 

@@ -6,7 +6,7 @@ import {useRouter} from "next/router";
 import useSWR from "swr";
 import Link from "next/link";
 import Head from "next/head";
-import intraFileLogic from "@/helpers/react/intraFileLogic";
+import intraFileLogic, {isThresholdFound} from "@/helpers/react/intraFileLogic";
 import axios from "axios";
 import {toast} from "react-toastify";
 import Loader from "@/components/Loader";
@@ -40,6 +40,7 @@ const Examine = (props: any) => {
     },[files]);
 
     const currentFile = useMemo(() => intraFileLogic(subjectAudios,groupSize), [files, groupSize]);
+    const isThreshFound = useMemo(() => isThresholdFound(subjectAudios,groupSize), [currentFile]);
 
     useEffect(() => {
         setUpdatedAudio(true);
@@ -250,6 +251,12 @@ const Examine = (props: any) => {
                         </button>
                     </div>
                 </form>}
+                {
+                    isThreshFound && !currentFile &&
+                    <button className={"btn btn-primary w-full"}>
+                        Complete
+                    </button>
+                }
             </div>
         </div>
     );

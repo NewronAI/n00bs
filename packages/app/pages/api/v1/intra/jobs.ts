@@ -84,6 +84,7 @@ intraJobsAPI.post(async (req, res) => {
                             file_name: pair.file_name,
                             file: pair.file,
                             is_reference: Boolean(pair.is_reference),
+                            cosine_score : pair.cosine_score
                         }
                     })
                 });

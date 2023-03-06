@@ -66,6 +66,7 @@ const CreateNewIntraPair = () => {
                                     {headerName: "Created At", field: "createdAt", sortable: true, filter: true, resizable: true, cellRenderer: DateFromNowRenderer},
                                     {headerName: "Is Reference", field: "is_reference", sortable: true, filter: true, resizable: true},
                                     {headerName: "Is Similar", field: "is_similar", sortable: true, filter: true, resizable: true},
+                                    {headerName: "Cosine Similarity", field: "cosine_score", sortable: true, filter: true, resizable: true},
                                     {headerName: "UUID", field: "uuid", sortable: true, filter: true, resizable: true},
 
                                 ]} />
