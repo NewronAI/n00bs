@@ -1,4 +1,4 @@
-import React, {useMemo, useRef} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 import PropTypes from 'prop-types';
 import clsx from "clsx";
 import {PlayIcon} from "@heroicons/react/solid";
@@ -11,22 +11,6 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import Loader from "@/components/Loader";
 
-const sampleAudios = [
-    {
-        name: 'Reference Audio 1',
-        href: '#',
-        members: '3',
-        bgColor: 'bg-indigo-500',
-        initials: 'SA',
-    },
-    {
-        name: 'Reference Audio 2',
-        href: '#',
-        members: '3',
-        bgColor: 'bg-indigo-500',
-        initials: 'SA',
-    },
-];
 
 const Examine = (props: any) => {
 
@@ -45,7 +29,7 @@ const Examine = (props: any) => {
     const createdBy = data?.created_by || [];
     const groupSize = data?.group_size || Infinity;
 
-
+    const [updatedAudio, setUpdatedAudio] = React.useState(false);
 
     const referenceAudios = useMemo(() => {
         return files.filter((file: any) => file.is_reference);
@@ -56,6 +40,13 @@ const Examine = (props: any) => {
     },[files]);
 
     const currentFile = useMemo(() => intraFileLogic(subjectAudios,groupSize), [files, groupSize]);
+
+    useEffect(() => {
+        setUpdatedAudio(true);
+        setTimeout(() => {
+            setUpdatedAudio(false);
+        }, 3000);
+    }, [currentFile]);
 
     console.log(currentFile);
 
@@ -144,7 +135,7 @@ const Examine = (props: any) => {
                     </div>
 
                     <div className={"mt-8"}>
-                        <h2 className="text-lg font-bold">Sample Audios</h2>
+                        <h2 className="text-lg font-bold">Reference Audios</h2>
                     </div>
                     <ul role="list" className="mt-3 flex gap-3 flex-wrap ">
                         {referenceAudios.map((referenceAudio: any, i : number) => (
@@ -201,7 +192,12 @@ const Examine = (props: any) => {
                                     </Link>
                                 </div>
                             </div>
-                        </li>}
+                        </li>
+                    }
+
+                    {
+                        updatedAudio && currentFile && <span className={"mt-4 text-green-500"}>Audio updated</span>
+                    }
                 </div>
 
                 {
