@@ -12,6 +12,9 @@ intraJobFiles.get(async (req, res) => {
             intra_pair_job: {
                 uuid: intraJobUUID
             }
+        },
+        orderBy: {
+            cosine_score: "asc"
         }
     });
 
