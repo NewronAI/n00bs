@@ -22,22 +22,22 @@ const actions = [
         iconForeground: 'text-purple-700',
         iconBackground: 'bg-purple-50',
     },
-    {
-        title: 'Performance Metrics',
-        href: '/intra/metrics',
-        icon: UsersIcon,
-        description: 'View the performance metrics of the tasks which are completed.',
-        iconForeground: 'text-sky-700',
-        iconBackground: 'bg-sky-50',
-    },
-    {
-        title: "Settings",
-        href: '/intra/settings',
-        icon: CogIcon,
-        description: 'View and update the settings of the Intra Pair task.',
-        iconForeground: 'text-amber-700',
-        iconBackground: 'bg-amber-50',
-    }
+    // {
+    //     title: 'Performance Metrics',
+    //     href: '/intra/metrics',
+    //     icon: UsersIcon,
+    //     description: 'View the performance metrics of the tasks which are completed.',
+    //     iconForeground: 'text-sky-700',
+    //     iconBackground: 'bg-sky-50',
+    // },
+    // {
+    //     title: "Settings",
+    //     href: '/intra/settings',
+    //     icon: CogIcon,
+    //     description: 'View and update the settings of the Intra Pair task.',
+    //     iconForeground: 'text-amber-700',
+    //     iconBackground: 'bg-amber-50',
+    // }
 ]
 
 
