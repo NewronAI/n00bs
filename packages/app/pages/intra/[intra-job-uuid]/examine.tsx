@@ -95,7 +95,7 @@ const Examine = (props: any) => {
         const is_similar = similarArr[0] === "yes";
 
         try {
-             await axios.post(`/api/v1/intra/answer`, {
+             await axios.post(`/api/v1/intra/${intraJobUuid}/answer`, {
                 confidence,
                 is_similar,
                 file_uuid
