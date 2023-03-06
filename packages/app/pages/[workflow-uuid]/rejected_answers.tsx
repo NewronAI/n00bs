@@ -20,13 +20,14 @@ import axios from 'axios';
 import clsx from "clsx";
 import UrlRenderer from "@/components/renderer/UrlRenderer";
 import { toast } from "react-toastify";
+import RatingViewer from '@/components/renderer/RatingViewer';
 
 interface UnassignedFilesPageProps {
     files: any[]
 }
 
 
-const UnassignedFilesPage = (props: UnassignedFilesPageProps) => {
+const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
 
     const fileGridRef = useRef<AgGridReactType>(null);
     const router = useRouter();
@@ -37,7 +38,7 @@ const UnassignedFilesPage = (props: UnassignedFilesPageProps) => {
     }
 
     const workflowUUID = router.query["workflow-uuid"] as string;
-    const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer`);
+    const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer/answer_rejected`);
     const files = data || [];
 
     const [updatingReview, setUpdatingReviews] = useState(false);
@@ -68,10 +69,7 @@ const UnassignedFilesPage = (props: UnassignedFilesPageProps) => {
             ...staticColumnDefs,
             ...dynamicColumnDef,
             ...[{
-                headerName: "Rating", field: "rating", cellRenderer: (props: any) => (<RatingRenderer onRatingChange={(rating, data) => {
-                    updatedLocalRating(data.uuid, rating)
-                }}
-                    {...props} oldRating={(data: { uuid: string; }) => taskRatings.get(data.uuid)} />)
+                headerName: "Rating", field: "review_rating", cellRenderer: RatingViewer
             }]
         ];
 
@@ -138,7 +136,7 @@ const UnassignedFilesPage = (props: UnassignedFilesPageProps) => {
     </div>
 
     return (
-        <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"answers"} workflowUUID={workflowUUID} />}>
+        <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"rejected_answers"} workflowUUID={workflowUUID} />}>
             <Head>
                 <title>Answered Files</title>
             </Head>
@@ -147,10 +145,10 @@ const UnassignedFilesPage = (props: UnassignedFilesPageProps) => {
                 <div className={"mt-2 flex justify-between"}>
                     <div className={"p-0 md:pl-4"}>
                         <h1 id={""} className={"text-xl font-semibold"}>
-                            Unreviewed Answers
+                            Disapproved Answer
                         </h1>
                         <p className={"font-thin text-sm"}>
-                            Answered tasks are tasks that have been answered by a member.
+                            Disapproved tasks are tasks that have been Disapproved by a member.
                         </p>
                     </div>
                     <div className={"flex items-center mr-5 btn-group"}>
@@ -217,4 +215,4 @@ const UnassignedFilesPage = (props: UnassignedFilesPageProps) => {
 
 export const getServerSideProps = withAuthorizedPageAccess({}, member_role.associate);
 
-export default UnassignedFilesPage;
+export default RejectedFilesPage;

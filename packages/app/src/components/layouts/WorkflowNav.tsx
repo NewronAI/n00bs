@@ -26,12 +26,20 @@ const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: <ChartSquareBarIcon className="h-5" aria-hidden="true" />, current: false, },
     {
         name: 'Files', href: '/all-files', icon: <DocumentDuplicateIcon className="h-5" aria-hidden="true" />, children: [
-            { name: 'All Files', href: '/unassigned', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
+            { name: 'All Files', href: '/all-files', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
             { name: 'Unassigned Files', href: '/unassigned', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
             { name: 'Assigned Files', href: '/assigned', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
         ]
     },
-    { name: 'Jobs', href: '/jobs', icon: <ViewBoardsIcon className="h-5" aria-hidden="true" />, current: false, },
+    { name: 'Tasks', href: '/tasks', icon: <ViewBoardsIcon className="h-5" aria-hidden="true" />, current: false, },
+    {
+        name: 'Answers', href: '/answers', icon: <ViewBoardsIcon className="h-5" aria-hidden="true" />, children: [
+            { name: 'Unreviewed', href: '/answers', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
+            { name: 'Approved ', href: '/accepted_answers', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
+            { name: 'Disapproved', href: '/rejected_answers', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
+
+        ]
+    },
     // { name: 'Open Jobs', href: '/jobs' },
     // { name: 'Completed Jobs', href: '/completed-jobs' },
     { name: 'Workers', href: '/workers', icon: <UserGroupIcon className="h-5" aria-hidden="true" />, current: false, },
@@ -90,7 +98,7 @@ const WorkflowNav = (props: WorkflowNavProps) => {
                                     href={`/${workflowUUID}${item.href}`}
                                     className={clsx(
                                         item.current
-                                            ? ' text-gray-300'
+                                            ? ' text-gray-300 '
                                             : 'text-gray-300  hover:bg-gray-50 hover:text-gray-900',
                                         'group flex w-full items-center rounded-md py-2 pl-7 pr-2 text-sm font-medium'
                                     )}
