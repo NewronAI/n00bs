@@ -229,7 +229,7 @@ model intra_pair_job {
   assigned_to_id   Int?
   assigned_to      member?           @relation(name: "intra_assignee", fields: [assigned_to_id], references: [id])
   current_index    Int               @default(-1)
-  threshold        Float             @default(0.0)
+  threshold        Float             @default(1)
 }
 
 model intra_pair_job_questions {

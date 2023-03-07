@@ -1,5 +1,4 @@
 import React, {useEffect, useMemo, useRef} from 'react';
-import PropTypes from 'prop-types';
 import clsx from "clsx";
 import {PlayIcon} from "@heroicons/react/solid";
 import {useRouter} from "next/router";
@@ -12,7 +11,7 @@ import {toast} from "react-toastify";
 import Loader from "@/components/Loader";
 
 
-const Examine = (props: any) => {
+const Examine = () => {
 
     const router = useRouter();
     const intraJobUuid = router.query["intra-job-uuid"];
@@ -26,12 +25,12 @@ const Examine = (props: any) => {
 
     const files = data?.intra_pair_files || [];
     const assignedTo = data?.assignedTo;
-    const createdBy = data?.created_by || [];
+    // const createdBy = data?.created_by || [];
     const groupSize = data?.group_size || Infinity;
 
     const [updatedAudio, setUpdatedAudio] = React.useState(false);
 
-    const [calculatedThreshold, setCalculatedThreshold] = React.useState<number>();
+    const [calculatedThreshold, setCalculatedThreshold] = React.useState<number>(1);
 
     const referenceAudios = useMemo(() => {
         return files.filter((file: any) => file.is_reference);
@@ -123,7 +122,9 @@ const Examine = (props: any) => {
 
     const completeTask = async () => {
         try {
-            await axios.post(`/api/v1/intra/${intraJobUuid}/complete`);
+            await axios.post(`/api/v1/intra/${intraJobUuid}/complete`, {
+                threshold: calculatedThreshold
+            });
             toast("Task Completed Successfully", {
                 type: "success"
             });
