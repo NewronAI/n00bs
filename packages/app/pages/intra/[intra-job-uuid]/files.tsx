@@ -64,15 +64,14 @@ const CreateNewIntraPair = () => {
                             <AgGridReact
                                 rowData={data}
                                 suppressMenuHide={true}
-                                pagination={true}
+                                // pagination={true}
+                                // paginationPageSize={15}
                                 rowSelection='multiple'
-                                paginationPageSize={15}
                                 groupDefaultExpanded={1}
                                 animateRows={true}
                                 columnDefs={[
-                                    {headerName: "File Name", field: "file_name", sortable: true, filter: true, resizable: true},
+                                    {headerName: "File Name", field: "file_name", sortable: true, filter: true, resizable: true, width: 450},
                                     {headerName: "Url", field: "file", sortable: true, filter: true, resizable: true, cellRenderer: UrlRenderer},
-                                    {headerName: "Status", field: "status", sortable: true, filter: true, resizable: true},
                                     {headerName: "Created At", field: "createdAt", sortable: true, filter: true, resizable: true, cellRenderer: DateFromNowRenderer},
                                     {headerName: "Is Reference", field: "is_reference", sortable: true, filter: true, resizable: true},
                                     {headerName: "Is Similar", field: "is_similar", sortable: true, filter: true, resizable: true},
