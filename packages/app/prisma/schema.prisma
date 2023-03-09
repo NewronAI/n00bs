@@ -111,6 +111,7 @@ model question {
   task_question       task_question[]
   task_answers        task_answer[]
   intra_job_questions intra_pair_job_questions[]
+  expected_answer     String?
 }
 
 model member {
