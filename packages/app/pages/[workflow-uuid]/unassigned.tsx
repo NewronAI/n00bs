@@ -176,7 +176,7 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                                 ref={memberGridRef}
                                 rowSelection='single'
                                 paginationPageSize={6}
-                                groupDefaultExpanded={2}
+                                groupDefaultExpanded={3}
                                 columnDefs={[
                                     {
                                         headerName: "Name",

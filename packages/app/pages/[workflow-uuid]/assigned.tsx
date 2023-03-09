@@ -56,7 +56,7 @@ const AssignedFilesPage = (props: assignedFilesPageProps) => {
                               ref={fileGridRef}
                               rowSelection='multiple'
                               paginationPageSize={15}
-                              groupDefaultExpanded={1}
+                              groupDefaultExpanded={3}
                               animateRows={true}
                               // modules={[RowGroupingModule]}
                               columnDefs={[
