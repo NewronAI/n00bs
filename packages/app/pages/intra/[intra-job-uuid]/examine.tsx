@@ -49,7 +49,7 @@ const Examine = () => {
             setCalculatedThreshold(calculateCosineThreshold(subjectAudios));
         }
 
-    }, []);
+    }, [isThreshFound]);
 
     useEffect(() => {
         setUpdatedAudio(true);

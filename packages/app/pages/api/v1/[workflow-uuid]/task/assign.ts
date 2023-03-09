@@ -221,6 +221,45 @@ assignTaskApi.put(async (req, res) => {
         }
     });
 
+    const workflowUUID = req.query["workflow-uuid"] as string;
+
+    const workflow = await db.workflow.findFirst({
+        where: {
+            uuid: workflowUUID
+        }
+    });
+
+    const task = await db.task.findFirstOrThrow({
+        where: {
+            id: task_assignment.task_id
+        },
+        include: {
+            task_questions: {
+                include: {
+                    questions: true
+                }
+            }
+        }
+    });
+
+    webhookHandler(events.task_assignment_created, workflowUUID, {
+        workflow,
+        task: {
+            uuid: task.uuid,
+            title: task.name,
+            createdAt: task.createdAt,
+            district: task.district,
+            state: task.state,
+            minReqAssignmentsPerFile: task.min_assignments,
+        },
+        questions: task.task_questions.map((taskQuestion) => taskQuestion.questions),
+        isUpdate: true,
+        "task_assignments":  [status]
+
+    }).then(() => {
+        console.log("Update Webhook triggered");
+    });
+
     res.status(200).json(status);
 
 });
@@ -250,7 +289,8 @@ assignTaskApi.delete(async (req, res) => {
     const status = await db.task_assignment.delete({
         where: {
             uuid: task_assignmentUUID
-        }
+        },
+
     });
 
     res.status(200).json(status);

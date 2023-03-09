@@ -83,7 +83,7 @@ export const calculateCosineThreshold = (files : any[], group : number = 5, min_
 
     let cosineThreshold = 1;
 
-    for(let i = 0; i < files.length; i += group){
+    for(let i = 0; i < files.length; i += 1){
         let groupPositiveCount = 0;
         for(let j = 0; j < group; j++){
             if(i+j >= files.length) {
@@ -94,7 +94,9 @@ export const calculateCosineThreshold = (files : any[], group : number = 5, min_
             }
         }
         if(groupPositiveCount >= min_reqd) {
+            console.log("grp positive cosine score",files[i].cosine_score);
             cosineThreshold = files[i].cosine_score;
+            break;
         }
     }
 

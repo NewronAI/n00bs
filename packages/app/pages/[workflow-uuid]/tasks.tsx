@@ -7,6 +7,7 @@ import {AgGridReact} from "ag-grid-react";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'ag-grid-community/styles/ag-theme-balham.min.css';
+import 'ag-grid-enterprise';
 import useSWR from "swr";
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import Loader from '@/components/Loader';
@@ -15,6 +16,7 @@ import axios from 'axios';
 import {member_role, Prisma} from "@prisma/client";
 import DateFromNowRenderer from '@/components/renderer/DateFromNowRenderer';
 import {AgGridReact as AgGridReactType} from 'ag-grid-react/lib/agGridReact'
+import FilenameRenderer from "@/components/renderer/FilenameRenderer";
 
 
 interface TaskFilesPage {
@@ -141,8 +143,12 @@ const Tasks = (props: TaskFilesPage) => {
                         defaultColDef={defaultColDef}
                         animateRows={true}
                         rowSelection='multiple'
+                        groupDefaultExpanded={3}
                         columnDefs={[
-                            { headerName: 'Action', field: 'button', cellRenderer: ({data}: {data: any} ) => {
+                            { headerName: 'Action', field: 'button', cellRenderer: ({data}: {data: any}) => {
+                                if(!data) {
+                                    return null;
+                                }
                                 return (
                                   <div className='btn-group'> 
                                         <button className='btn btn-xs btn-secondary' onClick={() => handleReassignModal(data)} >Reassign</button>
@@ -151,10 +157,10 @@ const Tasks = (props: TaskFilesPage) => {
                                 )
                               }
                               },
-                            { headerName: 'Task Name', field: 'task.name' },
+                            { headerName: 'File Name', field: 'workflow_file.file_name', cellRenderer : FilenameRenderer, width: 400, rowGroup: true },
                             { headerName: 'Created At', field: 'createdAt', cellRenderer: DateFromNowRenderer },
-                            { headerName: 'File District', field: 'workflow_file.district' },
-                            { headerName: 'File State', field: 'workflow_file.state' },
+                            { headerName: 'File State', field: 'workflow_file.state' , rowGroup: true},
+                            { headerName: 'File District', field: 'workflow_file.district', rowGroup: true },
                             { headerName: 'Name', field: 'assignee.name' },
                             { headerName: 'Email', field: 'assignee.email' },
                             { headerName: 'Member District', field: 'assignee.district' },
