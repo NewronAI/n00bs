@@ -62,6 +62,6 @@ QuestionPage.propTypes = {
 };
 
 
-export const getServerSideProps = withAuthorizedPageAccess({}, member_role.manager);
+export const getServerSideProps = withAuthorizedPageAccess({}, member_role.admin);
 
 export default QuestionPage;

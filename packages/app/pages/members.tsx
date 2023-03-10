@@ -508,7 +508,7 @@ Members.propTypes = {
 };
 
 
-export const getServerSideProps = withAuthorizedPageAccess({}, member_role.manager);
+export const getServerSideProps = withAuthorizedPageAccess({}, member_role.associate);
 
 
 export default Members;

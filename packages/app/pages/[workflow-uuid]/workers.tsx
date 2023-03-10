@@ -12,6 +12,7 @@ import axios from 'axios'
 import RatingRenderer from "@/components/renderer/RatingRenderer";
 import DateFromNowRenderer from "@/components/renderer/DateFromNowRenderer";
 import Loader from "@/components/Loader";
+import RatingViewer from "@/components/renderer/RatingViewer";
 
 
 interface MemberFetchSearch {
@@ -60,6 +61,7 @@ function Workers() {
         return <div>Error fetching</div>
     }
 
+    // @ts-ignore
     return (
 
         <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"workers"} workflowUUID={workflowUUID} />}>
@@ -88,7 +90,8 @@ function Workers() {
                             { headerName: 'Email', field: 'email', sortable: true, filter: true, },
                             { headerName: 'Phone No.', field: 'phone', sortable: true, filter: true, },
                             { headerName: 'Total Assignments', field: 'task_counts', sortable: true, filter: true },
-                            //{ headerName: 'Rating', field: 'rating', sortable: true, filter: true,cellRenderer: RatingRenderer },
+                            // @ts-ignore
+                            { headerName: 'Avg Rating', field: 'rating', sortable: true, filter: true , cellRenderer: RatingViewer, valueFormatter: (value : string) => typeof value === "string" ? parseFloat(value) : Math.round(value)},
                             { headerName: 'Role', field: 'role', sortable: true, filter: true, },
                             { headerName: 'Status', field: 'status', sortable: true, filter: true, },
                             { headerName: 'Added on', field: 'createdAt', sortable: true, filter: true, cellRenderer: DateFromNowRenderer},
