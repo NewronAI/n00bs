@@ -143,6 +143,7 @@ const Tasks = (props: TaskFilesPage) => {
                         defaultColDef={defaultColDef}
                         animateRows={true}
                         rowSelection='multiple'
+                        rowGroupPanelShow={"onlyWhenGrouping"}
                         groupDefaultExpanded={-1}
                         columnDefs={[
                             { headerName: 'Action', field: 'button', cellRenderer: ({data}: {data: any}) => {
