@@ -143,7 +143,7 @@ const Tasks = (props: TaskFilesPage) => {
                         defaultColDef={defaultColDef}
                         animateRows={true}
                         rowSelection='multiple'
-                        groupDefaultExpanded={3}
+                        groupDefaultExpanded={-1}
                         columnDefs={[
                             { headerName: 'Action', field: 'button', cellRenderer: ({data}: {data: any}) => {
                                 if(!data) {
@@ -157,10 +157,10 @@ const Tasks = (props: TaskFilesPage) => {
                                 )
                               }
                               },
-                            { headerName: 'File Name', field: 'workflow_file.file_name', cellRenderer : FilenameRenderer, width: 400, rowGroup: true },
-                            { headerName: 'Created At', field: 'createdAt', cellRenderer: DateFromNowRenderer },
                             { headerName: 'File State', field: 'workflow_file.state' , rowGroup: true},
                             { headerName: 'File District', field: 'workflow_file.district', rowGroup: true },
+                            { headerName: 'File Name', field: 'workflow_file.file_name', cellRenderer : FilenameRenderer, width: 450, rowGroup: true },
+                            { headerName: 'Created At', field: 'createdAt', cellRenderer: DateFromNowRenderer },
                             { headerName: 'Name', field: 'assignee.name' },
                             { headerName: 'Email', field: 'assignee.email' },
                             { headerName: 'Member District', field: 'assignee.district' },
@@ -218,6 +218,7 @@ const Tasks = (props: TaskFilesPage) => {
                                 ref={memberGridRef}
                                 rowSelection='single'
                                 paginationPageSize={6}
+                                rowGroupPanelShow={"onlyWhenGrouping"}
                                 columnDefs={[
                                     {
                                         headerName: "Name",

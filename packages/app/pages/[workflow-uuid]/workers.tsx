@@ -85,6 +85,7 @@ function Workers() {
                     <AgGridReact
                         rowData={member}
                         pagination={true}
+                        rowGroupPanelShow={"onlyWhenGrouping"}
                         columnDefs={[
                             { headerName: 'Name', field: 'name', sortable: true, filter: true, },
                             { headerName: 'Email', field: 'email', sortable: true, filter: true, },

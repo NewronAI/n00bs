@@ -169,9 +169,10 @@ const UnassignedFilesPage = (props: UnassignedFilesPageProps) => {
                             detailCellRendererParams={detailCellRendererParams}
                             detailRowAutoHeight={true}
                             detailRowHeight={250}
+                            rowGroupPanelShow={"onlyWhenGrouping"}
                             // rowGroupPanelShow={"onlyWhenGrouping"}
                             onFirstDataRendered={onFirstDataRendered}
-                            groupDefaultExpanded={1}
+                            groupDefaultExpanded={-1}
                             pivotMode={false}
                             defaultColDef={defaultColDef}
                             paginationPageSize={15}

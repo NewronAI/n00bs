@@ -168,6 +168,7 @@ const AcceptedFilesPage = (props: UnassignedFilesPageProps) => {
                             suppressMenuHide={true}
                             pagination={true}
                             ref={fileGridRef}
+                            rowGroupPanelShow={"onlyWhenGrouping"}
                             masterDetail={true}
                             isRowMaster={isRowMaster}
                             detailCellRendererParams={detailCellRendererParams}
@@ -175,7 +176,7 @@ const AcceptedFilesPage = (props: UnassignedFilesPageProps) => {
                             detailRowHeight={250}
                             // rowGroupPanelShow={"onlyWhenGrouping"}
                             onFirstDataRendered={onFirstDataRendered}
-                            groupDefaultExpanded={1}
+                            groupDefaultExpanded={-1}
                             pivotMode={false}
                             defaultColDef={defaultColDef}
                             paginationPageSize={15}

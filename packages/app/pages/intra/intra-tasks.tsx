@@ -45,7 +45,7 @@ const CreateNewIntraPair = () => {
                                 pagination={true}
                                 rowSelection='multiple'
                                 paginationPageSize={15}
-                                groupDefaultExpanded={1}
+                                groupDefaultExpanded={-1}
                                 animateRows={true}
                                 columnDefs={[
                                     {headerName: "Name", field: "name", sortable: true, filter: true, resizable: true, cellRenderer: LinkRenderer},

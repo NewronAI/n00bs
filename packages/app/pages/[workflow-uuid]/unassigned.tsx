@@ -176,7 +176,7 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                                 ref={memberGridRef}
                                 rowSelection='single'
                                 paginationPageSize={6}
-                                groupDefaultExpanded={3}
+                                groupDefaultExpanded={-1}
                                 columnDefs={[
                                     {
                                         headerName: "Name",
@@ -259,7 +259,7 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                         rowData={files}
                         suppressMenuHide={true}
                         pagination={true}
-                        groupDefaultExpanded={1}
+                        groupDefaultExpanded={-1}
                         ref={fileGridRef}
                         rowGroupPanelShow={"onlyWhenGrouping"}
                         pivotMode={false}

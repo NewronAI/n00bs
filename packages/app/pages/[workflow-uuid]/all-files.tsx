@@ -58,9 +58,10 @@ const AllFilesPage = () => {
                         <AgGridReact
                             rowData={files}
                             pagination={true}
-                            groupDefaultExpanded={1}
+                            groupDefaultExpanded={-1}
                             paginationPageSize={15}
                             suppressMenuHide={true}
+                            rowGroupPanelShow={"onlyWhenGrouping"}
                             columnDefs={[
                                 {headerName: "State", field: "state", sortable: true, filter: true,rowGroup:true, hide: true, width: 130,},
                                 {headerName: "District", field: "district", sortable: true, rowGroup: true, hide: true, filter: true, width: 150,},

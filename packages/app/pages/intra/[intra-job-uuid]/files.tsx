@@ -67,7 +67,7 @@ const CreateNewIntraPair = () => {
                                 // pagination={true}
                                 // paginationPageSize={15}
                                 rowSelection='multiple'
-                                groupDefaultExpanded={1}
+                                groupDefaultExpanded={-1}
                                 animateRows={true}
                                 columnDefs={[
                                     {headerName: "File Name", field: "file_name", sortable: true, filter: true, resizable: true, width: 450},
