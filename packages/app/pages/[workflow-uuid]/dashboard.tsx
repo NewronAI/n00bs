@@ -86,9 +86,9 @@ const DashboardPage = (props: DashboardProps) => {
                         <div className='grid grid-cols-4 gap-7 justify-center items-center mt-10 border-hidden'>
                             <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.filesCount}<p className='text-lg font-bold'>Total Files</p></div>
                             <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.assignedFilesCount}<p className='text-lg font-bold'>Total Assigned Files</p></div>
-                            <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.assignedJobsCount}<p className='text-lg font-bold'>Total Assigned Jobs</p></div>
-                            <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.pendingJobsCount}<p className='text-lg font-bold'>Total Pending Jobs</p></div>
-                            <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.completedJobsCount}<p className='text-lg font-bold'>Total Completed Jobs</p></div>
+                            <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.assignedTasksCount}<p className='text-lg font-bold'>Total Assigned Tasks</p></div>
+                            <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.pendingTasksCount}<p className='text-lg font-bold'>Total Pending Tasks</p></div>
+                            <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.completedTasksCount}<p className='text-lg font-bold'>Total Completed Tasks</p></div>
                         </div>
                     </div>
                 }

@@ -26,6 +26,7 @@ questionApi.post(async (req, res) => {
     const required = req.body.required as boolean | undefined;
 
     const questionOptions = req.body.options as string[];
+    const expectedAnswer = req.body.expected_answer as string | undefined;
 
     const question = await db.question.create({
         data: {
@@ -35,7 +36,7 @@ questionApi.post(async (req, res) => {
             options: questionOptions,
             order: Number(order),
             required: required,
-
+            expected_answer: expectedAnswer,
         }
     });
 
@@ -73,6 +74,7 @@ questionApi.put(async (req, res) => {
     const status = req.body.status as obj_status | undefined;
     const order = req.body.order as number | undefined;
     const required = req.body.required as boolean | undefined;
+    const expectedAnswer = req.body.expected_answer as string | undefined;
 
     logger.info("Updating question,");
     logger.info("uuid: " + questionUUID);
@@ -83,6 +85,7 @@ questionApi.put(async (req, res) => {
     logger.info("status: " + status);
     logger.info("order: " + order);
     logger.info("required: " + required);
+    logger.info("expectedAnswer: " + expectedAnswer);
 
 
     const question = await db.question.update({
@@ -96,7 +99,8 @@ questionApi.put(async (req, res) => {
             options: questionOptions,
             status: status,
             required: required,
-            order: Number(order)
+            order: Number(order),
+            expected_answer: expectedAnswer,
         }
     });
 
