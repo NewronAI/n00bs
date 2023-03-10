@@ -4,6 +4,7 @@ import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
 import getLogger from "@/helpers/node/getLogger";
 import {member_role, obj_status} from "@prisma/client";
+import {getSession} from "@auth0/nextjs-auth0";
 
 const memberApi = new NextExpress();
 
@@ -49,8 +50,14 @@ memberApi.get(async (req: NextApiRequest, res: NextApiResponse) => {
                 not : obj_status.deleted
             }
         },
+        include: {
+            added_by_member: true
+        },
         skip: offsetNum,
-        take: limitNum
+        take: limitNum,
+        orderBy: {
+            createdAt: "desc"
+        }
     });
 
     res.status(200).json(members);
@@ -88,7 +95,13 @@ memberApi.post(async (req: NextApiRequest, res : NextApiResponse) => {
 
     const logger = getLogger("api/v1/member");
 
+    const session = await getSession(req, res);
+    if (!session) {
+        res.status(401).json({message: "Unauthorized"});
+        return;
+    }
 
+    const adderEmail = session.user.email;
 
     role = role as string as member_role;
     role = role || member_role.freelancer;
@@ -130,7 +143,12 @@ memberApi.post(async (req: NextApiRequest, res : NextApiResponse) => {
             address,
             pincode,
             status,
-            payment_details
+            payment_details,
+            added_by_member: {
+                connect: {
+                    email: adderEmail
+                }
+            }
         }
     })
 

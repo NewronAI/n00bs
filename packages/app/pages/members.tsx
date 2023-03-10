@@ -198,6 +198,7 @@ const Members = () => {
                                     <th>Geolocation</th>
                                     <th>Contact</th>
                                     <th>Address</th>
+                                    <th>Added By</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -239,9 +240,13 @@ const Members = () => {
                                                     <br />
                                                     <a href={`mailto:${member.email}`} className="text-sm opacity-50">{member.email}</a>
                                                 </td>
+                                                <td className={""}>
+                                                    <div className="text-sm opacity-50 max-w-md whitespace-pre-wrap">{member.address} <span className="badge badge-ghost badge-sm text-white">{member.pincode}</span></div>
+
+                                                </td>
                                                 <td>
-                                                    <div className="text-sm opacity-50">{member.address}</div>
-                                                    <span className="badge badge-ghost badge-sm">{member.pincode}</span>
+                                                    <span className="badge badge-ghost badge-sm">{member.added_by_member?.name}</span>
+                                                    <div className="text-sm opacity-50">{member.added_by_member?.email}</div>
                                                 </td>
                                             </tr>)
                                     })

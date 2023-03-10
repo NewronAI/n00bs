@@ -134,6 +134,9 @@ model member {
   reviews           task_assignment[] @relation("reviewer")
   intra_creator_of  intra_pair_job[]  @relation("intra_created_by")
   intra_assignee_of intra_pair_job[]  @relation("intra_assignee")
+  added_by          Int?
+  added_by_member   member?           @relation("added_by", fields: [added_by], references: [id])
+  added_members     member[]          @relation("added_by")
 }
 
 model task {

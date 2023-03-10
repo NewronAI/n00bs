@@ -11,6 +11,7 @@ interface MemberItem {
     phone?: string;
     pincode?: string;
     status: string;
+    added_by_member?: MemberItem;
 }
 
 export default MemberItem;
