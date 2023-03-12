@@ -72,6 +72,9 @@ model workflow {
   tasks          task[]
   workflow_items workflow_file[]
   webhooks       webhook[]
+  child_id       Int?            @unique
+  child          workflow?       @relation("child", fields: [child_id], references: [id])
+  parent         workflow?       @relation("child")
 }
 
 model workflow_file {

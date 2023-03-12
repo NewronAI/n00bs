@@ -10,7 +10,16 @@ const logger = getLogger("api/v1/question");
 
 questionApi.get(async (req, res) => {
     // Get all questions
-    const questions = await db.question.findMany();
+    const questions = await db.question.findMany({
+        where: {
+            status: {
+                not: "deleted"
+            }
+        },
+        orderBy : {
+            createdAt: "asc"
+        }
+    });
     res.status(200).json(questions);
 });
 
