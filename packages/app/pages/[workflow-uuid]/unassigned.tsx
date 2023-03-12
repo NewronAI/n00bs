@@ -44,6 +44,15 @@ function getSelectedRegionsCount(selectedRows : {district : string}[]) {
     return selectedRegionsMap.size;
 }
 
+function getSelectedDistricts (selectedRows : {district : string}[]) {
+    const selectedDistricts = new Set<string>();
+    selectedRows.forEach((row) => {
+        selectedDistricts.add(row.district);
+    });
+
+    return selectedDistricts;
+}
+
 
 const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
 
@@ -61,6 +70,9 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
     const [selectionCount, setSelectionCount] = React.useState<number>(0);
 
     const workflowUUID = router.query["workflow-uuid"] as string;
+
+    const {data: workflowDetails} = useSWR<Prisma.workflowSelect>(`/api/v1/${workflowUUID}`);
+
     const {data, error, isLoading, mutate} = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/file/unassigned`, (url) => fetch(url).then(res => res.json()));
     const files = data || [];
 
@@ -112,10 +124,30 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
         const selectedRows = fileGridRef.current?.api.getSelectedRows();
         const selectedMembers = memberGridRef.current?.api.getSelectedRows();
 
+
+
         if(selectedRows.length === 0 || selectedMembers.length === 0) {
             setAssignModalError("Please select some member | task");
             return null;
         }
+
+        if(workflowDetails && workflowDetails?.enforce_region){
+            const selectedDistricts = getSelectedDistricts(selectedRows);
+            if(selectedDistricts.size > 1){
+                setAssignModalError("You can only assign files from a single region");
+                return null;
+            }
+
+            memberGridRef.current?.api.setFilterModel(null);
+            memberGridRef.current?.api.setFilterModel({
+                district: {
+                    filterType: "text",
+                    type: "equals",
+                    values: Array.from(selectedDistricts)[0]
+                }
+            });
+        }
+
 
         setAssignModalError(null);
 
