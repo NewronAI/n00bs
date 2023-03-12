@@ -62,6 +62,7 @@ const AllFilesPage = () => {
                             paginationPageSize={15}
                             suppressMenuHide={true}
                             rowGroupPanelShow={"onlyWhenGrouping"}
+                            sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
                             columnDefs={[
                                 {headerName: "State", field: "state", sortable: true, filter: true,rowGroup:true, hide: true, width: 130,},
                                 {headerName: "District", field: "district", sortable: true, rowGroup: true, hide: true, filter: true, width: 150,},

@@ -262,8 +262,7 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                         groupDefaultExpanded={-1}
                         ref={fileGridRef}
                         rowGroupPanelShow={"onlyWhenGrouping"}
-                        pivotMode={false}
-                        pivotPanelShow={"always"}
+                        sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
                         groupSelectsChildren={true}
                         onSelectionChanged={() => {
                             setSelectionCount(fileGridRef.current?.api.getSelectedRows().length || 0);

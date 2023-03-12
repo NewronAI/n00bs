@@ -170,6 +170,7 @@ const UnassignedFilesPage = (props: UnassignedFilesPageProps) => {
                             detailRowAutoHeight={true}
                             detailRowHeight={250}
                             rowGroupPanelShow={"onlyWhenGrouping"}
+                            sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
                             // rowGroupPanelShow={"onlyWhenGrouping"}
                             onFirstDataRendered={onFirstDataRendered}
                             groupDefaultExpanded={-1}

@@ -9,7 +9,6 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import {AgGridReact} from "ag-grid-react";
 import axios from 'axios'
-import RatingRenderer from "@/components/renderer/RatingRenderer";
 import DateFromNowRenderer from "@/components/renderer/DateFromNowRenderer";
 import Loader from "@/components/Loader";
 import RatingViewer from "@/components/renderer/RatingViewer";
@@ -86,6 +85,7 @@ function Workers() {
                         rowData={member}
                         pagination={true}
                         rowGroupPanelShow={"onlyWhenGrouping"}
+                        sidebar={{toolPanels:["columns", "filters"], hiddenByDefaulat: true}}{["columns", "filters"]}
                         columnDefs={[
                             { headerName: 'Name', field: 'name', sortable: true, filter: true, },
                             { headerName: 'Email', field: 'email', sortable: true, filter: true, },

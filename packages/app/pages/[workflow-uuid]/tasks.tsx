@@ -218,6 +218,7 @@ const Tasks = (props: TaskFilesPage) => {
                                 pagination={true}
                                 ref={memberGridRef}
                                 rowSelection='single'
+                                sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
                                 paginationPageSize={6}
                                 rowGroupPanelShow={"onlyWhenGrouping"}
                                 columnDefs={[

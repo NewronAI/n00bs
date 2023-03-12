@@ -168,6 +168,7 @@ const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
                             detailRowAutoHeight={true}
                             detailRowHeight={250}
                             rowGroupPanelShow={"onlyWhenGrouping"}
+                            sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
                             onFirstDataRendered={onFirstDataRendered}
                             groupDefaultExpanded={-1}
                             pivotMode={false}

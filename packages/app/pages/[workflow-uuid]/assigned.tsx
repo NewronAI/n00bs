@@ -59,12 +59,12 @@ const AssignedFilesPage = (props: assignedFilesPageProps) => {
                               groupDefaultExpanded={-1}
                               rowGroupPanelShow={"onlyWhenGrouping"}
                               animateRows={true}
-                              // modules={[RowGroupingModule]}
+                              sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
                               columnDefs={[
                                   {headerName: "File State", field: "state", rowGroup: true,hide: true, sortable: true, filter: true, width: 150},
                                   {headerName: "File District", field: "district", rowGroup: true,hide: true, sortable: true, filter: true, width: 150},
                                   {headerName: "Duration", field: "file_duration", sortable: true, filter: true, width: 135, valueFormatter: fileDurationFormatter, aggFunc: 'sum'},
-                                  {headerName: "File Name", field: "file_name", rowGroup: true, sortable: true, filter: true, width: 400, cellRenderer: FilenameRenderer, tooltipField: "file_name"},
+                                  {headerName: "File Name", field: "file_name", rowGroup: true, sortable: true, filter: true, width: 450, cellRenderer: FilenameRenderer, tooltipField: "file_name"},
                                   {headerName: "Member Name", field: "memeber_name", sortable: true, filter: true, width: 150},
                                 {headerName: "Member State", field: "member_district", sortable: true, filter: true, width: 150},
                                 {headerName: "Member State", field: "member_state", sortable: true, filter: true, width: 150},

@@ -169,6 +169,7 @@ const AcceptedFilesPage = (props: UnassignedFilesPageProps) => {
                             pagination={true}
                             ref={fileGridRef}
                             rowGroupPanelShow={"onlyWhenGrouping"}
+                            sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
                             masterDetail={true}
                             isRowMaster={isRowMaster}
                             detailCellRendererParams={detailCellRendererParams}
