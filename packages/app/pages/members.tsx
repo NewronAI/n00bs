@@ -245,8 +245,8 @@ const Members = () => {
 
                                                 </td>
                                                 <td>
-                                                    <span className="badge badge-ghost badge-sm">{member.added_by_member?.name}</span>
-                                                    <div className="text-sm opacity-50">{member.added_by_member?.email}</div>
+                                                    <span className="">{member.added_by_member?.name || "God himself"}</span>
+                                                    <div className="text-sm opacity-50">{member.added_by_member?.email || "god@heaven.peace"}</div>
                                                 </td>
                                             </tr>)
                                     })
