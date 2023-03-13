@@ -97,6 +97,9 @@ model workflow_file {
   state            String?
   vendor           String?
   metadata         Json?
+  parent_id        Int?              @unique
+  parent           workflow_file?    @relation("parent", fields: [parent_id], references: [id])
+  child            workflow_file?    @relation("parent")
 }
 
 model question {
@@ -123,7 +126,7 @@ model member {
   uuid              String            @unique @default(uuid()) @db.Char(36)
   name              String
   createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
+  updatedAt         DateTime?         @updatedAt
   deletedAt         DateTime?
   email             String            @unique @default(uuid()) @db.VarChar(255)
   phone             String            @unique
@@ -178,9 +181,9 @@ model task_assignment {
   updatedAt        DateTime      @updatedAt
   status           task_status   @default(pending)
   task_id          Int
-  task             task          @relation(fields: [task_id], references: [id])
+  task             task          @relation(fields: [task_id], references: [id], onDelete: Cascade)
   assignee_id      Int
-  assignee         member        @relation(name: "assignee", fields: [assignee_id], references: [id], onDelete: Cascade)
+  assignee         member        @relation(name: "assignee", fields: [assignee_id], references: [id])
   workflow_file_id Int
   workflow_file    workflow_file @relation(fields: [workflow_file_id], references: [id])
   task_answers     task_answer[]

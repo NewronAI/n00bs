@@ -8,7 +8,6 @@ import useSWR from "swr";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.min.css';
 import 'ag-grid-community/styles/ag-theme-balham.min.css';
-import moment from "moment";
 import FileTypeRenderer from '@/components/renderer/FileTypeRenderer';
 import DateFromNowRenderer from '@/components/renderer/DateFromNowRenderer';
 import {AgGridReact as AgGridReactType} from 'ag-grid-react/lib/agGridReact'
@@ -54,7 +53,7 @@ function getSelectedDistricts (selectedRows : {district : string}[]) {
 }
 
 
-const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
+const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
 
     const fileGridRef = useRef<AgGridReactType>(null);
     const memberGridRef = useRef<AgGridReactType>(null);
@@ -78,7 +77,7 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
 
     const {data : members, error : membersError, isLoading : membersLoading} = useSWR<Prisma.memberSelect[]>(`/api/v1/member`, (url) => fetch(url).then(res => res.json()));
 
-    if(error) {
+    if(error || membersError){
         return <div>Error fetching</div>
     }
 
@@ -87,14 +86,6 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
         setSelectedRegionsCount(0);
     }
 
-    const handleDeselectAll = () => {
-        fileGridRef.current?.api.deselectAll();
-        setSelectedRegionsCount(0);
-    }
-
-    const handleSelectAll = () => {
-        fileGridRef.current?.api.selectAllFiltered();
-    }
 
     const handleInitiateAssign = () => {
 
@@ -209,6 +200,18 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                                 rowSelection='single'
                                 paginationPageSize={6}
                                 groupDefaultExpanded={-1}
+                                defaultColDef={{
+                                    flex: 1,
+                                    minWidth: 100,
+                                    // allow every column to be aggregated
+                                    enableValue: true,
+                                    // allow every column to be grouped
+                                    enableRowGroup: true,
+                                    // allow every column to be pivoted
+                                    enablePivot: true,
+                                    sortable: true,
+                                    filter: true,
+                                }}
                                 columnDefs={[
                                     {
                                         headerName: "Name",
@@ -301,6 +304,18 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                         }}
                         rowSelection='multiple'
                         paginationPageSize={15}
+                        defaultColDef={{
+                            flex: 1,
+                            minWidth: 100,
+                            // allow every column to be aggregated
+                            enableValue: true,
+                            // allow every column to be grouped
+                            enableRowGroup: true,
+                            // allow every column to be pivoted
+                            enablePivot: true,
+                            sortable: true,
+                            filter: true,
+                        }}
                         columnDefs={[
                             {headerName: "", checkboxSelection: true, width: 80, headerCheckboxSelection: true, headerCheckboxSelectionFilteredOnly: true},
                             {headerName: "File Duration", field: "file_duration", sortable: true, filter: true, aggFunc: 'sum' , valueFormatter: fileDurationFormatter, width: 150},

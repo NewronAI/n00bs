@@ -1,25 +1,21 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import WorkflowNav from "@/components/layouts/WorkflowNav";
 import Head from "next/head";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import { useRouter } from "next/router";
-import { AgGridReact } from "ag-grid-react";
+import {useRouter} from "next/router";
+import {AgGridReact} from "ag-grid-react";
 import useSWR from "swr";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.min.css';
 import 'ag-grid-community/styles/ag-theme-balham.min.css';
 import DateFromNowRenderer from '@/components/renderer/DateFromNowRenderer';
-import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact'
+import {AgGridReact as AgGridReactType} from 'ag-grid-react/lib/agGridReact'
 import 'ag-grid-enterprise';
-import { member_role, Prisma } from "@prisma/client";
+import {member_role, Prisma} from "@prisma/client";
 import Loader from "@/components/Loader";
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
-import RatingRenderer from "@/components/renderer/RatingRenderer";
 import useSWRImmutable from 'swr/immutable';
-import axios from 'axios';
-import clsx from "clsx";
 import UrlRenderer from "@/components/renderer/UrlRenderer";
-import { toast } from "react-toastify";
 import RatingViewer from '@/components/renderer/RatingViewer';
 
 interface UnassignedFilesPageProps {
@@ -27,30 +23,19 @@ interface UnassignedFilesPageProps {
 }
 
 
-const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
+const RejectedFilesPage = (_props: UnassignedFilesPageProps) => {
 
     const fileGridRef = useRef<AgGridReactType>(null);
     const router = useRouter();
-    const [taskRatings, setTaskRatings] = useState(new Map<string, number>())
-
-    const updatedLocalRating = (uuid: string, rating: number) => {
-        setTaskRatings((prev: Map<string, number>) => prev.set(uuid, rating));
-    }
+    const [taskRatings, _setTaskRatings] = useState(new Map<string, number>())
 
     const workflowUUID = router.query["workflow-uuid"] as string;
-    const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer/answer_rejected`);
+    const { data, error, isLoading } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer/answer_rejected`);
     const files = data || [];
 
-    const [updatingReview, setUpdatingReviews] = useState(false);
 
     const { data: questionData, error: questionFetchError, isLoading: questionFetchLoading } = useSWRImmutable(`/api/v1/${workflowUUID}/question`)
-    console.log(questionData)
 
-    const defaultColDef = useMemo(() => {
-        return {
-            flex: 1,
-        };
-    }, []);
 
     const detailCellRendererParams = useMemo(() => {
         console.log("detailCellRendererParams")
@@ -94,7 +79,7 @@ const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
         };
     }, []);
 
-    const onFirstDataRendered = useCallback((params: any) => {
+    const onFirstDataRendered = useCallback((_params: any) => {
         // arbitrarily expand a row for presentational purposes
         setTimeout(function () {
             // @ts-ignore
@@ -102,37 +87,15 @@ const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
         }, 0);
     }, []);
 
-    const handleRate = () => {
-        console.log(taskRatings)
-        setUpdatingReviews(true);
-        axios.post(`/api/v1/${workflowUUID}/review_answers`, Array.from(taskRatings))
-            .then(response => {
-                setUpdatingReviews(false);
-                mutate().then(() => {
-                    console.log("files updated");
-                    toast("Review Posted", { type: "success" });
 
-                });
-
-            })
-            .catch(error => {
-                console.error(error);
-                setUpdatingReviews(false);
-                toast("Error posting review", { type: "error" });
-            })
-        setTaskRatings(new Map<string, number>())
-    }
-
-    if (error) {
+    if (error || questionFetchError) {
         return <div>Error fetching</div>
     }
 
     console.log(taskRatings.size)
 
     const ActionItem = () => <div>
-        <button className={clsx("btn", { "btn-secondary": true })} onClick={handleRate}>
-            {updatingReview ? "Saving. . ." : "Save Changes"}
-        </button>
+
     </div>
 
     return (
@@ -155,7 +118,7 @@ const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
                         <ActionItem />
                     </div>
                 </div>
-                <Loader isLoading={isLoading}>
+                <Loader isLoading={isLoading || questionFetchLoading}>
                     <div className={"w-full h-[760px] p-4 ag-theme-alpine-dark"}>
                         <AgGridReact
                             rowData={files}
@@ -172,7 +135,18 @@ const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
                             onFirstDataRendered={onFirstDataRendered}
                             groupDefaultExpanded={-1}
                             pivotMode={false}
-                            defaultColDef={defaultColDef}
+                            defaultColDef={{
+                                flex: 1,
+                                minWidth: 100,
+                                // allow every column to be aggregated
+                                enableValue: true,
+                                // allow every column to be grouped
+                                enableRowGroup: true,
+                                // allow every column to be pivoted
+                                enablePivot: true,
+                                sortable: true,
+                                filter: true,
+                            }}
                             paginationPageSize={15}
                             columnDefs={[
                                 {

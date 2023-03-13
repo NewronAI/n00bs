@@ -14,7 +14,6 @@ import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import {member_role} from "@prisma/client";
 import 'ag-grid-enterprise';
 import Loader from "@/components/Loader";
-import LongTextRenderer from "@/components/renderer/FilenameRenderer";
 import FilenameRenderer from "@/components/renderer/FilenameRenderer";
 import fileDurationFormatter from "@/helpers/react/fileDurationFormatter";
 
@@ -23,7 +22,7 @@ const AllFilesPage = () => {
     const router = useRouter();
     const workflowUUID = router.query["workflow-uuid"] as string;
 
-    const [currentPage, setCurrentPage] = React.useState(0);
+    const [currentPage, _setCurrentPage] = React.useState(0);
 
     const {data, error, isLoading} = useSWR(`/api/v1/${workflowUUID}/file?page=${currentPage}`, (url) => fetch(url).then(res => res.json()));
 
@@ -63,6 +62,18 @@ const AllFilesPage = () => {
                             suppressMenuHide={true}
                             rowGroupPanelShow={"onlyWhenGrouping"}
                             sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
+                            defaultColDef={{
+                                flex: 1,
+                                minWidth: 100,
+                                // allow every column to be aggregated
+                                enableValue: true,
+                                // allow every column to be grouped
+                                enableRowGroup: true,
+                                // allow every column to be pivoted
+                                enablePivot: true,
+                                sortable: true,
+                                filter: true,
+                            }}
                             columnDefs={[
                                 {headerName: "State", field: "state", sortable: true, filter: true,rowGroup:true, hide: true, width: 130,},
                                 {headerName: "District", field: "district", sortable: true, rowGroup: true, hide: true, filter: true, width: 150,},

@@ -24,9 +24,8 @@ interface TaskFilesPage {
     defaultColDef: boolean;
 }
 
-const Tasks = (props: TaskFilesPage) => {
+const Tasks = (_props: TaskFilesPage) => {
 
-    const gridRef = useRef<AgGridReact>(null)
     const memberGridRef = useRef<AgGridReactType>(null);
 
     const [assignModalError, setAssignModalError] = React.useState<string | null>(null);
@@ -113,7 +112,7 @@ const Tasks = (props: TaskFilesPage) => {
         setDelData(data)
     }
 
-    if (error) {
+    if (error || membersError) {
         return <div>Error fetching</div>
     }
 
@@ -221,6 +220,18 @@ const Tasks = (props: TaskFilesPage) => {
                                 sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
                                 paginationPageSize={6}
                                 rowGroupPanelShow={"onlyWhenGrouping"}
+                                defaultColDef={{
+                                    flex: 1,
+                                    minWidth: 100,
+                                    // allow every column to be aggregated
+                                    enableValue: true,
+                                    // allow every column to be grouped
+                                    enableRowGroup: true,
+                                    // allow every column to be pivoted
+                                    enablePivot: true,
+                                    sortable: true,
+                                    filter: true,
+                                }}
                                 columnDefs={[
                                     {
                                         headerName: "Name",

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 import WorkflowNav from "@/components/layouts/WorkflowNav";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
@@ -38,20 +38,11 @@ const memberFetcher = async ([url, query]: [string, MemberFetchSearch]) => {
 
 function Workers() {
 
-
-    const [search, setSearch] = useState('');
-    const [searchBy, setSearchBy] = useState('district');
-
-    const searchQuery: MemberFetchSearch = {
-        search: search,
-        by: searchBy
-    };
-
     const router = useRouter();
 
     const workflowUUID = router.query["workflow-uuid"] as string;
 
-    const { data, error,  isLoading, } = useSWR([`/api/v1/${workflowUUID}/workers`, searchQuery], memberFetcher);
+    const { data, error,  isLoading, } = useSWR([`/api/v1/${workflowUUID}/workers`], memberFetcher);
     console.log(data);
     const member = data || [];
 
@@ -86,13 +77,25 @@ function Workers() {
                         pagination={true}
                         rowGroupPanelShow={"onlyWhenGrouping"}
                         sidebar={{toolPanels:["columns", "filters"]}}
+                        defaultColDef={{
+                            flex: 1,
+                            minWidth: 100,
+                            // allow every column to be aggregated
+                            enableValue: true,
+                            // allow every column to be grouped
+                            enableRowGroup: true,
+                            // allow every column to be pivoted
+                            enablePivot: true,
+                            sortable: true,
+                            filter: true,
+                        }}
                         columnDefs={[
                             { headerName: 'Name', field: 'name', sortable: true, filter: true, },
                             { headerName: 'Email', field: 'email', sortable: true, filter: true, },
                             { headerName: 'Phone No.', field: 'phone', sortable: true, filter: true, },
                             { headerName: 'Total Assignments', field: 'task_counts', sortable: true, filter: true },
                             // @ts-ignore
-                            { headerName: 'Avg Rating', field: 'rating', sortable: true, filter: true , cellRenderer: RatingViewer, valueFormatter: (value : string) => typeof value === "string" ? parseFloat(value) : Math.round(value)},
+                            { headerName: 'Avg Rating', field: 'rating', sortable: true, filter: true , cellRenderer: RatingViewer, valueFormatter: (value : string | number) => typeof value === "string" ? parseFloat(value) : Math.round(value)},
                             { headerName: 'Role', field: 'role', sortable: true, filter: true, },
                             { headerName: 'Status', field: 'status', sortable: true, filter: true, },
                             { headerName: 'Added on', field: 'createdAt', sortable: true, filter: true, cellRenderer: DateFromNowRenderer},
