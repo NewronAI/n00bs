@@ -117,7 +117,7 @@ publicAnswerApi.post(async (req, res) => {
                     task_assignment_id: taskAssignment.id,
                     question_id: questionIds[i],
                     answer: response.answer,
-                    is_expected: response.answer === expectedAnswers[i]
+                    is_expected: expectedAnswers[i] ? response.answer === expectedAnswers[i] : null
                 }
             })
         }),
