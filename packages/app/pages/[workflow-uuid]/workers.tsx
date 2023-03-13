@@ -85,7 +85,7 @@ function Workers() {
                         rowData={member}
                         pagination={true}
                         rowGroupPanelShow={"onlyWhenGrouping"}
-                        sidebar={{toolPanels:["columns", "filters"], hiddenByDefaulat: true}}{["columns", "filters"]}
+                        sidebar={{toolPanels:["columns", "filters"]}}
                         columnDefs={[
                             { headerName: 'Name', field: 'name', sortable: true, filter: true, },
                             { headerName: 'Email', field: 'email', sortable: true, filter: true, },
