@@ -58,6 +58,8 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
     const fileGridRef = useRef<AgGridReactType>(null);
     const memberGridRef = useRef<AgGridReactType>(null);
 
+    const filterTimerRef = useRef<any>(null);
+
     const router = useRouter();
 
     const [assignModalError, setAssignModalError] = React.useState<string | null>(null);
@@ -70,7 +72,7 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
 
     const workflowUUID = router.query["workflow-uuid"] as string;
 
-    const {data: workflowDetails} = useSWR<Prisma.workflowSelect>(`/api/v1/${workflowUUID}`);
+    const {data: workflowDetails} = useSWR<Prisma.workflowSelect>(`/api/v1/${workflowUUID}/get-metadata`);
 
     const {data, error, isLoading, mutate} = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/file/unassigned`, (url) => fetch(url).then(res => res.json()));
     const files = data || [];
@@ -89,6 +91,8 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
 
     const handleInitiateAssign = () => {
 
+        console.log("Initiate assign")
+
         if(!fileGridRef.current){
             return null;
         }
@@ -101,6 +105,29 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
         }
 
         setSelectedRegionsCount(getSelectedRegionsCount(selectedRows));
+
+        console.log(workflowDetails);
+        if(workflowDetails && workflowDetails?.enforce_region){
+            const selectedDistricts = getSelectedDistricts(selectedRows);
+            if(selectedDistricts.size > 1){
+                setAssignModalError("You can only assign files from a single region");
+                return null;
+            }
+
+            console.log(selectedDistricts);
+
+            clearTimeout(filterTimerRef.current);
+            filterTimerRef.current = setTimeout(() => {
+                memberGridRef.current?.api.setFilterModel(null);
+                memberGridRef.current?.api.setFilterModel({
+                    district: {
+                        filterType: "text",
+                        type: "startsWith",
+                        values: Array.from(selectedDistricts)
+                    }
+                });
+            }, 100);
+        }
 
         setAssignDialogOpen(true);
     }
@@ -122,22 +149,6 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
             return null;
         }
 
-        if(workflowDetails && workflowDetails?.enforce_region){
-            const selectedDistricts = getSelectedDistricts(selectedRows);
-            if(selectedDistricts.size > 1){
-                setAssignModalError("You can only assign files from a single region");
-                return null;
-            }
-
-            memberGridRef.current?.api.setFilterModel(null);
-            memberGridRef.current?.api.setFilterModel({
-                district: {
-                    filterType: "text",
-                    type: "equals",
-                    values: Array.from(selectedDistricts)[0]
-                }
-            });
-        }
 
 
         setAssignModalError(null);
