@@ -41,8 +41,8 @@ Note: The schema is subject to change, Please refer to the latest schema in the 
 - This table stores the worker details.
 - Worker are people who are assigned to a task in a workflow.
 - Worker can be assigned to multiple tasks in a workflow.
-- Workers can have multiple roles in a workflow.
-- Workers can have different experience levels.
+- Assignee can have multiple roles in a workflow.
+- Assignee can have different experience levels.
 
 
 #### task
