@@ -16,6 +16,7 @@ workersAPI.get(async (req,res) => {
         SELECT member.*, count(task_assignment.assignee_id) AS task_counts,AVG(task_assignment.review_rating) as rating  FROM member
             INNER JOIN  task_assignment ON member.id = task_assignment.assignee_id
         GROUP BY member.id, task_assignment.assignee_id
+        ORDER BY task_counts DESC
     `;
 
     res.status(200).json(workers);

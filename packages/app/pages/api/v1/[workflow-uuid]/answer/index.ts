@@ -142,55 +142,7 @@ answersAPI.get(async (req, res) => {
     });
 
     res.status(200).json(processedTaskAssignmentResponses);
-
-
-    //rejected
-    const rejectedTaskAssignmentResponses = taskAssignmentRejected.map((taskAssignmentRejecte) => {
-        const newTaskAssignmentRejected = {
-            ...taskAssignmentRejecte,
-            task_assignments: taskAssignmentRejecte.task_assignments.map((taskAssignment) => {
-                const processedTaskAnswer = new Map<string, string>();
-
-                taskAssignment.task_answers.forEach((taskAnswer) => {
-                    processedTaskAnswer.set(taskAnswer.question.uuid, taskAnswer.answer);
-                });
-
-                console.log(processedTaskAnswer);
-
-                return {
-                    ...taskAssignment,
-                    task_answers: Object.fromEntries(processedTaskAnswer)
-                }
-            })
-        }
-        return newTaskAssignmentRejected;
-    });
-
-    res.status(200).json(rejectedTaskAssignmentResponses);
-
-    //accepted
-    const acceptedTaskAssignmentResponses = taskAssignmentAccepted.map((taskAssignmentAccepte) => {
-        const newTaskAssignmentAccepted = {
-            ...taskAssignmentAccepte,
-            task_assignments: taskAssignmentAccepte.task_assignments.map((taskAssignment) => {
-                const processedTaskAnswer = new Map<string, string>();
-
-                taskAssignment.task_answers.forEach((taskAnswer) => {
-                    processedTaskAnswer.set(taskAnswer.question.uuid, taskAnswer.answer);
-                });
-
-                console.log(processedTaskAnswer);
-
-                return {
-                    ...taskAssignment,
-                    task_answers: Object.fromEntries(processedTaskAnswer)
-                }
-            })
-        }
-        return newTaskAssignmentAccepted;
-    });
-
-    res.status(200).json(acceptedTaskAssignmentResponses);
+    return;
 
 });
 

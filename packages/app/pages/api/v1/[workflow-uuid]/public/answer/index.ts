@@ -91,9 +91,10 @@ publicAnswerApi.post(async (req, res) => {
     });
 
     const questionIds : number[] = [];
+    const expectedAnswers : (string | null)[] = [];
 
     for(const response of responses) {
-        const question = await db.question.findFirst({
+        const question = await db.question.findFirstOrThrow({
             where: {
                 uuid: response.question_uuid.trim()
             }
@@ -105,6 +106,7 @@ publicAnswerApi.post(async (req, res) => {
         });
 
         questionIds.push(question.id);
+        expectedAnswers.push(question.expected_answer);
     }
 
 
@@ -114,7 +116,8 @@ publicAnswerApi.post(async (req, res) => {
                 return {
                     task_assignment_id: taskAssignment.id,
                     question_id: questionIds[i],
-                    answer: response.answer
+                    answer: response.answer,
+                    is_expected: expectedAnswers[i] ? response.answer === expectedAnswers[i] : null
                 }
             })
         }),

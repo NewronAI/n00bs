@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 import WorkflowNav from "@/components/layouts/WorkflowNav";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
@@ -9,9 +9,9 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import {AgGridReact} from "ag-grid-react";
 import axios from 'axios'
-import RatingRenderer from "@/components/renderer/RatingRenderer";
 import DateFromNowRenderer from "@/components/renderer/DateFromNowRenderer";
 import Loader from "@/components/Loader";
+import RatingViewer from "@/components/renderer/RatingViewer";
 
 
 interface MemberFetchSearch {
@@ -38,20 +38,11 @@ const memberFetcher = async ([url, query]: [string, MemberFetchSearch]) => {
 
 function Workers() {
 
-
-    const [search, setSearch] = useState('');
-    const [searchBy, setSearchBy] = useState('district');
-
-    const searchQuery: MemberFetchSearch = {
-        search: search,
-        by: searchBy
-    };
-
     const router = useRouter();
 
     const workflowUUID = router.query["workflow-uuid"] as string;
 
-    const { data, error,  isLoading, } = useSWR([`/api/v1/${workflowUUID}/workers`, searchQuery], memberFetcher);
+    const { data, error,  isLoading, } = useSWR([`/api/v1/${workflowUUID}/workers`], memberFetcher);
     console.log(data);
     const member = data || [];
 
@@ -60,6 +51,7 @@ function Workers() {
         return <div>Error fetching</div>
     }
 
+    // @ts-ignore
     return (
 
         <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"workers"} workflowUUID={workflowUUID} />}>
@@ -83,12 +75,27 @@ function Workers() {
                     <AgGridReact
                         rowData={member}
                         pagination={true}
+                        rowGroupPanelShow={"onlyWhenGrouping"}
+                        sidebar={{toolPanels:["columns", "filters"]}}
+                        defaultColDef={{
+                            flex: 1,
+                            minWidth: 100,
+                            // allow every column to be aggregated
+                            enableValue: true,
+                            // allow every column to be grouped
+                            enableRowGroup: true,
+                            // allow every column to be pivoted
+                            enablePivot: true,
+                            sortable: true,
+                            filter: true,
+                        }}
                         columnDefs={[
                             { headerName: 'Name', field: 'name', sortable: true, filter: true, },
                             { headerName: 'Email', field: 'email', sortable: true, filter: true, },
                             { headerName: 'Phone No.', field: 'phone', sortable: true, filter: true, },
                             { headerName: 'Total Assignments', field: 'task_counts', sortable: true, filter: true },
-                            //{ headerName: 'Rating', field: 'rating', sortable: true, filter: true,cellRenderer: RatingRenderer },
+                            // @ts-ignore
+                            { headerName: 'Avg Rating', field: 'rating', sortable: true, filter: true , cellRenderer: RatingViewer, valueFormatter: (value : string | number) => typeof value === "string" ? parseFloat(value) : Math.round(value)},
                             { headerName: 'Role', field: 'role', sortable: true, filter: true, },
                             { headerName: 'Status', field: 'status', sortable: true, filter: true, },
                             { headerName: 'Added on', field: 'createdAt', sortable: true, filter: true, cellRenderer: DateFromNowRenderer},

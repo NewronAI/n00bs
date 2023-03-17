@@ -6,7 +6,7 @@ type UrlRendererProps = {
 
 const UrlRenderer = ({value}: UrlRendererProps) => {
   return (
-    <a className='text-indigo-200' href={value}>{value}</a>
+    <a className='text-indigo-200' href={value} target={"_blank"} rel={"noreferrer"}>{value}</a>
   )
 }
 

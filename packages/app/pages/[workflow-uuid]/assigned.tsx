@@ -21,15 +21,19 @@ interface assignedFilesPageProps {
     files: any[];
 }
 
-const AssignedFilesPage = (props: assignedFilesPageProps) => {
+const AssignedFilesPage = (_props: assignedFilesPageProps) => {
 
     const fileGridRef = useRef<AgGridReactType>(null);
     const router = useRouter();
     const workflowUUID = router.query["workflow-uuid"] as string;
 
-    const {data, error, isLoading, mutate} = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/file/assigned`, (url) => fetch(url).then(res => res.json()));
+    const {data, error, isLoading} = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/file/assigned`, (url) => fetch(url).then(res => res.json()));
     const files = data || [];
     console.log(files)
+
+    if(error) {
+        return <div>Error fetching data: {error.message}</div>
+    }
 
   return (
     <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"assigned files"} workflowUUID={workflowUUID} />} >
@@ -56,14 +60,27 @@ const AssignedFilesPage = (props: assignedFilesPageProps) => {
                               ref={fileGridRef}
                               rowSelection='multiple'
                               paginationPageSize={15}
-                              groupDefaultExpanded={1}
+                              groupDefaultExpanded={-1}
+                              rowGroupPanelShow={"onlyWhenGrouping"}
                               animateRows={true}
-                              // modules={[RowGroupingModule]}
+                              sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
+                              defaultColDef={{
+                                  flex: 1,
+                                  minWidth: 100,
+                                  // allow every column to be aggregated
+                                  enableValue: true,
+                                  // allow every column to be grouped
+                                  enableRowGroup: true,
+                                  // allow every column to be pivoted
+                                  enablePivot: true,
+                                  sortable: true,
+                                  filter: true,
+                              }}
                               columnDefs={[
                                   {headerName: "File State", field: "state", rowGroup: true,hide: true, sortable: true, filter: true, width: 150},
                                   {headerName: "File District", field: "district", rowGroup: true,hide: true, sortable: true, filter: true, width: 150},
                                   {headerName: "Duration", field: "file_duration", sortable: true, filter: true, width: 135, valueFormatter: fileDurationFormatter, aggFunc: 'sum'},
-                                  {headerName: "File Name", field: "file_name", rowGroup: true, sortable: true, filter: true, width: 400, cellRenderer: FilenameRenderer, tooltipField: "file_name"},
+                                  {headerName: "File Name", field: "file_name", rowGroup: true, sortable: true, filter: true, width: 450, cellRenderer: FilenameRenderer, tooltipField: "file_name"},
                                   {headerName: "Member Name", field: "memeber_name", sortable: true, filter: true, width: 150},
                                 {headerName: "Member State", field: "member_district", sortable: true, filter: true, width: 150},
                                 {headerName: "Member State", field: "member_state", sortable: true, filter: true, width: 150},

@@ -8,7 +8,6 @@ import useSWR from "swr";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.min.css';
 import 'ag-grid-community/styles/ag-theme-balham.min.css';
-import moment from "moment";
 import FileTypeRenderer from '@/components/renderer/FileTypeRenderer';
 import DateFromNowRenderer from '@/components/renderer/DateFromNowRenderer';
 import {AgGridReact as AgGridReactType} from 'ag-grid-react/lib/agGridReact'
@@ -44,11 +43,22 @@ function getSelectedRegionsCount(selectedRows : {district : string}[]) {
     return selectedRegionsMap.size;
 }
 
+function getSelectedDistricts (selectedRows : {district : string}[]) {
+    const selectedDistricts = new Set<string>();
+    selectedRows.forEach((row) => {
+        selectedDistricts.add(row.district);
+    });
 
-const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
+    return selectedDistricts;
+}
+
+
+const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
 
     const fileGridRef = useRef<AgGridReactType>(null);
     const memberGridRef = useRef<AgGridReactType>(null);
+
+    const filterTimerRef = useRef<any>(null);
 
     const router = useRouter();
 
@@ -61,12 +71,15 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
     const [selectionCount, setSelectionCount] = React.useState<number>(0);
 
     const workflowUUID = router.query["workflow-uuid"] as string;
+
+    const {data: workflowDetails} = useSWR<Prisma.workflowSelect>(`/api/v1/${workflowUUID}/get-metadata`);
+
     const {data, error, isLoading, mutate} = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/file/unassigned`, (url) => fetch(url).then(res => res.json()));
     const files = data || [];
 
     const {data : members, error : membersError, isLoading : membersLoading} = useSWR<Prisma.memberSelect[]>(`/api/v1/member`, (url) => fetch(url).then(res => res.json()));
 
-    if(error) {
+    if(error || membersError){
         return <div>Error fetching</div>
     }
 
@@ -75,16 +88,10 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
         setSelectedRegionsCount(0);
     }
 
-    const handleDeselectAll = () => {
-        fileGridRef.current?.api.deselectAll();
-        setSelectedRegionsCount(0);
-    }
-
-    const handleSelectAll = () => {
-        fileGridRef.current?.api.selectAllFiltered();
-    }
 
     const handleInitiateAssign = () => {
+
+        console.log("Initiate assign")
 
         if(!fileGridRef.current){
             return null;
@@ -99,6 +106,29 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
 
         setSelectedRegionsCount(getSelectedRegionsCount(selectedRows));
 
+        console.log(workflowDetails);
+        if(workflowDetails && workflowDetails?.enforce_region){
+            const selectedDistricts = getSelectedDistricts(selectedRows);
+            if(selectedDistricts.size > 1){
+                setAssignModalError("You can only assign files from a single region");
+                return null;
+            }
+
+            console.log(selectedDistricts);
+
+            clearTimeout(filterTimerRef.current);
+            filterTimerRef.current = setTimeout(() => {
+                memberGridRef.current?.api.setFilterModel(null);
+                memberGridRef.current?.api.setFilterModel({
+                    district: {
+                        filterType: "text",
+                        type: "startsWith",
+                        values: Array.from(selectedDistricts)
+                    }
+                });
+            }, 100);
+        }
+
         setAssignDialogOpen(true);
     }
 
@@ -112,10 +142,14 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
         const selectedRows = fileGridRef.current?.api.getSelectedRows();
         const selectedMembers = memberGridRef.current?.api.getSelectedRows();
 
+
+
         if(selectedRows.length === 0 || selectedMembers.length === 0) {
             setAssignModalError("Please select some member | task");
             return null;
         }
+
+
 
         setAssignModalError(null);
 
@@ -176,7 +210,19 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                                 ref={memberGridRef}
                                 rowSelection='single'
                                 paginationPageSize={6}
-                                groupDefaultExpanded={2}
+                                groupDefaultExpanded={-1}
+                                defaultColDef={{
+                                    flex: 1,
+                                    minWidth: 100,
+                                    // allow every column to be aggregated
+                                    enableValue: true,
+                                    // allow every column to be grouped
+                                    enableRowGroup: true,
+                                    // allow every column to be pivoted
+                                    enablePivot: true,
+                                    sortable: true,
+                                    filter: true,
+                                }}
                                 columnDefs={[
                                     {
                                         headerName: "Name",
@@ -259,17 +305,29 @@ const UnassignedFilesPage = (props : UnassignedFilesPageProps) => {
                         rowData={files}
                         suppressMenuHide={true}
                         pagination={true}
-                        groupDefaultExpanded={1}
+                        groupDefaultExpanded={-1}
                         ref={fileGridRef}
                         rowGroupPanelShow={"onlyWhenGrouping"}
-                        pivotMode={false}
-                        pivotPanelShow={"always"}
+                        sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
                         groupSelectsChildren={true}
                         onSelectionChanged={() => {
                             setSelectionCount(fileGridRef.current?.api.getSelectedRows().length || 0);
                         }}
                         rowSelection='multiple'
                         paginationPageSize={15}
+                        defaultColDef={{
+                            flex: 1,
+                            minWidth: 100,
+                            // allow every column to be aggregated
+                            enableValue: true,
+                            resizable: true,
+                            // allow every column to be grouped
+                            enableRowGroup: true,
+                            // allow every column to be pivoted
+                            enablePivot: true,
+                            sortable: true,
+                            filter: true,
+                        }}
                         columnDefs={[
                             {headerName: "", checkboxSelection: true, width: 80, headerCheckboxSelection: true, headerCheckboxSelectionFilteredOnly: true},
                             {headerName: "File Duration", field: "file_duration", sortable: true, filter: true, aggFunc: 'sum' , valueFormatter: fileDurationFormatter, width: 150},

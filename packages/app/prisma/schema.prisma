@@ -72,6 +72,10 @@ model workflow {
   tasks          task[]
   workflow_items workflow_file[]
   webhooks       webhook[]
+  child_id       Int?            @unique
+  child          workflow?       @relation("child", fields: [child_id], references: [id])
+  parent         workflow?       @relation("child")
+  enforce_region Boolean         @default(false)
 }
 
 model workflow_file {
@@ -93,6 +97,11 @@ model workflow_file {
   state            String?
   vendor           String?
   metadata         Json?
+  parent_id        Int?              @unique
+  parent           workflow_file?    @relation("parent", fields: [parent_id], references: [id])
+  child            workflow_file?    @relation("parent")
+  calculated       Boolean           @default(false)
+  delivered        Boolean           @default(false)
 }
 
 model question {
@@ -111,6 +120,7 @@ model question {
   task_question       task_question[]
   task_answers        task_answer[]
   intra_job_questions intra_pair_job_questions[]
+  expected_answer     String?
 }
 
 model member {
@@ -118,7 +128,7 @@ model member {
   uuid              String            @unique @default(uuid()) @db.Char(36)
   name              String
   createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
+  updatedAt         DateTime?         @updatedAt
   deletedAt         DateTime?
   email             String            @unique @default(uuid()) @db.VarChar(255)
   phone             String            @unique
@@ -133,6 +143,9 @@ model member {
   reviews           task_assignment[] @relation("reviewer")
   intra_creator_of  intra_pair_job[]  @relation("intra_created_by")
   intra_assignee_of intra_pair_job[]  @relation("intra_assignee")
+  added_by          Int?
+  added_by_member   member?           @relation("added_by", fields: [added_by], references: [id])
+  added_members     member[]          @relation("added_by")
 }
 
 model task {
@@ -170,9 +183,9 @@ model task_assignment {
   updatedAt        DateTime      @updatedAt
   status           task_status   @default(pending)
   task_id          Int
-  task             task          @relation(fields: [task_id], references: [id])
+  task             task          @relation(fields: [task_id], references: [id], onDelete: Cascade)
   assignee_id      Int
-  assignee         member        @relation(name: "assignee", fields: [assignee_id], references: [id], onDelete: Cascade)
+  assignee         member        @relation(name: "assignee", fields: [assignee_id], references: [id])
   workflow_file_id Int
   workflow_file    workflow_file @relation(fields: [workflow_file_id], references: [id])
   task_answers     task_answer[]
@@ -193,7 +206,8 @@ model task_answer {
   task_assigment     task_assignment @relation(fields: [task_assignment_id], references: [id], onDelete: Cascade)
   question_id        Int
   question           question        @relation(fields: [question_id], references: [id])
-  answer             String
+  answer             String          @db.VarChar(255)
+  is_expected        Boolean?
 }
 
 model webhook {
@@ -229,7 +243,7 @@ model intra_pair_job {
   assigned_to_id   Int?
   assigned_to      member?           @relation(name: "intra_assignee", fields: [assigned_to_id], references: [id])
   current_index    Int               @default(-1)
-  threshold        Float             @default(0.0)
+  threshold        Float             @default(1)
 }
 
 model intra_pair_job_questions {

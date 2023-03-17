@@ -95,6 +95,9 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
         const questionOptions = options;
         const questionRequired = e.target.questionRequired.checked;
         const questionOrder = e.target.questionOrder.value;
+        const expectedAnswer = e.target.expectedAnswer.value;
+
+        console.log(expectedAnswer);
 
         const questionData : QuestionItem = {
             name: questionName,
@@ -105,6 +108,7 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
             required: questionRequired,
             order: questionOrder,
             uuid: question?.uuid || undefined,
+            expected_answer: expectedAnswer,
         }
 
         try {
@@ -266,6 +270,17 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                                     }
                                 </div>
                             </div>}
+
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text">Expected Answer</span>
+                            </label>
+                            <input name={"expectedAnswer"} type="text" placeholder="Enter expected answer or leave blank, if not applicable"
+                                   className="input input-bordered"
+                                   defaultValue={question?.expected_answer}
+                                   readOnly={!editMode}
+                            />
+                        </div>
 
                         <div className={"flex justify-end mt-4"}>
                                 {

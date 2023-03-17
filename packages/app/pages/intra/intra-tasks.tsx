@@ -1,16 +1,11 @@
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import FilesUploadSelector from "@/components/CSVUploadSelector";
-import {useRouter} from "next/router";
-import {data} from "autoprefixer";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.min.css';
 import 'ag-grid-community/styles/ag-theme-balham.min.css';
 import {AgGridReact} from "ag-grid-react";
-import FilenameRenderer from "@/components/renderer/FilenameRenderer";
-import UrlRenderer from "@/components/renderer/UrlRenderer";
 import DateFromNowRenderer from "@/components/renderer/DateFromNowRenderer";
 import Loader from "@/components/Loader";
-import React, {useRef} from "react";
+import React from "react";
 import useSWR from "swr";
 import Link from "next/link";
 
@@ -22,6 +17,10 @@ const LinkRenderer = ({value,data} : {value: string, data: any}) => (<Link href=
 const CreateNewIntraPair = () => {
 
     const {data: intraJobData, error: intraJobError, isLoading: intraJobIsLoading} = useSWR<any>(`/api/v1/intra/jobs`);
+
+    if (intraJobError) {
+        return <div>Failed to load</div>
+    }
 
     return (
         <DashboardLayout currentPage={"intra check"} secondaryNav={<></>}>
@@ -46,7 +45,7 @@ const CreateNewIntraPair = () => {
                                 pagination={true}
                                 rowSelection='multiple'
                                 paginationPageSize={15}
-                                groupDefaultExpanded={1}
+                                groupDefaultExpanded={-1}
                                 animateRows={true}
                                 columnDefs={[
                                     {headerName: "Name", field: "name", sortable: true, filter: true, resizable: true, cellRenderer: LinkRenderer},
@@ -56,6 +55,7 @@ const CreateNewIntraPair = () => {
                                     {headerName: "Created By", field: "created_by_email", sortable: true, filter: true, resizable: true},
                                     {headerName: "Created At", field: "createdAt", sortable: true, filter: true, resizable: true, cellRenderer: DateFromNowRenderer},
                                     {headerName: "Assigned To", field: "assignedTo", sortable: true, filter: true, resizable: true},
+                                    {headerName: "Calculated threshold", field: "threshold", sortable: true, filter: true, resizable: true},
 
                                 ]} />
                         </div>

@@ -45,6 +45,10 @@ const findCurrentIndex = (files : any[], groupSize : number ) => {
                 }
             }
         }
+        else {
+            console.log("isGroupEvaluated",isGroupEvaluated);
+            return -1;
+        }
 
     }
 
@@ -53,11 +57,51 @@ const intraFileLogic = (files : any[], groupSize : number ) => {
 
     const currentIndex = findCurrentIndex(files, groupSize);
 
-    if(currentIndex === null || currentIndex === undefined) {
+    if(currentIndex === null || currentIndex === undefined || currentIndex === -1) {
         return null;
     }
 
     return files[currentIndex];
 
 };
+
+export const isThresholdFound = (files : any[], groupSize : number ) => {
+
+        const currentIndex = findCurrentIndex(files, groupSize);
+
+        console.log("currentIndex",currentIndex);
+
+        if(currentIndex === -1) {
+            return true;
+        }
+
+        return false;
+}
+
+export const calculateCosineThreshold = (files : any[], group : number = 5, min_reqd = 4 ) => {
+    // sliding window of size 5 and 80% of the files in the window should be similar
+
+    let cosineThreshold = 1;
+
+    for(let i = 0; i < files.length; i += 1){
+        let groupPositiveCount = 0;
+        for(let j = 0; j < group; j++){
+            if(i+j >= files.length) {
+                break;
+            }
+            if(files[i + j].is_similar === true){
+                groupPositiveCount++;
+            }
+        }
+        if(groupPositiveCount >= min_reqd) {
+            console.log("grp positive cosine score",files[i].cosine_score);
+            cosineThreshold = files[i].cosine_score;
+            break;
+        }
+    }
+
+    return cosineThreshold;
+
+}
+
 export default intraFileLogic;

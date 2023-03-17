@@ -7,7 +7,11 @@ const workflowApi = new NextExpress();
 workflowApi.get(async (req, res) => {
     // Get all workflows
 
-    const workflows = await db.workflow.findMany();
+    const workflows = await db.workflow.findMany({
+        orderBy: {
+            createdAt: "asc"
+        }
+    });
 
     res.status(200).json(workflows);
 

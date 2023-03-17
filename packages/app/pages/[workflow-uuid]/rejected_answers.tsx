@@ -28,7 +28,7 @@ interface UnassignedFilesPageProps {
 }
 
 
-const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
+const RejectedFilesPage = (_props: UnassignedFilesPageProps) => {
 
     const fileGridRef = useRef<AgGridReactType>(null);
     const router = useRouter();
@@ -53,38 +53,18 @@ const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
     const workflowUUID = router.query["workflow-uuid"] as string;
     const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer/answer_rejected`);
     const files = data || [];
-    console.log("files", files)
 
     const [updatingReview, setUpdatingReviews] = useState(false);
 
     const { data: questionData, error: questionFetchError, isLoading: questionFetchLoading } = useSWRImmutable(`/api/v1/${workflowUUID}/question`)
-    // console.log(questionData)
+    console.log(questionData)
 
-
-
-
-    //-
     const { data: members, error: membersError, isLoading: membersLoading } = useSWR<Prisma.memberSelect[]>(`/api/v1/member`, (url) => fetch(url).then(res => res.json()));
-
-    const defaultColDef = useMemo(() => {
-        return {
-            flex: 1,
-        };
-    }, []);
 
     const detailCellRendererParams = useMemo(() => {
         console.log("detailCellRendererParams")
 
         const staticColumnDefs = [
-            {
-                headerName: 'Action', field: 'button', cellRenderer: ({ data }: { data: any }) => {
-                    return (
-                        <div className='btn-group'>
-                            <button className='btn btn-xs btn-secondary' onClick={() => handleReassignModal(data)} >Reassign</button>
-                        </div>
-                    )
-                }
-            },
             { headerName: "Assignee Name", field: 'assignee.name', tooltipField: 'assignee.name', tooltipEnable: true },
             { headerName: "Assignee Ph. No", field: 'assignee.phone' },
             { headerName: "Answered At", field: 'createdAt', cellRenderer: DateFromNowRenderer },
@@ -123,7 +103,7 @@ const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
         };
     }, []);
 
-    const onFirstDataRendered = useCallback((params: any) => {
+    const onFirstDataRendered = useCallback((_params: any) => {
         // arbitrarily expand a row for presentational purposes
         setTimeout(function () {
             // @ts-ignore
@@ -229,7 +209,7 @@ const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
                         <ActionItem />
                     </div>
                 </div>
-                <Loader isLoading={isLoading}>
+                <Loader isLoading={isLoading || questionFetchLoading}>
                     <div className={"w-full h-[760px] p-4 ag-theme-alpine-dark"}>
                         <AgGridReact
                             rowData={files}
@@ -241,11 +221,23 @@ const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
                             detailCellRendererParams={detailCellRendererParams}
                             detailRowAutoHeight={true}
                             detailRowHeight={250}
-                            // rowGroupPanelShow={"onlyWhenGrouping"}
+                            rowGroupPanelShow={"onlyWhenGrouping"}
+                            sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
                             onFirstDataRendered={onFirstDataRendered}
-                            groupDefaultExpanded={1}
+                            groupDefaultExpanded={-1}
                             pivotMode={false}
-                            defaultColDef={defaultColDef}
+                            defaultColDef={{
+                                flex: 1,
+                                minWidth: 100,
+                                // allow every column to be aggregated
+                                enableValue: true,
+                                // allow every column to be grouped
+                                enableRowGroup: true,
+                                // allow every column to be pivoted
+                                enablePivot: true,
+                                sortable: true,
+                                filter: true,
+                            }}
                             paginationPageSize={15}
                             columnDefs={[
 

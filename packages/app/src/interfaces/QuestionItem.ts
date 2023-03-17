@@ -9,4 +9,5 @@ export default interface QuestionItem {
     order: number;
     text: string;
     required: boolean;
+    expected_answer?: string;
 }

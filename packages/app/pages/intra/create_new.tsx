@@ -61,7 +61,7 @@ const CreateNewIntraPair = () => {
                         <FilesUploadSelector onCancel={onCancel}
                                               onDatasetImported={onDatasetImported}
                                               transformHeader={intraCreateDataTransformer}
-                                              requiredFields={["file_name", "cosine_similarity", "is_reference", "file"]}/>
+                                              requiredFields={["file_name", "cosine_score", "is_reference", "file"]}/>
                     </div>
                 </div>
             </div>
