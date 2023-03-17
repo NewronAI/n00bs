@@ -6,6 +6,7 @@ const modeTs = new NextExpress();
 modeTs.get(async (req, res) => {
 
 
+
     let x = await db.$queryRaw`INSERT INTO workflow_file (uuid, file_name, file, file_type, workflow_id, file_duration, district, state, vendor, metadata, parent_id, "createdAt", "updatedAt")
                            (SELECT gen_random_uuid () as uuid, cwf.file_name, cwf.file,cwf.file_type,2 as workflow_id, cwf.file_duration, cwf.district,  cwf.state, cwf.vendor, cwf.metadata, cwf.id::int as parent_id, CURRENT_TIMESTAMP as createdAt, CURRENT_TIMESTAMP as updatedAt
                             FROM (SELECT l.id as id, COUNT(l.is_expected) as accepted_count FROM
