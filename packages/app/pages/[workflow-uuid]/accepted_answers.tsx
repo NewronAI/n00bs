@@ -108,7 +108,7 @@ const AcceptedFilesPage = (_props: UnassignedFilesPageProps) => {
     return (
         <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"accepted_answers"} workflowUUID={workflowUUID} />}>
             <Head>
-                <title>Answered Files</title>
+                <title>Approved Answer</title>
             </Head>
 
             <div>
