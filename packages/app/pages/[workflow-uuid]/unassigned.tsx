@@ -320,6 +320,7 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
                             minWidth: 100,
                             // allow every column to be aggregated
                             enableValue: true,
+                            resizable: true,
                             // allow every column to be grouped
                             enableRowGroup: true,
                             // allow every column to be pivoted

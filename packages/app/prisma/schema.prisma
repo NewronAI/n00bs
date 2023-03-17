@@ -100,6 +100,8 @@ model workflow_file {
   parent_id        Int?              @unique
   parent           workflow_file?    @relation("parent", fields: [parent_id], references: [id])
   child            workflow_file?    @relation("parent")
+  calculated       Boolean           @default(false)
+  delivered        Boolean           @default(false)
 }
 
 model question {

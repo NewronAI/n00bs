@@ -279,7 +279,6 @@ const CreateUpdateQuestion = (props? : CreateUpdateQuestionProps) => {
                                    className="input input-bordered"
                                    defaultValue={question?.expected_answer}
                                    readOnly={!editMode}
-                                   required
                             />
                         </div>
 

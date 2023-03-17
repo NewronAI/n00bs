@@ -122,7 +122,11 @@ Workflows.propTypes = {
 export const getServerSideProps = withAuthorizedPageAccess({
     getServerSideProps: async () => {
 
-        const workflows = await db.workflow.findMany();
+        const workflows = await db.workflow.findMany({
+            orderBy: {
+                createdAt: 'asc'
+            }
+        });
         const modeledWorkflows: WorkflowItems[] = workflows.map((workflow) => {
             const tWorkflow: WorkflowItems = {
                 title: workflow.name,
