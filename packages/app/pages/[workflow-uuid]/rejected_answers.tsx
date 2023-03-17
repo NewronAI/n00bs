@@ -21,6 +21,7 @@ import clsx from "clsx";
 import UrlRenderer from "@/components/renderer/UrlRenderer";
 import { toast } from "react-toastify";
 import RatingViewer from '@/components/renderer/RatingViewer';
+import Modal from '@/components/Modal';
 
 interface UnassignedFilesPageProps {
     files: any[]
@@ -33,6 +34,18 @@ const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
     const router = useRouter();
     const [taskRatings, setTaskRatings] = useState(new Map<string, number>())
 
+
+    const gridRef = useRef<AgGridReact>(null)
+    const memberGridRef = useRef<AgGridReactType>(null);
+    const [delData, setDelData] = React.useState<any>({})
+    const [assignModalError, setAssignModalError] = React.useState<string | null>(null);
+    const [assignDialogOpenEdit, setAssignDialogOpenEdit] = React.useState<boolean>(false);
+
+
+
+
+
+
     const updatedLocalRating = (uuid: string, rating: number) => {
         setTaskRatings((prev: Map<string, number>) => prev.set(uuid, rating));
     }
@@ -40,11 +53,18 @@ const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
     const workflowUUID = router.query["workflow-uuid"] as string;
     const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer/answer_rejected`);
     const files = data || [];
+    console.log("files", files)
 
     const [updatingReview, setUpdatingReviews] = useState(false);
 
     const { data: questionData, error: questionFetchError, isLoading: questionFetchLoading } = useSWRImmutable(`/api/v1/${workflowUUID}/question`)
-    console.log(questionData)
+    // console.log(questionData)
+
+
+
+
+    //-
+    const { data: members, error: membersError, isLoading: membersLoading } = useSWR<Prisma.memberSelect[]>(`/api/v1/member`, (url) => fetch(url).then(res => res.json()));
 
     const defaultColDef = useMemo(() => {
         return {
@@ -56,6 +76,15 @@ const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
         console.log("detailCellRendererParams")
 
         const staticColumnDefs = [
+            {
+                headerName: 'Action', field: 'button', cellRenderer: ({ data }: { data: any }) => {
+                    return (
+                        <div className='btn-group'>
+                            <button className='btn btn-xs btn-secondary' onClick={() => handleReassignModal(data)} >Reassign</button>
+                        </div>
+                    )
+                }
+            },
             { headerName: "Assignee Name", field: 'assignee.name', tooltipField: 'assignee.name', tooltipEnable: true },
             { headerName: "Assignee Ph. No", field: 'assignee.phone' },
             { headerName: "Answered At", field: 'createdAt', cellRenderer: DateFromNowRenderer },
@@ -123,6 +152,51 @@ const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
         setTaskRatings(new Map<string, number>())
     }
 
+
+    const handleReassign = async () => {
+
+        if (!memberGridRef.current) {
+            setAssignModalError("Something went wrong. Page not loaded properly");
+            return null;
+        }
+
+        const selectedMembers = memberGridRef.current?.api.getSelectedRows();
+
+        if (selectedMembers.length === 0) {
+            setAssignModalError("Please select some member | task");
+            return null;
+        }
+
+        setAssignModalError(null);
+
+        const selectedMemberUUID: string = selectedMembers[0].uuid;
+
+        try {
+            await axios.put(`/api/v1/${workflowUUID}/task/assign`, null, {
+
+                params: {
+                    "task-assignment-uuid": delData.uuid,
+                    "assignee-uuid": selectedMemberUUID,
+                }
+            });
+            await mutate();
+            setAssignDialogOpenEdit(false);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+
+
+    const handleReassignModal = (data: any) => {
+        setAssignDialogOpenEdit(true)
+        setDelData(data)
+    }
+    const handleDialogClose = () => {
+        setAssignDialogOpenEdit(false)
+    }
+
+
     if (error) {
         return <div>Error fetching</div>
     }
@@ -138,7 +212,7 @@ const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
     return (
         <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"rejected_answers"} workflowUUID={workflowUUID} />}>
             <Head>
-                <title>Answered Files</title>
+                <title>Disapproved Answer</title>
             </Head>
 
             <div>
@@ -174,6 +248,7 @@ const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
                             defaultColDef={defaultColDef}
                             paginationPageSize={15}
                             columnDefs={[
+
                                 {
                                     headerName: "File",
                                     field: "file_name",
@@ -207,6 +282,91 @@ const RejectedFilesPage = (props: UnassignedFilesPageProps) => {
                         <ActionItem />
                     </div>
                 </Loader>
+
+                {/* --- */}
+                <Modal open={assignDialogOpenEdit}
+                    onClose={handleDialogClose}
+                >
+                    <div className="flex flex-col">
+                        <div className="flex flex-col mt-4">
+                            <label className="block text-sm font-medium ">Assign to</label>
+                            <p className={"text-sm font-thin"}>
+                                Click on the member to select the account on which you want to assign the files.
+                            </p>
+                        </div>
+                        <Loader isLoading={membersLoading}>
+                            <div className="mt-2 flex flex-col h-60 ag-theme-balham-dark">
+                                <AgGridReact
+                                    rowData={members}
+                                    suppressMenuHide={true}
+                                    pagination={true}
+                                    ref={memberGridRef}
+                                    rowSelection='single'
+                                    paginationPageSize={6}
+                                    columnDefs={[
+
+                                        {
+                                            headerName: "Name",
+                                            field: "name",
+                                            sortable: true,
+                                            filter: true,
+                                        },
+                                        {
+                                            headerName: "District",
+                                            field: "district",
+                                            sortable: true,
+                                            filter: true,
+                                        },
+                                        {
+                                            headerName: "State",
+                                            field: "state",
+                                            sortable: true,
+                                            filter: true,
+                                        },
+                                        {
+                                            headerName: "Phone",
+                                            field: "phone",
+                                            sortable: true,
+                                            filter: true,
+                                        },
+                                        {
+                                            headerName: "Role",
+                                            field: "role",
+                                            sortable: true,
+                                            filter: true,
+                                        },
+                                        {
+                                            headerName: "Email",
+                                            field: "email",
+                                            sortable: true,
+                                            filter: true,
+                                        },
+
+                                    ]}
+                                />
+                            </div>
+                        </Loader>
+                        <div className={"flex justify-between mt-4 btn-group"}>
+                            <div className={"text-sm text-error"}>
+                                {assignModalError}
+                            </div>
+                            <div>
+                                <button className={"btn btn-sm btn-ghost"} onClick={handleDialogClose} >
+                                    Cancel
+                                </button>
+                                <button className={"btn btn-sm px-8 btn-primary"} onClick={handleReassign} >
+                                    Assign
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </Modal>
+
+
+
+                {/* --- */}
+
+
 
             </div>
         </DashboardLayout>

@@ -37,7 +37,6 @@ const Tasks = (props: TaskFilesPage) => {
     const workflowUUID = router.query["workflow-uuid"] as string;
 
     const { data, error, isLoading, mutate } = useSWR(`/api/v1/${workflowUUID}/task/all`, (url) => fetch(url).then(res => res.json()));
-    console.log(data);
     const task = data || [];
 
     const {data : members, error : membersError, isLoading : membersLoading} = useSWR<Prisma.memberSelect[]>(`/api/v1/member`, (url) => fetch(url).then(res => res.json()));
@@ -164,6 +163,7 @@ const Tasks = (props: TaskFilesPage) => {
                 </div>
                 </Loader>
             </div>
+            
             <Modal open={assignDialogOpenDelete}
                    onClose={handleDialogClose}
             >
@@ -193,6 +193,7 @@ const Tasks = (props: TaskFilesPage) => {
                     </div>
                 </div>
             </Modal>
+
             <Modal open={assignDialogOpenEdit}
                    onClose={handleDialogClose}
             >

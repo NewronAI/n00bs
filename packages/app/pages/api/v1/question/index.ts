@@ -1,6 +1,6 @@
 import NextExpress from "@/helpers/node/NextExpress";
-import {db} from "@/helpers/node/db";
-import {obj_status, question_type} from "@prisma/client";
+import { db } from "@/helpers/node/db";
+import { obj_status, question_type } from "@prisma/client";
 import assertUp from "@/helpers/node/assert/assertUp";
 import getLogger from "@/helpers/node/getLogger";
 
@@ -26,6 +26,9 @@ questionApi.post(async (req, res) => {
     const required = req.body.required as boolean | undefined;
 
     const questionOptions = req.body.options as string[];
+    
+
+
 
     const question = await db.question.create({
         data: {
@@ -35,6 +38,7 @@ questionApi.post(async (req, res) => {
             options: questionOptions,
             order: Number(order),
             required: required,
+            
         }
     });
 
