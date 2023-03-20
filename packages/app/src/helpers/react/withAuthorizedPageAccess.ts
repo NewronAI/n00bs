@@ -5,7 +5,12 @@ import isValidAccess from "@/helpers/node/isValidAccess";
 import {NextApiRequest} from "next";
 
 
-const withAuthorizedPageAccess = (config : any, requiredAccess : member_role) => {
+export type withAuthorizedPageAccessConfig = {
+    getServerSideProps? : (context : any) => Promise<any>,
+    returnTo? : string
+}
+
+const withAuthorizedPageAccess = (config : withAuthorizedPageAccessConfig, requiredAccess : member_role) => {
     return  withPageAuthRequired({
         getServerSideProps : async (context : any) => {
             // access the user session

@@ -42,7 +42,7 @@ const navigation = [
     },
     // { name: 'Open Jobs', href: '/jobs' },
     // { name: 'Completed Jobs', href: '/completed-jobs' },
-    { name: 'Workers', href: '/workers', icon: <UserGroupIcon className="h-5" aria-hidden="true" />, current: false, },
+    { name: 'Freelancers', href: '/workers', icon: <UserGroupIcon className="h-5" aria-hidden="true" />, current: false, },
     { name: 'Settings', href: '/settings', icon: <CogIcon className="h-5" aria-hidden="true" />, current: false, },
 ];
 

@@ -14,6 +14,7 @@ import {capitalize} from "lodash";
 
 const navigation = [
     { name: 'Workflows', href: '/workflows' },
+    { name: 'Report', href: '/report' },
     { name: 'Members', href: '/members' },
     { name: 'Questions', href: '/questions' },
     { name: 'Intra Check', href: '/intra' },

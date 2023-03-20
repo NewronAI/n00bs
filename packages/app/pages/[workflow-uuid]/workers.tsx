@@ -56,16 +56,16 @@ function Workers() {
 
         <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"workers"} workflowUUID={workflowUUID} />}>
             <Head>
-                <title>Workers</title>
+                <title>Freelancers</title>
             </Head>
 
             <div className={"mt-2 flex justify-between"}>
                 <div className={"p-0 md:pl-4"}>
                     <h1 className={"text-2xl font-bold"}>
-                        Workers
+                        Freelancers
                     </h1>
                     <p className={"font-thin text-sm"}>
-                        Tasks assigned to different workers.
+                        Tasks assigned to different freelancers.
                     </p>
                 </div>
             </div>
