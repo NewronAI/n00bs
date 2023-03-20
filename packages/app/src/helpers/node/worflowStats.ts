@@ -29,7 +29,9 @@ export async function getAssignedFilesCount(id : number) {
                                                                                                 INNER JOIN workflow ON workflow.id = ${id}
                      AND task.workflow_id = workflow.id ORDER BY task.id LIMIT 1))
     `) as TotalAssignments[];
-    return assignedFilesCount;
+
+    return assignedFilesCount[0].total_assignments;
+
 }
 
 
