@@ -65,6 +65,15 @@ const RejectedFilesPage = (_props: UnassignedFilesPageProps) => {
         console.log("detailCellRendererParams")
 
         const staticColumnDefs = [
+            {
+                headerName: 'Action', field: 'button', cellRenderer: ({ data }: { data: any }) => {
+                    return (
+                        <div className='btn-group'>
+                            <button className='btn btn-xs btn-secondary' onClick={() => handleReassignModal(data)} >Reassign</button>
+                        </div>
+                    )
+                }
+            },
             { headerName: "Assignee Name", field: 'assignee.name', tooltipField: 'assignee.name', tooltipEnable: true },
             { headerName: "Assignee Ph. No", field: 'assignee.phone' },
             { headerName: "Answered At", field: 'createdAt', cellRenderer: DateFromNowRenderer },
@@ -152,7 +161,7 @@ const RejectedFilesPage = (_props: UnassignedFilesPageProps) => {
         const selectedMemberUUID: string = selectedMembers[0].uuid;
 
         try {
-            await axios.put(`/api/v1/${workflowUUID}/task/assign`, null, {
+            await axios.post(`/api/v1/${workflowUUID}/task/force-reassign`, null, {
 
                 params: {
                     "task-assignment-uuid": delData.uuid,
@@ -184,9 +193,7 @@ const RejectedFilesPage = (_props: UnassignedFilesPageProps) => {
     console.log(taskRatings.size)
 
     const ActionItem = () => <div>
-        <button className={clsx("btn", { "btn-secondary": true })} onClick={handleRate}>
-            {updatingReview ? "Saving. . ." : "Save Changes"}
-        </button>
+
     </div>
 
     return (
