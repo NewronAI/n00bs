@@ -44,6 +44,12 @@ forceReassignApi.post(async (req, res) => {
         message: "Assignee not found"
     });
 
+    await db.task_answer.deleteMany({
+        where: {
+            task_assignment_id: task_assignment.id
+        }
+    });
+
     const status = await db.task_assignment.update({
         where: {
             uuid: task_assignmentUUID

@@ -32,29 +32,16 @@ const RejectedFilesPage = (_props: UnassignedFilesPageProps) => {
 
     const fileGridRef = useRef<AgGridReactType>(null);
     const router = useRouter();
-    const [taskRatings, setTaskRatings] = useState(new Map<string, number>())
 
-
-    const gridRef = useRef<AgGridReact>(null)
     const memberGridRef = useRef<AgGridReactType>(null);
     const [delData, setDelData] = React.useState<any>({})
     const [assignModalError, setAssignModalError] = React.useState<string | null>(null);
     const [assignDialogOpenEdit, setAssignDialogOpenEdit] = React.useState<boolean>(false);
 
-
-
-
-
-
-    const updatedLocalRating = (uuid: string, rating: number) => {
-        setTaskRatings((prev: Map<string, number>) => prev.set(uuid, rating));
-    }
-
     const workflowUUID = router.query["workflow-uuid"] as string;
     const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer/answer_rejected`);
     const files = data || [];
 
-    const [updatingReview, setUpdatingReviews] = useState(false);
 
     const { data: questionData, error: questionFetchError, isLoading: questionFetchLoading } = useSWRImmutable(`/api/v1/${workflowUUID}/question`)
     console.log(questionData)
@@ -120,27 +107,6 @@ const RejectedFilesPage = (_props: UnassignedFilesPageProps) => {
         }, 0);
     }, []);
 
-    const handleRate = () => {
-        console.log(taskRatings)
-        setUpdatingReviews(true);
-        axios.post(`/api/v1/${workflowUUID}/review_answers`, Array.from(taskRatings))
-            .then(response => {
-                setUpdatingReviews(false);
-                mutate().then(() => {
-                    console.log("files updated");
-                    toast("Review Posted", { type: "success" });
-
-                });
-
-            })
-            .catch(error => {
-                console.error(error);
-                setUpdatingReviews(false);
-                toast("Error posting review", { type: "error" });
-            })
-        setTaskRatings(new Map<string, number>())
-    }
-
 
     const handleReassign = async () => {
 
@@ -176,7 +142,6 @@ const RejectedFilesPage = (_props: UnassignedFilesPageProps) => {
     }
 
 
-
     const handleReassignModal = (data: any) => {
         setAssignDialogOpenEdit(true)
         setDelData(data)
@@ -190,7 +155,6 @@ const RejectedFilesPage = (_props: UnassignedFilesPageProps) => {
         return <div>Error fetching</div>
     }
 
-    console.log(taskRatings.size)
 
     const ActionItem = () => <div>
 
