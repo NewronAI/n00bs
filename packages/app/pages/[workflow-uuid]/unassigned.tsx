@@ -82,6 +82,13 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
 
     const {data : members, error : membersError, isLoading : membersLoading} = useSWR<Prisma.memberSelect[]>(`/api/v1/member`, (url) => fetch(url).then(res => res.json()));
 
+    useEffect(() => {
+        return () => {
+            clearTimeout(filterTimerRef.current);
+            clearTimeout(selectionTimer.current);
+        }
+    }, []);
+
     if(error || membersError){
         return <div>Error fetching</div>
     }
@@ -168,7 +175,6 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
                 fileGridRef.current?.api.forEachNode((node) => {
                     // console.log(node.data?.uuid, selectedItems);
                     if(selectedItems.includes(node.data?.uuid)){
-                        console.log("selecting", node.data?.uuid);
                         node.setSelected(true);
                     }
                 });
@@ -183,12 +189,7 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
 
     }
 
-    useEffect(() => {
-        return () => {
-            clearTimeout(filterTimerRef.current);
-            clearTimeout(selectionTimer.current);
-        }
-    }, []);
+
 
 
     return (
