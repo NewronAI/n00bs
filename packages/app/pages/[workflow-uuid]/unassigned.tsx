@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import WorkflowNav from "@/components/layouts/WorkflowNav";
 import Head from "next/head";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
@@ -69,6 +69,9 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
     const [selectedRegionsCount, setSelectedRegionsCount] = React.useState<number>(0);
 
     const [selectionCount, setSelectionCount] = React.useState<number>(0);
+    const [selectedItems, setSelectedItems] = React.useState<any[]>([]);
+    const [currentPage, setCurrentPage] = React.useState<number>(0);
+    const selectionTimer = useRef<any>(null);
 
     const workflowUUID = router.query["workflow-uuid"] as string;
 
@@ -78,6 +81,13 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
     const files = data || [];
 
     const {data : members, error : membersError, isLoading : membersLoading} = useSWR<Prisma.memberSelect[]>(`/api/v1/member`, (url) => fetch(url).then(res => res.json()));
+
+    useEffect(() => {
+        return () => {
+            clearTimeout(filterTimerRef.current);
+            clearTimeout(selectionTimer.current);
+        }
+    }, []);
 
     if(error || membersError){
         return <div>Error fetching</div>
@@ -161,6 +171,15 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
                 "assignee-uuid": selectedMemberUUID,
             });
             await mutate();
+            setTimeout(() => {
+                fileGridRef.current?.api.forEachNode((node) => {
+                    // console.log(node.data?.uuid, selectedItems);
+                    if(selectedItems.includes(node.data?.uuid)){
+                        node.setSelected(true);
+                    }
+                });
+                fileGridRef.current?.api.paginationGoToPage(currentPage);
+            }, 100);
         } catch (e) {
 
         }
@@ -169,6 +188,8 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
 
 
     }
+
+
 
 
     return (
@@ -310,8 +331,18 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
                         rowGroupPanelShow={"onlyWhenGrouping"}
                         sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
                         groupSelectsChildren={true}
+                        onPaginationChanged={(pageChangeEvent) => {
+                            setCurrentPage(pageChangeEvent.api.paginationGetCurrentPage());
+                        }
+                        }
                         onSelectionChanged={() => {
                             setSelectionCount(fileGridRef.current?.api.getSelectedRows().length || 0);
+                            setSelectedItems(fileGridRef.current?.api.getSelectedRows().map(node => {
+                                return node.uuid;
+                            }) || []);
+                        }}
+                        onGridReady={(params) => {
+                            params.api.sizeColumnsToFit();
                         }}
                         rowSelection='multiple'
                         paginationPageSize={15}
