@@ -20,6 +20,8 @@ import axios from 'axios';
 import clsx from "clsx";
 import UrlRenderer from "@/components/renderer/UrlRenderer";
 import {toast} from "react-toastify";
+import { ISelectCellEditorParams, ValueSetterParams } from 'ag-grid-community';
+import SelectRenderer from '@/components/renderer/SelectRenderer';
 
 interface UnassignedFilesPageProps {
     files: any[]
@@ -43,10 +45,25 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
     const [updatingReview, setUpdatingReviews] = useState(false);
 
     const { data: questionData, error: questionFetchError, isLoading: questionFetchLoading } = useSWRImmutable(`/api/v1/${workflowUUID}/question`)
-    console.log(questionData)
+    console.log(data)
 
     const detailCellRendererParams = useMemo(() => {
         console.log("detailCellRendererParams")
+
+        async function onCellValueChanged (event: any, questionUUID: string) {
+            const newValue = event.newValue
+            const taskAssignmentUUID = event.data.uuid
+            console.log(taskAssignmentUUID)
+
+            try {
+                const response = await axios.post(`/api/v1/editresponse?taskAssignmentUUID=${taskAssignmentUUID}&questionUUID=${questionUUID}`)
+                console.log(response)
+                await mutate()
+            }
+            catch (error) {
+                console.log(error)
+            }
+        }
 
         const staticColumnDefs = [
             { headerName: "Assignee Name", field: 'assignee.name', tooltipField: 'assignee.name', tooltipEnable: true },
@@ -55,7 +72,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
         ]
 
         const dynamicColumnDef = questionData?.map((question: any) => {
-            return { headerName: question.name, field: `task_answers.${question.uuid}` }
+            return { headerName: question.name, field: `task_answers.${question.uuid}`, cellRenderer: SelectRenderer, cellEditor: 'agSelectCellEditor', cellEditorParams: { values: question.options } as ISelectCellEditorParams, editable: question.name.includes('Comments') ? false : true, onCellValueChanged: (event: any) => onCellValueChanged(event,question.uuid) }
         }) || [];
 
         const colDef = [

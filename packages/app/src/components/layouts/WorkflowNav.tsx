@@ -96,12 +96,7 @@ const WorkflowNav = (props: WorkflowNavProps) => {
                             <div key={item.name}>
                                 <a
                                     href={`/${workflowUUID}${item.href}`}
-                                    className={clsx(
-                                        item.current
-                                            ? ' text-gray-300 '
-                                            : 'text-gray-300  hover:bg-gray-50 hover:text-gray-900',
-                                        'group flex w-full items-center rounded-md py-2 pl-7 pr-2 text-sm font-medium'
-                                    )}
+                                    className={'text-gray-300  hover:bg-gray-50 hover:text-gray-900 group flex w-full items-center rounded-md py-2 pl-7 pr-2 text-sm font-medium'}
                                 >
                                     {item.name}
                                 </a>
