@@ -128,8 +128,8 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
 
             clearTimeout(filterTimerRef.current);
             filterTimerRef.current = setTimeout(() => {
-                memberGridRef.current?.api.setFilterModel(null);
-                memberGridRef.current?.api.setFilterModel({
+                memberGridRef.current?.api?.setFilterModel(null);
+                memberGridRef.current?.api?.setFilterModel({
                     district: {
                         filterType: "text",
                         type: "startsWith",
