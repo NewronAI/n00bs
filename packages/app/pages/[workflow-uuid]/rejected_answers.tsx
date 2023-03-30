@@ -126,14 +126,16 @@ const RejectedFilesPage = (_props: UnassignedFilesPageProps) => {
 
         const selectedMemberUUID: string = selectedMembers[0].uuid;
 
-        try {
-            await axios.post(`/api/v1/${workflowUUID}/task/force-reassign`, null, {
+        console.log("API is getting called")
 
+        try {
+            const response = await axios.post(`/api/v1/${workflowUUID}/task/force-reassign`, null, {
                 params: {
                     "task-assignment-uuid": delData.uuid,
                     "assignee-uuid": selectedMemberUUID,
                 }
             });
+            console.log(response)
             await mutate();
             setAssignDialogOpenEdit(false);
         } catch (e) {

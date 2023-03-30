@@ -20,7 +20,7 @@ import axios from 'axios';
 import clsx from "clsx";
 import UrlRenderer from "@/components/renderer/UrlRenderer";
 import {toast} from "react-toastify";
-import { ISelectCellEditorParams, ValueSetterParams } from 'ag-grid-community';
+import { ISelectCellEditorParams } from 'ag-grid-community';
 import SelectRenderer from '@/components/renderer/SelectRenderer';
 
 interface UnassignedFilesPageProps {
@@ -51,16 +51,16 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
         console.log("detailCellRendererParams")
 
         async function onCellValueChanged (event: any, questionUUID: string) {
-            const newValue = event.newValue
-            const taskAssignmentUUID = event.data.uuid
-            console.log(taskAssignmentUUID)
+            const newValue = event.newValue;
+            const taskAssignmentUUID = event.data.uuid;
 
             try {
-                const response = await axios.post(`/api/v1/editresponse?taskAssignmentUUID=${taskAssignmentUUID}&questionUUID=${questionUUID}`)
-                console.log(response)
-                await mutate()
+                const response = await axios.post(`/api/v1/editresponse?taskAssignmentUUID=${taskAssignmentUUID}&questionUUID=${questionUUID}&value=${newValue}`)
+                console.log(response.data)
+                toast(`${response.data} from ${event.oldValue} to ${event.newValue} `, { type: "success" });
             }
-            catch (error) {
+            catch (error: any) {
+                toast(`${error.message}`, { type: "error" });
                 console.log(error)
             }
         }
@@ -139,8 +139,6 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
     if (error || questionFetchError) {
         return <div>Error fetching</div>
     }
-
-    console.log(taskRatings.size)
 
     const ActionItem = () => <div>
         <button className={clsx("btn", { "btn-secondary": true })} onClick={handleRate}>

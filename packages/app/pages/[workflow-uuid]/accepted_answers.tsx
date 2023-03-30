@@ -22,7 +22,7 @@ import RatingViewer from '@/components/renderer/RatingViewer';
 interface UnassignedFilesPageProps {
     files: any[]
 }
-
+ 
 
 const AcceptedFilesPage = (_props: UnassignedFilesPageProps) => {
 
@@ -47,7 +47,7 @@ const AcceptedFilesPage = (_props: UnassignedFilesPageProps) => {
             { headerName: "Assignee Name", field: 'assignee.name', tooltipField: 'assignee.name', tooltipEnable: true },
             { headerName: "Assignee Ph. No", field: 'assignee.phone' },
             { headerName: "Answered At", field: 'createdAt', cellRenderer: DateFromNowRenderer },
-        ]
+        ]   
 
         const dynamicColumnDef = questionData?.map((question: any) => {
             return { headerName: question.name, field: `task_answers.${question.uuid}` }

@@ -171,7 +171,7 @@ assignTaskApi.post(async (req, res) => {
 
 });
 
-
+ 
 
 assignTaskApi.put(async (req, res) => {
     // API to update the task assignment and reassign the task to another assignee
@@ -185,7 +185,6 @@ assignTaskApi.put(async (req, res) => {
     });
 
     assertUp(assigneeUUID, {
-
         status: 400,
         message: "assignee-uuid: Param is required. Should contain the uuid of the assignee"
     });

@@ -2,7 +2,7 @@ import NextExpress from "@/helpers/node/NextExpress";
 import assertUp from "@/helpers/node/assert/assertUp";
 import {db} from "@/helpers/node/db";
 import webhookHandler from "@/helpers/node/webhookHandler";
-import {events} from "@prisma/client";
+import {events, task_status} from "@prisma/client";
 
 const forceReassignApi = new NextExpress();
 
@@ -17,7 +17,6 @@ forceReassignApi.post(async (req, res) => {
     });
 
     assertUp(assigneeUUID, {
-
         status: 400,
         message: "assignee-uuid: Param is required. Should contain the uuid of the assignee"
     });
@@ -50,12 +49,16 @@ forceReassignApi.post(async (req, res) => {
         }
     });
 
+    const pendingStatus = task_status.pending
+
     const status = await db.task_assignment.update({
         where: {
             uuid: task_assignmentUUID
         },
         data: {
-            assignee_id: assignee.id
+            assignee_id: assignee.id,
+            status: pendingStatus,
+            review_rating: null
         }
     });
 
@@ -101,3 +104,5 @@ forceReassignApi.post(async (req, res) => {
     res.status(200).json(status);
 
 });
+
+export default forceReassignApi.handler;
