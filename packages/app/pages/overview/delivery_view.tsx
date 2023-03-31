@@ -127,6 +127,7 @@ const DeliveryPage = (props: any) => {
                                 minWidth: 150,
                                 // allow every column to be pivoted
                                 enablePivot: true,
+                                enableRowGroup: true,
                                 sortable: true,
                                 filter: true,
                             }}
