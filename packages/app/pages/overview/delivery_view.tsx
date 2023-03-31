@@ -72,8 +72,6 @@ const DeliveryPage = (props: any) => {
         { headerName: "File State", field: "state", sortable: true, filter: true, width: 150 },
         { headerName: "Duration", field: "file_duration", filter: true, width: 135, valueFormatter: fileDurationFormatter, aggFunc: 'sum' },
         { headerName: "File Path", field: "file", sortable: true, filter: true, width: 500, cellRenderer: UrlRenderer },
-        { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
-        { headerName: "Created at", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
     ]
 
     let dynamicColumnDefs: any[] = []
@@ -95,7 +93,11 @@ const DeliveryPage = (props: any) => {
 
     const columnDefs = [
         ...staticColumnDefs,
-        ...dynamicColumnDefs
+        ...dynamicColumnDefs,
+        ...[   
+            { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
+            { headerName: "Created at", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
+            ]
     ]
 
     return (
