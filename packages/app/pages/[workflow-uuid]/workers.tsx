@@ -20,20 +20,17 @@ interface MemberFetchSearch {
 }
 
 
-const memberFetcher = async ([url, query]: [string, MemberFetchSearch]) => {
-    const urlParams = new URLSearchParams();
-    console.log(query);
-    if (query.search) {
-        urlParams.append(query.by, query.search);
-    }
-    const res = await axios.get(url, {
-        params: urlParams
-    });
-    return res.data;
-}
-
-
-
+// const memberFetcher = async ([url, query]: [string, MemberFetchSearch]) => {
+//     const urlParams = new URLSearchParams();
+//     console.log(query);
+//     if (query.search) {
+//         urlParams.append(query.by, query.search);
+//     }
+//     const res = await axios.get(url, {
+//         params: urlParams
+//     });
+//     return res.data;
+// }
 
 
 function Workers() {
@@ -42,14 +39,12 @@ function Workers() {
 
     const workflowUUID = router.query["workflow-uuid"] as string;
 
-    const { data, error,  isLoading, } = useSWR([`/api/v1/${workflowUUID}/workers`], memberFetcher);
-    console.log(data);
+    const { data, error,  isLoading, } = useSWR([`/api/v1/${workflowUUID}/workers`]);
+    console.log(data,error);
     const member = data || [];
 
 
-    if (error) {
-        return <div>Error fetching</div>
-    }
+ 
 
     // @ts-ignore
     return (
