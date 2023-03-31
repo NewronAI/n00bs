@@ -59,12 +59,11 @@ const DeliveryPage = (props: any) => {
     console.log(data);
 
     function wf3qAnswers(params: ValueGetterParams, i: number) {
-        console.log(i," : ", params.data.wf_3q[i])
-        return params.data.wf_3q[i];
+        return params.data?.wf_3q[i];
     }
 
     function wf5qAnswers(params: ValueGetterParams, i: number) {
-        return params.data.wf_5q[i];
+        return params.data?.wf_5q[i];
     }
 
     const staticColumnDefs = [
@@ -96,9 +95,9 @@ const DeliveryPage = (props: any) => {
         ...staticColumnDefs,
         ...dynamicColumnDefs,
         ...[   
-            { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
-            { headerName: "Created at", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
-            ]
+                { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
+                { headerName: "Created at", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
+           ]
     ]
 
     return (
