@@ -59,6 +59,7 @@ const DeliveryPage = (props: any) => {
     console.log(data);
 
     function wf3qAnswers(params: ValueGetterParams, i: number) {
+        console.log(i," : ", params.data.wf_3q[i])
         return params.data.wf_3q[i];
     }
 
@@ -82,7 +83,7 @@ const DeliveryPage = (props: any) => {
             dynamicColumnDefs = [
                 ...dynamicColumnDefs,
                 {   headerName: questionsData[i].name, 
-                    valueGetter: questions.workflowID === 0 ? (params: any) => wf3qAnswers(params,i) : (params: any) => wf5qAnswers(params,i),
+                    valueGetter: questions.workflowID === 1 ? (params: any) => wf3qAnswers(params,i) : (params: any) => wf5qAnswers(params,i),
                     sortable: true, 
                     filter: true,
                     width: 200
