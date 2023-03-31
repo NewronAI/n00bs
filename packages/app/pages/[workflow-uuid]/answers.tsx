@@ -56,7 +56,6 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
 
             try {
                 const response = await axios.post(`/api/v1/editresponse?taskAssignmentUUID=${taskAssignmentUUID}&questionUUID=${questionUUID}&value=${newValue}`)
-                console.log(response.data)
                 toast(`${response.data} from ${event.oldValue} to ${event.newValue} `, { type: "success" });
             }
             catch (error: any) {
