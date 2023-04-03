@@ -70,6 +70,7 @@ const DeliveryPage = (props: any) => {
         { headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 450, cellRenderer: FilenameRenderer, tooltipField: "file_name" },
         { headerName: "File District", field: "district", sortable: true, filter: true, width: 150 },
         { headerName: "File State", field: "state", sortable: true, filter: true, width: 150 },
+        { headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150 },
         { headerName: "Duration", field: "file_duration", filter: true, width: 135, valueFormatter: fileDurationFormatter, aggFunc: 'sum' },
         { headerName: "File Path", field: "file", sortable: true, filter: true, width: 500, cellRenderer: UrlRenderer },
     ]
