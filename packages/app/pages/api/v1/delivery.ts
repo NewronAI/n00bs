@@ -24,8 +24,8 @@ INNER JOIN question q on p.q_id = q.id INNER JOIN  workflow_file wf on wf.id = p
 answers3q AS (SELECT id, array_agg(mode_answer) as wf_3q FROM wf_answer3q GROUP BY id),
 answers5q AS (SELECT id, array_agg(mode_answer) as wf_5q FROM wf_answer5q GROUP BY id),
 combined AS (
-SELECT answers3q.id as id, answers3q.wf_3q as wf_3q , answers5q.wf_5q as wf_5q FROM answers3q INNER JOIN answers5q ON answers5q.id = answers3q.id)
-SELECT * FROM workflow_file LEFT JOIN combined on workflow_file.id = combined.id;`;
+SELECT answers3q.id as id, answers3q.wf_3q as wf_3q , answers5q.wf_5q as wf_5q FROM answers3q LEFT JOIN answers5q ON answers5q.id = answers3q.id)
+SELECT * FROM workflow_file INNER JOIN combined on workflow_file.id = combined.id;`;
 
     res.json(data);
 
