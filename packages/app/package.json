@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "migrate:dev": "npx dotenv -e .env.local -- npx prisma migrate dev",
+    "migrate:deploy": "npx dotenv -e .env.local -- npx prisma migrate deploy",
     "migrate:reset": "npx dotenv -e .env.local -- npx prisma migrate reset",
     "studio": "npx dotenv -e .env.local -- npx prisma studio"
   },
