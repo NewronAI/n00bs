@@ -2,7 +2,7 @@ import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
 import webhookHandler from "@/helpers/node/webhookHandler";
-import {events} from "@prisma/client";
+import {events, task_status} from "@prisma/client";
 // import getLogger from "@/helpers/node/getLogger";
 
 const assignTaskApi = new NextExpress();
@@ -216,7 +216,8 @@ assignTaskApi.put(async (req, res) => {
             uuid: task_assignmentUUID
         },
         data: {
-            assignee_id: assignee.id
+            assignee_id: assignee.id,
+            status: task_status.in_progress
         }
     });
 

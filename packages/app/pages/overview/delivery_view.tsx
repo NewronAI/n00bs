@@ -56,14 +56,14 @@ const DeliveryPage = (props: any) => {
     const fileGridRef = useRef<AgGridReactType>(null);
 
     const { data, error, isLoading } = useSWR(`/api/v1/delivery`, (url) => fetch(url).then(res => res.json()));
-    console.log(data);
+    console.log(data); 
 
     function wf3qAnswers(params: ValueGetterParams, i: number) {
         return params.data?.wf_3q[i];
     }
 
     function wf5qAnswers(params: ValueGetterParams, i: number) {
-        return params.data?.wf_5q[i];
+        return params.data?.wf_5q === null ? null: params.data?.wf_5q[i];
     }
 
     const staticColumnDefs = [
@@ -179,7 +179,7 @@ export const getServerSideProps = withAuthorizedPageAccess({
             const questionsData = taskData?.task_questions.map(question => {
                 return question.questions
             })
-
+ 
             return {
                 workflowUUID: workflow.uuid,
                 workflowID: workflow.id,
