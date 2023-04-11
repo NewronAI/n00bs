@@ -126,7 +126,7 @@ publicAnswerApi.post(async (req, res) => {
                 id: taskAssignment.id
             },
             data: {
-                status: task_status.in_progress
+                status: task_status.pending
             }
         })
     ]);

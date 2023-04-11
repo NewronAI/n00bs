@@ -11,7 +11,7 @@ openTasksApi.get(async (req, res) => {
 
     const tasks = await db.task_assignment.findMany({
         where: {
-            status: task_status.in_progress,
+            status: task_status.pending,
             task: {
                 workflow: {
                     uuid: workflowUUID
