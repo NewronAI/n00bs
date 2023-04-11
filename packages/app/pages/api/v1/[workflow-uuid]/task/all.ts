@@ -1,5 +1,6 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
+import {task_status} from "@prisma/client";
 
 const openTasksApi = new NextExpress();
 
@@ -10,6 +11,7 @@ openTasksApi.get(async (req, res) => {
 
     const tasks = await db.task_assignment.findMany({
         where: {
+            status: task_status.pending,
             task: {
                 workflow: {
                     uuid: workflowUUID
