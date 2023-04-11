@@ -2,6 +2,7 @@ import {events} from "@prisma/client";
 import {db} from "@/helpers/node/db";
 import getLogger from "@/helpers/node/getLogger";
 import axios from "axios";
+import * as process from "process";
 
 
 type MessageTemplate = {
@@ -26,7 +27,7 @@ const slackMessageTemplate = ({heading,type, time,desc, reason , rawData } : Mes
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": `${type && `*Type:*\n${type}\n`}${time && `*When:*\n${time}\n`}${desc && `*Desc:* ${desc}\n*`}${reason && `Reason:* ${reason}\n ${rawData && JSON.stringify(rawData,null,2)}`}`
+                "text": `env: ${process.env.NEXT_PUBLIC_APP_ENV}\n ${type && `*Type:*\n${type}\n`}${time && `*When:*\n${time}\n`}${desc && `*Desc:* ${desc}\n*`}${reason && `Reason:* ${reason}\n ${rawData && JSON.stringify(rawData,null,2)}`}`
             },
             "accessory": {
                 "type": "image",
