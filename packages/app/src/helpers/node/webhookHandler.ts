@@ -10,9 +10,10 @@ type MessageTemplate = {
     time?: string,
     desc?: string,
     reason?: string
+    rawData? : any
 }
 
-const slackMessageTemplate = ({heading,type, time,desc, reason } : MessageTemplate) => ( {
+const slackMessageTemplate = ({heading,type, time,desc, reason , rawData } : MessageTemplate) => ( {
     "blocks": [
         {
             "type": "section",
@@ -25,7 +26,7 @@ const slackMessageTemplate = ({heading,type, time,desc, reason } : MessageTempla
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": `${type && `*Type:*\n${type}\n`}${time && `*When:*\n${time}\n`}${desc && `*Desc:* ${desc}\n*`}${reason && `Reason:* \"${reason}\"`}`
+                "text": `${type && `*Type:*\n${type}\n`}${time && `*When:*\n${time}\n`}${desc && `*Desc:* ${desc}\n*`}${reason && `Reason:* ${reason}\n ${rawData && JSON.stringify(rawData,null,2)}`}`
             },
             "accessory": {
                 "type": "image",
@@ -83,7 +84,8 @@ const webhookHandler = async (event: events, workflowUUID : string, rawData : an
               if(isSlackWebhook(webhook)){
                    const message = slackMessageTemplate({
                        ...slackMessageForEvent.get(event),
-                       time: new Date().toLocaleString()
+                       time: new Date().toLocaleString(),
+                       rawData
                    })
 
                   try {
