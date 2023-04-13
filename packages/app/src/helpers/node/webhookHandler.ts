@@ -79,10 +79,12 @@ const webhookHandler = async (event: events, workflowUUID : string, rawData : an
             }]
         ]);
 
+
        for(const webhook of webhooks){
 
+           let isSlack = isSlackWebhook(webhook);
            console.log("webhook", webhook);
-              if(isSlackWebhook(webhook)){
+              if(isSlack){
                    const message = slackMessageTemplate({
                        ...slackMessageForEvent.get(event),
                        time: new Date().toLocaleString(),
@@ -127,6 +129,51 @@ const webhookHandler = async (event: events, workflowUUID : string, rawData : an
                 catch (e) {
                     logger.error(`Error while raw sending webhook : ${webhook.url}`);
                     logger.error(e);
+
+                    const reportingURL = process.env.ERROR_REPORTING_WEBHOOK;
+
+                    if(reportingURL){
+                        try {
+                            await axios( {
+                                url: reportingURL,
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                data: {
+                                    "blocks": [
+                                        {
+                                            "type": "section",
+                                            "text": {
+                                                "type": "mrkdwn",
+                                                "text": `*Error while sending webhook:* ${webhook.url},  Env : ${process.env.NEXT_PUBLIC_APP_ENV}`
+                                            }
+                                        },
+                                        {
+                                            "type": "section",
+                                            "text": {
+                                                "type": "mrkdwn",
+                                                "text": `*Error:* ${e}`
+                                            }
+                                        },
+                                        {
+                                            "type": "section",
+                                            "text": {
+                                                "type": "mrkdwn",
+                                                "text": `*Raw Data:* ${JSON.stringify(rawData,null,2)}`
+                                            }
+                                        }
+                                    ]
+                                }
+                            });
+                        } catch (e) {
+                            logger.error(`Error while sending webhook : ${webhook.url}`);
+                            logger.error(e);
+                        }
+                    }
+
+
+
                 }
        }
 }

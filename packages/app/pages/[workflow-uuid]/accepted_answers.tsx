@@ -143,6 +143,7 @@ const AcceptedFilesPage = (_props: UnassignedFilesPageProps) => {
                                 enablePivot: true,
                                 sortable: true,
                                 filter: true,
+                                resizable: true,
                             }}
                             rowGroupPanelShow={"onlyWhenGrouping"}
                             sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}

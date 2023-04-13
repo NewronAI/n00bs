@@ -75,6 +75,7 @@ const AssignedFilesPage = (_props: assignedFilesPageProps) => {
                                   enablePivot: true,
                                   sortable: true,
                                   filter: true,
+                                  resizable : true,
                               }}
                               columnDefs={[
                                   {headerName: "File State", field: "state", rowGroup: true,hide: true, sortable: true, filter: true, width: 150},

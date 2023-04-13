@@ -212,6 +212,9 @@ const Jobs = (props: TaskFilesPage) => {
                                 ref={memberGridRef}
                                 rowSelection='single'
                                 paginationPageSize={6}
+                                defaultColDef={{
+                                    resizable :true
+                                }}
                                 columnDefs={[
                                     {
                                         headerName: "Name",

@@ -67,12 +67,12 @@ const DeliveryPage = (props: any) => {
     }
 
     const staticColumnDefs = [
-        { headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 450, cellRenderer: FilenameRenderer, tooltipField: "file_name" },
-        { headerName: "File District", field: "district", sortable: true, filter: true, width: 150 },
-        { headerName: "File State", field: "state", sortable: true, filter: true, width: 150 },
-        { headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150 },
-        { headerName: "Duration", field: "file_duration", filter: true, width: 135, valueFormatter: fileDurationFormatter, aggFunc: 'sum' },
-        { headerName: "File Path", field: "file", sortable: true, filter: true, width: 500, cellRenderer: UrlRenderer },
+        { headerName: "File Name", field: "file_name", sortable: true, filter: true,resizable : true, width: 450, cellRenderer: FilenameRenderer, tooltipField: "file_name", },
+        { headerName: "File District", field: "district", sortable: true, filter: true, width: 150, resizable : true,},
+        { headerName: "File State", field: "state", sortable: true, filter: true, width: 150,resizable : true, },
+        { headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150,resizable : true, },
+        { headerName: "Duration", field: "file_duration", filter: true, width: 135, valueFormatter: fileDurationFormatter, aggFunc: 'sum' ,resizable : true,},
+        { headerName: "File Path", field: "file", sortable: true, filter: true, width: 500, cellRenderer: UrlRenderer, resizable : true },
     ]
 
     let dynamicColumnDefs: any[] = []

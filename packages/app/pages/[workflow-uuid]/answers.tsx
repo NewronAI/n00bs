@@ -194,6 +194,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                                 enablePivot: true,
                                 sortable: true,
                                 filter: true,
+                                resizable : true,
                             }}
                             paginationPageSize={15}
                             columnDefs={[

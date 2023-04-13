@@ -73,6 +73,7 @@ const AllFilesPage = () => {
                                 enablePivot: true,
                                 sortable: true,
                                 filter: true,
+                                resizable : true,
                             }}
                             columnDefs={[
                                 {headerName: "State", field: "state", sortable: true, filter: true,rowGroup:true, hide: true, width: 130,},
