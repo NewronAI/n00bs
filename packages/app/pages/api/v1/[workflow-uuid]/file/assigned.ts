@@ -26,21 +26,18 @@ assignedFilesAPI.get(async (req, res) => {
 
     // this will return the assigned task asn well as whom it has been assigned to
     const assignedFiles = await db.$queryRaw`
-        SELECT workflow_file.*,
-               member.uuid as member_uuid, member.name as memeber_name, member.district as member_district,
-               member.state as member_state, member.phone as member_phone, member.email as member_email
-        FROM workflow_file
-                 INNER JOIN task_assignment ON task_assignment.workflow_file_id = workflow_file.id
-            AND workflow_file.id in
-                (SELECT workflow_file.id as total_assignments
-                 FROM workflow_file
-                          INNER JOIN workflow ON workflow.uuid = ${workflowUUID}
-                          LEFT JOIN task_assignment ON workflow_file.id = task_assignment.workflow_file_id
-                 GROUP BY workflow_file.id, task_assignment.task_id
-                 HAVING COUNT(task_assignment.task_id) >= (SELECT task.min_assignments FROM task
-                    INNER JOIN workflow ON workflow.uuid = ${workflowUUID}
-                     AND task.workflow_id = workflow.id ORDER BY task.id LIMIT 1))
-            INNER JOIN member ON member.id = task_assignment.assignee_id`;
+        WITH
+            wf_id AS (
+                SELECT id FROM workflow WHERE uuid = ${workflowUUID}
+            ),
+            reqdcount as
+                (SELECT t.min_assignments FROM task t INNER JOIN workflow w ON t.workflow_id = w.id WHERE w.id = (SELECT id FROM wf_id)),
+            assignments AS (SELECT ta.workflow_file_id as file_id, count(assignee_id) as ass_count FROM task_assignment ta
+                                                                                                            INNER JOIN workflow_file wf ON ta.workflow_file_id = wf.id WHERE wf.workflow_id = (SELECT id FROM wf_id) GROUP BY ta.workflow_file_id),
+            assigned_files AS (
+                SELECT file_id FROM assignments WHERE ass_count >= (SELECT * FROM reqdcount))
+        SELECT * FROM workflow_file wf INNER JOIN assigned_files ON wf.id = assigned_files.file_id;
+        `;
 
     res.status(200).json(assignedFiles);
 
