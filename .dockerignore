@@ -1,5 +1,10 @@
-# Node Modules
-/node_modules/
+.next
+node_modules
+packages/app/.next
+packages/app/.turbo
+packages/app/.env.local
+packages/app/node_modules
+
 
 # Editor directories and files
 .idea/
@@ -19,4 +24,3 @@ yarn-error.log*
 .turbo
 
 */.DS_Store
-/ci-cd-service-acount.json

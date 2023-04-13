@@ -220,11 +220,13 @@ export default function DashboardLayout({
                                 secondaryNav
                             }
                         </div>
-                        <div className="mx-auto max-w-[1350px] ml-2 mr-2 flex-1">
-                            {/* Replace with your content */}
-                            {
-                                children
-                            }
+                        <div className={"w-full flex justify-center"}>
+                            <div className="mx-auto max-w-[1350px] ml-2 mr-2 flex-1">
+                                {/* Replace with your content */}
+                                {
+                                    children
+                                }
+                            </div>
                         </div>
                     </main>
                 </div>

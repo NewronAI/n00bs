@@ -9,6 +9,9 @@
         },
         "dev": {
             "outputs": [".next/**"]
+        },
+        "start": {
+            "outputs": []
         }
     }
 }
