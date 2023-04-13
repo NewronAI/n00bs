@@ -9,6 +9,8 @@ openTasksApi.get(async (req, res) => {
 
     const workflowUUID = req.query["workflow-uuid"] as string;
 
+    console.log("Fetching all tasks",workflowUUID);
+
     const tasks = await db.task_assignment.findMany({
         where: {
             status: task_status.pending,
@@ -29,6 +31,8 @@ openTasksApi.get(async (req, res) => {
             }
         ]
     });
+
+    console.log("tasks",tasks);
 
     res.status(200).json(tasks);
 
