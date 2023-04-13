@@ -8,7 +8,7 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: apps
+    working-directory: .
 
 jobs:
   deploy:
@@ -62,7 +62,6 @@ jobs:
 
       - name: Build and Push Container
         run: |-
-          cd dashboard
           docker build --build-arg AUTH0_BASE_URL="${{ steps.secrets.outputs.auth0_base_url }}" \
           --build-arg AUTH0_CLIENT_ID="${{ steps.secrets.outputs.auth0_client_id }}" \
           --build-arg AUTH0_CLIENT_SECRET="${{ steps.secrets.outputs.auth0_client_secret }}" \
