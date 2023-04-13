@@ -70,7 +70,7 @@ jobs:
           --build-arg AUTH0_MGMT_API_CLIENT_SECRET="${{ steps.secrets.outputs.auth0_mgmt_api_client_secret }}" \
           --build-arg AUTH0_SECRET="${{ steps.secrets.outputs.auth0_secret }}" \
           --build-arg DATABASE_URL="${{ steps.secrets.outputs.database_url }}" \
-          --build-arg ERROR_REPORTING_WEBHOOK="${{ steps.secrets.outputs.error_reporting_webhook }}" \
+          --build-arg FAILED_WEBHOOKURL="${{ steps.secrets.outputs.error_reporting_webhook }}" \
           --build-arg NEXT_PUBLIC_APP_ENV="${{ steps.secrets.outputs.next_public_app_env }}" \
           --build-arg NEXT_PUBLIC_HOTJAR_ID="${{ steps.secrets.outputs.next_public_hotjar_id }}" \
           --build-arg NEXT_PUBLIC_HOTJAR_SNIPPET_VERSION="${{ steps.secrets.outputs.next_public_hotjar_snippet_version }}" \
