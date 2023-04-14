@@ -2,25 +2,25 @@
 # yarn lockfile v1
 
 
-"@ag-grid-community/core@~29.0.0":
-  version "29.0.0"
-  resolved "https://registry.npmjs.org/@ag-grid-community/core/-/core-29.0.0.tgz"
-  integrity sha512-qj5H9tAZtikpjFL9f7VmJLPS8tx/PUfIjt5DPtqDA01GZ9dYt3XwPuHdLKzpA5E9Yevhwk1m+TXCCz5Al7WWSw==
+"@ag-grid-community/core@~29.2.0":
+  version "29.2.0"
+  resolved "https://registry.yarnpkg.com/@ag-grid-community/core/-/core-29.2.0.tgz#03a0f214448a64444b6a6d943f1c5962c4564c2c"
+  integrity sha512-1G0X3DrCCfH/vngBXz5rKRhlNmb/WPy/kTtfy/Yo+XOAChs+lgMGG/dgurY/blRyCaMQsUO3aZoJmcckYG4/eQ==
 
-"@ag-grid-enterprise/core@~29.0.0":
-  version "29.0.0"
-  resolved "https://registry.npmjs.org/@ag-grid-enterprise/core/-/core-29.0.0.tgz"
-  integrity sha512-Bch/srH/T1L481w8+7YhgK/oXFQXwnIfA3AjbNcqHN7aPWt2xCS6uNW59NbyzV1l/nDqEIFCFpnTbaxwR7v7Uw==
+"@ag-grid-enterprise/core@~29.2.0":
+  version "29.2.0"
+  resolved "https://registry.yarnpkg.com/@ag-grid-enterprise/core/-/core-29.2.0.tgz#5145984da1598fba941f0eaf5081366b58051bbb"
+  integrity sha512-rsSyQlRjr8xRgAXco9TC/AgSU/YW5eWSyDMqkIposxKH44L73LT1Y0f8ENHsX8Jso37UIobqHTVbSausnBk9aQ==
   dependencies:
-    "@ag-grid-community/core" "~29.0.0"
+    "@ag-grid-community/core" "~29.2.0"
 
-"@ag-grid-enterprise/row-grouping@^29.0.0":
-  version "29.0.0"
-  resolved "https://registry.npmjs.org/@ag-grid-enterprise/row-grouping/-/row-grouping-29.0.0.tgz"
-  integrity sha512-YFSphp/CVh71hG+frevQO42sQYP3rFJxktTe8RYcpvRWisoUa0pb9QcIqX0D1Mt4+Y+7yuLtOrVfTGCSvgnULQ==
+"@ag-grid-enterprise/row-grouping@^29.2.0":
+  version "29.2.0"
+  resolved "https://registry.yarnpkg.com/@ag-grid-enterprise/row-grouping/-/row-grouping-29.2.0.tgz#6e851089398613cd4541be47614f73ac0b9610b7"
+  integrity sha512-n00Z+R5Eear2qRhpCqh9zTEfeIwhmwBclb5O2A64hnK1fx0JF1obc35Ixff0C22vY+toczFWnQ4hoF8JdwYeGg==
   dependencies:
-    "@ag-grid-community/core" "~29.0.0"
-    "@ag-grid-enterprise/core" "~29.0.0"
+    "@ag-grid-community/core" "~29.2.0"
+    "@ag-grid-enterprise/core" "~29.2.0"
 
 "@auth0/nextjs-auth0@^2.2.1":
   version "2.2.1"
@@ -481,20 +481,20 @@ acorn@^8.4.1, acorn@^8.8.0:
   resolved "https://registry.npmjs.org/acorn/-/acorn-8.8.1.tgz"
   integrity sha512-7zFpHzhnqYKrkYdUjF1HI1bzd0VygEGX8lFk4k5zVMqHEoES+P+7TKI+EvLO9WVMJ8eekdO0aDEK044xTXwPPA==
 
-ag-grid-community@29.0.0:
-  version "29.0.0"
-  resolved "https://registry.npmjs.org/ag-grid-community/-/ag-grid-community-29.0.0.tgz"
-  integrity sha512-onAQIqjhP1L93W5myAsfLBMBUyZPrWDb8FRulJuhjQKo8DEA4GSZ+oJHxwwLymm4biLu54zvZ+9GkTftha8gAg==
+ag-grid-community@29.2.0:
+  version "29.2.0"
+  resolved "https://registry.yarnpkg.com/ag-grid-community/-/ag-grid-community-29.2.0.tgz#ce29357464f50bbafa00aaa2adbd8b275310f44d"
+  integrity sha512-1xP1fpM8gXp2ALzBLONejZNul9hA3//ddszSlhq79QZ1FskQ1Z7E2WvvFeCeLJTJZrfhQkT1q1LO5DGfGeiBvg==
 
-ag-grid-enterprise@^29.0.0:
-  version "29.0.0"
-  resolved "https://registry.npmjs.org/ag-grid-enterprise/-/ag-grid-enterprise-29.0.0.tgz"
-  integrity sha512-WP0D73s5e44szR9bqjD0h66dlm6j5NO/IBEwCo48zMIUEob9a3WBT4cbBQefrka2TWevrfR14WqU/RKmITuXGw==
+ag-grid-enterprise@^29.2.0:
+  version "29.2.0"
+  resolved "https://registry.yarnpkg.com/ag-grid-enterprise/-/ag-grid-enterprise-29.2.0.tgz#32130d8e96dcceaa69ebc4e92774f2ff722cb927"
+  integrity sha512-LYwX6Z8O2FBzN2c0N+h9mMX5hQQMpBzZ+ztmTiboxIVE6DB1MrpfVy0A8YfR31JtzLaj/lRjCqsx6BcnbvkSmA==
 
-ag-grid-react@29.0.0:
-  version "29.0.0"
-  resolved "https://registry.npmjs.org/ag-grid-react/-/ag-grid-react-29.0.0.tgz"
-  integrity sha512-R8rE6fXXzl1SocGhfQGkfdGWUN0KmYOCVwyn4ZPNu0Ofsxb7/KZd0RwuetvH1J8hSlHmSsoou6qzalPbSC4jLQ==
+ag-grid-react@29.2.0:
+  version "29.2.0"
+  resolved "https://registry.yarnpkg.com/ag-grid-react/-/ag-grid-react-29.2.0.tgz#512f41e98cfd7ec291832aae8601f76b52c366c8"
+  integrity sha512-FZEWhbe51KNkvu+MohGXxXixIJdakJrs5XDdJ/h1jqmCX9WZzHNT2OvoYHIXB7gcKKj5pf47YJB8eaEqsRlpbg==
   dependencies:
     prop-types "^15.8.1"
 
