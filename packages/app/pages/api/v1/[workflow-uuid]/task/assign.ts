@@ -3,7 +3,9 @@ import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
 import webhookHandler from "@/helpers/node/webhookHandler";
 import {events, task_status} from "@prisma/client";
-// import getLogger from "@/helpers/node/getLogger";
+import getLogger from "@/helpers/node/getLogger";
+
+const logger = getLogger("/task/assign");
 
 const assignTaskApi = new NextExpress();
 
@@ -19,21 +21,28 @@ assignTaskApi.post(async (req, res) => {
     const assigneeUUID = req.body["assignee-uuid"] as string;
     const workflowFileUUIDs = req.body["workflow-file-uuids"] as string[];
 
+    logger.debug("Assigning task to member");
+
+    logger.debug("Workflow UUID: ", workflowUUID);
     assertUp(workflowUUID, {
         status: 400,
         message: "workflow-uuid: Param is required. Should contain the uuid of the task"
     });
 
+    logger.debug("Assignee UUID: ", assigneeUUID);
     assertUp(assigneeUUID, {
         status: 400,
         message: "assignee-uuid: Param is required. Should contain the uuid of the assignee"
     });
+
+    logger.debug("Workflow File UUIDs: ", workflowFileUUIDs);
 
     assertUp(workflowFileUUIDs.length, {
         status: 400,
         message: "workflow-file-uuids: Param is required. Should contain the list of uuid of the workflow file(s)"
     });
 
+    logger.debug("WF uuid, assignee uuid, workflow-file-uuid length are valid ");
 
     const task = await db.task.findFirst({
         where: {
@@ -50,10 +59,14 @@ assignTaskApi.post(async (req, res) => {
         }
     });
 
+    logger.debug("Task: ", task);
+
     assertUp(task, {
         status: 404,
         message: "Task not found"
     });
+
+    logger.debug("Task found");
 
     const assignee = await db.member.findFirst({
         where: {
@@ -61,10 +74,14 @@ assignTaskApi.post(async (req, res) => {
         }
     });
 
+    logger.debug("Assignee: ", assignee);
+
     assertUp(assignee, {
         status: 404,
         message: "Assignee not found"
     });
+
+    logger.debug("Assignee found");
 
     const workflowFiles = await db.workflow_file.findMany({
         where: {
@@ -78,10 +95,14 @@ assignTaskApi.post(async (req, res) => {
         }
     });
 
+    logger.debug("Workflow Files: ", workflowFiles);
+
     assertUp(workflowFiles.length === workflowFileUUIDs.length, {
         status: 404,
         message: "Some workflow files not found"
     });
+
+    logger.debug("All workflow files found");
 
     const workflowFileIds : number[] = workflowFiles.map((wf) => wf.id);
 
@@ -99,8 +120,11 @@ assignTaskApi.post(async (req, res) => {
         }
     });
 
+    logger.debug("Existing Assignments Length: ", existingAssignments.length);
+
     const existingAssignmentsMap = new Map<string, number>(existingAssignments.map((ea) => [ea.workflow_file_id.toString(), ea.id]));
 
+    logger.debug("Filtering out existing assignments");
     const newAssignments = workflowFileIds.filter((wfId) => !existingAssignmentsMap.has(wfId.toString()));
 
     const newAssignmentsData = newAssignments.map((wfId) => ({
@@ -110,13 +134,15 @@ assignTaskApi.post(async (req, res) => {
         name: `Task Assignment for ${assignee.name} for ${task.name}`
     }));
 
-    console.log(newAssignmentsData.length);
+    logger.debug("New Assignments to create Length: ", newAssignments.length);
 
     const newAssignmentsResult = await db.$transaction(
         newAssignmentsData.map((assignmentData) => db.task_assignment.create({
             data: assignmentData
         }))
     );
+
+    logger.debug("New Assignments created: ", newAssignmentsResult);
 
     const newAssignmentIds = newAssignmentsResult.map(ass => ass.id);
 
@@ -130,6 +156,8 @@ assignTaskApi.post(async (req, res) => {
         status: 404,
         message: "Task created but workflow not found, this should not happen"
     });
+
+    logger.debug("Workflow found");
 
 
     const taskAssignments = await db.task_assignment.findMany({
@@ -145,10 +173,14 @@ assignTaskApi.post(async (req, res) => {
         }
     });
 
+    logger.debug("ta found", taskAssignments.length);
+
     assertUp(taskAssignments.length, {
         status: 404,
         message: "Task created but task assignment not found, this should not happen"
     });
+
+    logger.debug("Sending it to webhook");
 
      webhookHandler(events.task_assignment_created, workflowUUID, {
          workflow,

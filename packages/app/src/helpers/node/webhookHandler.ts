@@ -46,7 +46,7 @@ function isSlackWebhook(webhook: any): boolean {
 
 const webhookHandler = async (event: events, workflowUUID : string, rawData : any) => {
 
-    const logger = getLogger('webhookHandler');
+    const logger = getLogger(`webhookHandler ${event} , ${workflowUUID}` );
 
     const workflow = await db.workflow.findFirst({
         where: {
@@ -61,12 +61,13 @@ const webhookHandler = async (event: events, workflowUUID : string, rawData : an
         }
     });
 
+    console.log("workflow", workflow);
+
     const webhooks = workflow?.webhooks;
-    console.log("webhooks", webhooks);
+    logger.debug("webhooks", webhooks);
 
        if(!webhooks){
            logger.debug("No webhooks found for this workflow");
-           console.log("No webhooks found for this workflow");
            return;
        }
 
@@ -80,10 +81,14 @@ const webhookHandler = async (event: events, workflowUUID : string, rawData : an
         ]);
 
 
+       logger.debug("calling webhooks");
        for(const webhook of webhooks){
 
+           logger.debug("webhook", webhook);
            let isSlack = isSlackWebhook(webhook);
-           console.log("webhook", webhook);
+           logger.debug("isSlackWebhook", isSlack);
+
+
               if(isSlack){
                    const message = slackMessageTemplate({
                        ...slackMessageForEvent.get(event),
@@ -167,7 +172,7 @@ const webhookHandler = async (event: events, workflowUUID : string, rawData : an
                                 }
                             });
                         } catch (e) {
-                            logger.error(`Error while sending webhook : ${webhook.url}`);
+                            logger.error(`Error while sending report webhook : ${webhook.url}`);
                             logger.error(e);
                         }
                     }
