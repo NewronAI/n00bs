@@ -58,12 +58,19 @@ dashboardStatsApi.get(async (req, res) => {
 
     const completedJobsCount = await db.task_assignment.count({
         where: {
-            workflow_file: {
-                workflow: {
-                    uuid: workflowUUID
-                }
-            },
-            status: task_status.completed
+            AND: {
+                workflow_file: {
+                    workflow: {
+                        uuid: workflowUUID,
+                    },
+                },
+                OR: [
+                    {status: task_status.completed},
+                    {status: task_status.rejected},
+                    {status: task_status.accepted},
+                    {status: task_status.in_progress}, // In progress means, answer received, but not yet reviewed
+                ]
+            }
         }
     });
 
