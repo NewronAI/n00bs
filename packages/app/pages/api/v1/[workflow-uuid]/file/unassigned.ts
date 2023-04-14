@@ -46,7 +46,8 @@ unassignedFilesApi.get(async (req, res) => {
                                                    ),
                                                    all_unassingned AS (
                                                        SELECT file_id FROM half_assigned_files UNION SELECT file_id FROM unassigned_files
-                                                   ) SELECT * FROM workflow_file INNER JOIN all_unassingned ON all_unassingned.file_id = workflow_file.id;`;
+                                                   ), unassigned_with_count AS (SELECT au.file_id as file_id, count(ta.id) as assignment_count FROM all_unassingned au LEFT JOIN task_assignment ta ON ta.workflow_file_id = au.file_id GROUP BY file_id)
+SELECT wf.*,uc.assignment_count as assignment_count FROM workflow_file wf INNER JOIN unassigned_with_count uc ON uc.file_id = wf.id;`;
 
 
 
