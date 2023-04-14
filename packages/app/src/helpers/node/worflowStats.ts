@@ -1,7 +1,7 @@
 import { db } from "./db";
 import {task_status} from "@prisma/client";
 
-type TotalAssignments = {total_assignments: number};
+type TotalAssignments = {count: number};
 export async function getFilesCount(id : number) {
     const filesCount = await db.workflow_file.count({
         where: {
@@ -14,23 +14,21 @@ export async function getFilesCount(id : number) {
     return filesCount;
 }
 
-export async function getAssignedFilesCount(id : number) {
+export async function getAssignedFilesCount(workflowUUID : string) {
+
     const assignedFilesCount : TotalAssignments[] = (await db.$queryRaw`
-        SELECT count(workflow_file.id)::int as total_assignments
-        FROM workflow_file
-                 INNER JOIN task_assignment ON task_assignment.workflow_file_id = workflow_file.id
-            AND workflow_file.id in
-                (SELECT workflow_file.id as total_assignments
-                 FROM workflow_file
-                          INNER JOIN workflow ON workflow.id = ${id} AND workflow_file.workflow_id = workflow.id
-                          LEFT JOIN task_assignment ON workflow_file.id = task_assignment.workflow_file_id
-                 GROUP BY workflow_file.id, task_assignment.task_id
-                 HAVING COUNT(task_assignment.task_id) >= (SELECT task.min_assignments FROM task
-                                                                                                INNER JOIN workflow ON workflow.id = ${id}
-                     AND task.workflow_id = workflow.id ORDER BY task.id LIMIT 1))
+        WITH
+            wf_id AS (
+                SELECT id FROM workflow WHERE uuid = ${workflowUUID}
+            ),
+            reqdcount as
+                (SELECT t.min_assignments FROM task t INNER JOIN workflow w ON t.workflow_id = w.id WHERE w.id = (SELECT id FROM wf_id)),
+            assignments AS (SELECT ta.workflow_file_id, count(assignee_id) FROM task_assignment ta
+                                                                                    INNER JOIN workflow_file wf ON ta.workflow_file_id = wf.id WHERE wf.workflow_id = (SELECT id FROM wf_id) GROUP BY ta.workflow_file_id)
+        SELECT count(workflow_file_id) ::text FROM assignments WHERE count >= (SELECT * FROM reqdcount);
     `) as TotalAssignments[];
 
-    return assignedFilesCount[0].total_assignments;
+    return assignedFilesCount[0].count;
 
 }
 
@@ -68,12 +66,19 @@ export async function getPendingJobsCount(id : number) {
 export async function getCompletedJobsCount(id : number) {
     const completedJobsCount = await db.task_assignment.count({
         where: {
-            workflow_file: {
-                workflow: {
-                    id: id
-                }
-            },
-            status: task_status.completed
+            AND: {
+                workflow_file: {
+                    workflow: {
+                        id: id,
+                    },
+                },
+                OR: [
+                    {status: task_status.completed},
+                    {status: task_status.rejected},
+                    {status: task_status.accepted},
+                    {status: task_status.in_progress}, // In progress means, answer received, but not yet reviewed
+                ]
+            }
         }
     });
     return completedJobsCount;

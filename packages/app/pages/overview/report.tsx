@@ -120,9 +120,10 @@ export const getServerSideProps = withAuthorizedPageAccess({
         const promises = workflows.map(async (workflow) => {
 
             let id = workflow.id;
+            let uuid = workflow.uuid;
 
             const filesCount = await getFilesCount(id);
-            const assignedFilesCount = await getAssignedFilesCount(id);
+            const assignedFilesCount = await getAssignedFilesCount(uuid);
             const assignedTasksCount = await getAssignedJobsCount(id);
             const pendingTasksCount = await getPendingJobsCount(id);
             const completedTasksCount = await getCompletedJobsCount(id);
