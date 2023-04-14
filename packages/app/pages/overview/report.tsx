@@ -24,7 +24,7 @@ const SecNav = () => {
         const [currentPage, setCurrentPage] = useState("Report")
 
     return (
-        <div className="flex flex-grow flex-col overflow-y-auto  border-r border-gray-800 pt-5 pb-4">
+        <div className="flex flex-grow flex-col overflow-y-auto  border-r border-gray-800 pt-5 pb-4 min-w-[200px]">
             <div className="mt-5 flex flex-grow flex-col">
                 <nav className="flex-1 space-y-1 px-2" aria-label="Sidebar">
                     {tabs.map((item) => (
