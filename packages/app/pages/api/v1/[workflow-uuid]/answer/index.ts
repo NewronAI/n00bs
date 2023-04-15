@@ -2,6 +2,7 @@ import NextExpress from "@/helpers/node/NextExpress";
 import { db } from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
 import { task_status } from "@prisma/client";
+import getLogger from "@/helpers/node/getLogger";
 
 
 const answersAPI = new NextExpress();
@@ -10,25 +11,8 @@ answersAPI.get(async (req, res) => {
 
     const workflowUUID = req.query["workflow-uuid"] as string;
 
-    // const taskAssignment = await db.task_assignment.findMany({
-    //     where: {
-    //         task: {
-    //             workflow: {
-    //                 uuid: workflowUUID
-    //             }
-    //         },
-    //         status: task_status.in_progress
-    //     },
-    //     include: {
-    //         task_answers: {
-    //             include: {
-    //                 question: true
-    //             }
-    //         },
-    //         workflow_file: true,
-    //         assignee: true
-    //     }
-    // });
+    const logger = getLogger(`/api/v1/${workflowUUID}/answer`);
+
 
     const taskAssignmentResponses = await db.workflow_file.findMany({
         where: {
@@ -58,68 +42,8 @@ answersAPI.get(async (req, res) => {
         }
     });
 
+    logger.debug(`taskAssignmentResponses : ${taskAssignmentResponses.length}`);
 
-    // accepted: 'accepted',
-    // rejected: 'rejected',
-    const taskAssignmentRejected = await db.workflow_file.findMany({
-        where: {
-            workflow: {
-                uuid: workflowUUID
-            },
-            task_assignments: {
-                some: {
-                    status: task_status.rejected,
-                }
-            }
-        },
-        include: {
-            task_assignments: {
-                include: {
-                    task_answers: {
-                        include: {
-                            question: true
-                        }
-                    },
-                    assignee: true
-                },
-                where: {
-                    status: task_status.rejected
-                }
-            }
-        }
-    });
-
-
-
-    const taskAssignmentAccepted = await db.workflow_file.findMany({
-        where: {
-            workflow: {
-                uuid: workflowUUID
-            },
-            task_assignments: {
-                some: {
-                    status: task_status.accepted,
-                }
-            }
-        },
-        include: {
-            task_assignments: {
-                include: {
-                    task_answers: {
-                        include: {
-                            question: true
-                        }
-                    },
-                    assignee: true
-                },
-                where: {
-                    status: task_status.accepted
-                }
-            }
-        }
-    });
-
-    
     const processedTaskAssignmentResponses = taskAssignmentResponses.map((taskAssignmentResponse) => {
         const newTaskAssignmentResponse = {
             ...taskAssignmentResponse,
@@ -130,8 +54,6 @@ answersAPI.get(async (req, res) => {
                     processedTaskAnswer.set(taskAnswer.question.uuid, taskAnswer.answer);
                 });
 
-                console.log(processedTaskAnswer);
-
                 return {
                     ...taskAssignment,
                     task_answers: Object.fromEntries(processedTaskAnswer)
@@ -140,6 +62,8 @@ answersAPI.get(async (req, res) => {
         }
         return newTaskAssignmentResponse;
     });
+
+    logger.debug(`processTaskAssignmentResponses : ${processedTaskAssignmentResponses.length}`);
 
     res.status(200).json(processedTaskAssignmentResponses);
     return;

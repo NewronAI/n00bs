@@ -4,7 +4,8 @@ import getPublicWorkflowAPISecret from "@/helpers/getPublicWorkflowAPISecret";
 import {db} from "@/helpers/node/db";
 import {task_status} from "@prisma/client";
 import getLogger from "@/helpers/node/getLogger";
-const logger = getLogger("/public/answer");
+
+
 const publicAnswerApi = new NextExpress();
 
 type QuestionAnswer = {
@@ -20,9 +21,10 @@ type QuestionAnswer = {
 
 publicAnswerApi.post(async (req, res) => {
 
-    logger.debug("Answering question");
-
     const workflowUuid = req.query?.["workflow-uuid"] as string;
+
+    const logger = getLogger(`/api/v1/${workflowUuid}/public/answer`, "api");
+    logger.debug("Answering question");
 
     logger.debug("Workflow UUID: ", workflowUuid);
 
@@ -168,7 +170,7 @@ publicAnswerApi.post(async (req, res) => {
                 id: taskAssignment.id
             },
             data: {
-                status: task_status.pending
+                status: task_status.in_progress
             }
         })
     ]);

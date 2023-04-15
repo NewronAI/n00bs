@@ -8,6 +8,7 @@ import DashboardLayout from '@/components/layouts/DashboardLayout';
 import Head from "next/head";
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import {member_role} from "@prisma/client";
+import getLogger from "@/helpers/node/getLogger";
 
 interface WorkflowItems {
     uuid?: string;
@@ -122,11 +123,19 @@ Workflows.propTypes = {
 export const getServerSideProps = withAuthorizedPageAccess({
     getServerSideProps: async () => {
 
+        const logger = getLogger("/pages/workflows");
+
+        logger.debug("Finding all workflows");
+
+
         const workflows = await db.workflow.findMany({
             orderBy: {
                 createdAt: 'asc'
             }
         });
+
+        logger.debug(`Found workflows: ${workflows.length}`);
+
         const modeledWorkflows: WorkflowItems[] = workflows.map((workflow) => {
             const tWorkflow: WorkflowItems = {
                 title: workflow.name,

@@ -1,6 +1,7 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
+import getLogger from "@/helpers/node/getLogger";
 
 const assignOneTaskApi = new NextExpress();
 
@@ -10,9 +11,12 @@ assignOneTaskApi.post(async (req, res) => {
     // const workflowUUID = req.query["workflow-uuid"] as string;
     // not required rn later can be used for verification
 
+    const workflowFileUUID = req.query["workflow-file-uuid"] as string;
+
+    const logger = getLogger(`/pages/api/v1/task/assign-one`);
+
     const taskUUID = req.query["task-uuid"] as string;
     const assigneeUUID = req.query["assignee-uuid"] as string;
-    const workflowFileUUID = req.query["workflow-file-uuid"] as string;
 
     assertUp(taskUUID, {
         status: 400,
@@ -29,40 +33,31 @@ assignOneTaskApi.post(async (req, res) => {
         message: "workflow-file-uuid: Param is required. Should contain the uuid of the workflow file"
     });
 
+    logger.debug(`taskUUID : ${taskUUID} , assignee-uuid : ${assigneeUUID}, workflowFileUUID : ${workflowFileUUID}`);
 
-    const task = await db.task.findFirst({
+    const task = await db.task.findFirstOrThrow({
         where: {
             uuid: taskUUID
         }
     });
 
-    assertUp(task, {
-        status: 404,
-        message: "Task not found"
-    });
+    logger.debug(`task found : ${task.name} ${task}`);
 
-    const assignee = await db.member.findFirst({
+    const assignee = await db.member.findFirstOrThrow({
         where: {
             uuid: assigneeUUID
         }
     });
 
-    assertUp(assignee, {
-        status: 404,
-        message: "Assignee not found"
-    });
+    logger.debug(`assignee found : ${assignee.name} ${assignee.uuid}`);
 
-    const workflowFile = await db.workflow_file.findFirst({
+    const workflowFile = await db.workflow_file.findFirstOrThrow({
         where: {
             uuid: workflowFileUUID
         }
     });
 
-    assertUp(workflowFile, {
-        status: 404,
-        message: "Workflow file not found"
-    });
-
+    logger.debug(`workflow-file : ${workflowFile.file} `);
 
 
     const status = await db.task_assignment.create({

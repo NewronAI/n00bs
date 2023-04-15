@@ -3,12 +3,15 @@ import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
 import getPublicWorkflowAPISecret from "@/helpers/getPublicWorkflowAPISecret";
 import {obj_status, task_status} from "@prisma/client";
+import getLogger from "@/helpers/node/getLogger";
 
 const getAllAssignmentsApi = new NextExpress();
 
 getAllAssignmentsApi.get(async (req, res) => {
 
     const workflowUUID = req.query["workflow-uuid"] as string;
+
+    const logger = getLogger(`/api/v1/${workflowUUID}/public/assignment/get-all`);
 
     assertUp(workflowUUID, {
         status: 400,
@@ -17,31 +20,31 @@ getAllAssignmentsApi.get(async (req, res) => {
 
     const secret = req.query.secret as string;
 
-    const workflow = await db.workflow.findFirst({
-        where: {
-            uuid: workflowUUID
-        }
-    });
-
-    assertUp(workflow, {
-        status: 404,
-        message: `workflow: workflow not found with uuid ${workflowUUID}`
-    });
+    logger.debug(`secret : ${secret}`);
 
     assertUp(secret, {
         status: 400,
         message: "secret: Query Param is required. Should contain the secret of the workflow"
     });
 
+    const workflow = await db.workflow.findFirstOrThrow({
+        where: {
+            uuid: workflowUUID
+        }
+    });
+
+    logger.debug(`workflow : ${workflow.name}`);
+
     const calculatedSecret = await getPublicWorkflowAPISecret(workflowUUID);
-    console.log("Secret: ", secret, calculatedSecret);
+
+    logger.debug(`secret : ${secret} , calculatedSecret : ${calculatedSecret}`);
 
     assertUp(calculatedSecret === secret, {
         status: 400,
         message: "secret: The secret is not valid"
     })
 
-    const task = await db.task.findFirst({
+    const task = await db.task.findFirstOrThrow({
         where: {
             workflow : {
                 uuid: workflowUUID
@@ -56,11 +59,9 @@ getAllAssignmentsApi.get(async (req, res) => {
             }
         }
     });
+    
 
-    assertUp(task, {
-        status: 404,
-        message: `task: task not found for workflow with uuid ${workflowUUID}`
-    });
+    logger.debug(`taskName : ${task.name}`);
 
     const taskAssignments = await db.task_assignment.findMany({
         where: {
@@ -72,6 +73,8 @@ getAllAssignmentsApi.get(async (req, res) => {
             workflow_file: true
         }
     });
+
+    logger.debug(`taskAssignments len: ${taskAssignments.length}`);
 
     const dataToSend = {
         workflow,

@@ -61,10 +61,8 @@ const webhookHandler = async (event: events, workflowUUID : string, rawData : an
         }
     });
 
-    console.log("workflow", workflow);
-
     const webhooks = workflow?.webhooks;
-    logger.debug("webhooks", webhooks);
+    logger.debug(`webhooks ${webhooks}`);
 
        if(!webhooks){
            logger.debug("No webhooks found for this workflow");
@@ -86,9 +84,7 @@ const webhookHandler = async (event: events, workflowUUID : string, rawData : an
 
            logger.debug("webhook", webhook);
            let isSlack = isSlackWebhook(webhook);
-           logger.debug("isSlackWebhook", isSlack);
-
-
+           logger.debug(`current : ${webhook}, isSlack : ${isSlack}`);
               if(isSlack){
                    const message = slackMessageTemplate({
                        ...slackMessageForEvent.get(event),

@@ -28,7 +28,6 @@ unassignedFilesApi.get(async (req, res) => {
     });
 
     const workflowId = workflow.id;
-    console.log(workflowUUID,workflowId);
 
     // As per Srikant and Team, One workflow can have only One task
     const unassignedFiles = await db.$queryRaw`WITH
