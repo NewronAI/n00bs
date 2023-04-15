@@ -12,7 +12,7 @@ review_answers.post(async (req, res) => {
     const session = await getSession( req , res);
     const email = session?.user.email;
     const taskRatings = new Map(req.body);
-    console.log(taskRatings);
+
 
     assertUp(workflowUUID, {
         status: 400,
@@ -42,10 +42,10 @@ review_answers.post(async (req, res) => {
                     }
                 }
             });
-            console.log("Task with uuid: ",key,"rated successfully");
+
         }
         catch(err) {
-            console.log("Task with uuid: ",key,"failed with err: ",err);
+
         }
       }
 

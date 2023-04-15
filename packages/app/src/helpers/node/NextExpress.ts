@@ -76,7 +76,7 @@ class NextExpress {
 
             const method = req.method as unknown as keyof MethodMap;
 
-            console.log(method);
+
 
             assertUp(method, {message: "Method not available", status: 405});
 

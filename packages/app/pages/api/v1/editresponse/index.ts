@@ -35,7 +35,6 @@ editresponse.post(async (req, res) => {
         }
     })
 
-    console.log("Task Answer got it")
 
     assertUp(taskAnswer, {
         status: 404,
@@ -53,7 +52,6 @@ editresponse.post(async (req, res) => {
         })
         res.status(200).json("Answer updated successfully");
     } catch (err) {
-        console.log(err)
         res.status(400).json("Could'nt updated the answer");
     }
 });

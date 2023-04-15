@@ -3,6 +3,7 @@ import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
 import webhookHandler from "@/helpers/node/webhookHandler";
 import {events} from "@prisma/client";
+import getLogger from "@/helpers/node/getLogger";
 // import getLogger from "@/helpers/node/getLogger";
 
 const assignTaskApi = new NextExpress();
@@ -18,6 +19,8 @@ assignTaskApi.post(async (req, res) => {
     const workflowUUID = req.query["workflow-uuid"] as string;
     const assigneeUUID = req.body["assignee-uuid"] as string;
     const workflowFileUUIDs = req.body["workflow-file-uuids"] as string[];
+
+    const logger = getLogger(`/api/v1/${workflowUUID}/task/reassign`);
 
     assertUp(workflowUUID, {
         status: 400,
@@ -110,7 +113,6 @@ assignTaskApi.post(async (req, res) => {
         name: `Task Assignment for ${assignee.name} for ${task.name}`
     }));
 
-    console.log(newAssignmentsData.length);
 
     const newAssignmentsResult = await db.$transaction(
         newAssignmentsData.map((assignmentData) => db.task_assignment.create({
@@ -164,7 +166,7 @@ assignTaskApi.post(async (req, res) => {
         "task_assignments":  taskAssignments
 
      }).then(() => {
-        console.log("Webhook triggered");
+        logger.debug("Webhook triggered");
     });
 
     res.status(200).json(newAssignmentsResult);

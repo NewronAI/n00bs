@@ -196,7 +196,7 @@ assignTaskApi.post(async (req, res) => {
         "task_assignments":  taskAssignments
 
      }).then(() => {
-        console.log("Webhook triggered");
+        logger.debug(`webhook triggered`);
     });
 
     res.status(200).json(newAssignmentsResult);
@@ -289,7 +289,7 @@ assignTaskApi.put(async (req, res) => {
         "task_assignments":  [status]
 
     }).then(() => {
-        console.log("Update Webhook triggered");
+        logger.debug(`webhook triggered`);
     });
 
     res.status(200).json(status);

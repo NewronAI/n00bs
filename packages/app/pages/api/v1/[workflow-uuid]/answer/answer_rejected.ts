@@ -53,7 +53,6 @@ answersAPI.get(async (req, res) => {
                     processedTaskAnswer.set(taskAnswer.question.uuid, taskAnswer.answer);
                 });
 
-                console.log(processedTaskAnswer);
 
                 return {
                     ...taskAssignment,

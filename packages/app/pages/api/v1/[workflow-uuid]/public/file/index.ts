@@ -34,8 +34,6 @@ fileApi.post(async (req: NextApiRequest, res: NextApiResponse) => {
 
     logger.debug(`calculatedSecret : ${calculatedSecret}`);
 
-    console.log("Secret: ", secret, calculatedSecret);
-
     assertUp(calculatedSecret === secret, {
         message: "Secret: The secret is not valid",
         status: 400
