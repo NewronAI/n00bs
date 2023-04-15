@@ -23,7 +23,7 @@ publicAnswerApi.post(async (req, res) => {
 
     const workflowUuid = req.query?.["workflow-uuid"] as string;
 
-    const logger = getLogger(`/api/v1/${workflowUuid}/public/answer`, "api");
+    const logger = getLogger(`/api/v1/${workflowUuid}/public/answer`);
     logger.debug("Answering question");
 
     logger.debug("Workflow UUID: ", workflowUuid);
