@@ -1,11 +1,16 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
+import getLogger from "@/helpers/node/getLogger";
 
 const workflowApi = new NextExpress();
 
+const logger = getLogger("/api/v1/workflow/index");
+
 workflowApi.get(async (req, res) => {
     // Get all workflows
+
+    logger.debug("Getting all workflows");
 
     const workflows = await db.workflow.findMany({
         orderBy: {

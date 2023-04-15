@@ -2,6 +2,7 @@ import NextExpress from "@/helpers/node/NextExpress";
 import { db } from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
 import { task_status } from "@prisma/client";
+import getLogger from "@/helpers/node/getLogger";
 
 
 const answersAPI = new NextExpress();
@@ -9,8 +10,7 @@ const answersAPI = new NextExpress();
 answersAPI.get(async (req, res) => {
 
     const workflowUUID = req.query["workflow-uuid"] as string;
-
-
+    const logger = getLogger(`/api/v1/${workflowUUID}/answer/answer_accepted`);
 
     // accepted: 'accepted',
     const taskAssignmentAccepted = await db.workflow_file.findMany({
@@ -40,6 +40,8 @@ answersAPI.get(async (req, res) => {
             }
         }
     });
+
+    logger.debug(`Accepted task assignment : ${taskAssignmentAccepted.length}`)
 
     //accepted
     const acceptedTaskAssignmentResponses = taskAssignmentAccepted.map((taskAssignmentAccepte) => {

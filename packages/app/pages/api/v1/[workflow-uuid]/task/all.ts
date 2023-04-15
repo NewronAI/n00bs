@@ -1,6 +1,7 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 import {task_status} from "@prisma/client";
+import getLogger from "@/helpers/node/getLogger";
 
 const openTasksApi = new NextExpress();
 
@@ -9,7 +10,8 @@ openTasksApi.get(async (req, res) => {
 
     const workflowUUID = req.query["workflow-uuid"] as string;
 
-    console.log("Fetching all tasks",workflowUUID);
+    const logger = getLogger(`/api/v1/${workflowUUID}/task/all`);
+
 
     const tasks = await db.task_assignment.findMany({
         where: {
@@ -32,7 +34,7 @@ openTasksApi.get(async (req, res) => {
         ]
     });
 
-    console.log("tasks",tasks);
+    logger.debug(`task : ${JSON.stringify(tasks)}`);
 
     res.status(200).json(tasks);
 

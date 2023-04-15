@@ -4,12 +4,15 @@ import assertUp from "@/helpers/node/assert/assertUp";
 import {Prisma} from "@prisma/client";
 import {NextApiRequest, NextApiResponse} from "next";
 import getPublicWorkflowAPISecret from "@/helpers/getPublicWorkflowAPISecret";
+import getLogger from "@/helpers/node/getLogger";
 
 const fileApi = new NextExpress();
 
 fileApi.post(async (req: NextApiRequest, res: NextApiResponse) => {
 
     const workflowUuid = req.query?.["workflow-uuid"] as string;
+
+    const logger = getLogger(`/api/v1/${workflowUuid}/public/file/index`);
 
     assertUp(workflowUuid, {
         message: "Workflow UUID: Param is required. Should contain the uuid of the workflow",
@@ -20,12 +23,16 @@ fileApi.post(async (req: NextApiRequest, res: NextApiResponse) => {
 
     const data = req.body.data as Prisma.workflow_fileSelect[];
 
+    logger.debug(`secret: ${secret}`);
+
     assertUp(secret, {
         message: "Secret: Param is required. Should contain the secret of the workflow",
         status: 400
     });
 
     const calculatedSecret = await getPublicWorkflowAPISecret(workflowUuid);
+
+    logger.debug(`calculatedSecret : ${calculatedSecret}`);
 
     console.log("Secret: ", secret, calculatedSecret);
 
@@ -56,16 +63,16 @@ fileApi.post(async (req: NextApiRequest, res: NextApiResponse) => {
         });
     }
 
-    const workflowId = (await db.workflow.findFirst({
+    const workflow = (await db.workflow.findFirstOrThrow({
         where: {
             uuid: workflowUuid
         }
-    }))?.id;
+    }));
 
-    assertUp(workflowId, {
-        message: "Workflow not found",
-        status: 404
-    });
+    const workflowId = workflow.id;
+
+    logger.debug(`workflow ${JSON.stringify(workflow)}`);
+
 
     // @ts-ignore
     const newFile = await db.workflow_file.createMany({data: data.map(item => {
@@ -76,8 +83,9 @@ fileApi.post(async (req: NextApiRequest, res: NextApiResponse) => {
         })
     });
 
-    res.status(200).json(newFile);
+    logger.debug(`newFile : ${JSON.stringify(newFile)}`);
 
+    res.status(200).json(newFile);
 
 });
 

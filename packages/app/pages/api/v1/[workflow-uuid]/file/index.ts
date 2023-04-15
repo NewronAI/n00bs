@@ -66,7 +66,6 @@ fileApi.get(async (req : NextApiRequest, res : NextApiResponse) => {
         }
     });
 
-    console.log(files);
 
     res.status(200).json(files);
 

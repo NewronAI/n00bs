@@ -8,7 +8,6 @@ getDeficitTasksApi.get(async (req, res) => {
     const fileUUID = req.query.fileUUID as string;
     const workflowUUID = req.query["workflow-uuid"] as string;
 
-    console.log(fileUUID, workflowUUID);
 
     //As per Srikant and Team, One workflow can have only One task, so only returning the task in the workflow
     // const tasks = await db.$queryRaw`SELECT task.uuid, task.name, task.min_assignments, COALESCE(tc.task_count, 0) as assignments,

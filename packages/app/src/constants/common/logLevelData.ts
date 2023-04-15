@@ -3,7 +3,7 @@
 
 
 const logLevelData = {
-    "*": "info",
+    "*": "debug",
     "app": process.env.NODE_ENV === "production" ? "silent" : "debug",
     "api": "debug"
 }
