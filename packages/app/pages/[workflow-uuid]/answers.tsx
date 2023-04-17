@@ -39,7 +39,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
     }
 
     const workflowUUID = router.query["workflow-uuid"] as string;
-    const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer`);
+    const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer`, { refreshInterval: 24*60*60*1000 } );
     const files = data || [];
 
     const [updatingReview, setUpdatingReviews] = useState(false);
