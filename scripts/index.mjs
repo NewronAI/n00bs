@@ -43,11 +43,8 @@ async function createVideoFile(audioFilePath, imageFilePath, outputFilePath) {
   await exec(`ffmpeg -loop 1 -i ${imageFilePath} -i ${audioFilePath} -c:v libx264 -tune stillimage -c:a copy -shortest ${outputFilePath}`);
 }
 
-const { data: csvData } = Papa.parse(csvFilePath, {
-	worker: true,
-	step: function(results) {
-		console.log("Row:", results.data);
-	}
+const csvData = Papa.parse(csvFilePath, {
+	header: true
 });
 
 console.log(csvData)
