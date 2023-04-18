@@ -21,10 +21,10 @@ function extractFileInfo(filename) {
   const district = parts[1];
   const speakerID = parts[2];
   const utteranceID = parts[3].split("-")[0];
-  const imageName = parts[4].concat('_').concat(parts[5]);
+  const imageName = parts[4] + '_' + parts[5];
   console.log(parts)
   console.log(state, district, speakerID, utteranceID, imageName)
-  return {state, district, speakerID, utteranceID};
+  return {state, district, speakerID, utteranceID, imageName};
 }
 
 // async function findImageFile(imageName) {
