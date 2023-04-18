@@ -18,16 +18,16 @@ const imagesDirPath = config.imagesDirPath;
 const videosDirPath = config.videosDirPath;
 const csvFilePath = config.csvFilePath;
 
-// function extractFileInfo(filename) {
-//   const parts = filename.split("_");
-// //   const state = parts[2];
-// //   const district = parts[3];
-// //   const speakerID = parts[4];
-// //   const utteranceID = parts[5].split("-")[0];
-//   console.log(parts)
-//   console.log(state, district, speakerID, utteranceID)
-//   return null;
-// }
+function extractFileInfo(filename) {
+  const parts = filename.split("_");
+  const state = parts[2];
+  const district = parts[3];
+  const speakerID = parts[4];
+  const utteranceID = parts[5].split("-")[0];
+  console.log(parts)
+  console.log(state, district, speakerID, utteranceID)
+  return {state, district, speakerID, utteranceID};
+}
 
 // async function findImageFile(imageName) {
 // //   const files = await readdir(imagesDirPath);
@@ -49,15 +49,13 @@ const { data: csvData } = Papa.parse(csvContents)
 
 for (const row of csvData) {
     const fileDetails = row[1]
-
     const separatorIndex = fileDetails.lastIndexOf('/');
-
-    // Extract the file name and file location
     const fileLocation = fileDetails.substring(0, separatorIndex);
     const fileName = fileDetails.substring(separatorIndex + 1);
 
-    console.log("FileLocation - ", fileLocation)
-    console.log("File Name - ", fileName)
+    const {state, district, speakerID, utteranceID} = extractFileInfo(fileName)
+    console.log("State", state, "district", district, "speakerID", speakerID, "utteranceID", utteranceID)
+
 
 //   if (imageFilePath) {
 //     // If an image file was found, create the video file.
