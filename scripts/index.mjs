@@ -47,7 +47,7 @@ const csvFileContents = fs.readFileSync(csvFilePath, "utf8");
 const { data: csvData } = Papa.parse(csvFileContents, { header: true, skipEmptyLines: 'greedy' });
 
 for (const row of csvData) {
-  console.log(row)
+  console.log("Row Data", row)
   const audioFilename = row["Audio Filename"];
   const audioFilePath = path.join(baseLocation, audioFilename);
   const dwads = extractFileInfo(audioFilename);
