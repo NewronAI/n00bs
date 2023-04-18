@@ -43,7 +43,7 @@ const csvFilePath = config.csvFilePath;
 //   await exec(`ffmpeg -loop 1 -i ${imageFilePath} -i ${audioFilePath} -c:v libx264 -tune stillimage -c:a copy -shortest ${outputFilePath}`);
 // }
 
-const csvContents = await fs.readFile(csvFilePath, 'utf-8')
+const csvContents = await fs.promises.readFile(csvFilePath, 'utf-8')
 
 const { data: records } = Papa.parse(csvContents, { header: true })
 
