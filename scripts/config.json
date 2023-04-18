@@ -1,4 +1,6 @@
 {
     "baseLocation": "/data/Database/raw",
-    "imageLocations": "/data2/Database/2023-03-22/Images/Images_Mar23"
+    "imagesDirPath": "/home/Anshul/files/images/Images_Mar23",
+    "videosDirPath": "/home/Anshul/files/videos/single_audios",
+    "csvFilePath" : "/home/Anshul/files/csv/shaip/test.csv"
 }
