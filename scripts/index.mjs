@@ -45,25 +45,20 @@ const csvFilePath = config.csvFilePath;
 
 const csvContents = await fs.promises.readFile(csvFilePath, 'utf-8')
 
-const { data: records } = Papa.parse(csvContents)
+const { data: csvData } = Papa.parse(csvContents)
 
-console.log(records)
+console.log(csvData)
 
-// for (const row of csvData) {
-//   console.log("Row Data", row)
-//   const audioFilename = row["Audio Filename"];
-//   const audioFilePath = path.join(baseLocation, audioFilename);
-//   const dwads = extractFileInfo(audioFilename);
+for (const row of csvData) {
+  console.log("Row Data", row)
 
-//   console.log(`Processing audio file: ${audioFilePath}`);
-
-// //   if (imageFilePath) {
-// //     // If an image file was found, create the video file.
-// //     const outputFilename = `${state}_${district}_${speakerID}_${utteranceID}.mp4`;
-// //     const outputFilePath = path.join(videosDirPath, outputFilename);
-// //     await createVideoFile(audioFilePath, imageFilePath, outputFilePath);
-// //     console.log(`Created video file: ${outputFilePath}`);
-// //   } else {
-// //     console.log(`Could not find image file for audio file: ${audioFilename}`);
-// //   }
-// }
+//   if (imageFilePath) {
+//     // If an image file was found, create the video file.
+//     const outputFilename = `${state}_${district}_${speakerID}_${utteranceID}.mp4`;
+//     const outputFilePath = path.join(videosDirPath, outputFilename);
+//     await createVideoFile(audioFilePath, imageFilePath, outputFilePath);
+//     console.log(`Created video file: ${outputFilePath}`);
+//   } else {
+//     console.log(`Could not find image file for audio file: ${audioFilename}`);
+//   }
+}
