@@ -48,7 +48,8 @@ const csvContents = await fs.promises.readFile(csvFilePath, 'utf-8')
 const { data: csvData } = Papa.parse(csvContents)
 
 for (const row of csvData) {
-  console.log("Row Data", row)
+    const fileName = row[1]
+  console.log("Row Data", fileName)
 
 //   if (imageFilePath) {
 //     // If an image file was found, create the video file.
