@@ -1,20 +1,12 @@
 #!/usr/bin/env zx
 
-const fs = require('fs');
-const csv = require('csv-parser');
+const { ffmpeg } = require('zx');
 
-const file = 'data.csv';
+const inputImage = 'image.png';
+const inputAudio = 'audio.mp3';
+const outputVideo = 'output.mp4';
 
-// Read the file contents
-const data = fs.readFileSync(file, 'utf-8');
-
-// Parse the CSV data into a JavaScript object
-const results = [];
-csv({ separator: ',' })
-  .on('data', data => results.push(data))
-  .on('end', () => {
-    console.log(results);
-  })
-  .write(data);
-
-console.log(results)
+// Use ffmpeg to create a video from the image and audio
+await ffmpeg(
+  `-loop 1 -i ${inputImage} -i ${inputAudio} -c:v libx264 -c:a aac -shortest ${outputVideo}`
+);
