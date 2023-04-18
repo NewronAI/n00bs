@@ -50,11 +50,11 @@ const { data: csvData } = Papa.parse(csvContents)
 for (const row of csvData) {
     const fileDetails = row[1]
 
-    const separatorIndex = filePath.lastIndexOf('/');
+    const separatorIndex = fileDetails.lastIndexOf('/');
 
     // Extract the file name and file location
-    const fileLocation = filePath.substring(0, separatorIndex);
-    const fileName = filePath.substring(separatorIndex + 1);
+    const fileLocation = fileDetails.substring(0, separatorIndex);
+    const fileName = fileDetails.substring(separatorIndex + 1);
 
     console.log("FileLocation - ", fileLocation)
     console.log("File Name - ", fileName)
