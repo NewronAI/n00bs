@@ -4,12 +4,14 @@ const path = require("path");
 const child_process = require("child_process");
 const Papa = require("papaparse");
 
-const readdir = promisify(fs.readdir);
-const exec = promisify(child_process.exec);
+// const readdir = promisify(fs.readdir);
+// const exec = promisify(child_process.exec);
 
 // Read the config file and extract the directory paths.
 const configFilePath = path.join(__dirname, "config.json");
 const config = JSON.parse(fs.readFileSync(configFilePath));
+
+console.log(config.baseLocation, config.imagesDirPath, config.videosDirPath, config.csvFilePath)
 
 const baseLocation = config.baseLocation;
 const imagesDirPath = config.imagesDirPath;
@@ -23,6 +25,7 @@ function extractFileInfo(filename) {
   const district = parts[3];
   const speakerID = parts[4];
   const utteranceID = parts[5].split("-")[0];
+  console.log(state, district, speakerID, utteranceID)
   return { state, district, speakerID, utteranceID };
 }
 
