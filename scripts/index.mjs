@@ -48,8 +48,16 @@ const csvContents = await fs.promises.readFile(csvFilePath, 'utf-8')
 const { data: csvData } = Papa.parse(csvContents)
 
 for (const row of csvData) {
-    const fileName = row[1]
-  console.log("Row Data", fileName)
+    const fileDetails = row[1]
+
+    const separatorIndex = filePath.lastIndexOf('/');
+
+    // Extract the file name and file location
+    const fileLocation = filePath.substring(0, separatorIndex);
+    const fileName = filePath.substring(separatorIndex + 1);
+
+    console.log("FileLocation - ", fileLocation)
+    console.log("File Name - ", fileName)
 
 //   if (imageFilePath) {
 //     // If an image file was found, create the video file.

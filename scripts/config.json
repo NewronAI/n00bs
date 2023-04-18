@@ -1,5 +1,5 @@
 {
-    "baseLocation": "/data/Database/raw",
+    "baseLocation": "/home/Anshul/files",
     "imagesDirPath": "/home/Anshul/files/images/Images_Mar23",
     "videosDirPath": "/home/Anshul/files/videos/single_audios",
     "csvFilePath" : "/home/Anshul/files/csv/shaip/test.csv"
