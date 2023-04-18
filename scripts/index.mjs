@@ -43,24 +43,30 @@ async function createVideoFile(audioFilePath, imageFilePath, outputFilePath) {
   await exec(`ffmpeg -loop 1 -i ${imageFilePath} -i ${audioFilePath} -c:v libx264 -tune stillimage -c:a copy -shortest ${outputFilePath}`);
 }
 
-const csvFileContents = fs.readFileSync(csvFilePath, "utf8");
-const { data: csvData } = Papa.parse(csvFileContents, { header: true, skipEmptyLines: 'greedy' });
+const { data: csvData } = Papa.parse(csvFilePath, {
+	worker: true,
+	step: function(results) {
+		console.log("Row:", results.data);
+	}
+});
 
-for (const row of csvData) {
-  console.log("Row Data", row)
-  const audioFilename = row["Audio Filename"];
-  const audioFilePath = path.join(baseLocation, audioFilename);
-  const dwads = extractFileInfo(audioFilename);
+console.log(csvData)
 
-  console.log(`Processing audio file: ${audioFilePath}`);
+// for (const row of csvData) {
+//   console.log("Row Data", row)
+//   const audioFilename = row["Audio Filename"];
+//   const audioFilePath = path.join(baseLocation, audioFilename);
+//   const dwads = extractFileInfo(audioFilename);
 
-//   if (imageFilePath) {
-//     // If an image file was found, create the video file.
-//     const outputFilename = `${state}_${district}_${speakerID}_${utteranceID}.mp4`;
-//     const outputFilePath = path.join(videosDirPath, outputFilename);
-//     await createVideoFile(audioFilePath, imageFilePath, outputFilePath);
-//     console.log(`Created video file: ${outputFilePath}`);
-//   } else {
-//     console.log(`Could not find image file for audio file: ${audioFilename}`);
-//   }
-}
+//   console.log(`Processing audio file: ${audioFilePath}`);
+
+// //   if (imageFilePath) {
+// //     // If an image file was found, create the video file.
+// //     const outputFilename = `${state}_${district}_${speakerID}_${utteranceID}.mp4`;
+// //     const outputFilePath = path.join(videosDirPath, outputFilename);
+// //     await createVideoFile(audioFilePath, imageFilePath, outputFilePath);
+// //     console.log(`Created video file: ${outputFilePath}`);
+// //   } else {
+// //     console.log(`Could not find image file for audio file: ${audioFilename}`);
+// //   }
+// }
