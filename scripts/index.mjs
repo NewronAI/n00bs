@@ -15,7 +15,7 @@ const imagesDirPath = config.imagesDirPath;
 const videosDirPath = config.videosDirPath;
 const csvFilePath = config.csvFilePath;
 
-function extractImageName(filename) {
+function extractFileInfo(filename) {
   const parts = filename.split("_");
   const state = parts[0];
   const district = parts[1];
