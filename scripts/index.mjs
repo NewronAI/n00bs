@@ -47,8 +47,6 @@ const csvContents = await fs.promises.readFile(csvFilePath, 'utf-8')
 
 const { data: csvData } = Papa.parse(csvContents)
 
-console.log(csvData)
-
 for (const row of csvData) {
   console.log("Row Data", row)
 
