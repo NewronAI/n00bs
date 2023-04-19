@@ -41,17 +41,17 @@ async function checkFile(filename, filepath) {
 async function checkImage(filename) {
   
   if (existsSync(`${imagesDirPath}/${filename}`)) {
-    console.log(`${filename} exists in ${directory}`)
+    console.log(`${filename} exists in ${imagesDirPath}`)
     return true
   } else if (existsSync(`${imagesDirPath}/${"Img" + filename}`)) {
-    console.log(`${filename} exists in ${directory} with the name of ${"Img" + filename}`)
+    console.log(`${filename} exists in ${imagesDirPath} with the name of ${"Img" + filename}`)
     return true
   } else if (existsSync(`${imagesDirPath}/${"Img_" + filename}`)) {
-    console.log(`${filename} exists in ${directory} with the name of ${"Img_" + filename}`)
+    console.log(`${filename} exists in ${imagesDirPath} with the name of ${"Img_" + filename}`)
     return true
   }
   else {
-    console.log(`${filename} does not exist in ${directory}`)
+    console.log(`${filename} does not exist in ${imagesDirPath}`)
     return false
   }
 }
