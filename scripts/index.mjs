@@ -51,6 +51,7 @@ async function checkImage(filename) {
     return true
   }
   else {
+    console.log(`Could not find ${filename}`)
     return false
   }
 }
@@ -66,7 +67,6 @@ const { data: csvData } = Papa.parse(csvContents)
 for (const row of csvData) {
 
   const fileDetails = row[1]
-  console.log(fileDetails)
 
   if (fileDetails !== undefined) {
     const separatorIndex = fileDetails.lastIndexOf('/');
