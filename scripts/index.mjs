@@ -87,7 +87,7 @@ for (const row of csvData) {
     const checkAudioFile = await checkFile(fileName, fileLocation)
     await copyImage(imageName)
 
-    if (checkAudioFile && checkImageFile) {
+    if (checkAudioFile) {
       //create the video
       console.log("creating video")
     }
