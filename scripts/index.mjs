@@ -33,7 +33,6 @@ async function checkFile(filename, filepath) {
     console.log(`${filename} exists in ${directory}`)
     return true
   } else {
-    console.log(`${filename} does not exist in ${directory}`)
     return false
   }
 }
@@ -51,7 +50,6 @@ async function checkImage(filename) {
     return true
   }
   else {
-    console.log(`${filename} does not exist in ${imagesDirPath}`)
     return false
   }
 }
