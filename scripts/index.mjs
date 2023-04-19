@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const child_process = require("child_process");
 const Papa = require("papaparse");
-import {existsSync} from "fs"
+import { existsSync } from "fs"
 
 // const readdir = promisify(fs.readdir);
 // const exec = promisify(child_process.exec);
@@ -23,12 +23,12 @@ function extractFileInfo(filename) {
   const speakerID = parts[2];
   const utteranceID = parts[3].split("-")[0];
   const imageName = parts[4] + '_' + parts[5];
-  return {state, district, speakerID, utteranceID, imageName};
+  return { state, district, speakerID, utteranceID, imageName };
 }
 
 async function checkFile(filename, filepath) {
   const directory = baseLocation + '/' + filepath
-  
+
   if (existsSync(`${directory}/${filename}`)) {
     //console.log(`${filename} exists in ${directory}`)
     return true
@@ -39,7 +39,7 @@ async function checkFile(filename, filepath) {
 }
 
 async function checkImage(filename) {
-  
+
   if (existsSync(`${imagesDirPath}/${filename}`)) {
     console.log(`${filename} exists in ${imagesDirPath}`)
     return true
@@ -65,19 +65,22 @@ const { data: csvData } = Papa.parse(csvContents)
 
 for (const row of csvData) {
 
-    const fileDetails = row[1]
-    console.log(fileDetails)
+  const fileDetails = row[1]
+  console.log(fileDetails)
+
+  if (fileDetails !== undefined) {
     const separatorIndex = fileDetails.lastIndexOf('/');
     const fileLocation = fileDetails.substring(0, separatorIndex);
     const fileName = fileDetails.substring(separatorIndex + 1);
 
-    const {state, district, speakerID, utteranceID, imageName} = extractFileInfo(fileName)
+    const { state, district, speakerID, utteranceID, imageName } = extractFileInfo(fileName)
 
-    const checkAudioFile = await checkFile(fileName,fileLocation)
+    const checkAudioFile = await checkFile(fileName, fileLocation)
     const checkImageFile = await checkImage(imageName)
 
-    if(checkAudioFile && checkImageFile) {
+    if (checkAudioFile && checkImageFile) {
       //create the video
       console.log("creating video")
     }
+  }
 }
