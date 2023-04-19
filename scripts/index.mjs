@@ -54,7 +54,7 @@ for (const row of csvData) {
     const fileLocation = fileDetails.substring(0, separatorIndex);
     const fileName = fileDetails.substring(separatorIndex + 1);
 
-    const checkFile = checkFile(fileName,fileLocation)
+    const checkFile = await checkFile(fileName,fileLocation)
 
     console.log(checkFile)
 
