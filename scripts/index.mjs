@@ -66,7 +66,7 @@ const { data: csvData } = Papa.parse(csvContents)
 for (const row of csvData) {
 
     const fileDetails = row[1]
-
+    console.log(fileDetails)
     const separatorIndex = fileDetails.lastIndexOf('/');
     const fileLocation = fileDetails.substring(0, separatorIndex);
     const fileName = fileDetails.substring(separatorIndex + 1);
