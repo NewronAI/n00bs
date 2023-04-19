@@ -6,7 +6,7 @@ const Papa = require("papaparse");
 import { existsSync } from "fs"
 
 // const readdir = promisify(fs.readdir);
-// const exec = promisify(child_process.exec);
+const exec = promisify(child_process.exec);
 
 const configFilePath = path.join(__dirname, "config.json");
 const config = JSON.parse(fs.readFileSync(configFilePath));
