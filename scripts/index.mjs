@@ -54,9 +54,9 @@ for (const row of csvData) {
     const fileLocation = fileDetails.substring(0, separatorIndex);
     const fileName = fileDetails.substring(separatorIndex + 1);
 
-    const checkFile = await checkFile(fileName,fileLocation)
+    const checkAudioFile = await checkFile(fileName,fileLocation)
 
-    console.log(checkFile)
+    console.log(checkAudioFile)
 
     const {state, district, speakerID, utteranceID, imageName} = extractFileInfo(fileName)
 }
