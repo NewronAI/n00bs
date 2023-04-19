@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const child_process = require("child_process");
 const Papa = require("papaparse");
+import {existsSync} from "fs"
 
 // const readdir = promisify(fs.readdir);
 // const exec = promisify(child_process.exec);
@@ -25,14 +26,16 @@ function extractFileInfo(filename) {
   return {state, district, speakerID, utteranceID, imageName};
 }
 
-async function findImageFile(imageName) {
-//   const files = await readdir(imagesDirPath);
-//   const matchingFile = files.find((file) => file.includes(imageName));
-//   if (matchingFile) {
-//     return path.join(imagesDirPath, matchingFile);
-//   } else {
-//     return null;
-//   }
+async function checkFile(filename, filepath) {
+  const directory = baseLocation + filepath
+  
+  if (existsSync(`${directory}/${filename}`)) {
+    console.log(`${filename} exists in ${directory}`)
+    return true
+  } else {
+    console.log(`${filename} does not exist in ${directory}`)
+    return false
+  }
 }
 
 async function createVideoFile(audioFilePath, imageFilePath, outputFilePath) {
@@ -51,8 +54,9 @@ for (const row of csvData) {
     const fileLocation = fileDetails.substring(0, separatorIndex);
     const fileName = fileDetails.substring(separatorIndex + 1);
 
+    const checkFile = checkFile(fileName,fileLocation)
+
+    console.log(checkFile)
+
     const {state, district, speakerID, utteranceID, imageName} = extractFileInfo(fileName)
-
-    
-
 }
