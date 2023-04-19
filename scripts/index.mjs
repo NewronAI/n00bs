@@ -30,9 +30,10 @@ async function checkFile(filename, filepath) {
   const directory = baseLocation + '/' + filepath
   
   if (existsSync(`${directory}/${filename}`)) {
-    console.log(`${filename} exists in ${directory}`)
+    //console.log(`${filename} exists in ${directory}`)
     return true
   } else {
+    //console.log(`${filename} does not exists in ${directory}`)
     return false
   }
 }
