@@ -22,36 +22,37 @@ function extractFileInfo(filename) {
   const speakerID = parts[2];
   const utteranceID = parts[3].split("-")[0];
   const imageName = parts[4] + '_' + parts[5];
-  console.log(parts)
-  console.log(state, district, speakerID, utteranceID, imageName)
   return {state, district, speakerID, utteranceID, imageName};
 }
 
-// async function findImageFile(imageName) {
-// //   const files = await readdir(imagesDirPath);
-// //   const matchingFile = files.find((file) => file.includes(imageName));
-// //   if (matchingFile) {
-// //     return path.join(imagesDirPath, matchingFile);
-// //   } else {
-// //     return null;
-// //   }
-// }
+async function findImageFile(imageName) {
+//   const files = await readdir(imagesDirPath);
+//   const matchingFile = files.find((file) => file.includes(imageName));
+//   if (matchingFile) {
+//     return path.join(imagesDirPath, matchingFile);
+//   } else {
+//     return null;
+//   }
+}
 
-// async function createVideoFile(audioFilePath, imageFilePath, outputFilePath) {
-//   await exec(`ffmpeg -loop 1 -i ${imageFilePath} -i ${audioFilePath} -c:v libx264 -tune stillimage -c:a copy -shortest ${outputFilePath}`);
-// }
+async function createVideoFile(audioFilePath, imageFilePath, outputFilePath) {
+  await exec(`ffmpeg -loop 1 -i ${imageFilePath} -i ${audioFilePath} -c:v libx264 -tune stillimage -c:a copy -shortest ${outputFilePath}`);
+}
 
 const csvContents = await fs.promises.readFile(csvFilePath, 'utf-8')
 
 const { data: csvData } = Papa.parse(csvContents)
 
 for (const row of csvData) {
+
     const fileDetails = row[1]
+
     const separatorIndex = fileDetails.lastIndexOf('/');
     const fileLocation = fileDetails.substring(0, separatorIndex);
     const fileName = fileDetails.substring(separatorIndex + 1);
 
     const {state, district, speakerID, utteranceID, imageName} = extractFileInfo(fileName)
-    console.log("State", state, "district", district, "speakerID", speakerID, "utteranceID", utteranceID, "Image Name", imageName)
+
+    
 
 }
