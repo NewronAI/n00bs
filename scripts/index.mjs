@@ -38,6 +38,24 @@ async function checkFile(filename, filepath) {
   }
 }
 
+async function checkImage(filename) {
+  
+  if (existsSync(`${imagesDirPath}/${filename}`)) {
+    console.log(`${filename} exists in ${directory}`)
+    return true
+  } else if (existsSync(`${imagesDirPath}/${"Img" + filename}`)) {
+    console.log(`${filename} exists in ${directory} with the name of ${"Img" + filename}`)
+    return true
+  } else if (existsSync(`${imagesDirPath}/${"Img_" + filename}`)) {
+    console.log(`${filename} exists in ${directory} with the name of ${"Img_" + filename}`)
+    return true
+  }
+  else {
+    console.log(`${filename} does not exist in ${directory}`)
+    return false
+  }
+}
+
 async function createVideoFile(audioFilePath, imageFilePath, outputFilePath) {
   await exec(`ffmpeg -loop 1 -i ${imageFilePath} -i ${audioFilePath} -c:v libx264 -tune stillimage -c:a copy -shortest ${outputFilePath}`);
 }
@@ -54,9 +72,13 @@ for (const row of csvData) {
     const fileLocation = fileDetails.substring(0, separatorIndex);
     const fileName = fileDetails.substring(separatorIndex + 1);
 
-    const checkAudioFile = await checkFile(fileName,fileLocation)
-
-    console.log(checkAudioFile)
-
     const {state, district, speakerID, utteranceID, imageName} = extractFileInfo(fileName)
+
+    const checkAudioFile = await checkFile(fileName,fileLocation)
+    const checkImageFile = await checkImage(imageName)
+
+    if(checkAudioFile && checkImageFile) {
+      //create the video
+      console.log("creating video")
+    }
 }
