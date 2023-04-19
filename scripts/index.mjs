@@ -62,8 +62,9 @@ async function createVideoFile(audioFilePath, imageFilePath, outputFilePath) {
 
 async function copyImage(imageName) {
   try {
-    await exec(`scp -r -i $HOME/.ssh/id_rsa_ldai artpark@34.93.48.56:/data2/Database/2023-03-22/Images/Images_Mar23/${imageName} /home/Anshul/files/images/Images_Mar23
+    await exec(`scp -r -i $HOME/.ssh/id_rsa_ldai artpark@34.93.48.56:/data2/Database/2023-03-22/Images/Images_Mar23/${imageName}.jpg /home/Anshul/files/images/Images_Mar23
     `);
+    console.log("Image found")
   } catch (e) {
     console.log(e)
   }
