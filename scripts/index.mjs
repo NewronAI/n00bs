@@ -64,8 +64,9 @@ async function copyImage(imageName) {
   try {
     await exec(`scp -r -i $HOME/.ssh/id_rsa_ldai artpark@34.93.48.56:/data2/Database/2023-03-22/Images/Images_Mar23/${imageName}.jpg /home/Anshul/files/images/Images_Mar23
     `);
-    console.log("Image found")
+    console.log(imageName, "Image found and downloaded")
   } catch (e) {
+    console.log(imageName, "Image not found")
     console.log(e)
   }
 }
@@ -87,10 +88,10 @@ for (const row of csvData) {
 
     const checkAudioFile = await checkFile(fileName, fileLocation)
     await copyImage(imageName)
-
-    if (checkAudioFile) {
-      //create the video
-      console.log("creating video")
-    }
+    
+    // if (checkAudioFile) {
+    //   //create the video
+    //   console.log("creating video")
+    // }
   }
 }
