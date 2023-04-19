@@ -27,7 +27,7 @@ function extractFileInfo(filename) {
 }
 
 async function checkFile(filename, filepath) {
-  const directory = baseLocation + filepath
+  const directory = baseLocation + '/' + filepath
   
   if (existsSync(`${directory}/${filename}`)) {
     console.log(`${filename} exists in ${directory}`)
