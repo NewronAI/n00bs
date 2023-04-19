@@ -81,7 +81,7 @@ for (const row of csvData) {
     const { state, district, speakerID, utteranceID, imageName } = extractFileInfo(fileName)
 
     const checkAudioFile = await checkFile(fileName, fileLocation)
-    const checkImageFile = await checkImage(imageName)
+    await copyImage(imageName)
 
     if (checkAudioFile && checkImageFile) {
       //create the video
