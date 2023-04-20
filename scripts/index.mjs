@@ -4,6 +4,12 @@ const path = require("path");
 const child_process = require("child_process");
 const Papa = require("papaparse");
 import { existsSync } from "fs"
+import { clearScreenDown } from "readline";
+
+const now = new Date();
+const logFileName = `log-${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.txt`;
+const logStream = fs.createWriteStream(logFileName, { flags: 'a' });
+logStream.write('Started running the script\n');
 
 // const readdir = promisify(fs.readdir);
 const exec = promisify(child_process.exec);
@@ -15,6 +21,11 @@ const baseLocation = config.baseLocation;
 const imagesDirPath = config.imagesDirPath;
 const videosDirPath = config.videosDirPath;
 const csvFilePath = config.csvFilePath;
+logStream.write('Getting Directories location from config file\n');
+logStream.write(`Base Location is ${baseLocation}\n`);
+logStream.write(`Images Dir Path is ${imagesDirPath}\n`);
+logStream.write(`Single Audio Videos Dir Path is ${videosDirPath}\n`);
+logStream.write(`CSV File Path is ${csvFilePath}\n`);
 
 function extractFileInfo(filename) {
   const parts = filename.split("_");
@@ -22,18 +33,22 @@ function extractFileInfo(filename) {
   const district = parts[1];
   const speakerID = parts[2];
   const utteranceID = parts[3].split("-")[0];
-  const imageName = parts[4] + '_' + parts[5];
+  const imageName = parts[4] !== "Img" ? (parts[4].slice(0, 3) === "Img" ? parts[4] : parts[4] + '_' + parts[5] ): parts[4] + '_' + parts[5] + '_' + parts[6];
+  console.log("Image name is ", imageName)
+  console.log(imageName)
   return { state, district, speakerID, utteranceID, imageName };
 }
 
 async function checkFile(filename, filepath) {
+  logStream.write(`Checking if the audio file (${filename}) is present in ${filepath} \n `);
+
   const directory = baseLocation + '/' + filepath
 
   if (existsSync(`${directory}/${filename}`)) {
-    //console.log(`${filename} exists in ${directory}`)
+    logStream.write(`Audio file is present\n `);
     return true
   } else {
-    //console.log(`${filename} does not exists in ${directory}`)
+    logStream.write(`Audio file is not present \n`);
     return false
   }
 }
@@ -60,38 +75,49 @@ async function createVideoFile(audioFilePath, imageFilePath, outputFilePath) {
   await exec(`ffmpeg -loop 1 -i ${imageFilePath} -i ${audioFilePath} -c:v libx264 -tune stillimage -c:a copy -shortest ${outputFilePath}`);
 }
 
-async function copyImage(imageName) {
-  try {
-    await exec(`scp -r -i $HOME/.ssh/id_rsa_ldai artpark@34.93.48.56:/data2/Database/2023-03-22/Images/Images_Mar23/${imageName}.jpg /home/Anshul/files/images/Images_Mar23
-    `);
-    console.log(imageName, "Image found and downloaded")
-  } catch (e) {
-    console.log(imageName, "Image not found")
-    console.log(e)
+async function copyAndCheckImage(imageName) {
+  if(existsSync(`${imagesDirPath}/${imageName}`)) {
+    console.log("Imgae found in local directory")
+    return true
+  } else {
+    try {
+      await exec(`scp -r -i $HOME/.ssh/id_rsa_ldai artpark@34.93.48.56:/data2/Database/2023-03-22/Images/Images_Mar23/${imageName}.jpg /home/Anshul/files/images/Images_Mar23
+      `);
+      console.log(imageName, "Image found in artpark instance and downloaded")
+      return true
+    } catch (e) {
+      console.log(imageName, "Image not in local and artpark instance found")
+      return false
+    }
   }
 }
 
+logStream.write(`Reading CSV file located in ${csvFilePath} \n `);
 const csvContents = await fs.promises.readFile(csvFilePath, 'utf-8')
 
 const { data: csvData } = Papa.parse(csvContents)
+if(csvData === null) {
+  logStream.write(`Read CSV file successfully\n `);
+}
+logStream.write(`Read CSV file successfully\n `);
 
 for (const row of csvData) {
 
   const fileDetails = row[1]
 
   if (fileDetails !== undefined) {
+    logStream.write(`Working on this file ${fileDetails} \n `);
     const separatorIndex = fileDetails.lastIndexOf('/');
     const fileLocation = fileDetails.substring(0, separatorIndex);
     const fileName = fileDetails.substring(separatorIndex + 1);
 
     const { state, district, speakerID, utteranceID, imageName } = extractFileInfo(fileName)
+    logStream.write(`Extracted the files details successfully\n `);
 
     const checkAudioFile = await checkFile(fileName, fileLocation)
-    await copyImage(imageName)
-    
-    // if (checkAudioFile) {
-    //   //create the video
-    //   console.log("creating video")
-    // }
+    const checkImageFile = await copyAndCheckImage(imageName)
   }
 }
+
+logStream.write(`Execution Done\n `);
+logStream.end();
