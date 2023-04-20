@@ -34,8 +34,6 @@ function extractFileInfo(filename) {
   const speakerID = parts[2];
   const utteranceID = parts[3].split("-")[0];
   const imageName = parts[4] !== "IMG" ? (parts[4].slice(0, 3) === "IMG" ? parts[4] : parts[4] + '_' + parts[5] ): parts[4] + '_' + parts[5] + '_' + parts[6];
-  console.log("Image name is ", imageName)
-  console.log(imageName)
   return { state, district, speakerID, utteranceID, imageName };
 }
 
@@ -76,8 +74,8 @@ async function createVideoFile(audioFilePath, imageFilePath, outputFilePath) {
 }
 
 async function copyAndCheckImage(imageName) {
-  if(existsSync(`${imagesDirPath}/${imageName}`)) {
-    console.log("Imgae found in local directory")
+  if(existsSync(`${imagesDirPath}/${imageName}.jpg`)) {
+    console.log("Image found in local directory")
     return true
   } else {
     try {
