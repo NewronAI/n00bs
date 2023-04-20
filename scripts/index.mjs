@@ -76,11 +76,8 @@ async function copyAndCheckImage(imageName) {
 
 async function createVideoFile(audioName , audioFilePath , imageFilePath , outputFilePath) {
   const videoFilePath = outputFilePath + '/' + audioName.slice(0,-4) + '.mp4'
-  console.log("outputFilePath", outputFilePath)
-  console.log("audioName", audioName)
-  console.log("videoFilePath", videoFilePath)
   try {
-    //await exec(`ffmpeg -loop 1 -i ${imageFilePath} -i ${audioFilePath} -c:v libx264 -tune stillimage -c:a copy -shortest ${outputFilePath}`);
+    await exec(`ffmpeg -loop 1 -i ${imageFilePath} -i ${audioFilePath} -c:v libx264 -tune stillimage -c:a copy -shortest ${outputFilePath}`);
     logStream.write(`Can not create this file video ${audioFilePath}\n`);
     console.log("Created the video for this audio", audioFilePath)
     return true;
