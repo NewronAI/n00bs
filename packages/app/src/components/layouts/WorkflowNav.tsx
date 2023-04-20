@@ -38,7 +38,6 @@ const navigation = [
             { name: 'Unreviewed Flat View', href: '/flattenedView', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
             { name: 'Approved ', href: '/accepted_answers', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
             { name: 'Disapproved', href: '/rejected_answers', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
-
         ]
     },
     // { name: 'Flattened View', href: '/flattenedView', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
