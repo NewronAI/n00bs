@@ -1,9 +1,9 @@
-import React, {useMemo, useRef} from 'react';
-import {useRouter} from "next/router";
+import React, { useMemo, useRef } from 'react';
+import { useRouter } from "next/router";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import WorkflowNav from "@/components/layouts/WorkflowNav";
 import Head from "next/head";
-import {AgGridReact} from "ag-grid-react";
+import { AgGridReact } from "ag-grid-react";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'ag-grid-community/styles/ag-theme-balham.min.css';
@@ -13,9 +13,9 @@ import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import Loader from '@/components/Loader';
 import Modal from "@/components/Modal";
 import axios from 'axios';
-import {member_role, Prisma} from "@prisma/client";
+import { member_role, Prisma } from "@prisma/client";
 import DateFromNowRenderer from '@/components/renderer/DateFromNowRenderer';
-import {AgGridReact as AgGridReactType} from 'ag-grid-react/lib/agGridReact'
+import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact'
 import FilenameRenderer from "@/components/renderer/FilenameRenderer";
 
 
@@ -40,32 +40,42 @@ const Tasks = (_props: TaskFilesPage) => {
     const { data, error, isLoading, mutate } = useSWR(`/api/v1/${workflowUUID}/task/all`, (url) => fetch(url).then(res => res.json()));
     const task = data || [];
 
-    const {data : members, error : membersError, isLoading : membersLoading} = useSWR<Prisma.memberSelect[]>(`/api/v1/member`, (url) => fetch(url).then(res => res.json()));
+    const { data: members, error: membersError, isLoading: membersLoading } = useSWR<Prisma.memberSelect[]>(`/api/v1/member`, (url) => fetch(url).then(res => res.json()));
 
     const defaultColDef = useMemo(() => ({
         sortable: true,
-        filter: true
+        filter: true, flex: 1,
+        minWidth: 100,
+        // allow every column to be aggregated
+        enableValue: true,
+        // allow every column to be grouped
+        enableRowGroup: true,
+        // allow every column to be pivoted
+        enablePivot: true,
+
+        resizable: true,
+
     }), []);
 
 
 
     const handleReassign = async () => {
 
-        if(!memberGridRef.current){
+        if (!memberGridRef.current) {
             setAssignModalError("Something went wrong. Page not loaded properly");
             return null;
         }
 
         const selectedMembers = memberGridRef.current?.api.getSelectedRows();
 
-        if(selectedMembers.length === 0) {
+        if (selectedMembers.length === 0) {
             setAssignModalError("Please select some member | task");
             return null;
         }
 
         setAssignModalError(null);
 
-        const selectedMemberUUID : string = selectedMembers[0].uuid;
+        const selectedMemberUUID: string = selectedMembers[0].uuid;
 
         try {
             await axios.put(`/api/v1/${workflowUUID}/task/assign`, null, {
@@ -84,9 +94,9 @@ const Tasks = (_props: TaskFilesPage) => {
     const handleDelete = async () => {
         try {
             await axios.delete(`/api/v1/${workflowUUID}/task/assign`, {
-                params : {
+                params: {
                     "task-assignment-uuid": delData.uuid
-                } 
+                }
             })
             await mutate()
             setAssignDialogOpenDelete(false)
@@ -115,6 +125,9 @@ const Tasks = (_props: TaskFilesPage) => {
         return <div>Error fetching</div>
     }
 
+
+
+
     return (
         <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"jobs"} workflowUUID={workflowUUID} />}>
             <Head>
@@ -135,43 +148,46 @@ const Tasks = (_props: TaskFilesPage) => {
                     </div>
                 </div>
                 <Loader isLoading={isLoading} >
-                <div className={"w-full h-[760px] p-4  ag-theme-alpine-dark"}>
-                    <AgGridReact
-                        rowData={task}
-                        defaultColDef={defaultColDef}
-                        animateRows={true}
-                        rowSelection='multiple'
-                        rowGroupPanelShow={"onlyWhenGrouping"}
-                        groupDefaultExpanded={-1}
-                        columnDefs={[
-                            { headerName: 'Action', field: 'button', cellRenderer: ({data}: {data: any}) => {
-                                if(!data) {
-                                    return null;
-                                }
-                                return (
-                                  <div className='btn-group'> 
-                                        <button className='btn btn-xs btn-secondary' onClick={() => handleReassignModal(data)} >Reassign</button>
-                                      <button className='btn btn-xs btn-error' onClick={() => handleModalDelete(data)} >Delete</button>
-                                  </div>
-                                )
-                              }
-                              },
-                            { headerName: 'File State', field: 'workflow_file.state' , rowGroup: true},
-                            { headerName: 'File District', field: 'workflow_file.district', rowGroup: true },
-                            { headerName: 'File Name', field: 'workflow_file.file_name', cellRenderer : FilenameRenderer, width: 450, rowGroup: true },
-                            { headerName: 'Created At', field: 'createdAt', cellRenderer: DateFromNowRenderer },
-                            { headerName: 'Name', field: 'assignee.name' },
-                            { headerName: 'Email', field: 'assignee.email' },
-                            { headerName: 'Member District', field: 'assignee.district' },
-                            { headerName: 'Member State', field: 'assignee.state' },
-                        ]}
-                    />
-                </div>
+                    <div className={"w-full h-[760px] p-4  ag-theme-alpine-dark"}>
+                        <AgGridReact
+                            rowData={task}
+                            defaultColDef={defaultColDef}
+                            sideBar={{ toolPanels: ["columns", "filters"], hiddenByDefault: false }}
+                            pivotMode={false}
+                            animateRows={true}
+                            rowSelection='multiple'
+                            rowGroupPanelShow={"onlyWhenGrouping"}
+                            groupDefaultExpanded={-1}
+                            columnDefs={[
+                                {
+                                    headerName: 'Action', field: 'button', cellRenderer: ({ data }: { data: any }) => {
+                                        if (!data) {
+                                            return null;
+                                        }
+                                        return (
+                                            <div className='btn-group'>
+                                                <button className='btn btn-xs btn-secondary' onClick={() => handleReassignModal(data)} >Reassign</button>
+                                                <button className='btn btn-xs btn-error' onClick={() => handleModalDelete(data)} >Delete</button>
+                                            </div>
+                                        )
+                                    }
+                                },
+                                { headerName: 'File State', field: 'workflow_file.state', rowGroup: true },
+                                { headerName: 'File District', field: 'workflow_file.district', rowGroup: true },
+                                { headerName: 'File Name', field: 'workflow_file.file_name', cellRenderer: FilenameRenderer, width: 450, rowGroup: true },
+                                { headerName: 'Created At', field: 'createdAt', cellRenderer: DateFromNowRenderer },
+                                { headerName: 'Name', field: 'assignee.name' },
+                                { headerName: 'Email', field: 'assignee.email' },
+                                { headerName: 'Member District', field: 'assignee.district' },
+                                { headerName: 'Member State', field: 'assignee.state' },
+                            ]}
+                        />
+                    </div>
                 </Loader>
             </div>
-            
+
             <Modal open={assignDialogOpenDelete}
-                   onClose={handleDialogClose}
+                onClose={handleDialogClose}
             >
                 <div>
                     <h2 className='pb-2'>Are you sure you want to delete this assignment?</h2>
@@ -191,17 +207,17 @@ const Tasks = (_props: TaskFilesPage) => {
                         <h2>File Location: </h2>
                         <h2>{delData?.workflow_file?.district}, {delData?.workflow_file?.state}</h2>
                     </div>
-                   <div className='flex justify-end'>
-                    <div className='btn-group'>
-                        <button className='btn btn-sm btn-primary' onClick={handleDialogClose} >No</button>
-                        <button className='btn btn-sm btn-error' onClick={handleDelete} >yes</button>
-                    </div>
+                    <div className='flex justify-end'>
+                        <div className='btn-group'>
+                            <button className='btn btn-sm btn-primary' onClick={handleDialogClose} >No</button>
+                            <button className='btn btn-sm btn-error' onClick={handleDelete} >yes</button>
+                        </div>
                     </div>
                 </div>
             </Modal>
 
             <Modal open={assignDialogOpenEdit}
-                   onClose={handleDialogClose}
+                onClose={handleDialogClose}
             >
                 <div className="flex flex-col">
                     <div className="flex flex-col mt-4">
@@ -218,7 +234,7 @@ const Tasks = (_props: TaskFilesPage) => {
                                 pagination={true}
                                 ref={memberGridRef}
                                 rowSelection='single'
-                                sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
+                                sideBar={{ toolPanels: ["columns", "filters"], hiddenByDefault: false }}
                                 paginationPageSize={6}
                                 rowGroupPanelShow={"onlyWhenGrouping"}
                                 defaultColDef={{
