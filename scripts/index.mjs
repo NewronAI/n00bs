@@ -33,7 +33,7 @@ function extractFileInfo(filename) {
   const district = parts[1];
   const speakerID = parts[2];
   const utteranceID = parts[3].split("-")[0];
-  const imageName = parts[4] !== "Img" ? (parts[4].slice(0, 3) === "Img" ? parts[4] : parts[4] + '_' + parts[5] ): parts[4] + '_' + parts[5] + '_' + parts[6];
+  const imageName = parts[4] !== "IMG" ? (parts[4].slice(0, 3) === "IMG" ? parts[4] : parts[4] + '_' + parts[5] ): parts[4] + '_' + parts[5] + '_' + parts[6];
   console.log("Image name is ", imageName)
   console.log(imageName)
   return { state, district, speakerID, utteranceID, imageName };
