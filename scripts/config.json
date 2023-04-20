@@ -2,5 +2,7 @@
     "baseLocation": "/home/Anshul/files",
     "imagesDirPath": "/home/Anshul/files/images/Images_Mar23",
     "videosDirPath": "/home/Anshul/files/videos/single_audios",
-    "csvFilePath" : "ImgTest.csv"
+    "csvFilePath" : "ImgTest.csv",
+    "imageNotFoundDataCsvPath" : "/home/Anshul/Logs/ImageNotFound",
+    "logsPath" : "/home/Anshul/Logs"
 }

@@ -6,8 +6,15 @@ const Papa = require("papaparse");
 import { existsSync } from "fs"
 import { clearScreenDown } from "readline";
 
+const logsPath = config.logsPath;
+const baseLocation = config.baseLocation;
+const imagesDirPath = config.imagesDirPath;
+const videosDirPath = config.videosDirPath;
+const csvFilePath = config.csvFilePath;
+const imageNotFoundDataCsvPath = config.imageNotFoundDataCsvPath;
+
 const now = new Date();
-const logFileName = `log-${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.txt`;
+const logFileName = `${logsPath}/log-${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.txt`;
 const logStream = fs.createWriteStream(logFileName, { flags: 'a' });
 logStream.write('Started running the script\n');
 
@@ -17,15 +24,15 @@ const exec = promisify(child_process.exec);
 const configFilePath = path.join(__dirname, "config.json");
 const config = JSON.parse(fs.readFileSync(configFilePath));
 
-const baseLocation = config.baseLocation;
-const imagesDirPath = config.imagesDirPath;
-const videosDirPath = config.videosDirPath;
-const csvFilePath = config.csvFilePath;
 logStream.write('Getting Directories location from config file\n');
 logStream.write(`Base Location is ${baseLocation}\n`);
 logStream.write(`Images Dir Path is ${imagesDirPath}\n`);
 logStream.write(`Single Audio Videos Dir Path is ${videosDirPath}\n`);
 logStream.write(`CSV File Path is ${csvFilePath}\n`);
+
+let imageNotFoundData = [
+  {fileName: "File Name", imageName: "Image Name"}
+];
 
 function extractFileInfo(filename) {
   const parts = filename.split("_");
@@ -116,8 +123,15 @@ for (const row of csvData) {
     const checkImageFile = await copyAndCheckImage(imageName)
 
     console.log("checkAudioFile",checkAudioFile," checkImageFile",checkImageFile)
+    if(!checkImageFile) {
+      imageNotFoundData = [...imageNotFoundData, ...{fileName: fileName, imageName: imageName}]
+    }
+
   }
 }
+
+const imageNotFoundString = Papa.unparse(imageNotFoundData);
+fs.writeFileSync(`${imageNotFoundDataCsvPath}/csv-${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}-${now.getHours()}.csv`, imageNotFoundString);
 
 logStream.write(`Execution Done\n `);
 logStream.end();
