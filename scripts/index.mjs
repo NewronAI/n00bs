@@ -57,28 +57,6 @@ async function checkFile(filename, filepath) {
   }
 }
 
-async function checkImage(filename) {
-
-  if (existsSync(`${imagesDirPath}/${filename}`)) {
-    console.log(`${filename} exists in ${imagesDirPath}`)
-    return true
-  } else if (existsSync(`${imagesDirPath}/${"Img" + filename}`)) {
-    console.log(`${filename} exists in ${imagesDirPath} with the name of ${"Img" + filename}`)
-    return true
-  } else if (existsSync(`${imagesDirPath}/${"Img_" + filename}`)) {
-    console.log(`${filename} exists in ${imagesDirPath} with the name of ${"Img_" + filename}`)
-    return true
-  }
-  else {
-    console.log(`Could not find ${filename}`)
-    return false
-  }
-}
-
-async function createVideoFile(audioFilePath, imageFilePath, outputFilePath) {
-  await exec(`ffmpeg -loop 1 -i ${imageFilePath} -i ${audioFilePath} -c:v libx264 -tune stillimage -c:a copy -shortest ${outputFilePath}`);
-}
-
 async function copyAndCheckImage(imageName) {
   if(existsSync(`${imagesDirPath}/${imageName}.jpg`)) {
     console.log("Image found in local directory")
@@ -93,6 +71,21 @@ async function copyAndCheckImage(imageName) {
       console.log(imageName, "Image not in local and artpark instance found")
       return false
     }
+  }
+}
+
+async function createVideoFile(audioName ,audioFilePath, imageFilePath, outputFilePath) {
+  const videoFilePath = outputFilePath + '/' + audioName.slice(0,-4) + '.mp4'
+  console.log(videoFilePath)
+  try {
+    //await exec(`ffmpeg -loop 1 -i ${imageFilePath} -i ${audioFilePath} -c:v libx264 -tune stillimage -c:a copy -shortest ${outputFilePath}`);
+    logStream.write(`Can not create this file video ${audioFilePath}. showing this error ${e}\n`);
+    console.log("Created the video for this audio", audioFilePath)
+    return true;
+  } catch (e) {
+    console.log(e)
+    logStream.write(`Can not create this file video ${audioFilePath}. showing this error ${e}\n`);
+    return false;
   }
 }
 
@@ -124,6 +117,16 @@ for (const row of csvData) {
     console.log("checkAudioFile",checkAudioFile," checkImageFile",checkImageFile)
     if(!checkImageFile) {
       imageNotFoundData.push({fileName: fileName, imageName: imageName})
+    }
+
+    if(checkAudioFile && checkImageFile) {
+      const checkVideoFile = await createVideoFile(`${baseLocation}/${fileDetails}`,`${imagesDirPath}`,`${videosDirPath}`)
+      if(checkVideoFile) {
+        console.log("Created")
+      }
+      else {
+        console.log("Not Created")
+      }
     }
   }
 }
