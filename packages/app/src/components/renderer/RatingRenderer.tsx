@@ -4,6 +4,7 @@ import clsx from "clsx";
 type RatingRendererProps = {
     value?: number | string | null,
     data: any,
+    node: any,
     oldRating: (data: any) => number,
     onRatingChange?: (value: number, data: any) => void
 }
