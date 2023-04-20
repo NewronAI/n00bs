@@ -116,6 +116,8 @@ for (const row of csvData) {
 
     const checkAudioFile = await checkFile(fileName, fileLocation)
     const checkImageFile = await copyAndCheckImage(imageName)
+
+    console.log("checkAudioFile",checkAudioFile," checkImageFile",checkImageFile)
   }
 }
 
