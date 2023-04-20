@@ -29,7 +29,7 @@ logStream.write(`Images Dir Path is ${imagesDirPath}\n`);
 logStream.write(`Single Audio Videos Dir Path is ${videosDirPath}\n`);
 logStream.write(`CSV File Path is ${csvFilePath}\n`);
 
-let imageNotFoundData = [
+const imageNotFoundData = [
   {fileName: "File Name", imageName: "Image Name"}
 ];
 
@@ -123,9 +123,8 @@ for (const row of csvData) {
 
     console.log("checkAudioFile",checkAudioFile," checkImageFile",checkImageFile)
     if(!checkImageFile) {
-      imageNotFoundData = [...imageNotFoundData, ...{fileName: fileName, imageName: imageName}]
+      imageNotFoundData.push({fileName: fileName, imageName: imageName})
     }
-
   }
 }
 
