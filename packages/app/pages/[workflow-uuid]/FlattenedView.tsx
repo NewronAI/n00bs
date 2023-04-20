@@ -231,8 +231,6 @@ const FlattenedView = () => {
               pagination={true}
               columnDefs={colDef}
 
-              // pivotMode={false}
-              // gridOptions={gridOptions}
               sideBar={{ toolPanels: ["columns", "filters"], hiddenByDefault: false }}
               pivotMode={false}
               defaultColDef={{
