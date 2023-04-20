@@ -3,6 +3,8 @@ const fs = require("fs");
 const path = require("path");
 const child_process = require("child_process");
 const Papa = require("papaparse");
+const configFilePath = path.join(__dirname, "config.json");
+const config = JSON.parse(fs.readFileSync(configFilePath));
 import { existsSync } from "fs"
 import { clearScreenDown } from "readline";
 
@@ -20,9 +22,6 @@ logStream.write('Started running the script\n');
 
 // const readdir = promisify(fs.readdir);
 const exec = promisify(child_process.exec);
-
-const configFilePath = path.join(__dirname, "config.json");
-const config = JSON.parse(fs.readFileSync(configFilePath));
 
 logStream.write('Getting Directories location from config file\n');
 logStream.write(`Base Location is ${baseLocation}\n`);
