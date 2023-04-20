@@ -35,12 +35,12 @@ const navigation = [
     {
         name: 'Answers', href: '/answers', icon: <ViewBoardsIcon className="h-5" aria-hidden="true" />, children: [
             { name: 'Unreviewed', href: '/answers', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
-            { name: 'Unreviewed Flat View', href: '/flattened_view', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
+            // { name: 'Unreviewed Flat View', href: '/flattenedView', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
             { name: 'Approved ', href: '/accepted_answers', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
             { name: 'Disapproved', href: '/rejected_answers', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
         ]
     },
-    // { name: 'Flattened View', href: '/flattenedView', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
+    { name: 'Flattened View', href: '/flattenedView', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
     // { name: 'Open Jobs', href: '/jobs' },
     // { name: 'Completed Jobs', href: '/completed-jobs' },
     { name: 'Freelancers', href: '/workers', icon: <UserGroupIcon className="h-5" aria-hidden="true" />, current: false, },

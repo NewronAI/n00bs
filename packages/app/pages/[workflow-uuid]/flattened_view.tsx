@@ -30,6 +30,7 @@ import { Grid, GridOptions, ValueGetterParams } from 'ag-grid-community';
 const FlattenedView = () => {
   const router = useRouter();
   const workflowUUID = router.query["workflow-uuid"] as string;
+  console.log(" workflowUUID", workflowUUID)
 
   const [taskRatings, setTaskRatings] = useState(new Map<string, number>())
 
@@ -56,9 +57,6 @@ const FlattenedView = () => {
       })
     }
   })
-
-
-
 
 
 
