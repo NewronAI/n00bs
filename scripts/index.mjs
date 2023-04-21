@@ -75,7 +75,7 @@ async function copyAndCheckImage(imageName) {
 }
 
 async function createVideoFile(audioName , audioFilePath , imageFilePath , outputFilePath) {
-  const videoFilePath = outputFilePath + '/' + audioName.slice(0,-4) + '.webm'
+  const videoFilePath = outputFilePath + '/' + audioName.slice(0,-4) + '.avi'
   try {
     await exec(`sudo ffmpeg -loop 1 -i ${imageFilePath} -i ${audioFilePath} -c:v libxvid -tune stillimage -c:a libmp3lame -b:a 192k -pix_fmt yuv420p -shortest ${videoFilePath}`)
     logStream.write(`Can not create this file video ${audioFilePath}\n`);
