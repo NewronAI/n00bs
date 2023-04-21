@@ -37,15 +37,11 @@ const FlattenedView = () => {
     setTaskRatings((prev: Map<string, number>) => prev.set(uuid, rating));
   }
 
-
   const [updatingReview, setUpdatingReviews] = useState(false);
-
 
   const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer`, { refreshInterval: 24 * 60 * 60 * 1000 });
   const files = data || [];
   console.log("files", files);
-  // console.log(JSON.stringify(files, null, 2));
-
 
   const flattendData: any = []
 
@@ -57,44 +53,14 @@ const FlattenedView = () => {
     }
   })
 
-
-
-
-
-
-
-
   console.log("FlattendData", flattendData)
-
-
-  // console.log("hello", JSON.stringify(FlattendData, null, 2));
 
   const { data: questionData, error: questionFetchError, isLoading: questionFetchLoading } = useSWRImmutable(`/api/v1/${workflowUUID}/question`)
   console.log("question", questionData)
 
-
-
-  // async function onCellValueChanged(event: any, questionUUID: string) {
-  //   const newValue = event.newValue;
-  //   const taskAssignmentUUID = event.data.uuid;
-
-  //   try {
-  //     const response = await axios.post(`/api/v1/editresponse?taskAssignmentUUID=${taskAssignmentUUID}&questionUUID=${questionUUID}&value=${newValue}`)
-  //     toast(`${response.data} from ${event.oldValue} to ${event.newValue} `, { type: "success" });
-  //   }
-  //   catch (error: any) {
-  //     toast(`${error.message}`, { type: "error" });
-  //     console.log(error)
-  //   }
-  // }
-
-
   async function onCellValueChanged(event: any, questionUUID: string) {
     const newValue = event.newValue;
-
     const taskAssignmentUUID = event.data.task_assignments.uuid;
-
-
     try {
       const response = await axios.post(`/api/v1/editresponse?taskAssignmentUUID=${taskAssignmentUUID}&questionUUID=${questionUUID}&value=${newValue}`)
       toast(`${response.data} from ${event.oldValue} to ${event.newValue} `, { type: "success" });
@@ -106,44 +72,15 @@ const FlattenedView = () => {
   }
 
   const staticColumnDefs = [
-    {
-      headerName: "File",
-      field: "file_name",
-      cellRenderer: 'agGroupCellRenderer',
-      tooltipField: 'file_name',
-      headerTooltip: "Good Work",
-      rowGroup: true,
-      enableRowGroup: true,
-      width: 400
-
-    },
-    {
-      headerName: "District",
-      field: "district",
-    },
-    {
-      headerName: "State",
-      field: "state",
-    },
-    {
-      headerName: "File",
-      field: "file",
-      cellRenderer: UrlRenderer
-    },
-    {
-      headerName: "Created At",
-      field: "createdAt",
-      cellRenderer: DateFromNowRenderer
-    },
-
+    { headerName: "File", field: "file_name", cellRenderer: 'agGroupCellRenderer', tooltipField: 'file_name', headerTooltip: "Good Work", rowGroup: true, enableRowGroup: true, width: 400 },
+    { headerName: "District", field: "district"},
+    { headerName: "State", field: "state"},
+    { headerName: "File", field: "file", cellRenderer: UrlRenderer },
+    { headerName: "Created At", field: "createdAt", cellRenderer: DateFromNowRenderer},
     { headerName: "Assignee Name", field: 'task_assignments.assignee.name', tooltipField: 'assignee.name', tooltipEnable: true },
     { headerName: "Assignee Ph. No", field: 'task_assignments.assignee.phone' },
     { headerName: "Answered At", field: 'task_assignments.assignee.createdAt', cellRenderer: DateFromNowRenderer },
   ]
-
-  // const dynamicColumnDef = questionData?.map((question: any) => {
-  //   return { headerName: question.name, field: `task_answers.${question.uuid}`, cellRenderer: SelectRenderer, cellEditor: 'agSelectCellEditor', cellEditorParams: { values: question.options } as ISelectCellEditorParams, editable: question.name.includes('Comments') ? false : true, onCellValueChanged: (event: any) => onCellValueChanged(event, question.uuid) }
-  // }) || [];
 
   const dynamicColumnDef = Array.isArray(questionData) ?
     questionData.map((question: any) => {
@@ -158,7 +95,6 @@ const FlattenedView = () => {
       }
     }) : [];
 
-
   const colDef = [
     ...staticColumnDefs,
     ...dynamicColumnDef,
@@ -169,7 +105,6 @@ const FlattenedView = () => {
         {...props} oldRating={(data: { uuid: string; }) => taskRatings.get(data?.uuid)} />)
     }]
   ];
-
 
   const handleRate = () => {
     console.log(taskRatings)
@@ -192,17 +127,14 @@ const FlattenedView = () => {
     setTaskRatings(new Map<string, number>())
   }
 
-
   const ActionItem = () => <div>
     <button className={clsx("btn", { "btn-secondary": true })} onClick={handleRate}>
       {updatingReview ? "Saving. . ." : "Save Changes"}
     </button>
   </div>
 
-
-
   return (
-    <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"flattenedView"} workflowUUID={workflowUUID} />} >
+    <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"flattened_view"} workflowUUID={workflowUUID} />} >
       <Head>
         <title>Flattend view</title>
       </Head>
@@ -221,16 +153,12 @@ const FlattenedView = () => {
             <ActionItem />
           </div>
         </div>
-
-
-
         <Loader isLoading={isLoading || questionFetchLoading}>
           <div className={"w-full h-[760px] p-4 ag-theme-alpine-dark"}>
             <AgGridReact
               rowData={flattendData}
               pagination={true}
               columnDefs={colDef}
-
               // pivotMode={false}
               // gridOptions={gridOptions}
               sideBar={{ toolPanels: ["columns", "filters"], hiddenByDefault: false }}
@@ -247,19 +175,12 @@ const FlattenedView = () => {
                 sortable: true,
                 filter: true,
                 resizable: true,
-
               }}
-
-
             />
-
           </div>
         </Loader>
       </div>
-
-
     </DashboardLayout>
-
   )
 }
 
