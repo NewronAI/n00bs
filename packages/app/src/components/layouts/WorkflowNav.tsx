@@ -40,7 +40,7 @@ const navigation = [
             { name: 'Disapproved', href: '/rejected_answers', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
         ]
     },
-    { name: 'Flattened View', href: '/flattenedView', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
+    //{ name: 'Flattened View', href: '/flattenedView', icon: <DocumentIcon className="h-5" aria-hidden="true" /> },
     // { name: 'Open Jobs', href: '/jobs' },
     // { name: 'Completed Jobs', href: '/completed-jobs' },
     { name: 'Freelancers', href: '/workers', icon: <UserGroupIcon className="h-5" aria-hidden="true" />, current: false, },
