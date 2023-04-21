@@ -231,6 +231,8 @@ const FlattenedView = () => {
 
               sideBar={{ toolPanels: ["columns", "filters"], hiddenByDefault: false }}
               pivotMode={false}
+              rowSelection='multiple'
+              rowGroupPanelShow={"onlyWhenGrouping"}
               defaultColDef={{
                 flex: 1,
                 minWidth: 200,
