@@ -25,12 +25,12 @@ import SelectRenderer from '@/components/renderer/SelectRenderer';
 import { forEach } from 'lodash';
 
 import { Grid, GridOptions, ValueGetterParams } from 'ag-grid-community';
+import FilenameRenderer from "@/components/renderer/FilenameRenderer";
 
 
 const FlattenedView = () => {
   const router = useRouter();
   const workflowUUID = router.query["workflow-uuid"] as string;
-  console.log(" workflowUUID", workflowUUID)
 
   const [taskRatings, setTaskRatings] = useState(new Map<string, number>())
 
@@ -45,7 +45,6 @@ const FlattenedView = () => {
   const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer`, { refreshInterval: 24 * 60 * 60 * 1000 });
   const files = data || [];
   console.log("files", files);
-  // console.log(JSON.stringify(files, null, 2));
 
 
   const flattendData: any = []
@@ -60,15 +59,7 @@ const FlattenedView = () => {
 
 
 
-
-
-  console.log("FlattendData", flattendData)
-
-
-  // console.log("hello", JSON.stringify(FlattendData, null, 2));
-
   const { data: questionData, error: questionFetchError, isLoading: questionFetchLoading } = useSWRImmutable(`/api/v1/${workflowUUID}/question`)
-  console.log("question", questionData)
 
 
 
@@ -105,38 +96,46 @@ const FlattenedView = () => {
 
   const staticColumnDefs = [
     {
-      headerName: "File",
-      field: "file_name",
-      cellRenderer: 'agGroupCellRenderer',
-      tooltipField: 'file_name',
-      headerTooltip: "Good Work",
+      headerName: "State",
+      field: "state",
       rowGroup: true,
-      enableRowGroup: true,
-      width: 400
-
+      hide: true
     },
     {
       headerName: "District",
       field: "district",
+        rowGroup: true,
+        hide: true
     },
     {
-      headerName: "State",
-      field: "state",
+      headerName: "Assignee Name",
+      field: 'task_assignments.assignee.name',
+      tooltipField: 'assignee.name',
+      rowGroup: true,
+      tooltipEnable: true
     },
+    { headerName: "Assignee Ph. No", field: 'task_assignments.assignee.phone' },
     {
-      headerName: "File",
+      headerName: "File Name",
+      field: "file_name",
+      cellRenderer : FilenameRenderer,
+      tooltipField: 'file_name',
+      headerTooltip: "Good Work",
+      width: 400
+
+    },
+
+    {
+      headerName: "URL",
       field: "file",
       cellRenderer: UrlRenderer
     },
     {
       headerName: "Created At",
       field: "createdAt",
-      cellRenderer: DateFromNowRenderer
+      cellRenderer: DateFromNowRenderer,
+      hide: true
     },
-
-    { headerName: "Assignee Name", field: 'task_assignments.assignee.name', tooltipField: 'assignee.name', tooltipEnable: true },
-    { headerName: "Assignee Ph. No", field: 'task_assignments.assignee.phone' },
-    { headerName: "Answered At", field: 'task_assignments.assignee.createdAt', cellRenderer: DateFromNowRenderer },
   ]
 
   // const dynamicColumnDef = questionData?.map((question: any) => {
@@ -202,17 +201,17 @@ const FlattenedView = () => {
   return (
     <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"flattenedView"} workflowUUID={workflowUUID} />} >
       <Head>
-        <title>Flattend view</title>
+        <title>Unreviewed Answers by Freelancer</title>
       </Head>
 
       <div>
         <div className={"mt-2 flex justify-between"}>
           <div className={"p-0 md:pl-4"}>
             <h1 id={""} className={"text-xl font-semibold"}>
-              Flattened View
+              Unreviewed Answers by Freelancer
             </h1>
             <p className={"font-thin text-sm"}>
-              In the Flattened View, tasks addressed by a team member
+              This view is customizable and can be used to review answers by freelancer.
             </p>
           </div>
           <div className={"flex items-center mr-5 btn-group"}>
@@ -228,7 +227,7 @@ const FlattenedView = () => {
               rowData={flattendData}
               pagination={true}
               columnDefs={colDef}
-
+              groupDefaultExpanded={-1}
               sideBar={{ toolPanels: ["columns", "filters"], hiddenByDefault: false }}
               pivotMode={false}
               rowSelection='multiple'
