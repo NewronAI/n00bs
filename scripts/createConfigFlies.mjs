@@ -52,7 +52,7 @@ const filename = `${batchDate}_${vendor}_config.json`;
 
 // Create the JSON file
 console.log("Creating Config file")
-fs.writeFile(filename, JSON.stringify(data), err => {
+fs.writeFile(`/home/Anshul/files/configFiles/${filename}`, JSON.stringify(data), err => {
   if (err) throw err;
   console.log('JSON file has been saved!');
 });
