@@ -7,7 +7,7 @@ console.log("Csv File Name",csvFilename)
 const csvContents = fs.readFileSync(csvFilename, 'utf-8');
 const { data: csvData } = Papa.parse(csvContents)
 
-console.log(csvData)
+console.log(csvData[0][1])
 const parts = csvData[0][1].split("/");
 const vendor = parts[0];
 const batchDate = parts[2];
