@@ -25,9 +25,8 @@ while (true) {
     console.log(`New file detected: ${newestFile} (${newestFilePath})`);
 
     // Run your other scripts here
-    // await $`./script1.sh ${newestFilePath}`;
+    await $`./script1.sh ${newestFilePath}`;
     // await $`./script2.sh ${newestFilePath}`;
-    // ...
 
     console.log("Running the required scripts")
 
