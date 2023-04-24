@@ -44,7 +44,7 @@ function extractFileInfo(filename) {
 }
 
 async function checkFile(filename, filepath) {
-  logStream.write(`Checking if the audio file (${filename}) is present in ${filepath} \n `);
+  logStream.write(`Checking if the audio file (${filename}) is present in ${filepath}\n`);
 
   const directory = baseLocation + '/' + filepath
 
@@ -75,9 +75,9 @@ async function copyAndCheckImage(imageName) {
 }
 
 async function createVideoFile(audioName , audioFilePath , imageFilePath , outputFilePath) {
-  const videoFilePath = outputFilePath + '/' + audioName.slice(0,-4) + '.webm'
+  const videoFilePath = outputFilePath + '/' + audioName.slice(0,-4) + '.wmv'
   try {
-    await exec(`sudo ffmpeg -loop 1 -i ${imageFilePath} -i ${audioFilePath} -c:v libxvid -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest ${videoFilePath}`)
+    await exec(`sudo ffmpeg -loop 1 -i ${imageFilePath} -i ${audioFilePath} -c:v libx264 -q:v 3 -c:a acc -b:a 192k -pix_fmt yuv420p -shortest ${videoFilePath}`)
     logStream.write(`Can not create this file video ${audioFilePath}\n`);
     console.log("Created the video for this audio", audioFilePath)
     return true;
@@ -93,7 +93,7 @@ const csvContents = await fs.promises.readFile(csvFilePath, 'utf-8')
 
 const { data: csvData } = Papa.parse(csvContents)
 if(csvData === null) {
-  logStream.write(`Read CSV file successfully\n `);
+  logStream.write(`Could'nt read the CSV file successfully\n `);
 }
 logStream.write(`Read CSV file successfully\n `);
 
