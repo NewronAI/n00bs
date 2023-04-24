@@ -2,19 +2,17 @@ const fs = require('fs');
 const Papa = require('papaparse');
 
 const csvFilename = process.argv[3];
-console.log("Csv File Name",csvFilename)
+
+if(csvFilename.slice(0,-3) !== "csv") {
+    throw new Error(`File ${csvFilename} is not csv format. The format is ${csvFilename.slice(0,-3)}`);
+}
 
 const csvContents = fs.readFileSync(csvFilename, 'utf-8');
 const { data: csvData } = Papa.parse(csvContents)
 
-console.log(csvData[0][1])
 const parts = csvData[0][1].split("/");
 const vendor = parts[0];
 const batchDate = parts[2];
-
-if(csvFilename.slice(0,-3) !== "csv") {
-    throw new Error(`File ${csvFilename} is not csv format`);
-}
 
 if(!existsSync(`/home/Anshul/files/videos/${vendor}/single_audios/${batchDate}`)) {
     await exec(`sudo mkdir /home/Anshul/files/videos/${vendor}/single_audios/${batchDate}`)
