@@ -5,8 +5,8 @@ let lastProcessedFile = "";
 let lastProcessedFileModifiedTime = new Date(0);
 
 while (true) {
+  console.log("Detectting new csv file")
   const files = await $`find ${folderPath} -type f`;
-
   console.log(files)
 
   let newestFile;
@@ -14,12 +14,12 @@ while (true) {
   for (const file of files.stdout.trim().split('\n')) {
     const { mtime } = await fs.stat(file);
     if (mtime > newestModifiedTime && mtime > lastProcessedFileModifiedTime) {
+        console.log("New File detected")
       newestFile = file;
       newestModifiedTime = mtime;
     }
   }
 
-  // Check if a new file was added to the folder
   if (newestModifiedTime > lastProcessedFileModifiedTime) {
     const newestFilePath = newestFile;
     console.log(`New file detected: ${newestFile} (${newestFilePath})`);
