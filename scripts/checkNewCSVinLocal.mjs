@@ -25,7 +25,7 @@ while (true) {
     console.log(`New file detected: ${newestFile} (${newestFilePath})`);
 
     // Run your other scripts here
-    await $`zx ./createConfigFlies.sh ${newestFilePath}`;
+    await $`zx ./createConfigFlies.mjs ${newestFilePath}`;
     // await $`./script2.sh ${newestFilePath}`;
 
     console.log("Running the required scripts")
