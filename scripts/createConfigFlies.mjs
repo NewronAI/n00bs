@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Papa = require('papaparse');
+import { existsSync } from "fs"
 
 const csvFilename = process.argv[3];
 
