@@ -35,6 +35,7 @@ if(!existsSync(`/home/Anshul/files/${vendor}/single_audio/${batchDate}`)) {
 
 if(!existsSync(`/home/Anshul/Logs/ImageNotFound/${batchDate}_${vendor}`)) {
     console.log(`Creating the directory /home/Anshul/Logs/ImageNotFound/${batchDate}_${vendor}`)
+    await exec(`sudo mkdir /home/Anshul/Logs/ImageNotFound/${batchDate}_${vendor}`)
 }
 
 // Define the data to be saved in the JSON file
