@@ -4,6 +4,8 @@ import { existsSync } from "fs"
 
 const csvFilename = process.argv[3];
 
+const exec = promisify(child_process.exec);
+
 if(csvFilename.slice(-3) !== "csv") {
     throw new Error(`File ${csvFilename} is not csv format. The format is ${csvFilename.slice(0,-3)}`);
 }
