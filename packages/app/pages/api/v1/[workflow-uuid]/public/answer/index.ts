@@ -26,7 +26,7 @@ publicAnswerApi.post(async (req, res) => {
     const logger = getLogger(`/api/v1/${workflowUuid}/public/answer`);
     logger.debug("Answering question");
 
-    logger.debug("Workflow UUID: ", workflowUuid);
+    logger.debug(`"Workflow UUID: ", ${workflowUuid}`);
 
     assertUp(workflowUuid, {
         message: "Workflow UUID: Param is required. Should contain the uuid of the workflow",
@@ -36,7 +36,7 @@ publicAnswerApi.post(async (req, res) => {
 
     const secret = req.body?.secret as string;
 
-    logger.debug("Secret: ", secret);
+    logger.debug(`"Secret: ", ${secret}`);
 
     assertUp(secret, {
         message: "Secret: Param is required. Should contain the secret of the workflow",
@@ -45,7 +45,7 @@ publicAnswerApi.post(async (req, res) => {
 
     const calculatedSecret = await getPublicWorkflowAPISecret(workflowUuid);
 
-    logger.debug("Calculated secret: ", calculatedSecret, " === ", secret);
+    logger.debug(`"Calculated secret: ${calculatedSecret} , calculatedSecret ===  secret`);
 
     assertUp(calculatedSecret === secret, {
         message: "secret: The secret is not valid",
@@ -56,7 +56,7 @@ publicAnswerApi.post(async (req, res) => {
 
     const data = req.body.data as QuestionAnswer;
 
-    logger.debug("Data: ", JSON.stringify(data));
+    logger.debug(`Data: , ${JSON.stringify(data)}`);
 
     assertUp(data, {
         message: "data: Param is required. Should contain the data of the answers",
