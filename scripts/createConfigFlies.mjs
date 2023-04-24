@@ -3,7 +3,7 @@ const Papa = require('papaparse');
 
 const csvFilename = process.argv[3];
 
-if(csvFilename.slice(0,-3) !== "csv") {
+if(csvFilename.slice(-3) !== "csv") {
     throw new Error(`File ${csvFilename} is not csv format. The format is ${csvFilename.slice(0,-3)}`);
 }
 
