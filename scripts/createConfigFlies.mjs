@@ -26,7 +26,7 @@ if(!existsSync(`/home/Anshul/files/videos/${vendor}/single_audios/${batchDate}`)
     console.log(`Directory is already there /home/Anshul/files/videos/${vendor}/single_audios/${batchDate}`)
 }
 
-if(!existsSync(`/home/Anshul/files/${shaip}/single_audio/${batchDate}`)) {
+if(!existsSync(`/home/Anshul/files/${vendor}/single_audio/${batchDate}`)) {
     console.log(`Copying the audio files`)
     await exec(`rsync -avz -e "ssh -i $HOME/.ssh/id_rsa_ldai" artpark@34.93.48.56:/data/Database/manual_qc/${vendor}/single_audio/${batchDate} /home/Anshul/files/${vendor}/single_audio/${vendor}`)
 } else {
