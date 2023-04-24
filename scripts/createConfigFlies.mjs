@@ -1,6 +1,7 @@
 const { promisify } = require("util");
 const fs = require('fs');
 const Papa = require('papaparse');
+const child_process = require("child_process");
 import { existsSync } from "fs"
 
 const csvFilename = process.argv[3];
