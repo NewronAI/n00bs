@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Papa = require('papaparse');
 
-const csvFilename = process.argv[2];
+const csvFilename = process.argv[3];
 console.log("Csv File Name",csvFilename)
 
 const csvContents = fs.readFileSync(csvFilename, 'utf-8');
