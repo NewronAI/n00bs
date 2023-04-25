@@ -21,6 +21,7 @@ const batchDate = parts[2];
 
 if(!existsSync(`/home/Anshul/files/videos/${vendor}/single_audios/${batchDate}`)) {
     await exec(`sudo mkdir /home/Anshul/files/videos/${vendor}/single_audios/${batchDate}`)
+    
     console.log(`${batchDate} folder created in /home/Anshul/files/videos/${vendor}/single_audios/`)
 } else {
     console.log(`Directory is already there /home/Anshul/files/videos/${vendor}/single_audios/${batchDate}`)
@@ -36,11 +37,13 @@ if(!existsSync(`/home/Anshul/files/${vendor}/single_audio/${batchDate}`)) {
 if(!existsSync(`/home/Anshul/Logs/ImageNotFound/${batchDate}_${vendor}`)) {
     console.log(`Creating the directory /home/Anshul/Logs/ImageNotFound/${batchDate}_${vendor}`)
     await exec(`sudo mkdir /home/Anshul/Logs/ImageNotFound/${batchDate}_${vendor}`)
+    await exec(`sudo chmod 777 /home/Anshul/Logs/ImageNotFound/${batchDate}_${vendor}`)
 }
 
 if(!existsSync(`/home/Anshul/files/result/single_audio/${vendor}/${batchDate}`)) {
     console.log(`Creating the directory /home/Anshul/files/result/single_audio/${vendor}/${batchDate}`)
     await exec(`sudo mkdir /home/Anshul/files/result/single_audio/${vendor}/${batchDate}`)
+    await exec(`sudo chmod 777 /home/Anshul/files/result/single_audio/${vendor}/${batchDate}`)
 }
 
 let data = {
