@@ -115,7 +115,6 @@ async function getFileLink(fileLocation, imageLocation) {
   const encodedFileLocation = encodeURIComponent(fileLocation)
   const encodedImageLocation = encodeURIComponent(imageLocationParts[4] + "/" + imageLocationParts[5] + "/" + imageLocationParts[6] + ".jpg")
   const fileLink = `http://35.222.19.219/?a=${encodedFileLocation}&i=${encodedImageLocation}`
-  console.log(fileLink)
   return fileLink
 }
 
@@ -152,6 +151,7 @@ for (const row of csvData) {
 
     if(checkAudioFile && checkImageFile) {
       const fileLink = getFileLink( fileDetails, imagesDirPath + "/" + imageName)
+      console.log(fileLink)
       resuldData.push({state: state, district:district, fileName: fileDetails, fileLink: fileLink, duration: duration})
     }
   }
