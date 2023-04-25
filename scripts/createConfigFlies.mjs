@@ -42,7 +42,7 @@ if(!existsSync(`/home/Anshul/Logs/ImageNotFound/${batchDate}_${vendor}`)) {
 let data = {
     "baseLocation": "/home/Anshul/files",
     "imagesDirPath": "/home/Anshul/files/images/Images_Mar23",
-    "videosDirPath": `/home/Anshul/files/videos/${vendor}/${batchDate}`,
+    "videosDirPath": `/home/Anshul/files/videos/${vendor}/single_audios/${batchDate}`,
     "csvFilePath" : csvFilename,
     "imageNotFoundDataCsvPath" : `/home/Anshul/Logs/ImageNotFound/${batchDate}_${vendor}`,
     "logsPath" : "/home/Anshul/Logs"
