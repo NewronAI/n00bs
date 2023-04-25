@@ -20,7 +20,7 @@ function addVideoElement () {
         // width="320" height="240" controls
         imageElement.src = imageFile;
         imageElement.width = 320;
-        imageElement.height = "auto";
+        imageElement.height = 240;
         imageElement.alt = 'Image ' + imageFile;
         container.appendChild(imageElement);
     }
