@@ -27,7 +27,7 @@ while (true) {
     const csvName = newestFilePath.substring(separatorIndex + 1);
     const csvNameParts = csvName.split("_");
     const batchDate = csvNameParts[0]
-    const vendor = csvNameParts[3]
+    const vendor = csvNameParts[3].slice(0,-4)
 
     // Run your other scripts here
     await $`zx ./createConfigFlies.mjs ${newestFilePath}`;
