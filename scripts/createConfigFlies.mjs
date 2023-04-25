@@ -38,14 +38,21 @@ if(!existsSync(`/home/Anshul/Logs/ImageNotFound/${batchDate}_${vendor}`)) {
     await exec(`sudo mkdir /home/Anshul/Logs/ImageNotFound/${batchDate}_${vendor}`)
 }
 
-// Define the data to be saved in the JSON file
+if(!existsSync(`/home/Anshul/files/result/single_audio/${vendor}/${batchDate}`)) {
+    console.log(`Creating the directory /home/Anshul/files/result/single_audio/${vendor}/${batchDate}`)
+    await exec(`sudo mkdir /home/Anshul/files/result/single_audio/${vendor}/${batchDate}`)
+}
+
 let data = {
+    "vendor": vendor,
+    "batch": batchDate,
     "baseLocation": "/home/Anshul/files",
     "imagesDirPath": "/home/Anshul/files/images/Images_Mar23",
     "videosDirPath": `/home/Anshul/files/videos/${vendor}/single_audios/${batchDate}`,
     "csvFilePath" : csvFilename,
     "imageNotFoundDataCsvPath" : `/home/Anshul/Logs/ImageNotFound/${batchDate}_${vendor}`,
-    "logsPath" : "/home/Anshul/Logs"
+    "logsPath" : "/home/Anshul/Logs",
+    "resultCSV" : `/home/Anshul/files/result/single_audio/${vendor}/${batchDate}`
 }
 
 // Define the filename for the JSON file
@@ -57,4 +64,3 @@ fs.writeFile(`/home/Anshul/files/configFiles/${filename}`, JSON.stringify(data),
   if (err) throw err;
   console.log('JSON file has been saved!');
 });
-

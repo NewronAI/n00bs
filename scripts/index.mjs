@@ -17,6 +17,9 @@ const imagesDirPath = config.imagesDirPath;
 const videosDirPath = config.videosDirPath;
 const csvFilePath = config.csvFilePath;
 const imageNotFoundDataCsvPath = config.imageNotFoundDataCsvPath;
+const resultPath = config.resultCSV
+const vendor = config.vendor
+const batch = config.batch
 
 const now = new Date();
 const logFileName = `${logsPath}/log-${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.txt`;
@@ -40,6 +43,10 @@ console.log(`CSV File Path is ${csvFilePath}\n`);
 
 const imageNotFoundData = [
   {fileName: "File Name", imageName: "Image Name"}
+];
+
+const resuldData = [
+  {state: "State", district: "District", fileName: "File Name", fileLink: "File Link", duration: "Duration of audio"}
 ];
 
 function extractFileInfo(filename) {
@@ -89,12 +96,20 @@ async function createVideoFile(audioName , audioFilePath , imageFilePath , outpu
     await exec(`sudo ffmpeg -loop 1 -i ${imageFilePath} -i ${audioFilePath} -c:v libxvid -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest ${videoFilePath}`)
     logStream.write(`Can not create this file video ${audioFilePath}\n`);
     console.log("Created the video for this audio", audioFilePath)
-    return true;
+    return videoFilePath;
   } catch (e) {
     console.log(e)
     logStream.write(`Can not create this file video ${audioFilePath}. showing this error ${e}\n`);
-    return false;
+    return null;
   }
+}
+
+async function createVideoLink(videoName) {
+  const videoNameParts = videoName.split("/")
+  console.log("videoFilePath", videoFilePath)
+  const videoFileLink = `http://35.222.19.219/${videoNameParts[3]}/${videoNameParts[4]}/${videoNameParts[5]}/${videoNameParts[6]}`;
+  console.log(videoFilePath)
+  return videoFileLink
 }
 
 logStream.write(`Reading CSV file located in ${csvFilePath} \n `);
@@ -128,9 +143,11 @@ for (const row of csvData) {
     }
 
     if(checkAudioFile && checkImageFile) {
-      const checkVideoFile = await createVideoFile(fileName, `${baseLocation}/${fileDetails}`,`${imagesDirPath}/${imageName}.jpg`,`${videosDirPath}`)
-      if(checkVideoFile) {
+      const videoFileName = await createVideoFile(fileName, `${baseLocation}/${fileDetails}`,`${imagesDirPath}/${imageName}.jpg`,`${videosDirPath}`)
+      if(videoFileName !== null) {
         console.log("Created")
+        const videoLink = getVideoLink(videoFileName)
+        imageNotFoundData.push({state: state, district: district, fileName: fileDetails, fileLink: videoLink, duration: "Duration of audio"})
       }
       else {
         console.log("Not Created")
@@ -141,6 +158,9 @@ for (const row of csvData) {
 
 const imageNotFoundString = Papa.unparse(imageNotFoundData);
 fs.writeFileSync(`${imageNotFoundDataCsvPath}/csv-${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}-${now.getHours()}.csv`, imageNotFoundString);
+
+const resultDataString = Papa.unparse(resuldData);
+fs.writeFileSync(`${resultPath}/${batch}_${vendor}.csv`, resultDataString);
 
 logStream.write(`Execution Done\n `);
 logStream.end();
