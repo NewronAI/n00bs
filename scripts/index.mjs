@@ -32,6 +32,12 @@ logStream.write(`Images Dir Path is ${imagesDirPath}\n`);
 logStream.write(`Single Audio Videos Dir Path is ${videosDirPath}\n`);
 logStream.write(`CSV File Path is ${csvFilePath}\n`);
 
+console.log('Getting Directories location from config file\n');
+console.log(`Base Location is ${baseLocation}\n`);
+console.log(`Images Dir Path is ${imagesDirPath}\n`);
+console.log(`Single Audio Videos Dir Path is ${videosDirPath}\n`);
+console.log(`CSV File Path is ${csvFilePath}\n`);
+
 const imageNotFoundData = [
   {fileName: "File Name", imageName: "Image Name"}
 ];
