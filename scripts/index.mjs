@@ -143,6 +143,7 @@ for (const row of csvData) {
     }
 
     if(checkAudioFile && checkImageFile) {
+      console.log("Starting Video Generation")
       const videoFileName = await createVideoFile(fileName, `${baseLocation}/${fileDetails}`,`${imagesDirPath}/${imageName}.jpg`,`${videosDirPath}`)
       if(videoFileName !== null) {
         console.log("Created")
