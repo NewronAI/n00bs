@@ -23,14 +23,19 @@ while (true) {
   if (newestModifiedTime > lastProcessedFileModifiedTime) {
     const newestFilePath = newestFile;
     console.log(`New file detected: ${newestFile} (${newestFilePath})`);
+    const separatorIndex = newestFilePath.lastIndexOf('/');
+    const csvName = newestFilePath.substring(separatorIndex + 1);
+    const csvNameParts = csvName.split("_");
+    const batchDate = csvNameParts[0]
+    const vendor = csvNameParts[3]
 
     // Run your other scripts here
-    const configFile = await $`zx ./createConfigFlies.mjs ${newestFilePath}`;
-    //await $`zx ./index.mjs ${newestFilePath}`;
+    await $`zx ./createConfigFlies.mjs ${newestFilePath}`;
+    console.log(`/home/Anshul/files/configFiles/${batchDate}_${vendor}_config.json`)
+    await $`zx ./index.mjs /home/Anshul/files/configFiles/${batchDate}_${vendor}_config.json`;
 
     console.log("Running the required scripts")
-    console.log(configFile)
-    
+
     lastProcessedFile = newestFilePath;
     lastProcessedFileModifiedTime = newestModifiedTime;
   }

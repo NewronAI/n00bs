@@ -1,12 +1,15 @@
+import { existsSync } from "fs"
+import { clearScreenDown } from "readline";
 const { promisify } = require("util");
 const fs = require("fs");
 const path = require("path");
 const child_process = require("child_process");
 const Papa = require("papaparse");
+
+const configFile = process.argv[3];
+console.log(configFile)
 const configFilePath = path.join(__dirname, "config.json");
 const config = JSON.parse(fs.readFileSync(configFilePath));
-import { existsSync } from "fs"
-import { clearScreenDown } from "readline";
 
 const logsPath = config.logsPath;
 const baseLocation = config.baseLocation;

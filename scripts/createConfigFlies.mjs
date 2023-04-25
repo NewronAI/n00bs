@@ -58,4 +58,3 @@ fs.writeFile(`/home/Anshul/files/configFiles/${filename}`, JSON.stringify(data),
   console.log('JSON file has been saved!');
 });
 
-return (`/home/Anshul/files/configFiles/${filename}`)
