@@ -25,11 +25,12 @@ while (true) {
     console.log(`New file detected: ${newestFile} (${newestFilePath})`);
 
     // Run your other scripts here
-    await $`zx ./createConfigFlies.mjs ${newestFilePath}`;
-    // await $`./script2.sh ${newestFilePath}`;
+    const configFile = await $`zx ./createConfigFlies.mjs ${newestFilePath}`;
+    //await $`zx ./index.mjs ${newestFilePath}`;
 
     console.log("Running the required scripts")
-
+    console.log(configFile)
+    
     lastProcessedFile = newestFilePath;
     lastProcessedFileModifiedTime = newestModifiedTime;
   }
