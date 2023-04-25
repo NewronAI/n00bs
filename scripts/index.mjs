@@ -158,7 +158,7 @@ for (const row of csvData) {
 }
 
 const imageNotFoundString = Papa.unparse(imageNotFoundData);
-fs.writeFileSync(`${imageNotFoundDataCsvPath}/csv-${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}-${now.getHours()}.csv`, imageNotFoundString);
+fs.writeFileSync(`${imageNotFoundDataCsvPath}/ImageNotFound-${vendor}-${batch}}.csv`, imageNotFoundString);
 
 console.log("Creating resultant csv")
 const resultDataString = Papa.unparse(resuldData);
