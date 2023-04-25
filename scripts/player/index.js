@@ -8,8 +8,8 @@ function addVideoElement () {
     // Format of links required : http://{server url / ip}/?a={path of audio from root}&i={path of image from root}
 
     const usp = new URLSearchParams(window.location.search);
-    const pathToFile = encodeURIComponent(usp.get('a'));
-    const imageFile = encodeURIComponent(usp.get('i'));
+    const pathToFile = usp.get('a');
+    const imageFile = usp.get('i');
 
     console.log({imageFile});
 
@@ -34,7 +34,6 @@ function addVideoElement () {
 
         audioElement.controls = true;
         container.appendChild(audioElement);
-
     }
 
     if(!pathToFile && !imageFile) {
