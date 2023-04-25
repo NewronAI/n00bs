@@ -145,7 +145,7 @@ for (const row of csvData) {
     }
 
     if(checkAudioFile && checkImageFile) {
-      const fileLink = getFileLink( baseLocation + fileDetails, imagesDirPath + imageName)
+      const fileLink = getFileLink( baseLocation + "/" + fileDetails, imagesDirPath + "/" + imageName)
       resuldData.push({state: state, district:district, fileName: fileDetails, fileLink: fileLink, duration: "Duration of audio"})
     }
   }
