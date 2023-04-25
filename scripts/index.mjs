@@ -109,7 +109,7 @@ async function copyAndCheckImage(imageName) {
 //   }
 // }
 
-async function getFileLink(fileLocation, imageLocation) {
+function getFileLink(fileLocation, imageLocation) {
   console.log("fileDetails", fileLocation, "imageLocation", imageLocation)
   const imageLocationParts = imageLocation.split("/")
   const encodedFileLocation = encodeURIComponent(fileLocation)
