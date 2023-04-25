@@ -90,26 +90,27 @@ async function copyAndCheckImage(imageName) {
   }
 }
 
-async function createVideoFile(audioName , audioFilePath , imageFilePath , outputFilePath) {
-  const videoFilePath = outputFilePath + '/' + audioName.slice(0,-4) + '.mp4'
-  try {
-    await exec(`sudo ffmpeg -loop 1 -i ${imageFilePath} -i ${audioFilePath} -c:v libxvid -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest ${videoFilePath}`)
-    logStream.write(`Can not create this file video ${audioFilePath}\n`);
-    console.log("Created the video for this audio", audioFilePath)
-    return videoFilePath;
-  } catch (e) {
-    console.log(e)
-    logStream.write(`Can not create this file video ${audioFilePath}. showing this error ${e}\n`);
-    return null;
-  }
-}
+// async function createVideoFile(audioName , audioFilePath , imageFilePath , outputFilePath) {
+//   const videoFilePath = outputFilePath + '/' + audioName.slice(0,-4) + '.mp4'
+//   try {
+//     await exec(`sudo ffmpeg -loop 1 -i ${imageFilePath} -i ${audioFilePath} -c:v libxvid -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest ${videoFilePath}`)
+//     logStream.write(`Can not create this file video ${audioFilePath}\n`);
+//     console.log("Created the video for this audio", audioFilePath)
+//     return videoFilePath;
+//   } catch (e) {
+//     console.log(e)
+//     logStream.write(`Can not create this file video ${audioFilePath}. showing this error ${e}\n`);
+//     return null;
+//   }
+// }
 
-async function getVideoLink(videoName) {
-  const videoNameParts = videoName.split("/")
-  console.log("videoFilePath", videoNameParts)
-  const videoFileLink = `http://35.222.19.219/${videoNameParts[4]}/${videoNameParts[5]}/${videoNameParts[6]}/${videoNameParts[7]}/${videoNameParts[8]}`;
-  console.log(videoFileLink)
-  return videoFileLink
+async function getFileLink(fileLocation, imageLocation) {
+  console.log("fileDetails", fileLocation, "imageLocation", imageLocation)
+  const encodedFileLocation = encodeURIComponent(fileLocation)
+  const encodedImageLocation = encodeURIComponent(imageLocation)
+  const fileLink = `http://35.222.19.219/?a=${encodedFileLocation}&i=${encodedImageLocation}`
+  console.log(fileLink)
+  return fileLink
 }
 
 logStream.write(`Reading CSV file located in ${csvFilePath} \n `);
@@ -127,6 +128,7 @@ for (const row of csvData) {
 
   if (fileDetails !== undefined) {
     logStream.write(`Working on this file ${fileDetails} \n `);
+
     const separatorIndex = fileDetails.lastIndexOf('/');
     const fileLocation = fileDetails.substring(0, separatorIndex);
     const fileName = fileDetails.substring(separatorIndex + 1);
@@ -143,17 +145,8 @@ for (const row of csvData) {
     }
 
     if(checkAudioFile && checkImageFile) {
-      console.log("Starting Video Generation")
-      const videoFileName = await createVideoFile(fileName, `${baseLocation}/${fileDetails}`,`${imagesDirPath}/${imageName}.jpg`,`${videosDirPath}`)
-      console.log("Video Generation Completed")
-      if(videoFileName !== null) {
-        console.log("Created")
-        const videoLink = getVideoLink(videoFileName)
-        imageNotFoundData.push({state: state, district: district, fileName: fileDetails, fileLink: videoLink, duration: "Duration of audio"})
-      }
-      else {
-        console.log("Not Created")
-      }
+      const fileLink = getFileLink( baseLocation + fileDetails, imagesDirPath + imageName)
+      resuldData.push({state: state, district:district, fileName: fileDetails, fileLink: fileLink, duration: "Duration of audio"})
     }
   }
 }

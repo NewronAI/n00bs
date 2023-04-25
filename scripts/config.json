@@ -1,8 +1,0 @@
-{
-    "baseLocation": "/home/Anshul/files",
-    "imagesDirPath": "/home/Anshul/files/images/Images_Mar23",
-    "videosDirPath": "/home/Anshul/files/videos/single_audios/23-02-2023",
-    "csvFilePath" : "ImgTest.csv",
-    "imageNotFoundDataCsvPath" : "/home/Anshul/Logs/ImageNotFound",
-    "logsPath" : "/home/Anshul/Logs"
-}
