@@ -33,10 +33,10 @@ if(!existsSync(`/home/Anshul/files/${vendor}/single_audio/${batchDate}`)) {
     console.log("Audio files are already present")
 }
 
-if(!existsSync(`/home/Anshul/Logs/ImageNotFound/${batchDate}_${vendor}`)) {
-    console.log(`Creating the directory /home/Anshul/Logs/ImageNotFound/${batchDate}_${vendor}`)
-    await exec(`mkdir /home/Anshul/Logs/ImageNotFound/${batchDate}_${vendor}`)
-    //await exec(`sudo chmod 777 /home/Anshul/Logs/ImageNotFound/${batchDate}_${vendor}`)
+if(!existsSync(`/home/Anshul/files/Logs/ImageNotFound/${batchDate}_${vendor}`)) {
+    console.log(`Creating the directory /home/Anshul/files/Logs/ImageNotFound/${batchDate}_${vendor}`)
+    await exec(`mkdir /home/Anshul/files/Logs/ImageNotFound/${batchDate}_${vendor}`)
+    await exec(`sudo chmod 777 /home/Anshul/files/Logs/ImageNotFound/${batchDate}_${vendor}`)
 }
 
 if(!existsSync(`/home/Anshul/files/result/single_audio/${vendor}/${batchDate}`)) {
@@ -52,7 +52,7 @@ let data = {
     "imagesDirPath": "/home/Anshul/files/images/Images_Mar23",
     "videosDirPath": `/home/Anshul/files/videos/${vendor}/single_audios/${batchDate}`,
     "csvFilePath" : csvFilename,
-    "imageNotFoundDataCsvPath" : `/home/Anshul/Logs/ImageNotFound/${batchDate}_${vendor}`,
+    "imageNotFoundDataCsvPath" : `/home/Anshul/files/Logs/ImageNotFound/${batchDate}_${vendor}`,
     "logsPath" : "/home/Anshul/Logs",
     "resultCSV" : `/home/Anshul/files/result/single_audio/${vendor}/${batchDate}`
 }
