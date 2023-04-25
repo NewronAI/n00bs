@@ -18,7 +18,7 @@ function addVideoElement () {
     if(imageFile) {
         const imageElement = document.createElement('img');
         // width="320" height="240" controls
-        imageElement.src = "http://35.222.19.219/images/Images_Mar23/BHARBA_351883.jpg";
+        imageElement.src = imageFile;
         imageElement.width = 320;
         imageElement.height = 240;
         imageElement.alt = 'Image ' + imageFile;
