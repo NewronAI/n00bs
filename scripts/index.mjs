@@ -60,6 +60,7 @@ function extractFileInfo(filename) {
   const lastNumber = parseInt(parts[parts.length - 1].splice(0,-4));
   console.log(parts[parts.length - 2], "-----", parts[parts.length - 1])
   const duration =  (lastNumber - secondLastNumber) / 1000;
+  console.log(duration)
   return { state, district, speakerID, utteranceID, imageName, duration };
 }
 
