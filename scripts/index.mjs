@@ -107,7 +107,7 @@ async function createVideoFile(audioName , audioFilePath , imageFilePath , outpu
 async function getVideoLink(videoName) {
   const videoNameParts = videoName.split("/")
   console.log("videoFilePath", videoNameParts)
-  const videoFileLink = `http://35.222.19.219/${videoNameParts[3]}/${videoNameParts[4]}/${videoNameParts[5]}/${videoNameParts[6]}`;
+  const videoFileLink = `http://35.222.19.219/${videoNameParts[4]}/${videoNameParts[5]}/${videoNameParts[6]}/${videoNameParts[7]}/${videoNameParts[8]}`;
   console.log(videoFileLink)
   return videoFileLink
 }
