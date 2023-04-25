@@ -108,7 +108,7 @@ async function getFileLink(fileLocation, imageLocation) {
   console.log("fileDetails", fileLocation, "imageLocation", imageLocation)
   const imageLocationParts = imageLocation.split("/")
   const encodedFileLocation = encodeURIComponent(fileLocation)
-  const encodedImageLocation = encodeURIComponent(imageLocationParts[4] + imageLocationParts[5] + imageLocationParts[6])
+  const encodedImageLocation = encodeURIComponent(imageLocationParts[4] + "/" + imageLocationParts[5] + "/" + imageLocationParts[6])
   const fileLink = `http://35.222.19.219/?a=${encodedFileLocation}&i=${encodedImageLocation}`
   console.log(fileLink)
   return fileLink
