@@ -8,7 +8,7 @@ const Papa = require("papaparse");
 
 const configFile = process.argv[3];
 console.log(configFile)
-const configFilePath = path.join(__dirname, "config.json");
+const configFilePath = path.join(__dirname, configFile);
 const config = JSON.parse(fs.readFileSync(configFilePath));
 
 const logsPath = config.logsPath;
