@@ -46,7 +46,7 @@ const imageNotFoundData = [
 ];
 
 const resuldData = [
-  {state: "State", district: "District", fileName: "File Name", fileLink: "File Link", duration: "Duration of audio"}
+  {state: "State", district: "District", fileName: "File Name", fileLink: "File Link", duration: "Duration of audio(s)"}
 ];
 
 function extractFileInfo(filename) {
@@ -139,7 +139,7 @@ for (const row of csvData) {
     const fileLocation = fileDetails.substring(0, separatorIndex);
     const fileName = fileDetails.substring(separatorIndex + 1);
 
-    const { state, district, speakerID, utteranceID, imageName } = extractFileInfo(fileName)
+    const { state, district, speakerID, utteranceID, imageName, duration } = extractFileInfo(fileName)
     logStream.write(`Extracted the files details successfully\n `);
 
     const checkAudioFile = await checkFile(fileName, fileLocation)
@@ -152,7 +152,7 @@ for (const row of csvData) {
 
     if(checkAudioFile && checkImageFile) {
       const fileLink = getFileLink( fileDetails, imagesDirPath + "/" + imageName)
-      resuldData.push({state: state, district:district, fileName: fileDetails, fileLink: fileLink, duration: "Duration of audio"})
+      resuldData.push({state: state, district:district, fileName: fileDetails, fileLink: fileLink, duration: duration})
     }
   }
 }
