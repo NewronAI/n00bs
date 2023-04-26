@@ -56,35 +56,37 @@ const DeliveryPage = (props: any) => {
     const fileGridRef = useRef<AgGridReactType>(null);
 
     const { data, error, isLoading } = useSWR(`/api/v1/delivery`, (url) => fetch(url).then(res => res.json()));
-    console.log(data); 
+    console.log(data);
 
     function wf3qAnswers(params: ValueGetterParams, i: number) {
         return params.data?.wf_3q[i];
     }
 
     function wf5qAnswers(params: ValueGetterParams, i: number) {
-        return params.data?.wf_5q === null ? null: params.data?.wf_5q[i];
+        return params.data?.wf_5q === null ? null : params.data?.wf_5q[i];
     }
 
     const staticColumnDefs = [
-        { headerName: "File Name", field: "file_name", sortable: true, filter: true,resizable : true, width: 450, cellRenderer: FilenameRenderer, tooltipField: "file_name", },
-        { headerName: "File District", field: "district", sortable: true, filter: true, width: 150, resizable : true,},
-        { headerName: "File State", field: "state", sortable: true, filter: true, width: 150,resizable : true, },
-        { headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150,resizable : true, },
-        { headerName: "Duration", field: "file_duration", filter: true, width: 135, valueFormatter: fileDurationFormatter, aggFunc: 'sum' ,resizable : true,},
-        { headerName: "File Path", field: "file", sortable: true, filter: true, width: 500, cellRenderer: UrlRenderer, resizable : true },
+        { headerName: "File Name", field: "file_name", sortable: true, filter: true, resizable: true, width: 450, cellRenderer: FilenameRenderer, tooltipField: "file_name", },
+        { headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150 },
+        { headerName: "File District", field: "district", sortable: true, filter: true, width: 150, resizable: true, },
+        { headerName: "File State", field: "state", sortable: true, filter: true, width: 150, resizable: true, },
+        { headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150, resizable: true, },
+        { headerName: "Duration", field: "file_duration", filter: true, width: 135, valueFormatter: fileDurationFormatter, aggFunc: 'sum', resizable: true, },
+        { headerName: "File Path", field: "file", sortable: true, filter: true, width: 500, cellRenderer: UrlRenderer, resizable: true },
     ]
 
     let dynamicColumnDefs: any[] = []
 
     questionsData?.map((questions: any) => {
         const questionsData = questions.questionsData;
-        for(let i = 0; i < questionsData.length; i++) {
+        for (let i = 0; i < questionsData.length; i++) {
             dynamicColumnDefs = [
                 ...dynamicColumnDefs,
-                {   headerName: questionsData[i].name, 
-                    valueGetter: questions.workflowID === 1 ? (params: any) => wf3qAnswers(params,i) : (params: any) => wf5qAnswers(params,i),
-                    sortable: true, 
+                {
+                    headerName: questionsData[i].name,
+                    valueGetter: questions.workflowID === 1 ? (params: any) => wf3qAnswers(params, i) : (params: any) => wf5qAnswers(params, i),
+                    sortable: true,
                     filter: true,
                     width: 200
                 }
@@ -95,10 +97,10 @@ const DeliveryPage = (props: any) => {
     const columnDefs = [
         ...staticColumnDefs,
         ...dynamicColumnDefs,
-        ...[   
-                { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
-                { headerName: "Created at", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
-           ]
+        ...[
+            { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
+            { headerName: "Created at", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
+        ]
     ]
 
     return (
@@ -179,7 +181,7 @@ export const getServerSideProps = withAuthorizedPageAccess({
             const questionsData = taskData?.task_questions.map(question => {
                 return question.questions
             })
- 
+
             return {
                 workflowUUID: workflow.uuid,
                 workflowID: workflow.id,

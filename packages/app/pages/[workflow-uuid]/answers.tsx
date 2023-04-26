@@ -1,17 +1,17 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import WorkflowNav from "@/components/layouts/WorkflowNav";
 import Head from "next/head";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import {useRouter} from "next/router";
-import {AgGridReact} from "ag-grid-react";
+import { useRouter } from "next/router";
+import { AgGridReact } from "ag-grid-react";
 import useSWR from "swr";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.min.css';
 import 'ag-grid-community/styles/ag-theme-balham.min.css';
 import DateFromNowRenderer from '@/components/renderer/DateFromNowRenderer';
-import {AgGridReact as AgGridReactType} from 'ag-grid-react/lib/agGridReact'
+import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact'
 import 'ag-grid-enterprise';
-import {member_role, Prisma} from "@prisma/client";
+import { member_role, Prisma } from "@prisma/client";
 import Loader from "@/components/Loader";
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import RatingRenderer from "@/components/renderer/RatingRenderer";
@@ -19,7 +19,7 @@ import useSWRImmutable from 'swr/immutable';
 import axios from 'axios';
 import clsx from "clsx";
 import UrlRenderer from "@/components/renderer/UrlRenderer";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import { ISelectCellEditorParams } from 'ag-grid-community';
 import SelectRenderer from '@/components/renderer/SelectRenderer';
 
@@ -39,7 +39,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
     }
 
     const workflowUUID = router.query["workflow-uuid"] as string;
-    const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer`, { refreshInterval: 24*60*60*1000 } );
+    const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer`, { refreshInterval: 24 * 60 * 60 * 1000 });
     const files = data || [];
 
     const [updatingReview, setUpdatingReviews] = useState(false);
@@ -50,7 +50,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
     const detailCellRendererParams = useMemo(() => {
         console.log("detailCellRendererParams")
 
-        async function onCellValueChanged (event: any, questionUUID: string) {
+        async function onCellValueChanged(event: any, questionUUID: string) {
             const newValue = event.newValue;
             const taskAssignmentUUID = event.data.uuid;
 
@@ -71,7 +71,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
         ]
 
         const dynamicColumnDef = questionData?.map((question: any) => {
-            return { headerName: question.name, field: `task_answers.${question.uuid}`, cellRenderer: SelectRenderer, cellEditor: 'agSelectCellEditor', cellEditorParams: { values: question.options } as ISelectCellEditorParams, editable: question.name.includes('Comments') ? false : true, onCellValueChanged: (event: any) => onCellValueChanged(event,question.uuid) }
+            return { headerName: question.name, field: `task_answers.${question.uuid}`, cellRenderer: SelectRenderer, cellEditor: 'agSelectCellEditor', cellEditorParams: { values: question.options } as ISelectCellEditorParams, editable: question.name.includes('Comments') ? false : true, onCellValueChanged: (event: any) => onCellValueChanged(event, question.uuid) }
         }) || [];
 
         const colDef = [
@@ -178,7 +178,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                             detailRowAutoHeight={true}
                             detailRowHeight={250}
                             rowGroupPanelShow={"onlyWhenGrouping"}
-                            sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
+                            sideBar={{ toolPanels: ["columns", "filters"], hiddenByDefault: false }}
                             // rowGroupPanelShow={"onlyWhenGrouping"}
                             onFirstDataRendered={onFirstDataRendered}
                             groupDefaultExpanded={-1}
@@ -194,7 +194,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                                 enablePivot: true,
                                 sortable: true,
                                 filter: true,
-                                resizable : true,
+                                resizable: true,
                             }}
                             paginationPageSize={15}
                             columnDefs={[
@@ -206,6 +206,8 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                                     headerTooltip: "Good Work",
 
                                 },
+                                { headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150 },
+
                                 {
                                     headerName: "District",
                                     field: "district",
@@ -223,7 +225,9 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                                     headerName: "Created At",
                                     field: "createdAt",
                                     cellRenderer: DateFromNowRenderer
-                                }
+                                },
+                                { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130 },
+
                             ]}
                         />
                     </div>
