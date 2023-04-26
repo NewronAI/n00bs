@@ -1,20 +1,20 @@
-import React, {useEffect, useRef} from 'react';
+import React, { useEffect, useRef } from 'react';
 import WorkflowNav from "@/components/layouts/WorkflowNav";
 import Head from "next/head";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import {useRouter} from "next/router";
-import {AgGridReact} from "ag-grid-react";
+import { useRouter } from "next/router";
+import { AgGridReact } from "ag-grid-react";
 import useSWR from "swr";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.min.css';
 import 'ag-grid-community/styles/ag-theme-balham.min.css';
 import FileTypeRenderer from '@/components/renderer/FileTypeRenderer';
 import DateFromNowRenderer from '@/components/renderer/DateFromNowRenderer';
-import {AgGridReact as AgGridReactType} from 'ag-grid-react/lib/agGridReact'
+import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact'
 import 'ag-grid-enterprise';
 
 import UrlRenderer from '@/components/renderer/UrlRenderer'
-import {member_role, Prisma} from "@prisma/client";
+import { member_role, Prisma } from "@prisma/client";
 import Modal from "@/components/Modal";
 import axios from "axios";
 import Loader from "@/components/Loader";
@@ -22,17 +22,17 @@ import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import FilenameRenderer from "@/components/renderer/FilenameRenderer";
 import fileDurationFormatter from "@/helpers/react/fileDurationFormatter";
 import FileAssignmentTooltip from "@/components/renderer/FileAssignmentTooltip";
-import {ITooltipParams} from "ag-grid-community";
+import { ITooltipParams } from "ag-grid-community";
 
 interface UnassignedFilesPageProps {
-    files : any[]
+    files: any[]
 }
 
-function getSelectedRegionsCount(selectedRows : {district : string}[]) {
-    const selectedRegionsMap = new Map<string,number>();
+function getSelectedRegionsCount(selectedRows: { district: string }[]) {
+    const selectedRegionsMap = new Map<string, number>();
 
     selectedRows.forEach((row) => {
-        if(selectedRegionsMap.has(row.district)){
+        if (selectedRegionsMap.has(row.district)) {
             const prevCount = selectedRegionsMap.get(row.district) || 0;
             selectedRegionsMap.set(row.district, prevCount + 1);
         } else {
@@ -43,7 +43,7 @@ function getSelectedRegionsCount(selectedRows : {district : string}[]) {
     return selectedRegionsMap.size;
 }
 
-function getSelectedDistricts (selectedRows : {district : string}[]) {
+function getSelectedDistricts(selectedRows: { district: string }[]) {
     const selectedDistricts = new Set<string>();
     selectedRows.forEach((row) => {
         selectedDistricts.add(row.district);
@@ -53,7 +53,7 @@ function getSelectedDistricts (selectedRows : {district : string}[]) {
 }
 
 
-const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
+const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
 
     const fileGridRef = useRef<AgGridReactType>(null);
     const memberGridRef = useRef<AgGridReactType>(null);
@@ -75,13 +75,13 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
 
     const workflowUUID = router.query["workflow-uuid"] as string;
 
-    const {data: workflowDetails} = useSWR<Prisma.workflowSelect>(`/api/v1/${workflowUUID}/get-metadata`);
+    const { data: workflowDetails } = useSWR<Prisma.workflowSelect>(`/api/v1/${workflowUUID}/get-metadata`);
 
-    const {data, error, isLoading, mutate} = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/file/unassigned`, (url) => fetch(url).then(res => res.json()));
+    const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/file/unassigned`, (url) => fetch(url).then(res => res.json()));
     const files = data || [];
 
-    const {data : members, error : membersError, isLoading : membersLoading} = useSWR<Prisma.memberSelect[]>(`/api/v1/member`, (url) => fetch(url).then(res => res.json()));
-
+    const { data: members, error: membersError, isLoading: membersLoading } = useSWR<Prisma.memberSelect[]>(`/api/v1/member`, (url) => fetch(url).then(res => res.json()));
+    console.log("members", members)
     useEffect(() => {
         return () => {
             clearTimeout(filterTimerRef.current);
@@ -89,7 +89,7 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
         }
     }, []);
 
-    if(error || membersError){
+    if (error || membersError) {
         return <div>Error fetching</div>
     }
 
@@ -103,12 +103,12 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
 
         console.log("Initiate assign")
 
-        if(!fileGridRef.current){
+        if (!fileGridRef.current) {
             return null;
         }
 
         const selectedRows = fileGridRef.current.api.getSelectedRows();
-        if(selectedRows.length === 0) {
+        if (selectedRows.length === 0) {
             //Todo: Show error
             console.log("Please select some task")
             return
@@ -117,9 +117,9 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
         setSelectedRegionsCount(getSelectedRegionsCount(selectedRows));
 
         console.log(workflowDetails);
-        if(workflowDetails && workflowDetails?.enforce_region){
+        if (workflowDetails && workflowDetails?.enforce_region) {
             const selectedDistricts = getSelectedDistricts(selectedRows);
-            if(selectedDistricts.size > 1){
+            if (selectedDistricts.size > 1) {
                 setAssignModalError("You can only assign files from a single region");
                 return null;
             }
@@ -144,7 +144,7 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
 
     const handleAssign = async () => {
 
-        if(!fileGridRef.current || !memberGridRef.current){
+        if (!fileGridRef.current || !memberGridRef.current) {
             setAssignModalError("Something went wrong. Page not loaded properly");
             return null;
         }
@@ -154,7 +154,7 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
 
 
 
-        if(selectedRows.length === 0 || selectedMembers.length === 0) {
+        if (selectedRows.length === 0 || selectedMembers.length === 0) {
             setAssignModalError("Please select some member | task");
             return null;
         }
@@ -163,7 +163,7 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
 
         setAssignModalError(null);
 
-        const selectedMemberUUID : string = selectedMembers[0].uuid;
+        const selectedMemberUUID: string = selectedMembers[0].uuid;
 
         try {
             await axios.post(`/api/v1/${workflowUUID}/task/assign`, {
@@ -174,7 +174,7 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
             setTimeout(() => {
                 fileGridRef.current?.api.forEachNode((node) => {
                     // console.log(node.data?.uuid, selectedItems);
-                    if(selectedItems.includes(node.data?.uuid)){
+                    if (selectedItems.includes(node.data?.uuid)) {
                         node.setSelected(true);
                     }
                 });
@@ -193,15 +193,15 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
 
 
     return (
-        <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"unassigned files"} workflowUUID={workflowUUID}/> }>
+        <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"unassigned files"} workflowUUID={workflowUUID} />}>
             <Head>
                 <title>Unassigned Files</title>
             </Head>
 
             <Modal open={assignDialogOpen}
-                   onClose={handleDialogClose}
-                   title={"Assign Files"}
-                   description={"Assign the selected files to a member"}
+                onClose={handleDialogClose}
+                title={"Assign Files"}
+                description={"Assign the selected files to a member"}
             >
                 <div className="flex flex-col">
                     <div className={"border flex justify-between items-center p-1 pl-4 rounded-xl"}>
@@ -322,61 +322,64 @@ const UnassignedFilesPage = (_props : UnassignedFilesPageProps) => {
                 </div>
                 <Loader isLoading={isLoading}>
                     <div className={"w-full h-[760px] p-4 ag-theme-alpine-dark"}>
-                    <AgGridReact
-                        rowData={files}
-                        suppressMenuHide={true}
-                        pagination={true}
-                        groupDefaultExpanded={-1}
-                        ref={fileGridRef}
-                        rowGroupPanelShow={"onlyWhenGrouping"}
-                        sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
-                        groupSelectsChildren={true}
-                        onPaginationChanged={(pageChangeEvent) => {
-                            setCurrentPage(pageChangeEvent.api.paginationGetCurrentPage());
-                        }
-                        }
-                        onSelectionChanged={() => {
-                            setSelectionCount(fileGridRef.current?.api.getSelectedRows().length || 0);
-                            setSelectedItems(fileGridRef.current?.api.getSelectedRows().map(node => {
-                                return node.uuid;
-                            }) || []);
-                        }}
-                        onGridReady={(params) => {
-                            params.api.sizeColumnsToFit();
-                        }}
-                        rowSelection='multiple'
-                        paginationPageSize={15}
-                        defaultColDef={{
-                            flex: 1,
-                            minWidth: 100,
-                            // allow every column to be aggregated
-                            enableValue: true,
-                            resizable: true,
-                            // allow every column to be grouped
-                            enableRowGroup: true,
-                            // allow every column to be pivoted
-                            enablePivot: true,
-                            sortable: true,
-                            filter: true,
-                        }}
-                        columnDefs={[
-                            {headerName: "", checkboxSelection: true, width: 80, headerCheckboxSelection: true, headerCheckboxSelectionFilteredOnly: true},
-                            {headerName: "File Duration", field: "file_duration", sortable: true, filter: true, aggFunc: 'sum' , valueFormatter: fileDurationFormatter, width: 150},
-                            {headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 100},
-                            {headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 400, cellRenderer: FilenameRenderer, tooltipField: "file_name"},
-                            {headerName: "Assignments", field: "assignment_count", sortable: true, filter: true, width: 170,
-                                tooltipField: "assignment_count",
-                                tooltipComponent: (props : ITooltipParams) => (<FileAssignmentTooltip {...props} workflowUUID={workflowUUID} />)},
-                            {headerName: "File Path", field: "file", sortable: true, filter: true, width: 500, cellRenderer: UrlRenderer},
-                            // {headerName: "File Status", field: "status", sortable: true, filter: true, width: 120},
-                            // {headerName: "File UUID", field: "uuid", sortable: true, filter: true, width: 330},
-                            {headerName: "State", field: "state", sortable: true, filter: true,rowGroup: true},
-                            {headerName: "District", field: "district", sortable: true, filter: true,rowGroup: true,},
-                            {headerName: "Created at", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120},
-                            {headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130},
-                        ]}
-                    />
-                </div>
+                        <AgGridReact
+                            rowData={files}
+                            suppressMenuHide={true}
+                            pagination={true}
+                            groupDefaultExpanded={-1}
+                            ref={fileGridRef}
+                            rowGroupPanelShow={"onlyWhenGrouping"}
+                            sideBar={{ toolPanels: ["columns", "filters"], hiddenByDefault: false }}
+                            groupSelectsChildren={true}
+                            onPaginationChanged={(pageChangeEvent) => {
+                                setCurrentPage(pageChangeEvent.api.paginationGetCurrentPage());
+                            }
+                            }
+                            onSelectionChanged={() => {
+                                setSelectionCount(fileGridRef.current?.api.getSelectedRows().length || 0);
+                                setSelectedItems(fileGridRef.current?.api.getSelectedRows().map(node => {
+                                    return node.uuid;
+                                }) || []);
+                            }}
+                            onGridReady={(params) => {
+                                params.api.sizeColumnsToFit();
+                            }}
+                            rowSelection='multiple'
+                            paginationPageSize={15}
+                            defaultColDef={{
+                                flex: 1,
+                                minWidth: 100,
+                                // allow every column to be aggregated
+                                enableValue: true,
+                                resizable: true,
+                                // allow every column to be grouped
+                                enableRowGroup: true,
+                                // allow every column to be pivoted
+                                enablePivot: true,
+                                sortable: true,
+                                filter: true,
+                            }}
+                            columnDefs={[
+                                { headerName: "", checkboxSelection: true, width: 80, headerCheckboxSelection: true, headerCheckboxSelectionFilteredOnly: true },
+                                { headerName: "File Duration", field: "file_duration", sortable: true, filter: true, aggFunc: 'sum', valueFormatter: fileDurationFormatter, width: 150 },
+                                { headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 100 },
+                                { headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 400, cellRenderer: FilenameRenderer, tooltipField: "file_name" },
+                                { headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150 },
+                                {
+                                    headerName: "Assignments", field: "assignment_count", sortable: true, filter: true, width: 170,
+                                    tooltipField: "assignment_count",
+                                    tooltipComponent: (props: ITooltipParams) => (<FileAssignmentTooltip {...props} workflowUUID={workflowUUID} />)
+                                },
+                                { headerName: "File Path", field: "file", sortable: true, filter: true, width: 500, cellRenderer: UrlRenderer },
+                                // {headerName: "File Status", field: "status", sortable: true, filter: true, width: 120},
+                                // {headerName: "File UUID", field: "uuid", sortable: true, filter: true, width: 330},
+                                { headerName: "State", field: "state", sortable: true, filter: true, rowGroup: true },
+                                { headerName: "District", field: "district", sortable: true, filter: true, rowGroup: true, },
+                                { headerName: "Created at", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
+                                { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130 },
+                            ]}
+                        />
+                    </div>
                 </Loader>
             </div>
         </DashboardLayout>
