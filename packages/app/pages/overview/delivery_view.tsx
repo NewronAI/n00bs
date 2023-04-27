@@ -98,8 +98,30 @@ const DeliveryPage = (props: any) => {
         ...staticColumnDefs,
         ...dynamicColumnDefs,
         ...[
-            { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
             { headerName: "Created at", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
+            { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
+            {
+                headerName: "File Received at",
+                field: "receivedAt",
+                sortable: true,
+                filter: true,
+                cellRenderer: (params: any) => {
+                    const receivedAt: string = params.value;
+                    let formattedDate: string = '';
+
+                    if (receivedAt) {
+                        const date: Date = new Date(receivedAt);
+                        const day: string = date.getDate().toString().padStart(2, '0');
+                        const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+                        const year: number = date.getFullYear();
+                        formattedDate = `${day}/${month}/${year}`;
+                    }
+
+                    return formattedDate;
+                },
+                width: 120
+            },
+
         ]
     ]
 
