@@ -348,7 +348,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                             paginationPageSize={15}
                             defaultColDef={{
                                 flex: 1,
-                                minWidth: 100,
+                                minWidth: 150,
                                 // allow every column to be aggregated
                                 enableValue: true,
                                 resizable: true,
@@ -376,7 +376,30 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                                 { headerName: "State", field: "state", sortable: true, filter: true, rowGroup: true },
                                 { headerName: "District", field: "district", sortable: true, filter: true, rowGroup: true, },
                                 { headerName: "Created at", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
-                                { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130 },
+                                // { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130 },
+                                {
+                                    headerName: "File Received at",
+                                    field: "receivedAt",
+                                    sortable: true,
+                                    filter: true,
+                                    cellRenderer: (params: any) => {
+                                        const receivedAt: string = params.value;
+                                        let formattedDate: string = '';
+
+                                        if (receivedAt) {
+                                            const date: Date = new Date(receivedAt);
+                                            const day: string = date.getDate().toString().padStart(2, '0');
+                                            const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+                                            const year: number = date.getFullYear();
+                                            formattedDate = `${day}/${month}/${year}`;
+                                        }
+
+                                        return formattedDate;
+                                    },
+                                    width: 150
+                                },
+
+
                             ]}
                         />
                     </div>

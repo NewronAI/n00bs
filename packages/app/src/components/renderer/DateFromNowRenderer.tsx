@@ -2,12 +2,12 @@ import React from 'react'
 import moment from 'moment'
 
 type DateFromNowRendererProps = {
-    value?: string
+  value?: string
 }
 
-const DateFromNowRenderer = ({value}: DateFromNowRendererProps) => {
-  
-  if(!value) {
+const DateFromNowRenderer = ({ value }: DateFromNowRendererProps) => {
+
+  if (!value) {
     return null;
   }
 
