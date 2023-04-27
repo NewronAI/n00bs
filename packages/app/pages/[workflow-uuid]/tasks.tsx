@@ -178,9 +178,6 @@ const Tasks = (_props: TaskFilesPage) => {
                                 { headerName: 'File Name', field: 'workflow_file.file_name', cellRenderer: FilenameRenderer, width: 450, rowGroup: true },
                                 { headerName: "Vendor", field: "workflow_file.vendor", sortable: true, filter: true, width: 150 },
                                 { headerName: 'Created At', field: 'createdAt', cellRenderer: DateFromNowRenderer },
-<<<<<<< HEAD
-                                { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
-=======
                                 { headerName: "Received at", field: "workflow_file.receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
                                 // {
                                 //     headerName: "Received at",
@@ -225,8 +222,6 @@ const Tasks = (_props: TaskFilesPage) => {
                                     },
                                     width: 120
                                 },
-
->>>>>>> absk_vendor
                                 { headerName: 'Name', field: 'assignee.name' },
                                 { headerName: 'Email', field: 'assignee.email' },
                                 { headerName: 'Member District', field: 'assignee.district' },
