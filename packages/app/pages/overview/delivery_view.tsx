@@ -98,8 +98,8 @@ const DeliveryPage = (props: any) => {
         ...staticColumnDefs,
         ...dynamicColumnDefs,
         ...[
-            // { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
             { headerName: "Created at", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
+            { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
             {
                 headerName: "File Received at",
                 field: "receivedAt",

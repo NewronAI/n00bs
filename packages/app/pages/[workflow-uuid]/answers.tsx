@@ -227,6 +227,12 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                                     cellRenderer: DateFromNowRenderer
                                 },
                                 {
+                                    headerName: "Recived At",
+                                    field: "receivedAt",
+                                    cellRenderer: DateFromNowRenderer
+                                },
+
+                                {
                                     headerName: "File Received at",
                                     field: "receivedAt",
                                     sortable: true,

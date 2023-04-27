@@ -178,7 +178,7 @@ const Tasks = (_props: TaskFilesPage) => {
                                 { headerName: 'File Name', field: 'workflow_file.file_name', cellRenderer: FilenameRenderer, width: 450, rowGroup: true },
                                 { headerName: "Vendor", field: "workflow_file.vendor", sortable: true, filter: true, width: 150 },
                                 { headerName: 'Created At', field: 'createdAt', cellRenderer: DateFromNowRenderer },
-                                // { headerName: "Received at", field: "workflow_file.receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
+                                { headerName: "Received at", field: "workflow_file.receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
                                 // {
                                 //     headerName: "Received at",
                                 //     field: "workflow_file.receivedAt",

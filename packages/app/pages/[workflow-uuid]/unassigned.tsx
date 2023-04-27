@@ -376,7 +376,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                                 { headerName: "State", field: "state", sortable: true, filter: true, rowGroup: true },
                                 { headerName: "District", field: "district", sortable: true, filter: true, rowGroup: true, },
                                 { headerName: "Created at", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
-                                // { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130 },
+                                { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130 },
                                 {
                                     headerName: "File Received at",
                                     field: "receivedAt",

@@ -241,7 +241,7 @@ const RejectedFilesPage = (_props: UnassignedFilesPageProps) => {
                                     field: "createdAt",
                                     cellRenderer: DateFromNowRenderer
                                 },
-                                // { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130 },
+                                { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130 },
                                 {
                                     headerName: "File Received at",
                                     field: "receivedAt",
