@@ -226,9 +226,6 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                                     field: "createdAt",
                                     cellRenderer: DateFromNowRenderer
                                 },
-<<<<<<< HEAD
-                                { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130 },
-=======
                                 {
                                     headerName: "Recived At",
                                     field: "receivedAt",
@@ -257,7 +254,6 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                                     width: 120
                                 },
 
->>>>>>> absk_vendor
 
                             ]}
                         />
