@@ -195,7 +195,7 @@ const RejectedFilesPage = (_props: UnassignedFilesPageProps) => {
                             detailRowAutoHeight={true}
                             detailRowHeight={250}
                             rowGroupPanelShow={"onlyWhenGrouping"}
-                            sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
+                            sideBar={{ toolPanels: ["columns", "filters"], hiddenByDefault: false }}
                             onFirstDataRendered={onFirstDataRendered}
                             groupDefaultExpanded={-1}
                             pivotMode={false}
@@ -222,6 +222,7 @@ const RejectedFilesPage = (_props: UnassignedFilesPageProps) => {
                                     headerTooltip: "Good Work",
 
                                 },
+                                { headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150 },
                                 {
                                     headerName: "District",
                                     field: "district",
@@ -239,7 +240,30 @@ const RejectedFilesPage = (_props: UnassignedFilesPageProps) => {
                                     headerName: "Created At",
                                     field: "createdAt",
                                     cellRenderer: DateFromNowRenderer
-                                }
+                                },
+                                { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130 },
+                                {
+                                    headerName: "File Received at",
+                                    field: "receivedAt",
+                                    sortable: true,
+                                    filter: true,
+                                    cellRenderer: (params: any) => {
+                                        const receivedAt: string = params.value;
+                                        let formattedDate: string = '';
+
+                                        if (receivedAt) {
+                                            const date: Date = new Date(receivedAt);
+                                            const day: string = date.getDate().toString().padStart(2, '0');
+                                            const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+                                            const year: number = date.getFullYear();
+                                            formattedDate = `${day}/${month}/${year}`;
+                                        }
+
+                                        return formattedDate;
+                                    },
+                                    width: 120
+                                },
+
                             ]}
                         />
                     </div>

@@ -1,8 +1,8 @@
 import { db } from "./db";
-import {task_status} from "@prisma/client";
+import { task_status } from "@prisma/client";
 
-type TotalAssignments = {count: number};
-export async function getFilesCount(id : number) {
+type TotalAssignments = { count: number };
+export async function getFilesCount(id: number) {
     const filesCount = await db.workflow_file.count({
         where: {
             workflow: {
@@ -14,9 +14,9 @@ export async function getFilesCount(id : number) {
     return filesCount;
 }
 
-export async function getAssignedFilesCount(workflowUUID : string) {
+export async function getAssignedFilesCount(workflowUUID: string) {
 
-    const assignedFilesCount : TotalAssignments[] = (await db.$queryRaw`
+    const assignedFilesCount: TotalAssignments[] = (await db.$queryRaw`
         WITH
             wf_id AS (
                 SELECT id FROM workflow WHERE uuid = ${workflowUUID}
@@ -33,7 +33,7 @@ export async function getAssignedFilesCount(workflowUUID : string) {
 }
 
 
-export async function getAssignedJobsCount(id : number) {
+export async function getAssignedJobsCount(id: number) {
     const assignedJobsCount = await db.task_assignment.count({
         where: {
             workflow_file: {
@@ -49,7 +49,7 @@ export async function getAssignedJobsCount(id : number) {
     return assignedJobsCount;
 }
 
-export async function getPendingJobsCount(id : number) {
+export async function getPendingJobsCount(id: number) {
     const pendingJobsCount = await db.task_assignment.count({
         where: {
             workflow_file: {
@@ -63,7 +63,7 @@ export async function getPendingJobsCount(id : number) {
     return pendingJobsCount;
 }
 
-export async function getCompletedJobsCount(id : number) {
+export async function getCompletedJobsCount(id: number) {
     const completedJobsCount = await db.task_assignment.count({
         where: {
             AND: {
@@ -73,10 +73,10 @@ export async function getCompletedJobsCount(id : number) {
                     },
                 },
                 OR: [
-                    {status: task_status.completed},
-                    {status: task_status.rejected},
-                    {status: task_status.accepted},
-                    {status: task_status.in_progress}, // In progress means, answer received, but not yet reviewed
+                    { status: task_status.completed },
+                    { status: task_status.rejected },
+                    { status: task_status.accepted },
+                    { status: task_status.in_progress }, // In progress means, answer received, but not yet reviewed
                 ]
             }
         }
@@ -84,7 +84,7 @@ export async function getCompletedJobsCount(id : number) {
     return completedJobsCount;
 }
 
-export async function getCompletedFilesCount(id : number) {
+export async function getCompletedFilesCount(id: number) {
     const completedFilesCount = await db.workflow_file.count({
         where: {
             workflow: {

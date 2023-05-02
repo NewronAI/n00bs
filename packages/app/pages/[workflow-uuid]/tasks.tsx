@@ -41,11 +41,12 @@ const Tasks = (_props: TaskFilesPage) => {
     const task = data || [];
 
     const { data: members, error: membersError, isLoading: membersLoading } = useSWR<Prisma.memberSelect[]>(`/api/v1/member`, (url) => fetch(url).then(res => res.json()));
+    console.log("members", members)
 
     const defaultColDef = useMemo(() => ({
         sortable: true,
         filter: true, flex: 1,
-        minWidth: 100,
+        minWidth: 200,
         // allow every column to be aggregated
         enableValue: true,
         // allow every column to be grouped
@@ -175,7 +176,52 @@ const Tasks = (_props: TaskFilesPage) => {
                                 { headerName: 'File State', field: 'workflow_file.state', rowGroup: true },
                                 { headerName: 'File District', field: 'workflow_file.district', rowGroup: true },
                                 { headerName: 'File Name', field: 'workflow_file.file_name', cellRenderer: FilenameRenderer, width: 450, rowGroup: true },
+                                { headerName: "Vendor", field: "workflow_file.vendor", sortable: true, filter: true, width: 150 },
                                 { headerName: 'Created At', field: 'createdAt', cellRenderer: DateFromNowRenderer },
+                                { headerName: "Received at", field: "workflow_file.receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
+                                // {
+                                //     headerName: "Received at",
+                                //     field: "workflow_file.receivedAt",
+                                //     sortable: true,
+                                //     filter: true,
+                                //     cellRenderer: function (params: any) {
+                                //         var receivedAt = params.value;
+                                //         var formattedDate = '';
+
+                                //         if (receivedAt) {
+                                //             var date = new Date(receivedAt);
+                                //             var day = date.getDate().toString().padStart(2, '0');
+                                //             var month = (date.getMonth() + 1).toString().padStart(2, '0');
+                                //             var year = date.getFullYear();
+                                //             formattedDate = day + '/' + month + '/' + year;
+                                //         }
+
+                                //         return formattedDate;
+                                //     },
+                                //     width: 120
+                                // },
+
+                                {
+                                    headerName: "File Received at",
+                                    field: "workflow_file.receivedAt",
+                                    sortable: true,
+                                    filter: true,
+                                    cellRenderer: (params: any) => {
+                                        const receivedAt: string = params.value;
+                                        let formattedDate: string = '';
+
+                                        if (receivedAt) {
+                                            const date: Date = new Date(receivedAt);
+                                            const day: string = date.getDate().toString().padStart(2, '0');
+                                            const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+                                            const year: number = date.getFullYear();
+                                            formattedDate = `${day}/${month}/${year}`;
+                                        }
+
+                                        return formattedDate;
+                                    },
+                                    width: 120
+                                },
                                 { headerName: 'Name', field: 'assignee.name' },
                                 { headerName: 'Email', field: 'assignee.email' },
                                 { headerName: 'Member District', field: 'assignee.district' },

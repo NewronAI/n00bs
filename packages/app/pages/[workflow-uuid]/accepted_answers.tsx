@@ -1,17 +1,17 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import WorkflowNav from "@/components/layouts/WorkflowNav";
 import Head from "next/head";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import {useRouter} from "next/router";
-import {AgGridReact} from "ag-grid-react";
+import { useRouter } from "next/router";
+import { AgGridReact } from "ag-grid-react";
 import useSWR from "swr";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.min.css';
 import 'ag-grid-community/styles/ag-theme-balham.min.css';
 import DateFromNowRenderer from '@/components/renderer/DateFromNowRenderer';
-import {AgGridReact as AgGridReactType} from 'ag-grid-react/lib/agGridReact'
+import { AgGridReact as AgGridReactType } from 'ag-grid-react/lib/agGridReact'
 import 'ag-grid-enterprise';
-import {member_role, Prisma} from "@prisma/client";
+import { member_role, Prisma } from "@prisma/client";
 import Loader from "@/components/Loader";
 import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import useSWRImmutable from 'swr/immutable';
@@ -22,7 +22,7 @@ import RatingViewer from '@/components/renderer/RatingViewer';
 interface UnassignedFilesPageProps {
     files: any[]
 }
- 
+
 
 const AcceptedFilesPage = (_props: UnassignedFilesPageProps) => {
 
@@ -47,7 +47,7 @@ const AcceptedFilesPage = (_props: UnassignedFilesPageProps) => {
             { headerName: "Assignee Name", field: 'assignee.name', tooltipField: 'assignee.name', tooltipEnable: true },
             { headerName: "Assignee Ph. No", field: 'assignee.phone' },
             { headerName: "Answered At", field: 'createdAt', cellRenderer: DateFromNowRenderer },
-        ]   
+        ]
 
         const dynamicColumnDef = questionData?.map((question: any) => {
             return { headerName: question.name, field: `task_answers.${question.uuid}` }
@@ -146,7 +146,7 @@ const AcceptedFilesPage = (_props: UnassignedFilesPageProps) => {
                                 resizable: true,
                             }}
                             rowGroupPanelShow={"onlyWhenGrouping"}
-                            sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
+                            sideBar={{ toolPanels: ["columns", "filters"], hiddenByDefault: false }}
                             masterDetail={true}
                             isRowMaster={isRowMaster}
                             detailCellRendererParams={detailCellRendererParams}
@@ -166,6 +166,7 @@ const AcceptedFilesPage = (_props: UnassignedFilesPageProps) => {
                                     headerTooltip: "Good Work",
 
                                 },
+                                { headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150 },
                                 {
                                     headerName: "District",
                                     field: "district",
@@ -183,7 +184,30 @@ const AcceptedFilesPage = (_props: UnassignedFilesPageProps) => {
                                     headerName: "Created At",
                                     field: "createdAt",
                                     cellRenderer: DateFromNowRenderer
-                                }
+                                },
+                                { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130 },
+                                {
+                                    headerName: "File Received at",
+                                    field: "receivedAt",
+                                    sortable: true,
+                                    filter: true,
+                                    cellRenderer: (params: any) => {
+                                        const receivedAt: string = params.value;
+                                        let formattedDate: string = '';
+
+                                        if (receivedAt) {
+                                            const date: Date = new Date(receivedAt);
+                                            const day: string = date.getDate().toString().padStart(2, '0');
+                                            const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+                                            const year: number = date.getFullYear();
+                                            formattedDate = `${day}/${month}/${year}`;
+                                        }
+
+                                        return formattedDate;
+                                    },
+                                    width: 120
+                                },
+
                             ]}
                         />
                     </div>

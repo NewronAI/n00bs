@@ -25,7 +25,6 @@ import SelectRenderer from '@/components/renderer/SelectRenderer';
 import { forEach } from 'lodash';
 
 import { Grid, GridOptions, ValueGetterParams } from 'ag-grid-community';
-import FilenameRenderer from "@/components/renderer/FilenameRenderer";
 
 
 const FlattenedView = () => {
@@ -38,14 +37,11 @@ const FlattenedView = () => {
     setTaskRatings((prev: Map<string, number>) => prev.set(uuid, rating));
   }
 
-
   const [updatingReview, setUpdatingReviews] = useState(false);
-
 
   const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer`, { refreshInterval: 24 * 60 * 60 * 1000 });
   const files = data || [];
   console.log("files", files);
-
 
   const flattendData: any = []
 
@@ -57,33 +53,14 @@ const FlattenedView = () => {
     }
   })
 
-
+  console.log("FlattendData", flattendData)
 
   const { data: questionData, error: questionFetchError, isLoading: questionFetchLoading } = useSWRImmutable(`/api/v1/${workflowUUID}/question`)
-
-
-
-  // async function onCellValueChanged(event: any, questionUUID: string) {
-  //   const newValue = event.newValue;
-  //   const taskAssignmentUUID = event.data.uuid;
-
-  //   try {
-  //     const response = await axios.post(`/api/v1/editresponse?taskAssignmentUUID=${taskAssignmentUUID}&questionUUID=${questionUUID}&value=${newValue}`)
-  //     toast(`${response.data} from ${event.oldValue} to ${event.newValue} `, { type: "success" });
-  //   }
-  //   catch (error: any) {
-  //     toast(`${error.message}`, { type: "error" });
-  //     console.log(error)
-  //   }
-  // }
-
+  console.log("question", questionData)
 
   async function onCellValueChanged(event: any, questionUUID: string) {
     const newValue = event.newValue;
-
     const taskAssignmentUUID = event.data.task_assignments.uuid;
-
-
     try {
       const response = await axios.post(`/api/v1/editresponse?taskAssignmentUUID=${taskAssignmentUUID}&questionUUID=${questionUUID}&value=${newValue}`)
       toast(`${response.data} from ${event.oldValue} to ${event.newValue} `, { type: "success" });
@@ -95,52 +72,15 @@ const FlattenedView = () => {
   }
 
   const staticColumnDefs = [
-    {
-      headerName: "State",
-      field: "state",
-      rowGroup: true,
-      hide: true
-    },
-    {
-      headerName: "District",
-      field: "district",
-        rowGroup: true,
-        hide: true
-    },
-    {
-      headerName: "Assignee Name",
-      field: 'task_assignments.assignee.name',
-      tooltipField: 'assignee.name',
-      rowGroup: true,
-      tooltipEnable: true
-    },
+    { headerName: "File", field: "file_name", cellRenderer: 'agGroupCellRenderer', tooltipField: 'file_name', headerTooltip: "Good Work", rowGroup: true, enableRowGroup: true, width: 400 },
+    { headerName: "District", field: "district"},
+    { headerName: "State", field: "state"},
+    { headerName: "File", field: "file", cellRenderer: UrlRenderer },
+    { headerName: "Created At", field: "createdAt", cellRenderer: DateFromNowRenderer},
+    { headerName: "Assignee Name", field: 'task_assignments.assignee.name', tooltipField: 'assignee.name', tooltipEnable: true },
     { headerName: "Assignee Ph. No", field: 'task_assignments.assignee.phone' },
-    {
-      headerName: "File Name",
-      field: "file_name",
-      cellRenderer : FilenameRenderer,
-      tooltipField: 'file_name',
-      headerTooltip: "Good Work",
-      width: 400
-
-    },
-
-    {
-      headerName: "URL",
-      field: "file",
-      cellRenderer: UrlRenderer
-    },
-    {
-      headerName: "Created At",
-      field: "createdAt",
-      cellRenderer: DateFromNowRenderer,
-      hide: true
-    },
+    { headerName: "Answered At", field: 'task_assignments.assignee.createdAt', cellRenderer: DateFromNowRenderer },
   ]
-
-  // const dynamicColumnDef = questionData?.map((question: any) => {
-  //   return { headerName: question.name, field: `task_answers.${question.uuid}`, cellRenderer: SelectRenderer, cellEditor: 'agSelectCellEditor', cellEditorParams: { values: question.options } as ISelectCellEditorParams, editable: question.name.includes('Comments') ? false : true, onCellValueChanged: (event: any) => onCellValueChanged(event, question.uuid) }
-  // }) || [];
 
   const dynamicColumnDef = Array.isArray(questionData) ?
     questionData.map((question: any) => {
@@ -155,7 +95,6 @@ const FlattenedView = () => {
       }
     }) : [];
 
-
   const colDef = [
     ...staticColumnDefs,
     ...dynamicColumnDef,
@@ -166,7 +105,6 @@ const FlattenedView = () => {
         {...props} oldRating={(data: { uuid: string; }) => taskRatings.get(data?.uuid)} />)
     }]
   ];
-
 
   const handleRate = () => {
     console.log(taskRatings)
@@ -189,45 +127,40 @@ const FlattenedView = () => {
     setTaskRatings(new Map<string, number>())
   }
 
-
   const ActionItem = () => <div>
     <button className={clsx("btn", { "btn-secondary": true })} onClick={handleRate}>
       {updatingReview ? "Saving. . ." : "Save Changes"}
     </button>
   </div>
 
-
-
   return (
-    <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"flattenedView"} workflowUUID={workflowUUID} />} >
+    <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"flattened_view"} workflowUUID={workflowUUID} />} >
       <Head>
-        <title>Unreviewed Answers by Freelancer</title>
+        <title>Flattend view</title>
       </Head>
 
       <div>
         <div className={"mt-2 flex justify-between"}>
           <div className={"p-0 md:pl-4"}>
             <h1 id={""} className={"text-xl font-semibold"}>
-              Unreviewed Answers by Freelancer
+              Flattened View
             </h1>
             <p className={"font-thin text-sm"}>
-              This view is customizable and can be used to review answers by freelancer.
+              In the Flattened View, tasks addressed by a team member
             </p>
           </div>
           <div className={"flex items-center mr-5 btn-group"}>
             <ActionItem />
           </div>
         </div>
-
-
-
         <Loader isLoading={isLoading || questionFetchLoading}>
           <div className={"w-full h-[760px] p-4 ag-theme-alpine-dark"}>
             <AgGridReact
               rowData={flattendData}
               pagination={true}
               columnDefs={colDef}
-              groupDefaultExpanded={-1}
+              // pivotMode={false}
+              // gridOptions={gridOptions}
               sideBar={{ toolPanels: ["columns", "filters"], hiddenByDefault: false }}
               pivotMode={false}
               rowSelection='multiple'
@@ -244,19 +177,12 @@ const FlattenedView = () => {
                 sortable: true,
                 filter: true,
                 resizable: true,
-
               }}
-
-
             />
-
           </div>
         </Loader>
       </div>
-
-
     </DashboardLayout>
-
   )
 }
 
