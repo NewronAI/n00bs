@@ -15,7 +15,8 @@ import { useState } from 'react';
 
 const tabs = [
     {name: "Report", href: "/overview/report"},
-    {name: "Delivery View", href: "/overview/delivery_view"}
+    {name: "Delivery View", href: "/overview/delivery_view"},
+    {name: "Sliced Report", href: "/overview/sliced-report"},
 ]
 
 const SecNav = () => {

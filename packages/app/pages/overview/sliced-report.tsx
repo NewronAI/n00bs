@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 import Head from "next/head";
 import { member_role } from "@prisma/client";
@@ -12,10 +12,13 @@ import {
     getPendingJobsCount
 } from "@/helpers/node/worflowStats";
 import { useState } from 'react';
+import useSWR from "swr";
+import axios from "axios";
 
 const tabs = [
     {name: "Report", href: "/overview/report"},
-    {name: "Delivery View", href: "/overview/delivery_view"}
+    {name: "Delivery View", href: "/overview/delivery_view"},
+    {name: "Sliced Report", href: "/overview/sliced-report"},
 ]
 
 const SecNav = () => {
@@ -43,10 +46,37 @@ const SecNav = () => {
     )
 }
 
+const slicedDataFetcher = (vendor : string) => {
+    return () => axios.get("/api/v1/sliced-report", {params: {vendor}}).then(res => res.data);
+}
+
 const ReportPage = (props : any) => {
 
-    const {workflows} = props;
+    const [currentVendor, setCurrentVendor] = useState("shaip");
+    const {data,isLoading, error,mutate} = useSWR("/api/v1/sliced-report", slicedDataFetcher(currentVendor));
+
+    const workflows = data?.workflows;
+
+    const [isMutating, setIsMutating] = useState(false);
+
+    const combinedLoading = useMemo(() => {
+        return isMutating || isLoading
+    }, [isLoading, isLoading])
+
+    const handleSelectChange =  async (e : any) => {
+        setCurrentVendor(e.target.value);
+        setIsMutating(true);
+        await mutate(slicedDataFetcher(e.target.value));
+        setIsMutating(false);
+    }
+
     console.log(workflows);
+
+    if(combinedLoading) {
+        return <div>Loading...</div>
+    }
+    if (error) return <div>failed to load</div>
+
 
     return (
         <DashboardLayout currentPage={"report"} secondaryNav={<SecNav />}>
@@ -63,6 +93,12 @@ const ReportPage = (props : any) => {
                         <p className={"font-thin text-sm"}>
                             Combined report of all the workflows but sliced.
                         </p>
+                    </div>
+                    <div className={"pl-4"}>
+                        <select className={"select select-accent w-full"} onChange={handleSelectChange}>
+                            <option value={"shaip"}>Shaip</option>
+                            <option value={"megdap"}>MEGDAP</option>
+                        </select>
                     </div>
                     {
                         workflows.map((wf : any) => {

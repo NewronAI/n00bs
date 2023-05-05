@@ -22,7 +22,8 @@ import { Grid, GridOptions, ValueGetterParams } from 'ag-grid-community';
 
 const tabs = [
     { name: "Report", href: "/overview/report" },
-    { name: "Delivery View", href: "/overview/delivery_view" }
+    { name: "Delivery View", href: "/overview/delivery_view" },
+    {name: "Sliced Report", href: "/overview/sliced-report"},
 ]
 
 const SecNav = () => {
