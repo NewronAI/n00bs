@@ -2,24 +2,25 @@ import { db } from "./db";
 import { task_status } from "@prisma/client";
 
 type TotalAssignments = { count: number };
-export async function getFilesCount(id: number) {
+export async function getFilesCount(id: number, vendor? : string) {
     const filesCount = await db.workflow_file.count({
         where: {
             workflow: {
-                id: id
+                id: id,
             },
-            status: "active"
+            status: "active",
+            vendor: vendor
         }
     });
     return filesCount;
 }
 
-export async function getAssignedFilesCount(workflowUUID: string) {
+export async function getAssignedFilesCount(workflowUUID: string, vendor : string | null = null) {
 
     const assignedFilesCount: TotalAssignments[] = (await db.$queryRaw`
         WITH
             wf_id AS (
-                SELECT id FROM workflow WHERE uuid = ${workflowUUID}
+                SELECT workflow.id as id FROM workflow where workflow.uuid = ${workflowUUID}
             ),
             reqdcount as
                 (SELECT t.min_assignments FROM task t INNER JOIN workflow w ON t.workflow_id = w.id WHERE w.id = (SELECT id FROM wf_id)),
@@ -33,13 +34,14 @@ export async function getAssignedFilesCount(workflowUUID: string) {
 }
 
 
-export async function getAssignedJobsCount(id: number) {
+export async function getAssignedJobsCount(id: number, vendor? : string) {
     const assignedJobsCount = await db.task_assignment.count({
         where: {
             workflow_file: {
                 workflow: {
                     id: id
-                }
+                },
+                vendor: vendor
             },
             status: {
                 not: task_status.cancelled
@@ -49,13 +51,14 @@ export async function getAssignedJobsCount(id: number) {
     return assignedJobsCount;
 }
 
-export async function getPendingJobsCount(id: number) {
+export async function getPendingJobsCount(id: number, vendor? : string) {
     const pendingJobsCount = await db.task_assignment.count({
         where: {
             workflow_file: {
                 workflow: {
                     id: id
-                }
+                },
+                vendor: vendor
             },
             status: task_status.pending
         }
@@ -63,7 +66,7 @@ export async function getPendingJobsCount(id: number) {
     return pendingJobsCount;
 }
 
-export async function getCompletedJobsCount(id: number) {
+export async function getCompletedJobsCount(id: number, vendor? : string) {
     const completedJobsCount = await db.task_assignment.count({
         where: {
             AND: {
@@ -71,6 +74,7 @@ export async function getCompletedJobsCount(id: number) {
                     workflow: {
                         id: id,
                     },
+                    vendor: vendor
                 },
                 OR: [
                     { status: task_status.completed },
@@ -84,12 +88,13 @@ export async function getCompletedJobsCount(id: number) {
     return completedJobsCount;
 }
 
-export async function getCompletedFilesCount(id: number) {
+export async function getCompletedFilesCount(id: number, vendor? : string) {
     const completedFilesCount = await db.workflow_file.count({
         where: {
             workflow: {
                 id: id
             },
+            vendor: vendor,
             calculated: true
         }
     });
