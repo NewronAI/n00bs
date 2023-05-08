@@ -3,7 +3,12 @@ import fs from 'fs';
 import path from 'path';
 import xlsx from 'xlsx';
 import { existsSync } from "fs"
-const [_, __, inputPath, outputPath] = process.argv;
+
+const inputPath = process.argv[0];
+const outputPath = process.argv[1];
+
+console.log(inputPath);
+console.log(outputPath);
 
 if (!existsSync(inputPath)) {
   console.error('Error: Input path not found');
