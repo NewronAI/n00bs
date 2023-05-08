@@ -163,7 +163,7 @@ const AcceptedFilesPage = (_props: UnassignedFilesPageProps) => {
                                     field: "file_name",
                                     cellRenderer: 'agGroupCellRenderer',
                                     tooltipField: 'file_name',
-                                    headerTooltip: "Good Work",
+                                    headerTooltip: "",
 
                                 },
                                 { headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150 },
