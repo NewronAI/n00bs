@@ -38,7 +38,7 @@ const AcceptedFilesPage = (_props: UnassignedFilesPageProps) => {
 
 
     const { data: questionData, error: questionFetchError, isLoading: questionFetchLoading } = useSWRImmutable(`/api/v1/${workflowUUID}/question`)
-    console.log(questionData)
+    console.log('questionData', questionData)
 
     const detailCellRendererParams = useMemo(() => {
         console.log("detailCellRendererParams")
