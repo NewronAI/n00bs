@@ -4,13 +4,13 @@ import path from 'path';
 import xlsx from 'xlsx';
 const [_, __, inputPath, outputPath] = process.argv;
 
-if (!inputPath.endsWith('.xlsx')) {
-  console.error('Error: Invalid input file format. Only .xlsx files are supported.');
+if (!$`test -f ${inputPath}`) {
+  console.error('Error: Input path not found');
   process.exit(1);
 }
 
-if (!$`test -f ${inputPath}`) {
-  console.error(`Error: Input file not found at path: ${inputPath}`);
+if (!$`test -f ${outputPath}`) {
+  console.error(`Error: Outout path not found : ${inputPath}`);
   process.exit(1);
 }
 
