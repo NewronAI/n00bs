@@ -2,16 +2,17 @@
 import fs from 'fs';
 import path from 'path';
 import xlsx from 'xlsx';
+import { existsSync } from "fs"
 const [_, __, inputPath, outputPath] = process.argv;
 
-if (!$`test -f ${inputPath}`) {
+if (!existsSync(inputPath)) {
   console.error('Error: Input path not found');
   process.exit(1);
 }
 
-if (!$`test -f ${outputPath}`) {
-  console.error(`Error: Outout path not found : ${inputPath}`);
-  process.exit(1);
+if (!existsSync(outputPath)) {
+    console.error('Error: Output path not found');
+    process.exit(1);
 }
 
 function convertXlsxToCsv(inputFolderPath, outputFolderPath) {
