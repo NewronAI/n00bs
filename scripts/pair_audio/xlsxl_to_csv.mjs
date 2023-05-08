@@ -23,6 +23,7 @@ if (!existsSync(outputPath)) {
 function convertXlsxToCsv(inputFolderPath, outputFolderPath) {
   const files = fs.readdirSync(inputFolderPath);
   for (const file of files) {
+    console.log("Converting", file, "to CSV");
     const inputFile = path.join(inputFolderPath, file);
     if (fs.statSync(inputFile).isFile() && path.extname(inputFile) === '.xlsx') {
       const workbook = xlsx.readFile(inputFile);
