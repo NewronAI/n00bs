@@ -1,8 +1,8 @@
 #!/usr/bin/env zx
 
 import { existsSync, readXlsxFile } from "fs";
+import Papa from "papaparse";
 import { dirname, extname, join } from "path";
-import { unparse as PapaUnparse } from "papaparse";
 
 const args = process.argv.slice(2);
 
@@ -25,7 +25,7 @@ if (!existsSync(xlsxPath)) {
 const { data } = await readXlsxFile(xlsxPath);
 
 // Convert the 2D array to a CSV string using PapaParse
-const csvStr = PapaUnparse(data);
+const csvStr = Papa.unparse(data);
 
 // Write the CSV string to a file in the output directory with the same name as the XLSX file, but with a .csv extension
 const csvFilename = `${basename(xlsxPath, extname(xlsxPath))}.csv`;
