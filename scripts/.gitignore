@@ -1,0 +1,22 @@
+# Node Modules
+/node_modules/
+
+# Editor directories and files
+.idea/
+.vscode/
+*.iml
+
+# Local .env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Turborepo
+.turbo
+
+*/.DS_Store
+/ci-cd-service-acount.json
