@@ -1,35 +1,23 @@
 #!/usr/bin/env zx
+import fs from 'fs';
+import path from 'path';
+import xlsx from 'xlsx';
 
-import { existsSync, readXlsxFile } from "fs";
-import Papa from "papaparse";
-import { dirname, extname, join } from "path";
-
-const args = process.argv.slice(2);
-
-// Check if an XLSX file path and output directory path were provided as input
-if (args.length !== 2) {
-  console.error("Please provide the path to an XLSX file and the output directory path as input.");
-  process.exit(1);
+function convertXlsxToCsv(inputFolderPath, outputFolderPath) {
+  const files = fs.readdirSync(inputFolderPath);
+  for (const file of files) {
+    const inputFile = path.join(inputFolderPath, file);
+    if (fs.statSync(inputFile).isFile() && path.extname(inputFile) === '.xlsx') {
+      const workbook = xlsx.readFile(inputFile);
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const csvData = xlsx.utils.sheet_to_csv(sheet);
+      const outputFileName = path.basename(inputFile, '.xlsx') + '.csv';
+      const outputFile = path.join(outputFolderPath, outputFileName);
+      fs.writeFileSync(outputFile, csvData);
+    }
+  }
 }
 
-const xlsxPath = args[0];
-const outputDir = args[1];
-
-// Check if the input file exists
-if (!existsSync(xlsxPath)) {
-  console.error(`The file ${xlsxPath} does not exist.`);
-  process.exit(1);
-}
-
-// Read the XLSX file into a 2D array
-const { data } = await readXlsxFile(xlsxPath);
-
-// Convert the 2D array to a CSV string using PapaParse
-const csvStr = Papa.unparse(data);
-
-// Write the CSV string to a file in the output directory with the same name as the XLSX file, but with a .csv extension
-const csvFilename = `${basename(xlsxPath, extname(xlsxPath))}.csv`;
-const csvPath = join(outputDir, csvFilename);
-await $`echo ${csvStr} > ${csvPath}`;
-
-console.log(`Successfully converted ${xlsxPath} to ${csvPath}`);
+// example usage
+convertXlsxToCsv('/path/to/input/folder', '/path/to/output/folder');
