@@ -4,8 +4,8 @@ import path from 'path';
 import xlsx from 'xlsx';
 import { existsSync } from "fs"
 
-const inputPath = process.argv[2];
-const outputPath = process.argv[3];
+const inputPath = process.argv[3];
+const outputPath = process.argv[4];
 
 console.log(inputPath);
 console.log(outputPath);
