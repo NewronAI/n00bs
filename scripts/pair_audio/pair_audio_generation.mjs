@@ -20,9 +20,31 @@ if (!existsSync(outputPath)) {
 }
 
 const intraWorkbook = xlsx.utils.book_new();
+const interWorkbook = xlsx.utils.book_new();
 
 function generateLink(fileName) {
     return `https://vaani.qc.artpark.in/pair_audio/${fileName}`;
+}
+
+function genrateInterFiles(inputFile, outputFolderPath) {
+    const workbook = xlsx.readFile(inputFile);
+    const firstSheetName = workbook.SheetNames[0];
+    const firstSheet = workbook.Sheets[firstSheetName];
+    const jsonSheet = xlsx.utils.sheet_to_json(firstSheet);
+
+    jsonSheet.forEach((row) => {
+        console.log(row)
+        row["Result"] = null ? "" : row["Result"];
+        row["Confidence"] = null ? "" : row["Confidence"];
+        row["Detailed sheet link"] = null ? "" : row["Detailed sheet link"];
+        row["File1_Link"] = generateLink(row["File1"]);
+        row["File2_Link"] = generateLink(row["File2"]);
+    })
+
+    const newSheet = xlsx.utils.json_to_sheet(jsonSheet);
+    xlsx.utils.book_append_sheet(interWorkbook, newSheet, "inter");
+    const outputFile = outputFolderPath + "\\" + "inter.xlsx"
+    fs.writeFileSync(outputFile, xlsx.write(interWorkbook, { type: 'buffer' }));
 }
 
 function generatePairAuido(inputFolderPath, outputFolderPath) {
@@ -30,6 +52,9 @@ function generatePairAuido(inputFolderPath, outputFolderPath) {
   for (const file of files) {
     if(file.slice(-5) !== ".xlsx") {
         console.log(file, "file name is not in proper format");
+    }
+    else if (file === "inter.xlsx") {
+        genrateInterFiles(inputFolderPath + "\\" + file, outputFolderPath)
     }
     else {
         const fileNameParts = file.split("_");
@@ -47,7 +72,7 @@ function generatePairAuido(inputFolderPath, outputFolderPath) {
             firstRow["File_Link"] = "  "
         
             for (const key in row) {
-                if (index === 0 && key !== "FileName" && key !== "Minimum_Score" && key !== "Minimum_Score_Reference") {
+                if (index === 0 && key !== "FileName" && key !== "Minimum_Score" && key !== "Minimum_Score_Reference" && key !== "Result" && key !== "Confidence") {
                         firstRow[key] = generateLink(key);
                 }
                 if (key === "FileName") {
@@ -67,13 +92,7 @@ function generatePairAuido(inputFolderPath, outputFolderPath) {
                 firstRow["Minimum_Score"] = "  "
                 firstRow["Minimum_Score_Reference"] = "  "
                 firstRow["Minimum_Score_Reference_Link"] = "  "
-                firstRow["Result"] = ""
-                firstRow["Confidence"] = ""
                 newJsonsSheet.push(firstRow);
-            }
-            else {
-                newRow["Result"] = ""
-                newRow["Confidence"] = ""
             }
             newJsonsSheet.push(newRow);
         });
@@ -81,9 +100,10 @@ function generatePairAuido(inputFolderPath, outputFolderPath) {
         const newSheet = xlsx.utils.json_to_sheet(newJsonsSheet);
         const sheetName = fileNameParts[2].slice(0, -5)
         xlsx.utils.book_append_sheet(intraWorkbook, newSheet, sheetName);
+        console.log("Sheet Inserted")
     }
   }
-  const outputFile = outputPath + "intra.xlsx"
+  const outputFile = outputPath + "\\" + "intra.xlsx"
   fs.writeFileSync(outputFile, xlsx.write(intraWorkbook, { type: 'buffer' }));
 }
 
