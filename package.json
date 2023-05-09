@@ -37,6 +37,7 @@
   },
   "packageManager": "yarn@1.22.19",
   "dependencies": {
-    "clsx": "^1.2.1"
+    "clsx": "^1.2.1",
+    "xlsx-populate": "^1.21.0"
   }
 }
