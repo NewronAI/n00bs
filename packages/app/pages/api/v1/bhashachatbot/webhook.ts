@@ -26,7 +26,7 @@ webhook.get(async (req, res) => {
 
 webhook.post(async (req, res) => {
     const body_param = req.body
-    console.log("Body: ", body_param)
+    console.log("Body: ", JSON.stringify(body_param,null,2));
 
     res.status(200).json("successfull")
 
