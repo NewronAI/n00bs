@@ -8,10 +8,10 @@ const myToken = "2d464c63-249b-4c91-8698-45abda5d3b7b"
 
 webhook.get(async (req, res) => {
     const mode = req.query["hub.mode"]
-    const challange = req.query["hub.challange"]
-    const token = req.query["hub.token"]
+    const challange = req.query["hub.challenge"]
+    const token = req.query["hub.verify_token"]
 
-    console.log(mode, challange, token)
+    console.log(req.query,mode, challange, token);
 
     if(mode === "subscribe" && token === myToken) {
         res.status(200).send(challange);
