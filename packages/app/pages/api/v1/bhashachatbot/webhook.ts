@@ -10,7 +10,7 @@ webhook.get(async (req, res) => {
     const challange = req.query["hub.challange"]
     const token = req.query["hub.token"]
 
-    const myToken = "bashaChatbot"
+    const myToken = "2d464c63-249b-4c91-8698-45abda5d3b7b"
 
     if(mode === "subscribe" && token === myToken) {
         res.status(200).json(challange);
