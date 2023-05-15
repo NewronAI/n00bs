@@ -60,6 +60,13 @@ enum request_method {
   PUT
 }
 
+enum check_type {
+  pair_audio
+  single_audio
+  district_wise_audio
+  district_wise_transcript
+}
+
 model workflow {
   id             Int             @id @default(autoincrement())
   uuid           String          @unique @default(uuid()) @db.Char(36)
@@ -110,7 +117,7 @@ model question {
   name                String
   text                String
   order               Int                        @default(autoincrement())
-  required            Boolean                    @default(true)
+  required            Boolean                    @default(true) // Required to match with expected answer to continue
   createdAt           DateTime                   @default(now())
   updatedAt           DateTime                   @updatedAt
   deletedAt           DateTime?
@@ -121,6 +128,7 @@ model question {
   task_answers        task_answer[]
   intra_job_questions intra_pair_job_questions[]
   expected_answer     String?
+  user_session        user_session[]
 }
 
 model member {
@@ -146,6 +154,7 @@ model member {
   added_by          Int?
   added_by_member   member?           @relation("added_by", fields: [added_by], references: [id])
   added_members     member[]          @relation("added_by")
+  user_session      user_session[]
 }
 
 model task {
@@ -176,23 +185,24 @@ model task_question {
 }
 
 model task_assignment {
-  id               Int           @id @default(autoincrement())
-  uuid             String        @unique @default(uuid()) @db.Char(36)
+  id               Int            @id @default(autoincrement())
+  uuid             String         @unique @default(uuid()) @db.Char(36)
   name             String
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
-  status           task_status   @default(pending)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  status           task_status    @default(pending)
   task_id          Int
-  task             task          @relation(fields: [task_id], references: [id], onDelete: Cascade)
+  task             task           @relation(fields: [task_id], references: [id], onDelete: Cascade)
   assignee_id      Int
-  assignee         member        @relation(name: "assignee", fields: [assignee_id], references: [id])
+  assignee         member         @relation(name: "assignee", fields: [assignee_id], references: [id])
   workflow_file_id Int
-  workflow_file    workflow_file @relation(fields: [workflow_file_id], references: [id])
+  workflow_file    workflow_file  @relation(fields: [workflow_file_id], references: [id])
   task_answers     task_answer[]
   review_rating    Int?
   review_comments  String?
   reviewer_id      Int?
-  reviewer         member?       @relation(name: "reviewer", fields: [reviewer_id], references: [id])
+  reviewer         member?        @relation(name: "reviewer", fields: [reviewer_id], references: [id])
+  user_session     user_session[]
 
   @@unique([assignee_id, workflow_file_id, task_id])
 }
@@ -282,4 +292,18 @@ model intra_pair_file {
   confidence        confidence_level @default(low)
   intra_pair_job    intra_pair_job?  @relation(fields: [intra_pair_job_id], references: [id], onDelete: Cascade)
   intra_pair_job_id Int
+}
+
+model user_session {
+  id                    Int             @id @default(autoincrement())
+  member_id             Int
+  member                member?         @relation(fields: [member_id], references: [id])
+  current_question_uuid String?         @db.VarChar(255)
+  current_question      question?       @relation(fields: [current_question_uuid], references: [uuid])
+  task_assignment_id    Int
+  task_assignments      task_assignment @relation(fields: [task_assignment_id], references: [id])
+  responses             Json?
+  has_accepted_policy   Boolean         @default(false)
+  check_type            check_type?
+  createdAt             DateTime        @default(now())
 }
