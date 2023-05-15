@@ -24,7 +24,7 @@ webhook.get(async (req, res) => {
 })
 
 webhook.post(async (req, res) => {
-    const body_param = JSON.parse(req.body)
+    const body_param = req.body
 
     if(body_param.field !== "messages"){
         res.status(403).json({
@@ -36,6 +36,10 @@ webhook.post(async (req, res) => {
     const message = body_param.entry[0].changes[0].messages[0].text.body;
     console.log("WA_ID", waid)
     console.log("Message", message)
+
+    if(message === "Hi") {
+        //Start the process
+    }
 
     res.status(200).json("successfull")
 })
