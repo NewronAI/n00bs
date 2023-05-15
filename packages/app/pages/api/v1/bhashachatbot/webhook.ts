@@ -11,6 +11,8 @@ webhook.get(async (req, res) => {
     const challange = req.query["hub.challange"]
     const token = req.query["hub.token"]
 
+    console.log(mode, challange, token)
+
     if(mode === "subscribe" && token === myToken) {
         res.status(200).send(challange);
     }
