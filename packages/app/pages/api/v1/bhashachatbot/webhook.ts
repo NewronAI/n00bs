@@ -32,8 +32,8 @@ webhook.post(async (req, res) => {
         });
     }
 
-    const waid = body_param.entry[0].changes[0].contacts[0].wa_id;
-    const message = body_param.entry[0].changes[0].messages[0].text.body;
+    const waid = body_param["entry"][0]["changes"][0]["contacts"][0]["wa_id"];
+    const message = body_param["entry"][0]["changes"][0]["messages"][0]["text"]["body"];
     console.log("WA_ID", waid)
     console.log("Message", message)
 
