@@ -60,33 +60,47 @@ webhook.post(async (req, res) => {
             message: "User not registered"
         });
         return;
+    } else {
+        console.log("Assignee", assigneDetails);
+        const task_assignments = await db.task_assignment.findMany({
+            where: {
+                assignee_id: assigneDetails.id
+            },
+        })
+        if(task_assignments === null){
+            console.log("No Task Assinged")
+            await sendTextMessage(waID, "You have no task assinged. Enjoy your day")
+        }
+        res.status(200).json({
+            message: "No task assinged"
+        });
+        return;
     }
 
-    await sendInteractiveMessage(waID, {
-        body: {
-            text: "Would you like to continue?"
-        },
-        type: "button",
-        action: {
-            buttons: [
-                {
-                    type: "reply",
-                    reply : {
-                        title: "Yes",
-                        id: "3Q Q1 Yes"
-                    }
-                },
-                {
-                    type: "reply",
-                    reply : {
-                        title: "No",
-                        id: "3Q Q1 No"
-                    }
-                }
-            ]
-        }
-
-    });
+    // await sendInteractiveMessage(waID, {
+    //     body: {
+    //         text: "Would you like to continue?"
+    //     },
+    //     type: "button",
+    //     action: {
+    //         buttons: [
+    //             {
+    //                 type: "reply",
+    //                 reply : {
+    //                     title: "Yes",
+    //                     id: "3Q Q1 Yes"
+    //                 }
+    //             },
+    //             {
+    //                 type: "reply",
+    //                 reply : {
+    //                     title: "No",
+    //                     id: "3Q Q1 No"
+    //                 }
+    //             }
+    //         ]
+    //     }
+    //    });
 
     res.status(200).json("successfull")
 })
