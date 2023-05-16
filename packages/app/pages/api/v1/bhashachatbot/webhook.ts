@@ -60,7 +60,7 @@ webhook.post(async (req, res) => {
             message: "User not registered"
         });
         return;
-    } else {
+    } else if (textBody === "Hi") {
         console.log("Assignee", assigneDetails);
         const task_assignments = await db.task_assignment.findMany({
             where: {
