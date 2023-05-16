@@ -26,42 +26,46 @@ webhook.get(async (req, res) => {
 })
 
 webhook.post(async (req, res) => {
-
-    if (!req.body) {
-        res.status(400).json({
-          message: "Empty request body",
+    try {
+      const data = req.body ? JSON.parse(req.body) : null;
+  
+      if (!data || !data.entry || !data.entry[0] || !data.entry[0].changes || !data.entry[0].changes[0]) {
+        return res.status(400).json({
+          message: "Invalid request body format",
         });
-        return;
       }
-    
-    console.log(req.body);
-    
-    const data = JSON.parse(req.body);
-
-    if(data.entry[0].changes[0].field !== "messages") {
-        res.status(403).json({
-            message: "Request is not from the messages webhook"
+  
+      const field = data.entry[0].changes[0].field;
+      if (field !== "messages") {
+        return res.status(403).json({
+          message: "Request is not from the messages webhook",
         });
-    }
-
-    const waID = data.entry[0].changes[0].value.contacts[0].wa_id;
-    const textBody = data.entry[0].changes[0].value.messages[0].text.body;
-
-    const assigneDetails = await db.member.findFirst({
+      }
+  
+      const waID = data.entry[0].changes[0].value.contacts[0].wa_id;
+      const textBody = data.entry[0].changes[0].value.messages[0].text.body;
+  
+      const assigneDetails = await db.member.findFirst({
         where: {
-            phone: waID,
-        }
-    })
-
-    if(assigneDetails === null){
-        console.log("user not registered");
-        await sendMessage(authorizationToken, waID, "You are not registered. Please register your whats number")
-        res.status(200).json({
-            message: "User not registered"
+          phone: waID,
+        },
+      });
+  
+      if (!assigneDetails) {
+        console.log("User not registered");
+        await sendMessage(authorizationToken, waID, "You are not registered. Please register your WhatsApp number.");
+        return res.status(200).json({
+          message: "User not registered",
         });
+      }
+  
+      return res.status(200).json("Successful");
+    } catch (error) {
+      console.error("Error parsing request body:", error);
+      return res.status(400).json({
+        message: "Error parsing request body",
+      });
     }
-
-    res.status(200).json("successfull")
-})
+  });
 
 export default webhook.handler;
