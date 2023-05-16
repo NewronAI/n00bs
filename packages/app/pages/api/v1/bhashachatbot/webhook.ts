@@ -26,6 +26,16 @@ webhook.get(async (req, res) => {
 })
 
 webhook.post(async (req, res) => {
+
+    if (!req.body) {
+        res.status(400).json({
+          message: "Empty request body",
+        });
+        return;
+      }
+    
+    console.log(req.body);
+    
     const data = JSON.parse(req.body);
 
     if(data.entry[0].changes[0].field !== "messages") {
