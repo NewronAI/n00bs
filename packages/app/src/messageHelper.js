@@ -35,12 +35,12 @@ export async function sendInteractiveMessage(to,data){
     await rawWhatsappMessage(body);
 }
 
-export async function sendTextMessage( waID, message) {
+export async function sendTextMessage( to, message) {
     console.log("sendMessage function called");
 
     const data = {
         ...commonWhatsappCallData,
-        to: waID,
+        to,
         type: 'text',
         text: {
             preview_url: false,

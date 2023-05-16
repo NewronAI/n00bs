@@ -3,6 +3,7 @@ import assertUp from "@/helpers/node/assert/assertUp";
 import { db } from "@/helpers/node/db";
 import { events, request_method } from "@prisma/client";
 import { sendTextMessage, sendTemplateMessage, sendInteractiveMessage} from "src/messageHelper";
+import { task_status } from "@prisma/client";
 
 const webhook = new NextExpress();
 const webhookSecret = "2d464c63-249b-4c91-8698-45abda5d3b7b"
@@ -32,9 +33,7 @@ webhook.post(async (req, res) => {
         });
         return;
       }
-    
-    console.log(req.body);
-    
+
     const data = req.body;
 
     if(data.entry[0].changes[0].field !== "messages") {
@@ -59,22 +58,35 @@ webhook.post(async (req, res) => {
         res.status(200).json({
             message: "User not registered"
         });
+
         return;
     } else if (textBody === "Hi") {
         console.log("Assignee", assigneDetails);
         const task_assignments = await db.task_assignment.findMany({
             where: {
-                assignee_id: assigneDetails.id
+                assignee_id: assigneDetails.id,
+                status: task_status.in_progress,
             },
         })
+
+        console.log("Task Assignments", task_assignments);
+
         if(task_assignments === null){
             console.log("No Task Assinged")
             await sendTextMessage(waID, "You have no task assinged. Enjoy your day")
+            res.status(200).json({
+                message: "No task assinged"
+            });
+
+            return;
+        } else {
+            console.log("Task assinged")
+            res.status(200).json({
+                message: "task assinged"
+            });
+
+            return;
         }
-        res.status(200).json({
-            message: "No task assinged"
-        });
-        return;
     }
 
     // await sendInteractiveMessage(waID, {
