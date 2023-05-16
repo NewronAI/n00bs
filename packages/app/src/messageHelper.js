@@ -2,12 +2,44 @@ import axios from 'axios';
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 
-export async function sendMessage( waID, message) {
+const commonWhatsappCallData =  {
+    messaging_product: 'whatsapp',
+    recipient_type: 'individual',
+    
+};
+
+async function rawWhatsappMessage(data){
+    const headers = {
+        'Authorization': `Bearer ${whatsappToken}`,
+        'Content-Type': 'application/json'
+    };
+
+    return await axios.post('https://graph.facebook.com/v16.0/109457618815544/messages', data, { headers })
+        .then(response => {
+            console.log('Request successful:', response.data);
+        })
+        .catch(error => {
+            console.error('Error:', error.response.data);
+    });
+
+}
+
+export async function sendInteractiveMessage(to,data){
+    const body = {
+        ...commonWhatsappCallData,
+        to,
+        type: "interactive",
+        interactive: data
+    }
+
+    await rawWhatsappMessage(body);
+}
+
+export async function sendTextMessage( waID, message) {
     console.log("sendMessage function called");
 
     const data = {
-        messaging_product: 'whatsapp',
-        recipient_type: 'individual',
+        ...commonWhatsappCallData,
         to: waID,
         type: 'text',
         text: {
@@ -16,19 +48,11 @@ export async function sendMessage( waID, message) {
         }
     };
 
-    const headers = {
-        'Authorization': `Bearer ${whatsappToken}`,
-        'Content-Type': 'application/json'
-    };
+    console.log({data});
 
-    axios.post('https://graph.facebook.com/v16.0/109457618815544/messages', data, { headers })
-        .then(response => {
-            console.log('Request successful:', response.data);
-        })
-        .catch(error => {
-            console.error('Error:', error.response.data);
-        });
+    await rawWhatsappMessage(data);
 
+    
 }
 
 export function sendTemplateMessage(data, token) {

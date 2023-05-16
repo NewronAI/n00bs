@@ -2,7 +2,7 @@ import NextExpress from "@/helpers/node/NextExpress";
 import assertUp from "@/helpers/node/assert/assertUp";
 import { db } from "@/helpers/node/db";
 import { events, request_method } from "@prisma/client";
-import { sendMessage, sendTemplateMessage} from "src/messageHelper";
+import { sendTextMessage, sendTemplateMessage, sendInteractiveMessage} from "src/messageHelper";
 
 const webhook = new NextExpress();
 const webhookSecret = "2d464c63-249b-4c91-8698-45abda5d3b7b"
@@ -48,19 +48,45 @@ webhook.post(async (req, res) => {
 
     const assigneDetails = await db.member.findFirst({
         where: {
-            phone: waID,
+            phone: `+${waID}`,
         }
     })
 
     if(assigneDetails === null){
         console.log("user not registered");
-        await sendMessage(waID, "You are not registered. Please register your whats number")
+        await sendTextMessage(waID, "You are not registered. Please register your whats number")
 
         res.status(200).json({
             message: "User not registered"
         });
         return;
     }
+
+    await sendInteractiveMessage(waID, {
+        body: {
+            text: "Would you like to continue?"
+        },
+        type: "button",
+        action: {
+            buttons: [
+                {
+                    type: "reply",
+                    reply : {
+                        title: "Yes",
+                        id: "3Q Q1 Yes"
+                    }
+                },
+                {
+                    type: "reply",
+                    reply : {
+                        title: "No",
+                        id: "3Q Q1 No"
+                    }
+                }
+            ]
+        }
+
+    });
 
     res.status(200).json("successfull")
 })
