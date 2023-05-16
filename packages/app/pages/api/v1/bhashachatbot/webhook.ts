@@ -26,8 +26,7 @@ webhook.get(async (req, res) => {
 })
 
 webhook.post(async (req, res) => {
-    const body_param = req.body
-    const data = JSON.parse(body_param);
+    const data = JSON.parse(req.body);
 
     if(data.entry[0].changes[0].field !== "messages") {
         res.status(403).json({
@@ -38,18 +37,18 @@ webhook.post(async (req, res) => {
     const waID = data.entry[0].changes[0].value.contacts[0].wa_id;
     const textBody = data.entry[0].changes[0].value.messages[0].text.body;
 
-    const assigneDetails = db.member.findFirst({
+    const assigneDetails = await db.member.findFirst({
         where: {
             phone: waID,
         }
     })
 
     if(assigneDetails === null){
-        sendMessage(authorizationToken, waID, "You are not registered")
-    }
-
-    if(textBody === "Hi") {
-        
+        console.log("user not registered");
+        await sendMessage(authorizationToken, waID, "You are not registered. Please register your whats number")
+        res.status(200).json({
+            message: "User not registered"
+        });
     }
 
     res.status(200).json("successfull")
