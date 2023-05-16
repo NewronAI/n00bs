@@ -1,19 +1,21 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import assertUp from "@/helpers/node/assert/assertUp";
-import {db} from "@/helpers/node/db";
-import {events, request_method} from "@prisma/client";
+import { db } from "@/helpers/node/db";
+import { events, request_method } from "@prisma/client";
+import { sendMessage, sendTemplateMessage} from "src/messageHelper";
 
 const webhook = new NextExpress();
 const myToken = "2d464c63-249b-4c91-8698-45abda5d3b7b"
+const authorizationToken = "EAASzAN1WZAS8BAANrSJVlLyOWNsYnW5EGdzYkrSPsSNg2ZAtscgcgIZAzTDZBWbLbkIZCGs3eEon5hzppSxWLTJ7gdYfI9BkS1ofPAfsUkmeIYGH93ZB6n3Mun1xZAR10t9XghP6wDAyaxrx1qewP8CIZCMIzfhkEhKe7ZAvx3MQs0EzZCoBZBCANBwTriDCW7JWyhFQZBK5i6VTqgDnxw4KL1E8X8aHz33smzkZD"
 
 webhook.get(async (req, res) => {
     const mode = req.query["hub.mode"]
     const challange = req.query["hub.challenge"]
     const token = req.query["hub.verify_token"]
 
-    console.log(req.query,mode, challange, token);
+    console.log(req.query, mode, challange, token);
 
-    if(mode === "subscribe" && token === myToken) {
+    if (mode === "subscribe" && token === myToken) {
         res.status(200).send(challange);
     }
     else {
@@ -25,20 +27,29 @@ webhook.get(async (req, res) => {
 
 webhook.post(async (req, res) => {
     const body_param = req.body
+    const data = JSON.parse(body_param);
 
-    if(body_param.field !== "messages"){
+    if(data.entry[0].changes[0].field !== "messages") {
         res.status(403).json({
-            message: "Request not from the messages webhook"
+            message: "Request is not from the messages webhook"
         });
     }
 
-    const waid = body_param["entry"][0]["changes"][0]["contacts"][0]["wa_id"];
-    const message = body_param["entry"][0]["changes"][0]["messages"][0]["text"]["body"];
-    console.log("WA_ID", waid)
-    console.log("Message", message)
+    const waID = data.entry[0].changes[0].value.contacts[0].wa_id;
+    const textBody = data.entry[0].changes[0].value.messages[0].text.body;
 
-    if(message === "Hi") {
-        //Start the process
+    const assigneDetails = db.member.findFirst({
+        where: {
+            phone: waID,
+        }
+    })
+
+    if(assigneDetails === null){
+        sendMessage(authorizationToken, waID, "You are not registered")
+    }
+
+    if(textBody === "Hi") {
+        
     }
 
     res.status(200).json("successfull")
