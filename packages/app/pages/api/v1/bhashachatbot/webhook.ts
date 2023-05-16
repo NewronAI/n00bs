@@ -40,6 +40,8 @@ webhook.post(async (req, res) => {
         res.status(403).json({
             message: "Request is not from the messages webhook"
         });
+
+        return;
     }
 
     const waID = data.entry[0].changes[0].value.contacts[0].wa_id;
@@ -69,24 +71,27 @@ webhook.post(async (req, res) => {
             },
         })
 
-        console.log("Task Assignments", task_assignments);
+        console.log("Task Assignments", task_assignments.length);
 
-        if(task_assignments === null){
-            console.log("No Task Assinged")
+        if(task_assignments.length > 0){
+            console.log("Task assinged")
+            await sendTextMessage(waID, `You have ${task_assignments.length} task assinged.`)
+            res.status(200).json({
+                message: "task assinged"
+            });
+            return;
+
+        } else {
             await sendTextMessage(waID, "You have no task assinged. Enjoy your day")
             res.status(200).json({
                 message: "No task assinged"
             });
-
-            return;
-        } else {
-            console.log("Task assinged")
-            res.status(200).json({
-                message: "task assinged"
-            });
-
-            return;
         }
+    }
+    else {
+            res.status(200).json({
+                message: ""
+            });
     }
 
     // await sendInteractiveMessage(waID, {
@@ -113,8 +118,6 @@ webhook.post(async (req, res) => {
     //         ]
     //     }
     //    });
-
-    res.status(200).json("successfull")
 })
 
 export default webhook.handler;
