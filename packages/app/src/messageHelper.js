@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 
-export async function sendMessage(token, waID, message) {
+export async function sendMessage( waID, message) {
     console.log("sendMessage function called");
 
     const data = {
@@ -17,7 +17,7 @@ export async function sendMessage(token, waID, message) {
     };
 
     const headers = {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${whatsappToken}`,
         'Content-Type': 'application/json'
     };
 
