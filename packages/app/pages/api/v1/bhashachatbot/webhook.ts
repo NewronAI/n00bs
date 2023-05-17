@@ -99,7 +99,7 @@ webhook.post(async (req, res) => {
         })
     }
 
-    sendTextMessage(waID, `Welcome ${assigneDetails.name}`)
+    await sendTextMessage(waID, `Welcome ${assigneDetails.name}`)
 
     const task_assignments = await db.task_assignment.findMany({
         where: {
