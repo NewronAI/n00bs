@@ -106,19 +106,30 @@ webhook.post(async (req, res) => {
             assignee_id: assigneDetails.id,
             status: task_status.in_progress,
         },
+        include: {
+            task: true,
+        }
     })
 
-    const single_audio_assingments = task_assignments.filter(task => task.workflow_file_id === 1)
-    const district_audio_assignments = task_assignments.filter(task => task.workflow_file_id === 2)
-    const transcription_check_assignments  = task_assignments.filter(task => task.workflow_file_id === 2)
+    console.log("Task Assingments", task_assignments)
+
+    const single_audio_assingments = task_assignments.filter(task => task.task.workflow_id === 1)
+    const district_audio_assignments = task_assignments.filter(task => task.task.workflow_id === 2)
+    const transcription_check_assignments  = task_assignments.filter(task => task.task.workflow_id === 3)
+
+    console.log(`Single Audio - ${single_audio_assingments.length}
+District Wise Audio - ${district_audio_assignments.length}
+Transcription Check - ${transcription_check_assignments.length}`)
 
     await sendInteractiveMessage(waID, {
         body: {
             text: `You have these many assignments assigned to you.
-                Single Audio - ${single_audio_assingments.length}
-                District Wise Audio - ${district_audio_assignments.length}
-                Transcription Check - ${transcription_check_assignments.length}
-            `
+
+Single Audio - ${single_audio_assingments.length}
+District Wise Audio - ${district_audio_assignments.length}
+Transcription Check - ${transcription_check_assignments.length}
+
+Please select any one option.`
         },
         type: "button",
         action: {
@@ -146,9 +157,9 @@ webhook.post(async (req, res) => {
                 }
             ]
         }
-       });
+    });
 
-       res.status(200).json({
+    res.status(200).json({
         message: "Successfull"
     });
 
