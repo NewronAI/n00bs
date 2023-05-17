@@ -296,12 +296,12 @@ model intra_pair_file {
 
 model user_session {
   id                    Int             @id @default(autoincrement())
-  member_id             Int
+  member_id             Int?
   member                member?         @relation(fields: [member_id], references: [id])
   current_question_uuid String?         @db.VarChar(255)
   current_question      question?       @relation(fields: [current_question_uuid], references: [uuid])
-  task_assignment_id    Int
-  task_assignments      task_assignment @relation(fields: [task_assignment_id], references: [id])
+  task_assignment_id    Int?
+  task_assignments      task_assignment? @relation(fields: [task_assignment_id], references: [id])
   responses             Json?
   has_accepted_policy   Boolean         @default(false)
   check_type            check_type?

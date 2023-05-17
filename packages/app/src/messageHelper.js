@@ -5,7 +5,6 @@ const whatsappToken = process.env.WHATSAPP_TOKEN;
 const commonWhatsappCallData =  {
     messaging_product: 'whatsapp',
     recipient_type: 'individual',
-    
 };
 
 async function rawWhatsappMessage(data){
@@ -52,18 +51,31 @@ export async function sendTextMessage( to, message) {
 
     await rawWhatsappMessage(data);
 
-    
 }
 
-export function sendTemplateMessage(data, token) {
-    const config = {
-        method: "POST",
-        url: 'https://graph.facebook.com/v16.0/109457618815544/messages',
-        Headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+export async function sendQuestion(to, question_text) {
+        await sendInteractiveMessage(to, {
+        body: {
+            text: question_text
         },
-        data: data
-    }
-    return axios(config)
+        type: "button",
+        action: {
+            buttons: [
+                {
+                    type: "reply",
+                    reply : {
+                        title: "Yes",
+                        id: "3Q Q1 Yes"
+                    }
+                },
+                {
+                    type: "reply",
+                    reply : {
+                        title: "No",
+                        id: "3Q Q1 No"
+                    }
+                }
+            ]
+        }
+       });
 }
