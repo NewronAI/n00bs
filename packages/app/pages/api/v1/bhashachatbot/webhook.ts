@@ -54,6 +54,7 @@ webhook.post(async (req, res) => {
     }
 
     const data = req.body;
+    console.log(JSON.stringify(data, null, 2));
 
     if (data.entry[0].changes[0].field !== "messages") {
         res.status(403).json({
@@ -99,65 +100,79 @@ webhook.post(async (req, res) => {
         })
     }
 
-    await sendTextMessage(waID, `Welcome ${assigneDetails.name}`)
+    if(textBody === "Hi") {
+        await sendTextMessage(waID, `Welcome ${assigneDetails.name}`)
 
-    const task_assignments = await db.task_assignment.findMany({
-        where: {
-            assignee_id: assigneDetails.id,
-            status: task_status.in_progress,
-        },
-        include: {
-            task: true,
-        }
-    })
+        const task_assignments = await db.task_assignment.findMany({
+            where: {
+                assignee_id: assigneDetails.id,
+                status: task_status.in_progress,
+            },
+            include: {
+                task: true,
+            }
+        })
 
-    console.log("Task Assingments", task_assignments)
+        console.log("Task Assingments", task_assignments)
 
-    const single_audio_assingments = task_assignments.filter(task => task.task.workflow_id === 1)
-    const district_audio_assignments = task_assignments.filter(task => task.task.workflow_id === 2)
-    const transcription_check_assignments  = task_assignments.filter(task => task.task.workflow_id === 3)
+        const single_audio_assingments = task_assignments.filter(task => task.task.workflow_id === 1)
+        const district_audio_assignments = task_assignments.filter(task => task.task.workflow_id === 2)
+        const transcription_check_assignments  = task_assignments.filter(task => task.task.workflow_id === 3)
 
-    console.log(`Single Audio - ${single_audio_assingments.length}
-District Wise Audio - ${district_audio_assignments.length}
-Transcription Check - ${transcription_check_assignments.length}`)
+        console.log(`Single Audio - ${single_audio_assingments.length}
+    District Wise Audio - ${district_audio_assignments.length}
+    Transcription Check - ${transcription_check_assignments.length}`)
 
-    await sendInteractiveMessage(waID, {
-        body: {
-            text: `You have these many assignments assigned to you.
+        await sendInteractiveMessage(waID, {
+            body: {
+                text: `You have these many assignments assigned to you.
 
-Single Audio - ${single_audio_assingments.length}
-District Wise Audio - ${district_audio_assignments.length}
-Transcription Check - ${transcription_check_assignments.length}
+    Single Audio - ${single_audio_assingments.length}
+    District Wise Audio - ${district_audio_assignments.length}
+    Transcription Check - ${transcription_check_assignments.length}
 
-Please select any one option.`
-        },
-        type: "button",
-        action: {
-            buttons: [
-                {
-                    type: "reply",
-                    reply : {
-                        title: "Single Audio",
-                        id: "single_audio"
+    Please select any one option.`
+            },
+            type: "button",
+            action: {
+                buttons: [
+                    {
+                        type: "reply",
+                        reply : {
+                            title: "Single Audio",
+                            id: "single_audio"
+                        }
+                    },
+                    {
+                        type: "reply",
+                        reply : {
+                            title: "District wise Audio",
+                            id: "district_audio"
+                        }
+                    },
+                    {
+                        type: "reply",
+                        reply : {
+                            title: "Transcription Check",
+                            id: "transcription_check"
+                        }
                     }
-                },
-                {
-                    type: "reply",
-                    reply : {
-                        title: "District wise Audio",
-                        id: "district_audio"
-                    }
-                },
-                {
-                    type: "reply",
-                    reply : {
-                        title: "Transcription Check",
-                        id: "transcription_check"
-                    }
-                }
-            ]
-        }
-    });
+                ]
+            }
+        });
+
+        res.status(200).json({
+            message: "Response of Hi - successfull."
+        });
+
+        return;
+    } else if(textBody === "Single Audio" && textBody === "District wise Audio" && "Transcription Check") {
+        console.log("Message", textBody);
+
+        res.status(200).json({
+            message: `Selected ${textBody} workflow`
+        });
+    }
 
     res.status(200).json({
         message: "Successfull"
