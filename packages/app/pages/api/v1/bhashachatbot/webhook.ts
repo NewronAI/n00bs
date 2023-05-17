@@ -1,31 +1,13 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import assertUp from "@/helpers/node/assert/assertUp";
 import { db } from "@/helpers/node/db";
-import { events, request_method } from "@prisma/client";
+import { check_type, events, request_method } from "@prisma/client";
 import { sendTextMessage, sendQuestion, sendInteractiveMessage } from "src/messageHelper";
 import { task_status } from "@prisma/client";
+import axios from "axios";
 
 const webhook = new NextExpress();
 const webhookSecret = "2d464c63-249b-4c91-8698-45abda5d3b7b"
-
-async function checkSession(assignee_id: any) {
-    const session = await db.user_session.findFirst({
-        where: {
-            member_id: assignee_id
-        },
-    });
-
-    if (session) {
-        return true;
-    }
-    else {
-        const newSession = await db.user_session.create({
-            data: {
-                member_id: assignee_id,
-            }
-        })
-    }
-}
 
 webhook.get(async (req, res) => {
     const mode = req.query["hub.mode"]
@@ -46,15 +28,14 @@ webhook.get(async (req, res) => {
 
 webhook.post(async (req, res) => {
 
-    if (!req.body) {
-        res.status(400).json({
-            message: "Empty request body",
-        });
-        return;
-    }
+    console.log("Webhook Starts")
+
+    assertUp(req.body, {
+        message: "Empty request body",
+        status: 400
+    })
 
     const data = req.body;
-    console.log(JSON.stringify(data, null, 2));
 
     if (data.entry[0].changes[0].field !== "messages") {
         res.status(403).json({
@@ -65,7 +46,9 @@ webhook.post(async (req, res) => {
     }
 
     const waID = data.entry[0].changes[0].value.contacts[0].wa_id;
-    const textBody = data.entry[0].changes[0].value.messages[0].text.body;
+    const message = data.entry[0].changes[0].value.messages[0];
+    const textBody = message.type === "interactive" ? message.interactive.button_reply.title : message.text.body;
+    const messageId = message.type === "interactive" ? data.entry[0].changes[0].value.messages[0].interactive.button_reply.id : null;
 
     const assigneDetails = await db.member.findFirst({
         where: {
@@ -90,7 +73,7 @@ webhook.post(async (req, res) => {
         }
     })
 
-    if(!user_session) {
+    if (!user_session) {
         console.log("user session not found");
 
         user_session = await db.user_session.create({
@@ -100,29 +83,23 @@ webhook.post(async (req, res) => {
         })
     }
 
-    if(textBody === "Hi") {
+    const task_assignments = await db.task_assignment.findMany({
+        where: {
+            assignee_id: assigneDetails.id,
+            status: task_status.in_progress,
+        },
+        include: {
+            task: true,
+            workflow_file: true
+        }
+    })
+
+    const single_audio_assingments = task_assignments.filter(task => task.task.workflow_id === 1)
+    const district_audio_assignments = task_assignments.filter(task => task.task.workflow_id === 2)
+    const transcription_check_assignments = task_assignments.filter(task => task.task.workflow_id === 3)
+
+    if (textBody === "Hi") {
         await sendTextMessage(waID, `Welcome ${assigneDetails.name}`)
-
-        const task_assignments = await db.task_assignment.findMany({
-            where: {
-                assignee_id: assigneDetails.id,
-                status: task_status.in_progress,
-            },
-            include: {
-                task: true,
-            }
-        })
-
-        console.log("Task Assingments", task_assignments)
-
-        const single_audio_assingments = task_assignments.filter(task => task.task.workflow_id === 1)
-        const district_audio_assignments = task_assignments.filter(task => task.task.workflow_id === 2)
-        const transcription_check_assignments  = task_assignments.filter(task => task.task.workflow_id === 3)
-
-        console.log(`Single Audio - ${single_audio_assingments.length}
-    District Wise Audio - ${district_audio_assignments.length}
-    Transcription Check - ${transcription_check_assignments.length}`)
-
         await sendInteractiveMessage(waID, {
             body: {
                 text: `You have these many assignments assigned to you.
@@ -131,28 +108,28 @@ webhook.post(async (req, res) => {
     District Wise Audio - ${district_audio_assignments.length}
     Transcription Check - ${transcription_check_assignments.length}
 
-    Please select any one option.`
+Please select any one option.`
             },
             type: "button",
             action: {
                 buttons: [
                     {
                         type: "reply",
-                        reply : {
+                        reply: {
                             title: "Single Audio",
                             id: "single_audio"
                         }
                     },
                     {
                         type: "reply",
-                        reply : {
+                        reply: {
                             title: "District wise Audio",
                             id: "district_audio"
                         }
                     },
                     {
                         type: "reply",
-                        reply : {
+                        reply: {
                             title: "Transcription Check",
                             id: "transcription_check"
                         }
@@ -166,13 +143,81 @@ webhook.post(async (req, res) => {
         });
 
         return;
-    } else if(textBody === "Single Audio" && textBody === "District wise Audio" && "Transcription Check") {
-        console.log("Message", textBody);
+    }
+    if (messageId === "single_audio" || messageId === "district_audio" || messageId === "transcription_check") {
+
+        const checkType = messageId === "single_audio" ? check_type.single_audio : messageId === "district_audio" ? check_type.district_wise_audio : messageId === "transcription_check" ? check_type.district_wise_transcript : null;
+        const currentTaskAssignment = checkType === check_type.single_audio ? single_audio_assingments[0] : checkType === check_type.district_wise_audio ? district_audio_assignments[0] : checkType === check_type.district_wise_transcript ? transcription_check_assignments[0] : null;
+        const workflow_id = checkType === check_type.single_audio ? 1 : checkType === check_type.district_wise_audio ? 2 : checkType === check_type.district_wise_transcript ? 3 : null;
+        const fileName = currentTaskAssignment?.workflow_file.file_name.split("/").pop();
+        const fileLink = currentTaskAssignment?.workflow_file.file;
+
+        const questions = await db.task_assignment.findMany({
+            where: {
+                id: currentTaskAssignment?.id
+            },
+            select: {
+                task: {
+                    select: {
+                        task_questions: {
+                            select: {
+                                questions: {
+                                    select: {
+                                        id: true,
+                                        uuid: true,
+                                        name: true,
+                                        text: true,
+                                        expected_answer: true,
+                                        options: true,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        const responsesJSON: { [key: string]: null } = {};
+        questions[0].task.task_questions.map(question => {
+            const uuid = question.questions.uuid;
+            responsesJSON[uuid] = null;
+        })
+
+        try {
+            await db.user_session.update({
+            where: {
+                id: user_session.id
+            },
+            data: {
+                current_question_uuid: Object.keys(responsesJSON)[0],
+                task_assignment_id: currentTaskAssignment?.id,
+                check_type: checkType,
+                responses: responsesJSON
+            }
+        })} catch(e) {
+            console.log("Error while updating the user_session", e)
+            return;
+        }
+
+        const firstQuestion = questions[0].task.task_questions.find(question => question.questions.uuid === Object.keys(responsesJSON)[0])
+        console.log("First question", firstQuestion)
+
+        await sendTextMessage(waID, `File Name - ${fileName}.
+
+Please visit the below link to view the file.
+
+${fileLink}`)
+
+        await sendQuestion(waID,firstQuestion?.questions.text, firstQuestion?.questions.options, Object.keys(responsesJSON)[0])
 
         res.status(200).json({
             message: `Selected ${textBody} workflow`
         });
+        return;
     }
+
+
 
     res.status(200).json({
         message: "Successfull"

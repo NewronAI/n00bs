@@ -47,35 +47,56 @@ export async function sendTextMessage( to, message) {
         }
     };
 
-    console.log({data});
-
     await rawWhatsappMessage(data);
-
 }
 
-export async function sendQuestion(to, question_text) {
+export async function sendQuestion(to, question_text, options, questionUUID) {
+        const buttons = options.map( (option, index) => {
+            return {
+                type: "reply",
+                reply: {
+                    title: option,
+                    id: `${index}${questionUUID}`,
+                }
+            }
+        })
+
         await sendInteractiveMessage(to, {
         body: {
             text: question_text
         },
         type: "button",
-        action: {
-            buttons: [
-                {
-                    type: "reply",
-                    reply : {
-                        title: "Yes",
-                        id: "3Q Q1 Yes"
-                    }
-                },
-                {
-                    type: "reply",
-                    reply : {
-                        title: "No",
-                        id: "3Q Q1 No"
-                    }
-                }
-            ]
-        }
+        action: { buttons: buttons }
        });
+}
+
+export async function sendLink(to,fileName,fileLink) {
+    const data = {
+        "messaging_product": "whatsapp",
+        "recipient_type": "individual",
+        "to": "PHONE_NUMBER",
+        "type": "template",
+        "template": {
+          "name": "TEMPLATE_NAME",
+          "language": {
+            "code": "LANGUAGE_AND_LOCALE_CODE"
+          },
+          "components": [
+            {
+              "type": "body",
+              "parameters": [
+                {
+                  "type": "text",
+                  "text": fileName
+                },
+              ]
+            },
+            {
+                "type": "text",
+            }
+          ]
+        }
+      }
+
+      await rawWhatsappMessage(data);
 }
