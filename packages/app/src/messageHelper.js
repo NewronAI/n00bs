@@ -30,8 +30,15 @@ export async function sendInteractiveMessage(to,data){
         type: "interactive",
         interactive: data
     }
-
-    await rawWhatsappMessage(body);
+    try{
+        console.log("sending interactive messages");
+        await rawWhatsappMessage(body);
+        console.log("message sent");
+    }
+    catch(error){
+        console.log("Failed to send message");
+        throw error;
+    }
 }
 
 export async function sendTextMessage( to, message) {
@@ -46,8 +53,13 @@ export async function sendTextMessage( to, message) {
             body: message
         }
     };
-
-    await rawWhatsappMessage(data);
+    try{
+        await rawWhatsappMessage(data);
+        console.log("Text message sent: ", message);
+    }
+    catch(error){
+        console.log("Failed to send message");
+    }
 }
 
 export async function sendQuestion(to, question_text, options, quuid, expectedAns, wfID) {
