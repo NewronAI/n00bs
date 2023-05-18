@@ -209,6 +209,8 @@ webhook.post(async (req, res) => {
     })
 
     const data = req.body;
+    console.log(req.body);
+    
 
     if (data.entry[0].changes[0].field !== "messages") {
         res.status(403).json({
