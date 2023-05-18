@@ -171,11 +171,11 @@ async function handleQuestionResponses(messageId: any, session: any, waID: numbe
                 return question;
             }
         })
-        if(!filteredQuestions) {
+        if (!filteredQuestions) {
             return
         }
 
-        await updateSession(response,session.id ,filteredQuestions[0].uuid)
+        await updateSession(response, session.id, filteredQuestions[0].uuid)
 
         await sendQuestion(waID, filteredQuestions[0].text, filteredQuestions[0].options, filteredQuestions[0].uuid, filteredQuestions[0].expected_answer, messageId.wfID);
         //await updateSession(response,session.id)
@@ -269,40 +269,42 @@ webhook.post(async (req, res) => {
             return;
         }
     }
-    
-    switch (messageId.type) {
-        case "wf": {
-            try {
-                await handleWFResponse(messageId, user_session, waID)
-                res.status(200).json({
-                    message: "First question successfully"
-                });
-                return;
-            } catch (e) {
-                console.log(e)
-                res.status(403).json({
-                    message: e
-                });
-                return;
+
+    if (message.type) {
+        switch (messageId.type) {
+            case "wf": {
+                try {
+                    await handleWFResponse(messageId, user_session, waID)
+                    res.status(200).json({
+                        message: "First question successfully"
+                    });
+                    return;
+                } catch (e) {
+                    console.log(e)
+                    res.status(403).json({
+                        message: e
+                    });
+                    return;
+                }
             }
-        }
-        case "QA": {
-            try {
-                await handleQuestionResponses(messageId, user_session, waID, textBody)
-                res.status(200).json({
-                    message: "Question send successfully"
-                });
-                return;
-            } catch (e) {
-                console.log(e)
-                res.status(403).json({
-                    message: e
-                });
-                return;
+            case "QA": {
+                try {
+                    await handleQuestionResponses(messageId, user_session, waID, textBody)
+                    res.status(200).json({
+                        message: "Question send successfully"
+                    });
+                    return;
+                } catch (e) {
+                    console.log(e)
+                    res.status(403).json({
+                        message: e
+                    });
+                    return;
+                }
             }
-        }
-        default: {
-            sendTextMessage(waID, "Invalid Response")
+            default: {
+                sendTextMessage(waID, "Invalid Response")
+            }
         }
     }
 
