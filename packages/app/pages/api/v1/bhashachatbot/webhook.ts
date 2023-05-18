@@ -314,47 +314,47 @@ webhook.post(async (req, res) => {
         }
     }
 
-    if (message.type) {
-        switch (messageId.type) {
-            case "WF": {
-                try {
-                    console.log("Message type detected as worflow selection");
-                    
-                    await handleWFResponse(messageId, user_session, waID)
-                    res.status(200).json({
-                        message: "First question successfully"
-                    });
-                    return;
-                } catch (e) {
-                    console.log(e)
-                    res.status(403).json({
-                        message: e
-                    });
-                    return;
-                }
-            }
-            case "QA": {
-                try {
-                    console.log("Message type is of QA");
 
-                    await handleQuestionResponses(messageId, user_session, waID, textBody)
-                    res.status(200).json({
-                        message: "Question send successfully"
-                    });
-                    return;
-                } catch (e) {
-                    console.log(e)
-                    res.status(403).json({
-                        message: e
-                    });
-                    return;
-                }
-            }
-            default: {
-                sendTextMessage(waID, "Invalid Response")
+    switch (parsedMessageId.type) {
+        case "WF": {
+            try {
+                console.log("Message type detected as worflow selection");
+                
+                await handleWFResponse(parsedMessageId, user_session, waID)
+                res.status(200).json({
+                    message: "First question successfully"
+                });
+                return;
+            } catch (e) {
+                console.log(e)
+                res.status(403).json({
+                    message: e
+                });
+                return;
             }
         }
+        case "QA": {
+            try {
+                console.log("Message type is of QA");
+
+                await handleQuestionResponses(parsedMessageId, user_session, waID, textBody)
+                res.status(200).json({
+                    message: "Question send successfully"
+                });
+                return;
+            } catch (e) {
+                console.log(e)
+                res.status(403).json({
+                    message: e
+                });
+                return;
+            }
+        }
+        default: {
+            sendTextMessage(waID, "Invalid Response")
+        }
     }
+
 
     res.status(200).json({
         message: "Successfull"
