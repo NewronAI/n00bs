@@ -11,7 +11,13 @@ const webhook = new NextExpress();
 const webhookSecret = "2d464c63-249b-4c91-8698-45abda5d3b7b"
 
 async function handleHiResponse(waID: any, assigneDetails: any) {
+
+    console.log("sending hi response", waID, assigneDetails);
+
     await sendTextMessage(waID, `Welcome ${assigneDetails.name}!`);
+    console.log("welcome message sent");
+    
+
 
     const workflows = await db.workflow.findMany({
         include: {
@@ -21,6 +27,8 @@ async function handleHiResponse(waID: any, assigneDetails: any) {
             id: "asc"
         }
     });
+    console.log("fetched workflows");
+    
 
     const dataFetchPromises = workflows.map(async (flow) => {
         return db.task_assignment.count({
@@ -31,8 +39,10 @@ async function handleHiResponse(waID: any, assigneDetails: any) {
             }
         })
     });
+    
 
     const countValues = await Promise.all(dataFetchPromises);
+    console.log("fetched all counts");
 
     const toSendMessage = `You have following number of tasks:\n\n${workflows.map(({ name }, index) => {
         return `${name}  : ${countValues[index]}`
@@ -48,6 +58,9 @@ async function handleHiResponse(waID: any, assigneDetails: any) {
         }
     });
 
+
+
+    
     await sendInteractiveMessage(waID, {
         body: {
             text: toSendMessage
@@ -57,6 +70,9 @@ async function handleHiResponse(waID: any, assigneDetails: any) {
             buttons: buttons
         }
     });
+
+    console.log("sent user count");
+    
 }
 
 async function getTaskAssingment(workflowID: number, assigneeID: any) {
