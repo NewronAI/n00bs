@@ -210,7 +210,7 @@ Please visit the below link to view the file.
 
 ${fileLink}`)
 
-        await sendQuestion(waID,firstQuestion?.questions.text, firstQuestion?.questions.options, Object.keys(responsesJSON)[0])
+        await sendQuestion(waID,firstQuestion?.questions.text, firstQuestion?.questions.options, `workflowID_${workflow_id}`)
 
         res.status(200).json({
             message: `Selected ${textBody} workflow`
@@ -218,12 +218,9 @@ ${fileLink}`)
         return;
     }
 
-
-
     res.status(200).json({
         message: "Successfull"
     });
-
 })
 
 export default webhook.handler;

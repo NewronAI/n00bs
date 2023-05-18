@@ -50,13 +50,13 @@ export async function sendTextMessage( to, message) {
     await rawWhatsappMessage(data);
 }
 
-export async function sendQuestion(to, question_text, options, questionUUID) {
-        const buttons = options.map( (option, index) => {
+export async function sendQuestion(to, question_text, options, messageID) {
+        const buttons = options.map( (option) => {
             return {
                 type: "reply",
                 reply: {
                     title: option,
-                    id: `${index}${questionUUID}`,
+                    id: `${messageID}_${option}`,
                 }
             }
         })
