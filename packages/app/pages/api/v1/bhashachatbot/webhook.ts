@@ -5,10 +5,185 @@ import { check_type, events, request_method } from "@prisma/client";
 import { sendTextMessage, sendQuestion, sendInteractiveMessage } from "src/messageHelper";
 import { task_status } from "@prisma/client";
 import axios from "axios";
-import { values } from "lodash";
+import { update, values } from "lodash";
 
 const webhook = new NextExpress();
 const webhookSecret = "2d464c63-249b-4c91-8698-45abda5d3b7b"
+
+async function handleHiResponse(waID: any, assigneDetails: any) {
+    await sendTextMessage(waID, `Welcome ${assigneDetails.name}!`);
+
+    const workflows = await db.workflow.findMany({
+        include: {
+            tasks: true
+        },
+        orderBy: {
+            id: "asc"
+        }
+    });
+
+    const dataFetchPromises = workflows.map(async (flow) => {
+        return db.task_assignment.count({
+            where: {
+                task_id: flow.tasks[0].id,
+                assignee_id: assigneDetails.id,
+                status: "pending"
+            }
+        })
+    });
+
+    const countValues = await Promise.all(dataFetchPromises);
+
+    const toSendMessage = `You have following number of tasks:\n\n${workflows.map(({ name }, index) => {
+        return `${name}  : ${countValues[index]}`
+    }).join("\n")}`;
+
+    const buttons = workflows.map((flow) => {
+        return {
+            type: "reply",
+            reply: {
+                title: flow.id === 1 ? "Single Audio Check" : "District Audio Check",
+                id: JSON.stringify({ type: "wf", wfID: flow.id }),
+            }
+        }
+    });
+
+    console.log("Buttons", buttons);
+
+    await sendInteractiveMessage(waID, {
+        body: {
+            text: toSendMessage
+        },
+        type: "button",
+        action: {
+            buttons: buttons
+        }
+    });
+}
+
+async function getTaskAssingment(workflowID: number, assigneeID: any) {
+    const task_assignment = await db.task_assignment.findFirst({
+        where: {
+            assignee_id: assigneeID,
+            status: "pending",
+            task: {
+                workflow_id: workflowID,
+            }
+        },
+        select: {
+            id: true,
+            workflow_file: {
+                select: {
+                    uuid: true,
+                    file_name: true,
+                    file: true,
+                }
+            }
+        }
+    })
+
+    return task_assignment;
+}
+
+async function getQuestions(wfID: number, task_assignmentID: any) {
+    const taskQuestions = await db.task_assignment.findFirst({
+        where: {
+            id: task_assignmentID
+        },
+        select: {
+            task: {
+                select: {
+                    task_questions: {
+                        select: {
+                            questions: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    uuid: true,
+                                    expected_answer: true,
+                                    text: true,
+                                    question_type: true,
+                                    options: true,
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    })
+
+    const questions = taskQuestions?.task.task_questions.map(question => {
+        return question.questions
+    })
+
+    return questions;
+}
+
+async function handleWFResponse(messageId: any, session: any, waID: number) {
+
+    const task_assignment = await getTaskAssingment(messageId.wfID, session.member_id)
+    const questions = await getQuestions(messageId.wfID, task_assignment?.id);
+    if (!questions) {
+        assertUp(questions, {
+            message: "Could Not fetch the questions",
+            status: 400
+        })
+        return;
+    }
+    let responseJSON: { [key: string]: string } = {};
+    questions.map(question => {
+        responseJSON[question.uuid] = "null";
+    });
+    await db.user_session.update({
+        where: {
+            id: session.id,
+        },
+        data: {
+            task_assignment_id: task_assignment?.id,
+            responses: responseJSON,
+            current_question_uuid: questions[0].uuid,
+        }
+    });
+
+    await sendTextMessage(waID, `File Name - ${task_assignment?.workflow_file.file_name.split("/").pop()}\n\n Please visit the below link to view the file\n\n${task_assignment?.workflow_file.file}`)
+    await sendQuestion(waID, questions[0].text, questions[0].options, questions[0].uuid, questions[0].expected_answer, messageId.wfID);
+}
+
+async function updateSession(responses: any, sessionID: any, current_question_uuid: string) {
+    await db.user_session.update({
+        where: {
+            id: sessionID,
+        },
+        data: {
+            responses,
+            current_question_uuid
+        }
+    })
+}
+
+async function handleQuestionResponses(messageId: any, session: any, waID: number, textBody: any) {
+    console.log(messageId.expectedAns, textBody)
+    if (messageId.expectedAns === textBody || messageId.wfID === 2) {
+        const task_assignment_id = session.task_assignment_id
+        const response = session.responses;
+        response[messageId.questionUUID] = textBody;
+        const questions = await getQuestions(messageId.wfID, task_assignment_id)
+        const filteredQuestions = questions?.filter(question => {
+            if (question.uuid !== messageId.questionUUID) {
+                return question;
+            }
+        })
+        if(!filteredQuestions) {
+            return
+        }
+
+        await updateSession(response,session.id ,filteredQuestions[0].uuid)
+
+        await sendQuestion(waID, filteredQuestions[0].text, filteredQuestions[0].options, filteredQuestions[0].uuid, filteredQuestions[0].expected_answer, messageId.wfID);
+        //await updateSession(response,session.id)
+    }
+}
 
 webhook.get(async (req, res) => {
     const mode = req.query["hub.mode"]
@@ -37,8 +212,6 @@ webhook.post(async (req, res) => {
     })
 
     const data = req.body;
-
-    // console.log(JSON.stringify(data, null, 2))
 
     if (data.entry[0].changes[0].field !== "messages") {
         res.status(403).json({
@@ -86,212 +259,54 @@ webhook.post(async (req, res) => {
         })
     }
 
-    const task_assignments = await db.task_assignment.findMany({
-        where: {
-            assignee_id: assigneDetails.id,
-            status: task_status.in_progress,
-        },
-        include: {
-            task: true,
-            workflow_file: true
-        }
-    })
-
-    const single_audio_assingments = task_assignments.filter(task => task.task.workflow_id === 1)
-    const district_audio_assignments = task_assignments.filter(task => task.task.workflow_id === 2)
-    const transcription_check_assignments = task_assignments.filter(task => task.task.workflow_id === 3)
-
     if (textBody === "Hi") {
-        await sendTextMessage(waID, `Welcome ${assigneDetails.name}`)
-        await sendInteractiveMessage(waID, {
-            body: {
-                text: `You have these many assignments assigned to you.
-
-    Single Audio - ${single_audio_assingments.length}
-    District Wise Audio - ${district_audio_assignments.length}
-    Transcription Check - ${transcription_check_assignments.length}
-
-Please select any one option.`
-            },
-            type: "button",
-            action: {
-                buttons: [
-                    {
-                        type: "reply",
-                        reply: {
-                            title: "Single Audio",
-                            id: "single_audio"
-                        }
-                    },
-                    {
-                        type: "reply",
-                        reply: {
-                            title: "District wise Audio",
-                            id: "district_audio"
-                        }
-                    },
-                    {
-                        type: "reply",
-                        reply: {
-                            title: "Transcription Check",
-                            id: "transcription_check"
-                        }
-                    }
-                ]
-            }
-        });
-
-        res.status(200).json({
-            message: "Response of Hi - successfull."
-        });
-
-        return;
-    }
-    if (messageId === "single_audio" || messageId === "district_audio" || messageId === "transcription_check") {
-
-        const checkType = messageId === "single_audio" ? check_type.single_audio : messageId === "district_audio" ? check_type.district_wise_audio : messageId === "transcription_check" ? check_type.district_wise_transcript : null;
-        const currentTaskAssignment = checkType === check_type.single_audio ? single_audio_assingments[0] : checkType === check_type.district_wise_audio ? district_audio_assignments[0] : checkType === check_type.district_wise_transcript ? transcription_check_assignments[0] : null;
-        const workflow_id = checkType === check_type.single_audio ? 1 : checkType === check_type.district_wise_audio ? 2 : checkType === check_type.district_wise_transcript ? 3 : null;
-        const fileName = currentTaskAssignment?.workflow_file.file_name.split("/").pop();
-        const fileLink = currentTaskAssignment?.workflow_file.file;
-
-        const questions = await db.task_assignment.findMany({
-            where: {
-                id: currentTaskAssignment?.id
-            },
-            select: {
-                task: {
-                    select: {
-                        task_questions: {
-                            select: {
-                                questions: {
-                                    select: {
-                                        id: true,
-                                        uuid: true,
-                                        name: true,
-                                        text: true,
-                                        expected_answer: true,
-                                        options: true,
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        })
-
-        const responsesJSON: { [key: string]: string } = {};
-        questions[0].task.task_questions.map(question => {
-            const uuid = question.questions.uuid;
-            responsesJSON[uuid] = "null";
-        })
-
         try {
-            await db.user_session.update({
-                where: {
-                    id: user_session.id
-                },
-                data: {
-                    current_question_uuid: Object.keys(responsesJSON)[0],
-                    task_assignment_id: currentTaskAssignment?.id,
-                    check_type: checkType,
-                    responses: responsesJSON
-                }
-            })
+            await handleHiResponse(waID, assigneDetails)
+            res.status(200).json({
+                message: "Response of Hi - successfull."
+            });
+
+            return;
         } catch (e) {
-            console.log("Error while updating the user_session", e)
+            console.log("Error while handling Hi response :", e);
             return;
         }
-
-        const firstQuestion = questions[0].task.task_questions.find(question => question.questions.uuid === Object.keys(responsesJSON)[0])
-
-        await sendTextMessage(waID, `File Name - ${fileName}.
-
-Please visit the below link to view the file.
-
-${fileLink}`)
-
-        await sendQuestion(waID, firstQuestion?.questions.text, firstQuestion?.questions.options, `workflowID_${workflow_id}_${firstQuestion?.questions.uuid}`)
-
-        res.status(200).json({
-            message: `Selected ${textBody} workflow`
-        });
-        return;
     }
 
-    const checkAnswer = messageId.split("_")
-
-    if (checkAnswer[0] === "workflowID") {
-        let response = JSON.parse(JSON.stringify(user_session.responses))
-        console.log(response)
-        response[user_session.current_question_uuid ?? ''] = textBody;
-        const currentTaskAssignment = user_session.check_type === check_type.single_audio ? single_audio_assingments[0] :  user_session.check_type === check_type.district_wise_audio ? district_audio_assignments[0] :  user_session.check_type === check_type.district_wise_transcript ? transcription_check_assignments[0] : null;
-        const fileName = currentTaskAssignment?.workflow_file.file_name.split("/").pop();
-        console.log("", response);
-
-        await db.user_session.update({
-            where: {
-                id: user_session.id
-            },
-            data: {
-                responses: response,
+    switch (messageId.type) {
+        case "wf": {
+            try {
+                await handleWFResponse(messageId, user_session, waID)
+                res.status(200).json({
+                    message: "First question successfully"
+                });
+                return;
+            } catch (e) {
+                console.log(e)
+                res.status(403).json({
+                    message: e
+                });
+                return;
             }
-        })
-
-        const questions = await db.task_assignment.findMany({
-            where: {
-                id: currentTaskAssignment?.id
-            },
-            select: {
-                task: {
-                    select: {
-                        task_questions: {
-                            select: {
-                                questions: {
-                                    select: {
-                                        id: true,
-                                        uuid: true,
-                                        name: true,
-                                        text: true,
-                                        expected_answer: true,
-                                        options: true,
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        })
-
-        const responsesJSON: { [key: string]: string } = {};
-        questions[0].task.task_questions.map(question => {
-            const uuid = question.questions.uuid;
-            if (response[uuid] === "null") {
-                responsesJSON[uuid] = "null";
-            }
-        })
-        console.log(responsesJSON)
-
-        if(Object.keys(responsesJSON).length === 0) {
-            await sendTextMessage(waID,`File Name - ${fileName} quality check completed`)
-
-            res.status(200).json({
-                message: `Answer recieved`
-            });
-            return;
         }
-
-        const firstQuestion = questions[0].task.task_questions.find(question => question.questions.uuid === Object.keys(responsesJSON)[0])
-        console.log(firstQuestion)
-
-        await sendQuestion(waID, firstQuestion?.questions.text, firstQuestion?.questions.options, `workflowID_${checkAnswer[1]}_${firstQuestion?.questions.uuid}`)
-
-        res.status(200).json({
-            message: `Answer recieved`
-        });
-        return;
+        case "QA": {
+            try {
+                await handleQuestionResponses(messageId, user_session, waID, textBody)
+                res.status(200).json({
+                    message: "Question send successfully"
+                });
+                return;
+            } catch (e) {
+                console.log(e)
+                res.status(403).json({
+                    message: e
+                });
+                return;
+            }
+        }
+        default: {
+            sendTextMessage(waID, "Invalid Response")
+        }
     }
 
     res.status(200).json({
