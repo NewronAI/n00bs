@@ -48,8 +48,6 @@ async function handleHiResponse(waID: any, assigneDetails: any) {
         }
     });
 
-    console.log("Buttons", buttons);
-
     await sendInteractiveMessage(waID, {
         body: {
             text: toSendMessage
@@ -163,7 +161,6 @@ async function updateSession(responses: any, sessionID: any, current_question_uu
 }
 
 async function handleQuestionResponses(messageId: any, session: any, waID: number, textBody: any) {
-    console.log(messageId.expectedAns, textBody)
     if (messageId.expectedAns === textBody || messageId.wfID === 2) {
         const task_assignment_id = session.task_assignment_id
         const response = session.responses;
@@ -225,7 +222,7 @@ webhook.post(async (req, res) => {
     const message = data.entry[0].changes[0].value.messages[0];
     const textBody: string = message.type === "interactive" ? message.interactive.button_reply.title : message.text.body;
     const messageId = message.type === "interactive" ? data.entry[0].changes[0].value.messages[0].interactive.button_reply.id : null;
-
+    console.log("Message Type", messageId.type)
     const assigneDetails = await db.member.findFirst({
         where: {
             phone: `+${waID}`,
@@ -272,7 +269,7 @@ webhook.post(async (req, res) => {
             return;
         }
     }
-
+    
     switch (messageId.type) {
         case "wf": {
             try {
@@ -304,9 +301,9 @@ webhook.post(async (req, res) => {
                 return;
             }
         }
-        // default: {
-        //     sendTextMessage(waID, "Invalid Response")
-        // }
+        default: {
+            sendTextMessage(waID, "Invalid Response")
+        }
     }
 
     res.status(200).json({
