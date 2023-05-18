@@ -57,10 +57,10 @@ webhook.post(async (req, res) => {
         return;
     }
 
-    const waID = data.entry[0].changes[0].value.contacts[0].wa_id;
-    const message = data.entry[0].changes[0].value.messages[0];
-    const textBody: string = message.type === "interactive" ? message.interactive.button_reply.title : message.text.body;
-    const messageId = message.type === "interactive" ? data.entry[0].changes[0].value.messages[0].interactive.button_reply.id : null;
+    const waID = data.entry?.[0]?.changes?.[0]?.value.contacts?.[0]?.wa_id;
+    const message = data.entry?.[0]?.changes?.[0]?.value.messages?.[0];
+    const textBody: string = message.type === "interactive" ? message?.interactive?.button_reply?.title : message?.text?.body;
+    const messageId = message.type === "interactive" ? data.entry?.[0]?.changes?.[0]?.value?.messages?.[0].interactive?.button_reply?.id : null;
 
     console.log("Extracted important variables", waID, message, textBody, messageId);
     
