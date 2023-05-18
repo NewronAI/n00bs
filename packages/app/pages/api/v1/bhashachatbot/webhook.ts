@@ -181,10 +181,10 @@ Please select any one option.`
             }
         })
 
-        const responsesJSON: { [key: string]: any } = {};
+        const responsesJSON: { [key: number]: number | string } = {};
         questions[0].task.task_questions.map(question => {
-            const uuid = question.questions.uuid;
-            responsesJSON[uuid] = 0;
+            const id = question.questions.id;
+            responsesJSON[id] = 0;
         })
 
         try {
@@ -225,7 +225,9 @@ ${fileLink}`)
     if (checkAnswer[0] === "workflowID") {
 
         const responses = user_session.responses;
-        console.log(responses) // Assuming `user_session.responses` is of type `JsonValue`
+        responses?[user_session.current_question_uuid] : textBody;
+
+        console.log("Responses", responses);
 
         res.status(200).json({
             message: `Answer recieved`
