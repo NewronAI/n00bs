@@ -181,10 +181,10 @@ Please select any one option.`
             }
         })
 
-        const responsesJSON: { [key: number]: number | string } = {};
+        const responsesJSON: { [key: string]: any } = {};
         questions[0].task.task_questions.map(question => {
-            const id = question.questions.id;
-            responsesJSON[id] = 0;
+            const uuid = question.questions.uuid;
+            responsesJSON[uuid] = 0;
         })
 
         try {
@@ -226,8 +226,6 @@ ${fileLink}`)
 
         const responses = user_session.responses;
         responses?[user_session.current_question_uuid] : textBody;
-
-        console.log("Responses", responses);
 
         res.status(200).json({
             message: `Answer recieved`
