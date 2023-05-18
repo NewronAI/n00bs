@@ -36,7 +36,6 @@ webhook.post(async (req, res) => {
     })
 
     const data = req.body;
-    console.log(JSON.stringify(data, null, 2));
 
     if (data.entry[0].changes[0].field !== "messages") {
         res.status(403).json({
@@ -202,7 +201,6 @@ Please select any one option.`
         }
 
         const firstQuestion = questions[0].task.task_questions.find(question => question.questions.uuid === Object.keys(responsesJSON)[0])
-        console.log("First question", firstQuestion)
 
         await sendTextMessage(waID, `File Name - ${fileName}.
 
@@ -221,7 +219,7 @@ ${fileLink}`)
     const checkAnswer = messageId.split("_")
 
     if(checkAnswer[0] === "workflowID") {
-        console.log("User Session Responses")
+        console.log("User Session Responses",user_session.responses)
         // const responsesJSON = user_session.responses;
         // responsesJSON[user_session.current_question_uuid]
 
