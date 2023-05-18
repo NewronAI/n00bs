@@ -10,6 +10,15 @@ import { update, values } from "lodash";
 const webhook = new NextExpress();
 const webhookSecret = "2d464c63-249b-4c91-8698-45abda5d3b7b"
 
+interface MessageIdObj {
+    type?: string,
+    questionUUID?: string,
+    value?: string,
+    expectedAns?: string,
+    wfID?: number
+
+}
+
 async function handleHiResponse(waID: any, assigneDetails: any) {
 
     console.log("sending hi response", waID, assigneDetails);
@@ -53,7 +62,7 @@ async function handleHiResponse(waID: any, assigneDetails: any) {
             type: "reply",
             reply: {
                 title: flow.id === 1 ? "Single Audio Check" : "District Audio Check",
-                id: JSON.stringify({ type: "wf", wfID: flow.id }),
+                id: JSON.stringify({ type: "WF", wfID: flow.id }),
             }
         }
     });
@@ -239,16 +248,31 @@ webhook.post(async (req, res) => {
     const waID = data.entry[0].changes[0].value.contacts[0].wa_id;
     const message = data.entry[0].changes[0].value.messages[0];
     const textBody: string = message.type === "interactive" ? message.interactive.button_reply.title : message.text.body;
-    const messageId = message.type === "interactive" ? data.entry[0].changes[0].value.messages[0].interactive.button_reply.id : "Hi";
-    console.log("Message Type", messageId.type)
+    const messageId = message.type === "interactive" ? data.entry[0].changes[0].value.messages[0].interactive.button_reply.id : null;
+
+    let parsedMessageId : MessageIdObj = {};
+
+    try {
+        parsedMessageId = JSON.parse(messageId);
+    }
+    catch (e) {
+        console.log("could not parse the id string", "treating as normal message");
+    }
+
+    console.log("Message Type", parsedMessageId.type);
+
     const assigneDetails = await db.member.findFirst({
         where: {
             phone: `+${waID}`,
         }
-    })
+    });
+
+    console.log("Fetched assignee details");
+    
 
     if (assigneDetails === null) {
         console.log("user not registered");
+
         await sendTextMessage(waID, "You are not registered. Please register your whats number")
 
         res.status(200).json({
@@ -263,6 +287,8 @@ webhook.post(async (req, res) => {
             member_id: assigneDetails.id
         }
     })
+    console.log("Searched for user session. Found : ", !!user_session);
+    
 
     if (!user_session) {
         console.log("user session not found");
@@ -290,8 +316,10 @@ webhook.post(async (req, res) => {
 
     if (message.type) {
         switch (messageId.type) {
-            case "wf": {
+            case "WF": {
                 try {
+                    console.log("Message type detected as worflow selection");
+                    
                     await handleWFResponse(messageId, user_session, waID)
                     res.status(200).json({
                         message: "First question successfully"
@@ -307,6 +335,8 @@ webhook.post(async (req, res) => {
             }
             case "QA": {
                 try {
+                    console.log("Message type is of QA");
+
                     await handleQuestionResponses(messageId, user_session, waID, textBody)
                     res.status(200).json({
                         message: "Question send successfully"
