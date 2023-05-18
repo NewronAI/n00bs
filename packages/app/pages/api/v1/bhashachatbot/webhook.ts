@@ -224,6 +224,7 @@ ${fileLink}`)
 
     if (checkAnswer[0] === "workflowID") {
         let response = JSON.parse(JSON.stringify(user_session.responses))
+        console.log(response)
         response[user_session.current_question_uuid ?? ''] = textBody;
         const currentTaskAssignment = user_session.check_type === check_type.single_audio ? single_audio_assingments[0] :  user_session.check_type === check_type.district_wise_audio ? district_audio_assignments[0] :  user_session.check_type === check_type.district_wise_transcript ? transcription_check_assignments[0] : null;
         const fileName = currentTaskAssignment?.workflow_file.file_name.split("/").pop();
@@ -273,9 +274,6 @@ ${fileLink}`)
         })
         console.log(responsesJSON)
 
-        const firstQuestion = questions[0].task.task_questions.find(question => question.questions.uuid === Object.keys(responsesJSON)[0])
-        console.log(firstQuestion)
-
         if(Object.keys(responsesJSON).length === 0) {
             await sendTextMessage(waID,`File Name - ${fileName} quality check completed`)
 
@@ -284,6 +282,9 @@ ${fileLink}`)
             });
             return;
         }
+
+        const firstQuestion = questions[0].task.task_questions.find(question => question.questions.uuid === Object.keys(responsesJSON)[0])
+        console.log(firstQuestion)
 
         await sendQuestion(waID, firstQuestion?.questions.text, firstQuestion?.questions.options, `workflowID_${checkAnswer[1]}_${firstQuestion?.questions.uuid}`)
 
