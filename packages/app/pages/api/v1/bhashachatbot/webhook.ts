@@ -5,6 +5,7 @@ import { check_type, events, request_method } from "@prisma/client";
 import { sendTextMessage, sendQuestion, sendInteractiveMessage } from "src/messageHelper";
 import { task_status } from "@prisma/client";
 import axios from "axios";
+import { values } from "lodash";
 
 const webhook = new NextExpress();
 const webhookSecret = "2d464c63-249b-4c91-8698-45abda5d3b7b"
@@ -49,7 +50,7 @@ webhook.post(async (req, res) => {
 
     const waID = data.entry[0].changes[0].value.contacts[0].wa_id;
     const message = data.entry[0].changes[0].value.messages[0];
-    const textBody = message.type === "interactive" ? message.interactive.button_reply.title : message.text.body;
+    const textBody : any = message.type === "interactive" ? message.interactive.button_reply.title : message.text.body;
     const messageId = message.type === "interactive" ? data.entry[0].changes[0].value.messages[0].interactive.button_reply.id : null;
 
     const assigneDetails = await db.member.findFirst({
@@ -180,7 +181,7 @@ Please select any one option.`
             }
         })
 
-        const responsesJSON: { [key: string]: null } = {};
+        const responsesJSON: { [key: string]: any} = {};
         questions[0].task.task_questions.map(question => {
             const uuid = question.questions.uuid;
             responsesJSON[uuid] = null;
@@ -210,7 +211,7 @@ Please visit the below link to view the file.
 
 ${fileLink}`)
 
-        await sendQuestion(waID,firstQuestion?.questions.text, firstQuestion?.questions.options, `workflowID_${workflow_id}`)
+        await sendQuestion(waID,firstQuestion?.questions.text, firstQuestion?.questions.options, `workflowID_${workflow_id}_${firstQuestion?.questions.uuid}`)
 
         res.status(200).json({
             message: `Selected ${textBody} workflow`
@@ -221,9 +222,11 @@ ${fileLink}`)
     const checkAnswer = messageId.split("_")
 
     if(checkAnswer[0] === "workflowID") {
-        console.log("User Session Responses",user_session.responses)
-        // const responsesJSON = user_session.responses;
-        // responsesJSON[user_session.current_question_uuid]
+
+        const responses = user_session.responses;
+        console.log("Responses: ", responses)
+
+        responses?[user_session.current_question_uuid] = textBody;
 
         res.status(200).json({
             message: `Answer recieved`
