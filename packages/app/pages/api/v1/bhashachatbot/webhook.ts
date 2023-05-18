@@ -50,7 +50,7 @@ webhook.post(async (req, res) => {
 
     const waID = data.entry[0].changes[0].value.contacts[0].wa_id;
     const message = data.entry[0].changes[0].value.messages[0];
-    const textBody: any = message.type === "interactive" ? message.interactive.button_reply.title : message.text.body;
+    const textBody: string = message.type === "interactive" ? message.interactive.button_reply.title : message.text.body;
     const messageId = message.type === "interactive" ? data.entry[0].changes[0].value.messages[0].interactive.button_reply.id : null;
 
     const assigneDetails = await db.member.findFirst({
@@ -181,10 +181,10 @@ Please select any one option.`
             }
         })
 
-        const responsesJSON: { [key: string]: any } = {};
+        const responsesJSON: { [key: string]: string } = {};
         questions[0].task.task_questions.map(question => {
             const uuid = question.questions.uuid;
-            responsesJSON[uuid] = 0;
+            responsesJSON[uuid] = "null";
         })
 
         try {
@@ -223,9 +223,50 @@ ${fileLink}`)
     const checkAnswer = messageId.split("_")
 
     if (checkAnswer[0] === "workflowID") {
+        let response = JSON.parse(JSON.stringify(user_session.responses))
+        response[user_session.current_question_uuid ?? ''] = textBody;
+        console.log("Res", response)
 
-        const responses = user_session.responses;
-        responses?[user_session.current_question_uuid] : textBody;
+        const checkType = messageId === "single_audio" ? check_type.single_audio : messageId === "district_audio" ? check_type.district_wise_audio : messageId === "transcription_check" ? check_type.district_wise_transcript : null;
+        const currentTaskAssignment = checkType === check_type.single_audio ? single_audio_assingments[0] : checkType === check_type.district_wise_audio ? district_audio_assignments[0] : checkType === check_type.district_wise_transcript ? transcription_check_assignments[0] : null;
+
+        const questions = await db.task_assignment.findMany({
+            where: {
+                id: currentTaskAssignment?.id
+            },
+            select: {
+                task: {
+                    select: {
+                        task_questions: {
+                            select: {
+                                questions: {
+                                    select: {
+                                        id: true,
+                                        uuid: true,
+                                        name: true,
+                                        text: true,
+                                        expected_answer: true,
+                                        options: true,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        const responsesJSON: { [key: string]: string } = {};
+        questions[0].task.task_questions.map(question => {
+            const uuid = question.questions.uuid;
+            if (response[uuid] !== "null") {
+                responsesJSON[uuid] = "null";
+            }
+        })
+
+        const firstQuestion = questions[0].task.task_questions.find(question => question.questions.uuid === Object.keys(responsesJSON)[0])
+
+        console.log("First", firstQuestion)
 
         res.status(200).json({
             message: `Answer recieved`
