@@ -304,9 +304,9 @@ webhook.post(async (req, res) => {
                 return;
             }
         }
-        default: {
-            sendTextMessage(waID, "Invalid Response")
-        }
+        // default: {
+        //     sendTextMessage(waID, "Invalid Response")
+        // }
     }
 
     res.status(200).json({
