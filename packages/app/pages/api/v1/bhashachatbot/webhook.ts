@@ -225,10 +225,9 @@ ${fileLink}`)
     if (checkAnswer[0] === "workflowID") {
         let response = JSON.parse(JSON.stringify(user_session.responses))
         response[user_session.current_question_uuid ?? ''] = textBody;
-        console.log("Res", response)
-
-        const checkType = messageId === "single_audio" ? check_type.single_audio : messageId === "district_audio" ? check_type.district_wise_audio : messageId === "transcription_check" ? check_type.district_wise_transcript : null;
-        const currentTaskAssignment = checkType === check_type.single_audio ? single_audio_assingments[0] : checkType === check_type.district_wise_audio ? district_audio_assignments[0] : checkType === check_type.district_wise_transcript ? transcription_check_assignments[0] : null;
+        const currentTaskAssignment = user_session.check_type === check_type.single_audio ? single_audio_assingments[0] :  user_session.check_type === check_type.district_wise_audio ? district_audio_assignments[0] :  user_session.check_type === check_type.district_wise_transcript ? transcription_check_assignments[0] : null;
+        const fileName = currentTaskAssignment?.workflow_file.file_name.split("/").pop();
+        console.log(currentTaskAssignment)
 
         const questions = await db.task_assignment.findMany({
             where: {
@@ -259,14 +258,24 @@ ${fileLink}`)
         const responsesJSON: { [key: string]: string } = {};
         questions[0].task.task_questions.map(question => {
             const uuid = question.questions.uuid;
-            if (response[uuid] !== "null") {
+            if (response[uuid] === "null") {
                 responsesJSON[uuid] = "null";
             }
         })
 
+        console.log(responsesJSON)
         const firstQuestion = questions[0].task.task_questions.find(question => question.questions.uuid === Object.keys(responsesJSON)[0])
 
-        console.log("First", firstQuestion)
+        if(Object.keys(responsesJSON).length === 0) {
+            await sendTextMessage(waID,`File Name - ${fileName} quality check completed`)
+
+            res.status(200).json({
+                message: `Answer recieved`
+            });
+            return;
+        }
+
+        await sendQuestion(waID, firstQuestion?.questions.text, firstQuestion?.questions.options, `workflowID_${checkAnswer[1]}_${firstQuestion?.questions.uuid}`)
 
         res.status(200).json({
             message: `Answer recieved`
