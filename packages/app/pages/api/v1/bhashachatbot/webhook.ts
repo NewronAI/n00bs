@@ -221,7 +221,7 @@ webhook.post(async (req, res) => {
     const waID = data.entry[0].changes[0].value.contacts[0].wa_id;
     const message = data.entry[0].changes[0].value.messages[0];
     const textBody: string = message.type === "interactive" ? message.interactive.button_reply.title : message.text.body;
-    const messageId = message.type === "interactive" ? data.entry[0].changes[0].value.messages[0].interactive.button_reply.id : null;
+    const messageId = message.type === "interactive" ? data.entry[0].changes[0].value.messages[0].interactive.button_reply.id : "Hi";
     console.log("Message Type", messageId.type)
     const assigneDetails = await db.member.findFirst({
         where: {
