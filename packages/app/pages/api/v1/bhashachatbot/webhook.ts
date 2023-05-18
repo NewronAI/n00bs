@@ -218,6 +218,19 @@ ${fileLink}`)
         return;
     }
 
+    const checkAnswer = messageId.split("_")
+
+    if(checkAnswer[0] === "workflowID") {
+        console.log("User Session Responses")
+        // const responsesJSON = user_session.responses;
+        // responsesJSON[user_session.current_question_uuid]
+
+        res.status(200).json({
+            message: `Answer recieved`
+        });
+        return;
+    }
+
     res.status(200).json({
         message: "Successfull"
     });
