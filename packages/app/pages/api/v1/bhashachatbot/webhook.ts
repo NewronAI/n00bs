@@ -38,7 +38,7 @@ webhook.post(async (req, res) => {
 
     const data = req.body;
 
-    console.log(JSON.stringify(data, null,2))
+    console.log(JSON.stringify(data, null, 2))
 
     if (data.entry[0].changes[0].field !== "messages") {
         res.status(403).json({
@@ -50,7 +50,7 @@ webhook.post(async (req, res) => {
 
     const waID = data.entry[0].changes[0].value.contacts[0].wa_id;
     const message = data.entry[0].changes[0].value.messages[0];
-    const textBody : any = message.type === "interactive" ? message.interactive.button_reply.title : message.text.body;
+    const textBody: any = message.type === "interactive" ? message.interactive.button_reply.title : message.text.body;
     const messageId = message.type === "interactive" ? data.entry[0].changes[0].value.messages[0].interactive.button_reply.id : null;
 
     const assigneDetails = await db.member.findFirst({
@@ -181,24 +181,25 @@ Please select any one option.`
             }
         })
 
-        const responsesJSON: { [key: string]: any} = {};
+        const responsesJSON: { [key: string]: any } = {};
         questions[0].task.task_questions.map(question => {
             const uuid = question.questions.uuid;
-            responsesJSON[uuid] = null;
+            responsesJSON[uuid] = 0;
         })
 
         try {
             await db.user_session.update({
-            where: {
-                id: user_session.id
-            },
-            data: {
-                current_question_uuid: Object.keys(responsesJSON)[0],
-                task_assignment_id: currentTaskAssignment?.id,
-                check_type: checkType,
-                responses: responsesJSON
-            }
-        })} catch(e) {
+                where: {
+                    id: user_session.id
+                },
+                data: {
+                    current_question_uuid: Object.keys(responsesJSON)[0],
+                    task_assignment_id: currentTaskAssignment?.id,
+                    check_type: checkType,
+                    responses: responsesJSON
+                }
+            })
+        } catch (e) {
             console.log("Error while updating the user_session", e)
             return;
         }
@@ -211,7 +212,7 @@ Please visit the below link to view the file.
 
 ${fileLink}`)
 
-        await sendQuestion(waID,firstQuestion?.questions.text, firstQuestion?.questions.options, `workflowID_${workflow_id}_${firstQuestion?.questions.uuid}`)
+        await sendQuestion(waID, firstQuestion?.questions.text, firstQuestion?.questions.options, `workflowID_${workflow_id}_${firstQuestion?.questions.uuid}`)
 
         res.status(200).json({
             message: `Selected ${textBody} workflow`
@@ -221,12 +222,10 @@ ${fileLink}`)
 
     const checkAnswer = messageId.split("_")
 
-    if(checkAnswer[0] === "workflowID") {
+    if (checkAnswer[0] === "workflowID") {
 
         const responses = user_session.responses;
-        console.log("Responses: ", responses)
-
-        responses?[user_session.current_question_uuid] = textBody;
+        console.log(responses) // Assuming `user_session.responses` is of type `JsonValue`
 
         res.status(200).json({
             message: `Answer recieved`
