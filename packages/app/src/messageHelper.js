@@ -74,8 +74,6 @@ export async function sendQuestion(to, question_text, options, quuid, expectedAn
         })
     })
 
-    console.log(messageID)
-
         const buttons = options.map( (option, index) => {
             return {
                 type: "reply",

@@ -110,7 +110,9 @@ webhook.post(async (req, res) => {
         })
     }
 
-    if(message?.type === "text" && (user_session.current_question_uuid !== undefined || user_session.current_question_uuid !== null) && textBody !== "Hi") {
+    console.log("User Session", user_session)
+
+    if(message?.type === "text" && textBody !== "Hi") {
         console.log("Entering in comment response flow");
         try {
             console.log("Handling Comment response");
@@ -126,6 +128,8 @@ webhook.post(async (req, res) => {
 
         const flowID = user_session.check_type === "single_audio" ? 1 : user_session.check_type === "district_wise_audio" ? 2 : 3
         await handleWFResponse({ type: "WF", wfID: flowID }, user_session, waID)
+
+        return;
     }
 
     if (textBody === "Hi") {
