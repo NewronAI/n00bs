@@ -169,7 +169,9 @@ export async function updateSession(responses: any, sessionID: any, current_ques
 }
 
 export async function handleQuestionResponses(messageId: any, session: any, waID: number, textBody: any) {
+    console.log("Question Handler called")
     if (messageId.expectedAns === textBody || messageId.wfID === 2) {
+        console.log("Answer recieved is expected answer")
         const task_assignment_id = session.task_assignment_id
         const response = session.responses;
         response[messageId.questionUUID] = textBody;
@@ -186,8 +188,8 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
         console.log("Responses", filteredQuestions)
 
         const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid)
+        console.log("Updated Session", updatedSesssion)
         console.log("Session", JSON.stringify(session))
         await sendQuestion(waID, filteredQuestions[0].text, filteredQuestions[0].options, filteredQuestions[0].uuid, filteredQuestions[0].expected_answer, messageId.wfID);
-        //await updateSession(response,session.id)
     }
 }
