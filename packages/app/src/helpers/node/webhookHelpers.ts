@@ -4,7 +4,7 @@ import assertUp from "./assert/assertUp";
 
 export async function handleHiResponse(waID: any, assigneDetails: any, session: any) {
 
-    await db.user_session.update({
+    try {await db.user_session.update({
         where: {
             id: session.id,
         },
@@ -15,6 +15,11 @@ export async function handleHiResponse(waID: any, assigneDetails: any, session: 
             check_type: undefined,
         }
     })
+    } catch(e) {
+        console.log(e);
+        console.log("Couldnt initiate the session, ERROR:", e);
+        return;
+    }
 
     console.log("sending hi response", waID, assigneDetails);
 
