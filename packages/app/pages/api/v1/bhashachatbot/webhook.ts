@@ -120,6 +120,9 @@ webhook.post(async (req, res) => {
 
             await handleWFResponse({ type: "WF", wfID: flowID }, user_session, waID)
 
+            res.status(200).json({
+                message: "User not registered"
+            });
             return;
         }
         catch (e) {
