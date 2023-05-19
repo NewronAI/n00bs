@@ -224,6 +224,9 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
 // }
 
 export async function handleCommentResponse(waID: string, session: any, textBody: string) {
+    const questions = await getQuestions(1, session.task_assignment_id)
+    console.log("Question :", questions)
+
     const question = await db.question.findFirst({
         where: {
             uuid: session.current_question_uuid,
@@ -236,6 +239,12 @@ export async function handleCommentResponse(waID: string, session: any, textBody
             id: true
         }
     })
+
+    console.log("Question type", question?.question_type)
+    if(question?.question_type !== "text") {
+        await sendTextMessage(waID,"Please select from options")
+        return;
+    }
 
     console.log("Last question", question?.question_type)
     const response = session.responses;
