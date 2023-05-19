@@ -184,7 +184,7 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
     console.log("Question Handler called")
     console.log("Expected Answer is :", messageId.expectedAns, typeof messageId.expectedAns)
     console.log("Recieved Answer is :", textBody)
-    if (messageId.expectedAns === textBody || messageId.wfID === 2 || messageId.expectedAns === null) {
+    if (messageId.expectedAns === textBody || messageId.wfID === 2 || messageId.expectedAns === "") {
         console.log("Answer recieved is expected answer")
         const task_assignment_id = session.task_assignment_id
         const response = session.responses;
