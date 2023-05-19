@@ -183,6 +183,8 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
             return
         }
 
+
+        console.log("Session", JSON.stringify(session))
         await updateSession(response, session.id, filteredQuestions[0].uuid)
 
         await sendQuestion(waID, filteredQuestions[0].text, filteredQuestions[0].options, filteredQuestions[0].uuid, filteredQuestions[0].expected_answer, messageId.wfID);

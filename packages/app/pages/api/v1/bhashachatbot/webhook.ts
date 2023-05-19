@@ -17,8 +17,6 @@ interface MessageIdObj {
 
 }
 
-
-
 webhook.get(async (req, res) => {
     const mode = req.query["hub.mode"]
     const challange = req.query["hub.challenge"]
