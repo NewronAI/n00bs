@@ -237,20 +237,17 @@ export async function handleCommentResponse(waID: string, session: any, textBody
         }
     })
     console.log("Question Type", question?.question_type)
-    if(question?.question_type === "text") {
-        const response = session.responses;
-        response[session.current_question_uuid] = textBody;
-        const upddatedSession = await db.user_session.update({
-            where: {
-                id: session.id,
-            },
-            data: {
-                responses: response
-            }
-        })
 
-        //await updateTask()
-    } else {
-        await sendTextMessage(waID, "Invalid response, Please select any of the options")
-    }
+    const response = session.responses;
+    response[session.current_question_uuid] = textBody;
+    const upddatedSession = await db.user_session.update({
+        where: {
+            id: session.id,
+        },
+        data: {
+            responses: response
+        }
+    })
+
+    //await updateTask()
 }
