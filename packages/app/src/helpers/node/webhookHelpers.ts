@@ -203,11 +203,12 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
             return
         }
 
+        const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid)
+
         if(filteredQuestions.length === 1 && filteredQuestions[0].name.slice(0,8) === "Comments") {
             await sendTextMessage(waID, filteredQuestions[0].text)
             return;
         }
-        const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid)
         await sendQuestion(waID, filteredQuestions[0].text, filteredQuestions[0].options, filteredQuestions[0].uuid, filteredQuestions[0].expected_answer, messageId.wfID);
     }
 }
@@ -242,16 +243,21 @@ export async function handleCommentResponse(waID: string, session: any, textBody
 
     console.log("Question type", question?.question_type)
     if(question?.question_type !== "text") {
+        console.log("Question ID", question?.id)
         if(question?.id === 9 || question?.id === 10)
-        await db.question.update({
-            where: {
-                uuid: session.current_question_uuid,
-            },
-            data: {
-                question_type: "text"
-            }
-        })
-        return;
+        try {
+            const newQuest = await db.question.update({
+                where: {
+                    uuid: session.current_question_uuid,
+                },
+                data: {
+                    question_type: "text"
+                }
+            })
+            console.log("New Question Details",newQuest.id, newQuest.question_type)
+        } catch(e) {
+            console.log("Error while changing the question type", e)
+        }
     }
 
     console.log("Last question", question?.question_type)
