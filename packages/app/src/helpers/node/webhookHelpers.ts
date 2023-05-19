@@ -236,10 +236,12 @@ export async function handleCommentResponse(waID: string, session: any, textBody
             id: true
         }
     })
-    console.log("Question Type", question?.question_type)
 
+    console.log("Question Type", question?.question_type)
     const response = session.responses;
     response[session.current_question_uuid] = textBody;
+    console.log("Responses", response)
+
     const upddatedSession = await db.user_session.update({
         where: {
             id: session.id,
