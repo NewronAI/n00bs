@@ -31,7 +31,7 @@ export async function handleHiResponse(waID: any, assigneDetails: any) {
     });
     console.log("fetched workflows");
 
-    const dataFetchPromises = workflows.map(async (flow) => {
+    const dataFetchPromises = workflows.map(async (flow: { tasks: { id: any; }[]; }) => {
         return db.task_assignment.count({
             where: {
                 task_id: flow.tasks[0].id,
@@ -45,11 +45,11 @@ export async function handleHiResponse(waID: any, assigneDetails: any) {
     const countValues = await Promise.all(dataFetchPromises);
     console.log("fetched all counts");
 
-    const toSendMessage = `You have following number of tasks:\n\n${workflows.map(({ name }, index) => {
+    const toSendMessage = `You have following number of tasks:\n\n${workflows.map(({ name }: any, index: any) => {
         return `${name}  : ${countValues[index]}`
     }).join("\n")}`;
 
-    const buttons = workflows.map((flow) => {
+    const buttons = workflows.map((flow: { id: number; }) => {
         return {
             type: "reply",
             reply: {
@@ -125,7 +125,7 @@ export async function getQuestions(wfID: number, task_assignmentID: any) {
         }
     })
 
-    const questions = taskQuestions?.task.task_questions.map(question => {
+    const questions = taskQuestions?.task.task_questions.map((question: { questions: any; }) => {
         return question.questions
     })
 
@@ -144,7 +144,7 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
         return;
     }
     let responseJSON: { [key: string]: string } = {};
-    questions.map(question => {
+    questions.map((question: { uuid: string | number; }) => {
         responseJSON[question.uuid] = "null";
     });
 
@@ -183,7 +183,7 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
         const response = session.responses;
         response[messageId.questionUUID] = textBody;
         const questions = await getQuestions(messageId.wfID, task_assignment_id)
-        const filteredQuestions = questions?.filter(question => {
+        const filteredQuestions = questions?.filter((question: { uuid: string | number; }) => {
             if (response[question.uuid] !== "null") {
                 return question;
             }
