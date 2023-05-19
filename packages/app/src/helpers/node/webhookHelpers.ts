@@ -196,12 +196,12 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
         if (!filteredQuestions) {
             return
         }
-        console.log("Responses", response)
-        console.log("Responses", filteredQuestions)
 
+        if(filteredQuestions.length === 1 && filteredQuestions[0].name.slice(0,8) === "Comments") {
+            await sendTextMessage(waID, filteredQuestions[0].text)
+            return;
+        }
         const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid)
-        console.log("Updated Session", updatedSesssion)
-        console.log("Session", JSON.stringify(session))
         await sendQuestion(waID, filteredQuestions[0].text, filteredQuestions[0].options, filteredQuestions[0].uuid, filteredQuestions[0].expected_answer, messageId.wfID);
     }
 }
