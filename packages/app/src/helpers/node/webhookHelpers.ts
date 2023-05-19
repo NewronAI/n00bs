@@ -242,7 +242,15 @@ export async function handleCommentResponse(waID: string, session: any, textBody
 
     console.log("Question type", question?.question_type)
     if(question?.question_type !== "text") {
-        await sendTextMessage(waID,"Please select from options")
+        if(question?.id === 9 || question?.id === 10)
+        await db.question.update({
+            where: {
+                uuid: session.current_question_uuid,
+            },
+            data: {
+                question_type: "text"
+            }
+        })
         return;
     }
 
