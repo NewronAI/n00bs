@@ -112,7 +112,8 @@ webhook.post(async (req, res) => {
 
     console.log("User Session", user_session)
 
-    if(message?.type === "text" && textBody !== "Hi") {
+    if(message?.type === "text" && textBody !== "Hi" && user_session.current_question_uuid) {
+
         console.log("Entering in comment response flow");
         try {
             console.log("Handling Comment response");
