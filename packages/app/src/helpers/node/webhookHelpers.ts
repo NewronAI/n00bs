@@ -182,11 +182,11 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
         if (!filteredQuestions) {
             return
         }
+        console.log("Responses", response)
+        console.log("Responses", filteredQuestions)
 
-
+        const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid)
         console.log("Session", JSON.stringify(session))
-        await updateSession(response, session.id, filteredQuestions[0].uuid)
-
         await sendQuestion(waID, filteredQuestions[0].text, filteredQuestions[0].options, filteredQuestions[0].uuid, filteredQuestions[0].expected_answer, messageId.wfID);
         //await updateSession(response,session.id)
     }

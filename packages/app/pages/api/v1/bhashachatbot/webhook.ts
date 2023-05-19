@@ -135,7 +135,6 @@ webhook.post(async (req, res) => {
         case "WF": {
             try {
                 console.log("Message type detected as worflow selection");
-                
                 await handleWFResponse(parsedMessageId, user_session, waID)
                 res.status(200).json({
                     message: "First question successfully"
