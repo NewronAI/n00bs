@@ -45,7 +45,6 @@ webhook.post(async (req, res) => {
 
     const data = req.body;
     console.log(JSON.stringify(req.body, null,2));
-    
 
     if (data.entry[0].changes[0].field !== "messages") {
         res.status(403).json({
@@ -56,7 +55,6 @@ webhook.post(async (req, res) => {
     }
 
     console.log("Extracting values");
-    
 
     const waID = data.entry?.[0]?.changes?.[0]?.value.contacts?.[0]?.wa_id;
     const message = data.entry?.[0]?.changes?.[0]?.value.messages?.[0];
@@ -64,7 +62,6 @@ webhook.post(async (req, res) => {
     const messageId = message?.type === "interactive" ? data.entry?.[0]?.changes?.[0]?.value?.messages?.[0].interactive?.button_reply?.id : undefined;
 
     console.log("Extracted important variables", waID, message, textBody, messageId);
-    
 
     let parsedMessageId : MessageIdObj = {};
 
@@ -84,7 +81,6 @@ webhook.post(async (req, res) => {
     });
 
     console.log("Fetched assignee details");
-    
 
     if (assigneDetails === null) {
         console.log("user not registered");
@@ -104,7 +100,6 @@ webhook.post(async (req, res) => {
         }
     })
     console.log("Searched for user session. Found : ", !!user_session);
-    
 
     if (!user_session) {
         console.log("user session not found");
@@ -129,7 +124,6 @@ webhook.post(async (req, res) => {
             return;
         }
     }
-
 
     switch (parsedMessageId.type) {
         case "WF": {
@@ -169,7 +163,6 @@ webhook.post(async (req, res) => {
             sendTextMessage(waID, "Invalid Response")
         }
     }
-
 
     res.status(200).json({
         message: "Successfull"

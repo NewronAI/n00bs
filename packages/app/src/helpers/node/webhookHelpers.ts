@@ -4,12 +4,22 @@ import assertUp from "./assert/assertUp";
 
 export async function handleHiResponse(waID: any, assigneDetails: any) {
 
+    await db.user_session.update({
+        where: {
+            id: assigneDetails.id,
+        },
+        data: {
+            current_question: undefined,
+            task_assignment_id: undefined,
+            responses: undefined,
+            check_type: undefined,
+        }
+    })
+
     console.log("sending hi response", waID, assigneDetails);
 
     await sendTextMessage(waID, `Welcome ${assigneDetails.name}!`);
     console.log("welcome message sent");
-    
-
 
     const workflows = await db.workflow.findMany({
         include: {
@@ -20,7 +30,6 @@ export async function handleHiResponse(waID: any, assigneDetails: any) {
         }
     });
     console.log("fetched workflows");
-    
 
     const dataFetchPromises = workflows.map(async (flow) => {
         return db.task_assignment.count({
@@ -31,7 +40,7 @@ export async function handleHiResponse(waID: any, assigneDetails: any) {
             }
         })
     });
-    
+
 
     const countValues = await Promise.all(dataFetchPromises);
     console.log("fetched all counts");
@@ -50,9 +59,6 @@ export async function handleHiResponse(waID: any, assigneDetails: any) {
         }
     });
 
-
-
-    
     await sendInteractiveMessage(waID, {
         body: {
             text: toSendMessage
@@ -64,7 +70,7 @@ export async function handleHiResponse(waID: any, assigneDetails: any) {
     });
 
     console.log("sent user count");
-    
+
 }
 
 export async function getTaskAssingment(workflowID: number, assigneeID: any) {
@@ -141,6 +147,7 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
     questions.map(question => {
         responseJSON[question.uuid] = "null";
     });
+
     await db.user_session.update({
         where: {
             id: session.id,
