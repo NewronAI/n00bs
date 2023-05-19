@@ -243,21 +243,9 @@ export async function handleCommentResponse(waID: string, session: any, textBody
 
     console.log("Question type", question?.question_type)
     if(question?.question_type !== "text") {
-        console.log("Question ID", question?.id)
-        if(question?.id === 9 || question?.id === 10)
-        try {
-            const newQuest = await db.question.update({
-                where: {
-                    uuid: session.current_question_uuid,
-                },
-                data: {
-                    question_type: "text"
-                }
-            })
-            console.log("New Question Details",newQuest.id, newQuest.question_type)
-        } catch(e) {
-            console.log("Error while changing the question type", e)
-        }
+        console.log("Comments question type is different than expected. Question ID", question?.text, question?.question_type)
+        await sendTextMessage(waID, "Please select from the options")
+        return;
     }
 
     console.log("Last question", question?.question_type)
@@ -273,6 +261,4 @@ export async function handleCommentResponse(waID: string, session: any, textBody
             responses: response
         }
     })
-
-    //await updateTask()
 }
