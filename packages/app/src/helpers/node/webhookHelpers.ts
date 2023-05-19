@@ -46,7 +46,6 @@ export async function handleHiResponse(waID: any, assigneDetails: any, session: 
         })
     });
 
-
     const countValues = await Promise.all(dataFetchPromises);
     console.log("fetched all counts");
 
@@ -140,6 +139,11 @@ export async function getQuestions(wfID: number, task_assignmentID: any) {
 export async function handleWFResponse(messageId: any, session: any, waID: number) {
 
     const task_assignment = await getTaskAssingment(messageId.wfID, session.member_id)
+    if(!task_assignment) {
+        await sendTextMessage(waID, `You have no assingments from ${session.check_type.replace(/_/g, " ")}`)
+
+        return;
+    }
     const questions = await getQuestions(messageId.wfID, task_assignment?.id);
     if (!questions) {
         assertUp(questions, {
@@ -205,5 +209,47 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
         }
         const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid)
         await sendQuestion(waID, filteredQuestions[0].text, filteredQuestions[0].options, filteredQuestions[0].uuid, filteredQuestions[0].expected_answer, messageId.wfID);
+    }
+}
+
+// async function updateTask(session: any) {
+//     const taskFinished = await db.task_answer.update({
+//         where: {
+
+//         },
+//         data: {
+
+//         }
+//     })
+// }
+
+export async function handleCommentResponse(waID: string, session: any, textBody: string) {
+    const question = await db.question.findFirst({
+        where: {
+            uuid: session.current_question_uuid,
+        },
+        select: {
+            question_type: true,
+            text: true,
+            name: true,
+            uuid: true,
+            id: true
+        }
+    })
+    if(question?.question_type === "text") {
+        const response = session.responses;
+        response[session.current_question_uuid] = textBody;
+        const upddatedSession = await db.user_session.update({
+            where: {
+                id: session.id,
+            },
+            data: {
+                responses: response
+            }
+        })
+
+        //await updateTask()
+    } else {
+        await sendTextMessage(waID, "Invalid response, Please select any of the options")
     }
 }

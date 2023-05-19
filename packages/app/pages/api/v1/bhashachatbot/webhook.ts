@@ -2,7 +2,8 @@ import NextExpress from "@/helpers/node/NextExpress";
 import assertUp from "@/helpers/node/assert/assertUp";
 import { db } from "@/helpers/node/db";
 import { sendTextMessage } from "src/messageHelper";
-import { handleHiResponse, handleQuestionResponses, handleWFResponse } from "@/helpers/node/webhookHelpers";
+import { handleHiResponse, handleQuestionResponses, handleWFResponse, handleCommentResponse } from "@/helpers/node/webhookHelpers";
+import { Session } from "@auth0/nextjs-auth0";
 
 const webhook = new NextExpress();
 const webhookSecret = "2d464c63-249b-4c91-8698-45abda5d3b7b"
@@ -108,6 +109,20 @@ webhook.post(async (req, res) => {
                 member_id: assigneDetails.id,
             }
         })
+    }
+
+    if(message?.type === "text" && (user_session.current_question_uuid !== undefined || user_session.current_question_uuid !== null) && textBody !== "Hi") {
+        console.log("Entering in comment response flow");
+        try {
+            console.log("Handling Comment response");
+            await handleCommentResponse(waID, user_session, textBody);
+            const flowID = user_session.check_type === "single_audio" ? 1 : user_session.check_type === "district_wise_audio" ? 2 : 3
+
+            await handleWFResponse({ type: "WF", wfID: flowID }, user_session, waID)
+        }
+        catch (e) {
+            console.log(e)
+        }
     }
 
     if (textBody === "Hi") {
