@@ -103,7 +103,6 @@ webhook.post(async (req, res) => {
 
     if (!user_session) {
         console.log("user session not found");
-
         user_session = await db.user_session.create({
             data: {
                 member_id: assigneDetails.id,

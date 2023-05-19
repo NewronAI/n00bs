@@ -184,7 +184,7 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
         response[messageId.questionUUID] = textBody;
         const questions = await getQuestions(messageId.wfID, task_assignment_id)
         const filteredQuestions = questions?.filter((question: { uuid: string | number; }) => {
-            if (response[question.uuid] !== "null") {
+            if (response[question.uuid] === "null") {
                 return question;
             }
         })
