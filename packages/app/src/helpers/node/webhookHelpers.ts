@@ -2,11 +2,11 @@ import { sendTextMessage, sendQuestion, sendInteractiveMessage } from "src/messa
 import { db } from "@/helpers/node/db";
 import assertUp from "./assert/assertUp";
 
-export async function handleHiResponse(waID: any, assigneDetails: any) {
+export async function handleHiResponse(waID: any, assigneDetails: any, session: any) {
 
     await db.user_session.update({
         where: {
-            id: assigneDetails.id,
+            id: session.id,
         },
         data: {
             current_question: undefined,

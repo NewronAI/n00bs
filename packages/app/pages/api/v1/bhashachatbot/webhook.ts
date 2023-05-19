@@ -113,7 +113,7 @@ webhook.post(async (req, res) => {
 
     if (textBody === "Hi") {
         try {
-            await handleHiResponse(waID, assigneDetails)
+            await handleHiResponse(waID, assigneDetails, user_session)
             res.status(200).json({
                 message: "Response of Hi - successfull."
             });
