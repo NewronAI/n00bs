@@ -237,7 +237,7 @@ export async function handleCommentResponse(waID: string, session: any, textBody
         }
     })
 
-    console.log("Question Type", question?.question_type)
+    console.log("Last question", question?.question_type)
     const response = session.responses;
     response[session.current_question_uuid] = textBody;
     console.log("Responses", response)
