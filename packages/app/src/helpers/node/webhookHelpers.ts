@@ -236,6 +236,7 @@ export async function handleCommentResponse(waID: string, session: any, textBody
             id: true
         }
     })
+    console.log("Question Type", question?.question_type)
     if(question?.question_type === "text") {
         const response = session.responses;
         response[session.current_question_uuid] = textBody;
