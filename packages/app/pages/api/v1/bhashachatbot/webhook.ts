@@ -119,6 +119,8 @@ webhook.post(async (req, res) => {
             const flowID = user_session.check_type === "single_audio" ? 1 : user_session.check_type === "district_wise_audio" ? 2 : 3
 
             await handleWFResponse({ type: "WF", wfID: flowID }, user_session, waID)
+
+            return;
         }
         catch (e) {
             console.log(e)
