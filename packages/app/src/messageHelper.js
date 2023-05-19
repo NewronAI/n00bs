@@ -63,6 +63,7 @@ export async function sendTextMessage( to, message) {
 }
 
 export async function sendQuestion(to, question_text, options, quuid, expectedAns, wfID) {
+    console.log("Type of expected Answer is :", typeof expectedAns);
     const messageID = options.map( (option) => {
         return JSON.stringify({
             type: "QA",
