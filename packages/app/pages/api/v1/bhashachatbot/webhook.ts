@@ -112,30 +112,6 @@ webhook.post(async (req, res) => {
 
     console.log("User Session", user_session)
 
-    if(message?.type === "text" && textBody !== "Hi" && user_session.current_question_uuid) {
-
-        console.log("Entering in comment response flow");
-        try {
-            console.log("Handling Comment response");
-            await handleCommentResponse(waID, user_session, textBody);
-        }
-        catch (e) {
-            console.log(e)
-            res.status(403).json({
-                message: "Error in handling error response"
-            });
-            return;
-        }
-
-        const flowID = user_session.check_type === "single_audio" ? 1 : user_session.check_type === "district_wise_audio" ? 2 : 3
-        await handleWFResponse({ type: "WF", wfID: flowID }, user_session, waID)
-
-        res.status(200).json({
-            message: "Completed the task assingment, Moving to next one"
-        });
-        return;
-    }
-
     if (textBody === "Hi") {
         try {
             await handleHiResponse(waID, assigneDetails, user_session)
@@ -187,6 +163,30 @@ webhook.post(async (req, res) => {
         default: {
             sendTextMessage(waID, "Invalid Response")
         }
+    }
+
+    if(message?.type === "text" && textBody !== "Hi" && user_session.current_question_uuid) {
+
+        console.log("Entering in comment response flow");
+        try {
+            console.log("Handling Comment response");
+            await handleCommentResponse(waID, user_session, textBody);
+        }
+        catch (e) {
+            console.log(e)
+            res.status(403).json({
+                message: "Error in handling error response"
+            });
+            return;
+        }
+
+        const flowID = user_session.check_type === "single_audio" ? 1 : user_session.check_type === "district_wise_audio" ? 2 : 3
+        await handleWFResponse({ type: "WF", wfID: flowID }, user_session, waID)
+
+        res.status(200).json({
+            message: "Completed the task assingment, Moving to next one"
+        });
+        return;
     }
 
     res.status(200).json({

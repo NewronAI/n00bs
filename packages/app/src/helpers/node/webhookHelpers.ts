@@ -2,8 +2,7 @@ import { sendTextMessage, sendQuestion, sendInteractiveMessage } from "src/messa
 import { db } from "@/helpers/node/db";
 import assertUp from "./assert/assertUp";
 
-export async function handleHiResponse(waID: any, assigneDetails: any, session: any) {
-
+async function clearSessionData(session: any) {
     try {await db.user_session.update({
         where: {
             id: session.id,
@@ -17,9 +16,14 @@ export async function handleHiResponse(waID: any, assigneDetails: any, session: 
     })
     } catch(e) {
         console.log(e);
-        console.log("Couldnt initiate the session, ERROR:", e);
+        console.log("Couldnt clear the session, ERROR:", e);
         return;
     }
+}
+
+export async function handleHiResponse(waID: any, assigneDetails: any, session: any) {
+
+    await clearSessionData(session);
 
     console.log("sending hi response", waID, assigneDetails);
 
@@ -261,4 +265,19 @@ export async function handleCommentResponse(waID: string, session: any, textBody
             responses: response
         }
     })
+}
+
+async function checkResponseTime(session: any, messageID: any) {
+    const lastUpdate = session.updatedAt
+    const currentDateTime = new Date();
+    const checkDiffrence = Math.floor(Math.abs(currentDateTime.getTime() - lastUpdate.getTime()) / (1000 * 60))
+    console.log("lastUpdate", lastUpdate)
+    console.log("currentDateTime", currentDateTime)
+    console.log("checkDiffrence", checkDiffrence)
+    if (checkDiffrence <= 15) {
+        return true;
+    } else {
+        await clearSessionData(session);
+        return false;
+    }
 }
