@@ -3,7 +3,7 @@ import assertUp from "@/helpers/node/assert/assertUp";
 import { db } from "@/helpers/node/db";
 import { sendTextMessage } from "src/messageHelper";
 import { handleHiResponse, handleQuestionResponses, handleWFResponse, handleCommentResponse, checkResponseTime } from "@/helpers/node/webhookHelpers";
-import { Session } from "@auth0/nextjs-auth0";
+
 
 const webhook = new NextExpress();
 const webhookSecret = "2d464c63-249b-4c91-8698-45abda5d3b7b"
@@ -150,6 +150,8 @@ webhook.post(async (req, res) => {
         return;
     }
 
+    console.log("parsedMessageId type", parsedMessageId.type);
+
     switch (parsedMessageId.type) {
         case "WF": {
             if(await checkResponseTime(user_session)) {
@@ -176,7 +178,7 @@ webhook.post(async (req, res) => {
             }
         }
         case "QA": {
-            if(await checkResponseTime(user_session)) {
+            if(true) {
                 try {
                     console.log("Message type is of QA");
                     await handleQuestionResponses(parsedMessageId, user_session, waID, textBody)
@@ -201,6 +203,10 @@ webhook.post(async (req, res) => {
         }
         default: {
             sendTextMessage(waID, "Invalid Response")
+            res.status(200).json({
+                message: "Invalid Response"
+            });
+            return;
         }
     }
 })

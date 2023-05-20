@@ -268,16 +268,25 @@ export async function handleCommentResponse(waID: string, session: any, textBody
 }
 
 export async function checkResponseTime(session: any) {
-    const lastUpdate = session.updatedAt
+    const lastUpdate = session.updatedAt;
     const currentDateTime = new Date();
-    const checkDiffrence = Math.floor(Math.abs(currentDateTime.getTime() - lastUpdate.getTime()) / (1000 * 60))
-    console.log("lastUpdate", lastUpdate)
-    console.log("currentDateTime", currentDateTime)
-    console.log("checkDiffrence", checkDiffrence)
-    if (checkDiffrence <= 15) {
+
+    if (lastUpdate) {
+      const differenceInMinutes = Math.floor(Math.abs(currentDateTime.getTime() - lastUpdate.getTime()) / (1000 * 60));
+      console.log("lastUpdate", lastUpdate);
+      console.log("currentDateTime", currentDateTime);
+      console.log("differenceInMinutes", differenceInMinutes);
+
+      if (differenceInMinutes <= 15) {
         return true;
-    } else {
+      } else {
         await clearSessionData(session);
         return false;
+      }
+    } else {
+      // Handle the case when lastUpdate is null
+      // For example, return false or perform some other logic
+      return true;
     }
+
 }
