@@ -44,7 +44,7 @@ webhook.post(async (req, res) => {
     })
 
     const data = req.body;
-    console.log(JSON.stringify(req.body, null,2));
+    console.log(JSON.stringify(req.body, null, 2));
 
     if (data.entry[0].changes[0].field !== "messages") {
         res.status(403).json({
@@ -63,7 +63,7 @@ webhook.post(async (req, res) => {
 
     console.log("Extracted important variables", waID, message, textBody, messageId);
 
-    let parsedMessageId : MessageIdObj = {};
+    let parsedMessageId: MessageIdObj = {};
 
     try {
         parsedMessageId = JSON.parse(messageId);
@@ -126,6 +126,30 @@ webhook.post(async (req, res) => {
         }
     }
 
+    if (message?.type === "text" && textBody !== "Hi" && user_session.current_question_uuid) {
+
+        console.log("Entering in comment response flow");
+        try {
+            console.log("Handling Comment response");
+            await handleCommentResponse(waID, user_session, textBody);
+        }
+        catch (e) {
+            console.log(e)
+            res.status(403).json({
+                message: "Error in handling error response"
+            });
+            return;
+        }
+
+        const flowID = user_session.check_type === "single_audio" ? 1 : user_session.check_type === "district_wise_audio" ? 2 : 3
+        await handleWFResponse({ type: "WF", wfID: flowID }, user_session, waID)
+
+        res.status(200).json({
+            message: "Completed the task assingment, Moving to next one"
+        });
+        return;
+    }
+
     switch (parsedMessageId.type) {
         case "WF": {
             try {
@@ -163,30 +187,6 @@ webhook.post(async (req, res) => {
         default: {
             sendTextMessage(waID, "Invalid Response")
         }
-    }
-
-    if(message?.type === "text" && textBody !== "Hi" && user_session.current_question_uuid) {
-
-        console.log("Entering in comment response flow");
-        try {
-            console.log("Handling Comment response");
-            await handleCommentResponse(waID, user_session, textBody);
-        }
-        catch (e) {
-            console.log(e)
-            res.status(403).json({
-                message: "Error in handling error response"
-            });
-            return;
-        }
-
-        const flowID = user_session.check_type === "single_audio" ? 1 : user_session.check_type === "district_wise_audio" ? 2 : 3
-        await handleWFResponse({ type: "WF", wfID: flowID }, user_session, waID)
-
-        res.status(200).json({
-            message: "Completed the task assingment, Moving to next one"
-        });
-        return;
     }
 
     res.status(200).json({
