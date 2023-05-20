@@ -81,7 +81,7 @@ export async function handleHiResponse(waID: any, assigneDetails: any, session: 
 
 }
 
-export async function getTaskAssingment(workflowID: number, assigneeID: any) {
+async function getTaskAssingment(workflowID: number, assigneeID: any) {
     const task_assignment = await db.task_assignment.findFirst({
         where: {
             assignee_id: assigneeID,
@@ -105,7 +105,7 @@ export async function getTaskAssingment(workflowID: number, assigneeID: any) {
     return task_assignment;
 }
 
-export async function getQuestions(wfID: number, task_assignmentID: any) {
+async function getQuestions(wfID: number, task_assignmentID: any) {
     const taskQuestions = await db.task_assignment.findFirst({
         where: {
             id: task_assignmentID
@@ -138,6 +138,18 @@ export async function getQuestions(wfID: number, task_assignmentID: any) {
     })
 
     return questions;
+}
+
+async function updateSession(responses: any, sessionID: any, current_question_uuid: string) {
+    await db.user_session.update({
+        where: {
+            id: sessionID,
+        },
+        data: {
+            responses,
+            current_question_uuid
+        }
+    })
 }
 
 export async function handleWFResponse(messageId: any, session: any, waID: number) {
@@ -176,19 +188,13 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
     await sendQuestion(waID, questions[0].text, questions[0].options, questions[0].uuid, questions[0].expected_answer, messageId.wfID);
 }
 
-export async function updateSession(responses: any, sessionID: any, current_question_uuid: string) {
-    await db.user_session.update({
-        where: {
-            id: sessionID,
-        },
-        data: {
-            responses,
-            current_question_uuid
-        }
-    })
-}
+
 
 export async function handleQuestionResponses(messageId: any, session: any, waID: number, textBody: any) {
+    if(session.current_question_uuid !== messageId.questionUUID) {
+        await sendTextMessage("Please answer current question only.")
+        return;
+    }
     console.log("Question Handler called")
     console.log("Expected Answer is :", messageId.expectedAns, typeof messageId.expectedAns)
     console.log("Recieved Answer is :", textBody)
