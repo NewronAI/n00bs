@@ -188,16 +188,14 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
     await sendQuestion(waID, questions[0].text, questions[0].options, questions[0].uuid, questions[0].expected_answer, messageId.wfID);
 }
 
-
-
 export async function handleQuestionResponses(messageId: any, session: any, waID: number, textBody: any) {
+    console.log("Current Question UUID: ",session.current_question_uuid);
+    console.log("Recived answer question UUID: ",messageId.questionUUID);
     if(session.current_question_uuid !== messageId.questionUUID) {
-        await sendTextMessage("Please answer current question only.")
+        console.log("Couldn't match the question uuid")
+        await sendTextMessage("Please answer the current question only.")
         return;
     }
-    console.log("Question Handler called")
-    console.log("Expected Answer is :", messageId.expectedAns, typeof messageId.expectedAns)
-    console.log("Recieved Answer is :", textBody)
     if (messageId.expectedAns === textBody || messageId.wfID === 2 || messageId.expectedAns === "") {
         console.log("Answer recieved is expected answer")
         const task_assignment_id = session.task_assignment_id
