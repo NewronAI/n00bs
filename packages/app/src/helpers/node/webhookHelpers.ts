@@ -267,7 +267,7 @@ export async function handleCommentResponse(waID: string, session: any, textBody
     })
 }
 
-async function checkResponseTime(session: any, messageID: any) {
+export async function checkResponseTime(session: any) {
     const lastUpdate = session.updatedAt
     const currentDateTime = new Date();
     const checkDiffrence = Math.floor(Math.abs(currentDateTime.getTime() - lastUpdate.getTime()) / (1000 * 60))

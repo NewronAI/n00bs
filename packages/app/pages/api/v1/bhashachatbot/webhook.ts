@@ -2,7 +2,7 @@ import NextExpress from "@/helpers/node/NextExpress";
 import assertUp from "@/helpers/node/assert/assertUp";
 import { db } from "@/helpers/node/db";
 import { sendTextMessage } from "src/messageHelper";
-import { handleHiResponse, handleQuestionResponses, handleWFResponse, handleCommentResponse } from "@/helpers/node/webhookHelpers";
+import { handleHiResponse, handleQuestionResponses, handleWFResponse, handleCommentResponse, checkResponseTime } from "@/helpers/node/webhookHelpers";
 import { Session } from "@auth0/nextjs-auth0";
 
 const webhook = new NextExpress();
@@ -152,34 +152,49 @@ webhook.post(async (req, res) => {
 
     switch (parsedMessageId.type) {
         case "WF": {
-            try {
-                console.log("Message type detected as worflow selection");
-                await handleWFResponse(parsedMessageId, user_session, waID)
+            if(await checkResponseTime(user_session)) {
+                try {
+                    console.log("Message type detected as worflow selection");
+                    await handleWFResponse(parsedMessageId, user_session, waID)
+                    res.status(200).json({
+                        message: "First question successfully"
+                    });
+                    return;
+                } catch (e) {
+                    console.log(e)
+                    res.status(403).json({
+                        message: e
+                    });
+                    return;
+                }
+            } else {
+                await sendTextMessage(waID,"You have not responded within time limit. Please try again.")
                 res.status(200).json({
-                    message: "First question successfully"
-                });
-                return;
-            } catch (e) {
-                console.log(e)
-                res.status(403).json({
-                    message: e
+                    message: "Session expired. Not responded within time limit"
                 });
                 return;
             }
         }
         case "QA": {
-            try {
-                console.log("Message type is of QA");
-
-                await handleQuestionResponses(parsedMessageId, user_session, waID, textBody)
+            if(await checkResponseTime(user_session)) {
+                try {
+                    console.log("Message type is of QA");
+                    await handleQuestionResponses(parsedMessageId, user_session, waID, textBody)
+                    res.status(200).json({
+                        message: "Question send successfully"
+                    });
+                    return;
+                } catch (e) {
+                    console.log(e)
+                    res.status(403).json({
+                        message: e
+                    });
+                    return;
+                }
+            } else {
+                await sendTextMessage(waID,"You have not responded within time limit. Please try again.")
                 res.status(200).json({
-                    message: "Question send successfully"
-                });
-                return;
-            } catch (e) {
-                console.log(e)
-                res.status(403).json({
-                    message: e
+                    message: "Session expired. Not responded within time limit"
                 });
                 return;
             }
@@ -188,10 +203,6 @@ webhook.post(async (req, res) => {
             sendTextMessage(waID, "Invalid Response")
         }
     }
-
-    res.status(200).json({
-        message: "Successfull"
-    });
 })
 
 export default webhook.handler;
