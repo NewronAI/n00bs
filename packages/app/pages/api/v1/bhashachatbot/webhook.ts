@@ -154,25 +154,17 @@ webhook.post(async (req, res) => {
 
     switch (parsedMessageId.type) {
         case "WF": {
-            if(true) {
-                try {
-                    console.log("Message type detected as worflow selection");
-                    await handleWFResponse(parsedMessageId, user_session, waID)
-                    res.status(200).json({
-                        message: "First question successfully"
-                    });
-                    return;
-                } catch (e) {
-                    console.log(e)
-                    res.status(403).json({
-                        message: e
-                    });
-                    return;
-                }
-            } else {
-                await sendTextMessage(waID,"You have not responded within time limit. Please try again.")
+            try {
+                console.log("Message type detected as worflow selection");
+                await handleWFResponse(parsedMessageId, user_session, waID)
                 res.status(200).json({
-                    message: "Session expired. Not responded within time limit"
+                    message: "First question successfully"
+                });
+                return;
+            } catch (e) {
+                console.log(e)
+                res.status(403).json({
+                    message: e
                 });
                 return;
             }
