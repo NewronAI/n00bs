@@ -163,6 +163,7 @@ async function updateSession(responses: any, sessionID: any, current_question_uu
 export async function handleWFResponse(messageId: any, session: any, waID: number) {
 
     console.log("Workflow Id got ----------------------------------------------------", messageId.wfID)
+    console.log("Check type", session.check_type)
     const task_assignment = await getTaskAssingment(messageId.wfID, session.member_id)
     if(!task_assignment) {
         await sendTextMessage(waID, `You have no assingments from ${session.check_type.replace(/_/g, " ")}`)
