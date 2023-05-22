@@ -154,7 +154,7 @@ webhook.post(async (req, res) => {
 
     switch (parsedMessageId.type) {
         case "WF": {
-            if(await checkResponseTime(user_session)) {
+            if(true) {
                 try {
                     console.log("Message type detected as worflow selection");
                     await handleWFResponse(parsedMessageId, user_session, waID)
@@ -178,7 +178,7 @@ webhook.post(async (req, res) => {
             }
         }
         case "QA": {
-            if(true) {
+            if(await checkResponseTime(user_session)) {
                 try {
                     console.log("Message type is of QA");
                     await handleQuestionResponses(parsedMessageId, user_session, waID, textBody)

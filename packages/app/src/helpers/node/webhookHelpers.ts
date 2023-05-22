@@ -161,6 +161,7 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
 
         return;
     }
+    
     const questions = await getQuestions(messageId.wfID, task_assignment?.id);
     if (!questions) {
         assertUp(questions, {
