@@ -304,7 +304,7 @@ model user_session {
   task_assignments      task_assignment? @relation(fields: [task_assignment_id], references: [id])
   responses             Json?
   has_accepted_policy   Boolean         @default(false)
-  check_type            check_type?
+  check_type            Int?
   createdAt             DateTime        @default(now())
   updatedAt             DateTime?        @updatedAt
 }

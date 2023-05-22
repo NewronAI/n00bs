@@ -134,9 +134,8 @@ webhook.post(async (req, res) => {
             console.log("Handling Comment response");
             const checkResponse = await handleCommentResponse(waID, user_session, textBody);
             if(checkResponse) {
-                const flowID = user_session.check_type === check_type.single_audio ? 1 : user_session.check_type === check_type.district_wise_audio ? 2 : null;
+                const flowID = user_session.check_type;
                 console.log("----------Flow ID--------------",flowID);
-                console.log("----------Check Type--------------",user_session.check_type);
 
                 await handleWFResponse({ type: "WF", wfID: flowID }, user_session, waID)
             }
@@ -144,7 +143,7 @@ webhook.post(async (req, res) => {
         catch (e) {
             console.log(e)
             res.status(403).json({
-                message: "Error in handling error response"
+                message: e
             });
             return;
         }
