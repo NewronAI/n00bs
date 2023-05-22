@@ -4,7 +4,6 @@ import { db } from "@/helpers/node/db";
 import { sendTextMessage } from "src/messageHelper";
 import { handleHiResponse, handleQuestionResponses, handleWFResponse, handleCommentResponse, checkResponseTime } from "@/helpers/node/webhookHelpers";
 
-
 const webhook = new NextExpress();
 const webhookSecret = "2d464c63-249b-4c91-8698-45abda5d3b7b"
 

@@ -1,27 +1,39 @@
 import { sendTextMessage, sendQuestion, sendInteractiveMessage } from "src/messageHelper";
 import { db } from "@/helpers/node/db";
 import assertUp from "./assert/assertUp";
+import { task_status } from "@prisma/client";
+
+type QuestionAnswer = {
+    task_assignment_uuid: string,
+    responses: [
+        {
+            question_uuid: string,
+            answer: string
+        }
+    ]
+
+}
 
 async function clearSessionData(session: any) {
     try {
         const clearedSession = await db.user_session.update({
             where: { id: session.id },
             data: {
-              current_question: { disconnect: true },
-              task_assignments: { disconnect: true },
+                current_question: { disconnect: true },
+                task_assignments: { disconnect: true },
             },
-          });
+        });
 
-          const updatedSession = await db.user_session.update({
+        const updatedSession = await db.user_session.update({
             where: { id: session.id },
             data: {
-              current_question_uuid: null,
-              task_assignment_id: null,
-              responses: {},
+                current_question_uuid: null,
+                task_assignment_id: null,
+                responses: {},
             },
-          });
-          console.log("Cleared Session", updatedSession);
-    } catch(e) {
+        });
+        console.log("Cleared Session", updatedSession);
+    } catch (e) {
         console.log(e);
         console.log("Couldnt clear the session, ERROR:", e);
         return;
@@ -164,7 +176,7 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
     console.log("Workflow Id got ----------------------------------------------------", messageId.wfID)
     console.log("Check type", session.check_type)
     const task_assignment = await getTaskAssingment(messageId.wfID, session.member_id)
-    if(!task_assignment) {
+    if (!task_assignment) {
         await sendTextMessage(waID, `You have no assingments left`)
         return;
     }
@@ -180,7 +192,7 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
     let responseJSON: { [key: string]: string } = {};
     questions.map((question: { uuid: string | number; }) => {
         responseJSON[question.uuid] = "null";
-    }); 
+    });
 
     await db.user_session.update({
         where: {
@@ -199,9 +211,9 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
 }
 
 export async function handleQuestionResponses(messageId: any, session: any, waID: number, textBody: any) {
-    console.log("Current Question UUID: ",session.current_question_uuid);
-    console.log("Recived answer question UUID: ",messageId.questionUUID);
-    if(session.current_question_uuid !== messageId.questionUUID) {
+    console.log("Current Question UUID: ", session.current_question_uuid);
+    console.log("Recived answer question UUID: ", messageId.questionUUID);
+    if (session.current_question_uuid !== messageId.questionUUID) {
         console.log("Couldn't match the question uuid")
         await sendTextMessage("Please answer the current question only.")
         return;
@@ -218,29 +230,80 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
             }
         })
         if (!filteredQuestions) {
-            return
+            return;
         }
 
         const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid)
 
-        if(filteredQuestions.length === 1 && filteredQuestions[0].name.slice(0,8) === "Comments") {
+        if (filteredQuestions.length === 1 && filteredQuestions[0].name.slice(0, 8) === "Comments") {
             await sendTextMessage(waID, filteredQuestions[0].text)
             return;
         }
         await sendQuestion(waID, filteredQuestions[0].text, filteredQuestions[0].options, filteredQuestions[0].uuid, filteredQuestions[0].expected_answer, messageId.wfID);
+    } else if (messageId.expectedAns !== textBody && messageId.wfID === 1) {
+        const response = session.responses;
+        const responseKeys = Object.keys(response)
+        responseKeys.forEach(key => {
+            if (response[key] === "null") {
+                response[key] = "NA"
+            }
+        });
+        const upddatedSession = await db.user_session.update({
+            where: {
+                id: session.id,
+            },
+            data: {
+                responses: response
+            }
+        })
+        await updateTask(session)
     }
 }
 
-// async function updateTask(session: any) {
-//     const taskFinished = await db.task_answer.update({
-//         where: {
+async function updateTask(session: any) {
 
-//         },
-//         data: {
+    const questionIds : number[] = [];
+    const answers: string[] = []
+    const expectedAnswers: (string | null)[] = []
 
-//         }
-//     })
-// }
+    const responses = session.responses;
+    Object.keys(responses).forEach(async questionUUID => {
+        const question = await db.question.findFirstOrThrow({
+            where: {
+                uuid: questionUUID,
+            }
+        })
+
+        questionIds.push(question.id);
+        answers.push(responses[questionUUID]);
+        expectedAnswers.push(question.expected_answer)
+    })
+
+    try {    const [writeStatus] = await db.$transaction([
+        db.task_answer.createMany({
+            data: questionIds.map((questionID, index) => {
+                return {
+                    task_assignment_id: session.task_assignment_id,
+                    question_id: questionID,
+                    answer: answers[index],
+                    is_expected: expectedAnswers[index] ? answers[index] === expectedAnswers[index] : null
+                }
+            })
+        }),
+        db.task_assignment.update({
+            where: {
+                id: session.task_assignment_id,
+            },
+            data: {
+                status: task_status.in_progress
+            }
+        })
+    ]);
+        console.log("Task Assingment updated successfully");
+    } catch (e) {
+        console.log(e);
+    }
+}
 
 export async function handleCommentResponse(waID: string, session: any, textBody: string) {
     const questions = await getQuestions(1, session.task_assignment_id)
@@ -260,7 +323,7 @@ export async function handleCommentResponse(waID: string, session: any, textBody
     })
 
     console.log("Question type", question?.question_type)
-    if(question?.question_type !== "text") {
+    if (question?.question_type !== "text") {
         console.log("Comments question type is different than expected. Question ID", question?.text, question?.question_type)
         await sendTextMessage(waID, "Please select from the options")
         return false;
@@ -279,7 +342,7 @@ export async function handleCommentResponse(waID: string, session: any, textBody
             responses: response
         }
     })
-    return true;
+    await updateTask(session)
 }
 
 export async function checkResponseTime(session: any) {
@@ -287,21 +350,21 @@ export async function checkResponseTime(session: any) {
     const currentDateTime = new Date();
 
     if (lastUpdate) {
-      const differenceInMinutes = Math.floor(Math.abs(currentDateTime.getTime() - lastUpdate.getTime()) / (1000 * 60));
-      console.log("lastUpdate", lastUpdate);
-      console.log("currentDateTime", currentDateTime);
-      console.log("differenceInMinutes", differenceInMinutes);
+        const differenceInMinutes = Math.floor(Math.abs(currentDateTime.getTime() - lastUpdate.getTime()) / (1000 * 60));
+        console.log("lastUpdate", lastUpdate);
+        console.log("currentDateTime", currentDateTime);
+        console.log("differenceInMinutes", differenceInMinutes);
 
-      if (differenceInMinutes <= 15) {
-        return true;
-      } else {
-        await clearSessionData(session);
-        return false;
-      }
+        if (differenceInMinutes <= 15) {
+            return true;
+        } else {
+            await clearSessionData(session);
+            return false;
+        }
     } else {
-      // Handle the case when lastUpdate is null
-      // For example, return false or perform some other logic
-      return true;
+        // Handle the case when lastUpdate is null
+        // For example, return false or perform some other logic
+        return true;
     }
 
 }
