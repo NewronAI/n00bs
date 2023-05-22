@@ -261,7 +261,7 @@ export async function handleCommentResponse(waID: string, session: any, textBody
     if(question?.question_type !== "text") {
         console.log("Comments question type is different than expected. Question ID", question?.text, question?.question_type)
         await sendTextMessage(waID, "Please select from the options")
-        return;
+        return false;
     }
 
     console.log("Last question", question?.question_type)
@@ -277,6 +277,7 @@ export async function handleCommentResponse(waID: string, session: any, textBody
             responses: response
         }
     })
+    return true;
 }
 
 export async function checkResponseTime(session: any) {

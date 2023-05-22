@@ -131,7 +131,11 @@ webhook.post(async (req, res) => {
         console.log("Entering in comment response flow");
         try {
             console.log("Handling Comment response");
-            await handleCommentResponse(waID, user_session, textBody);
+            const checkResponse = await handleCommentResponse(waID, user_session, textBody);
+            if(checkResponse) {
+                const flowID = user_session.check_type === "single_audio" ? 1 : user_session.check_type === "district_wise_audio" ? 2 : 3
+                await handleWFResponse({ type: "WF", wfID: flowID }, user_session, waID)
+            }
         }
         catch (e) {
             console.log(e)
@@ -140,9 +144,6 @@ webhook.post(async (req, res) => {
             });
             return;
         }
-
-        const flowID = user_session.check_type === "single_audio" ? 1 : user_session.check_type === "district_wise_audio" ? 2 : 3
-        await handleWFResponse({ type: "WF", wfID: flowID }, user_session, waID)
 
         res.status(200).json({
             message: "Completed the task assingment, Moving to next one"
