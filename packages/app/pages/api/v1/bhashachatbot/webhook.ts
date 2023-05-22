@@ -3,6 +3,7 @@ import assertUp from "@/helpers/node/assert/assertUp";
 import { db } from "@/helpers/node/db";
 import { sendTextMessage } from "src/messageHelper";
 import { handleHiResponse, handleQuestionResponses, handleWFResponse, handleCommentResponse, checkResponseTime } from "@/helpers/node/webhookHelpers";
+import { check_type } from "@prisma/client";
 
 
 const webhook = new NextExpress();
@@ -133,7 +134,7 @@ webhook.post(async (req, res) => {
             console.log("Handling Comment response");
             const checkResponse = await handleCommentResponse(waID, user_session, textBody);
             if(checkResponse) {
-                const flowID = user_session.check_type === "single_audio" ? 1 : user_session.check_type === "district_wise_audio" ? 2 : 3;
+                const flowID = user_session.check_type === check_type.single_audio ? 1 : user_session.check_type === check_type.district_wise_audio ? 2 : 3;
                 console.log("----------Flow ID--------------",flowID);
                 console.log("----------Check Type--------------",user_session.check_type);
 

@@ -182,7 +182,7 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
         responseJSON[question.uuid] = "null";
     });
 
-    const checkType = messageId.waID === 1 ? "single_audio" : messageId.waID === 2 ? "district_wise_audio" : null;
+    const checkType = messageId.waID === 1 ? check_type.single_audio : messageId.waID === 2 ? check_type.district_wise_audio : null;
 
     await db.user_session.update({
         where: {
