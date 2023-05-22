@@ -1,6 +1,7 @@
 import { sendTextMessage, sendQuestion, sendInteractiveMessage } from "src/messageHelper";
 import { db } from "@/helpers/node/db";
 import assertUp from "./assert/assertUp";
+import { check_type } from "@prisma/client";
 
 async function clearSessionData(session: any) {
     try {
@@ -161,10 +162,10 @@ async function updateSession(responses: any, sessionID: any, current_question_uu
 
 export async function handleWFResponse(messageId: any, session: any, waID: number) {
 
+    console.log("Workflow Id got ----------------------------------------------------", messageId.wfID)
     const task_assignment = await getTaskAssingment(messageId.wfID, session.member_id)
     if(!task_assignment) {
         await sendTextMessage(waID, `You have no assingments from ${session.check_type.replace(/_/g, " ")}`)
-
         return;
     }
 
@@ -181,6 +182,8 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
         responseJSON[question.uuid] = "null";
     });
 
+    const checkType = messageId.waID === 1 ? "single_audio" : messageId.waID === 2 ? "district_wise_audio" : null;
+
     await db.user_session.update({
         where: {
             id: session.id,
@@ -189,6 +192,7 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
             task_assignment_id: task_assignment?.id,
             responses: responseJSON,
             current_question_uuid: questions[0].uuid,
+            check_type: checkType,
         }
     });
 
