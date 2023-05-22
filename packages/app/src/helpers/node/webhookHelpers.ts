@@ -3,17 +3,24 @@ import { db } from "@/helpers/node/db";
 import assertUp from "./assert/assertUp";
 
 async function clearSessionData(session: any) {
-    try {await db.user_session.update({
-        where: {
-            id: session.id,
-        },
-        data: {
-            current_question: undefined,
-            task_assignment_id: undefined,
-            responses: undefined,
-            check_type: undefined,
-        }
-    })
+    try {
+        const clearedSession = await db.user_session.update({
+            where: { id: session.id },
+            data: {
+              current_question: { disconnect: true },
+              task_assignments: { disconnect: true },
+            },
+          });
+
+          const updatedSession = await db.user_session.update({
+            where: { id: session.id },
+            data: {
+              current_question_uuid: null,
+              task_assignment_id: null,
+              responses: {},
+            },
+          });
+          console.log("Cleared Session", updatedSession);
     } catch(e) {
         console.log(e);
         console.log("Couldnt clear the session, ERROR:", e);
@@ -24,7 +31,6 @@ async function clearSessionData(session: any) {
 export async function handleHiResponse(waID: any, assigneDetails: any, session: any) {
 
     await clearSessionData(session);
-    console.log("Session Details", session)
 
     console.log("sending hi response", waID, assigneDetails);
 
@@ -161,7 +167,7 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
 
         return;
     }
-    
+
     const questions = await getQuestions(messageId.wfID, task_assignment?.id);
     if (!questions) {
         assertUp(questions, {
