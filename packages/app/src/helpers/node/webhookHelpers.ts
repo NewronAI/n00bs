@@ -256,11 +256,11 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
                 responses: response
             }
         })
-        await updateTask(session)
+        await updateTask(waID,session)
     }
 }
 
-async function updateTask(session: any) {
+async function updateTask(waID: any,session: any) {
 
     const questionIds : number[] = [];
     const answers: string[] = []
@@ -303,6 +303,7 @@ async function updateTask(session: any) {
     } catch (e) {
         console.log(e);
     }
+    await sendTextMessage(waID,"Your response have been saved.")
 }
 
 export async function handleCommentResponse(waID: string, session: any, textBody: string) {
@@ -342,7 +343,7 @@ export async function handleCommentResponse(waID: string, session: any, textBody
             responses: response
         }
     })
-    await updateTask(session)
+    await updateTask(waID,session)
 }
 
 export async function checkResponseTime(session: any) {
