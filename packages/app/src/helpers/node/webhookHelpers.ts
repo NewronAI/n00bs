@@ -344,6 +344,7 @@ export async function handleCommentResponse(waID: string, session: any, textBody
         }
     })
     await updateTask(waID,session)
+    return true;
 }
 
 export async function checkResponseTime(session: any) {
