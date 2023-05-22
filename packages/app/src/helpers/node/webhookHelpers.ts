@@ -24,6 +24,7 @@ async function clearSessionData(session: any) {
 export async function handleHiResponse(waID: any, assigneDetails: any, session: any) {
 
     await clearSessionData(session);
+    console.log("Session Details", session)
 
     console.log("sending hi response", waID, assigneDetails);
 
