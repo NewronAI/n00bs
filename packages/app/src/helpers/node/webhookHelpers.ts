@@ -180,7 +180,7 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
     let responseJSON: { [key: string]: string } = {};
     questions.map((question: { uuid: string | number; }) => {
         responseJSON[question.uuid] = "null";
-    });
+    }); 
 
     await db.user_session.update({
         where: {
