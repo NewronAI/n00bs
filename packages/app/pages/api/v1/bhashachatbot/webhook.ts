@@ -90,7 +90,7 @@ webhook.post(async (req, res) => {
     if (assigneDetails === null) {
         console.log("user not registered");
 
-        await sendTextMessage(waID, "You are not registered. Please register your whats number")
+        await sendTextMessage(waID, "You are not registered. Please register your whats app number")
 
         res.status(200).json({
             message: "User not registered"
