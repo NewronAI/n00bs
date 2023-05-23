@@ -45,7 +45,7 @@ webhook.post(async (req, res) => {
     const data = req.body;
     console.log(JSON.stringify(req.body, null, 2));
 
-    if (data.entry[0].changes[0].field !== "messages" || data.entry?.[0]?.changes?.[0]?.value.messages === null) {
+    if (data.entry[0].changes[0].field !== "messages") {
         res.status(403).json({
             message: "Request is not from the messages webhook"
         });
@@ -61,6 +61,12 @@ webhook.post(async (req, res) => {
     const messageId = message?.type === "interactive" ? data.entry?.[0]?.changes?.[0]?.value?.messages?.[0].interactive?.button_reply?.id : undefined;
 
     console.log("Extracted important variables", waID, message, textBody, messageId);
+    if(waID === undefined || message === undefined){
+        res.status(403).json({
+            message: "It is a billing request"
+        });
+        return ;
+    }
 
     let parsedMessageId: MessageIdObj = {};
 
