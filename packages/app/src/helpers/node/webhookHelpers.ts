@@ -65,7 +65,7 @@ export async function handleHiResponse(waID: any, assigneDetails: any, session: 
         return `${name}  : ${countValues[index]}`
     }).join("\n")}`;
 
-    const buttons = workflows.map((flow: { id: number, name: string }) => {
+    const buttons = workflows.map((flow) => {
         return {
             type: "reply",
             reply: {
