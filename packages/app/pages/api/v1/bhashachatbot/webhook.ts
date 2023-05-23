@@ -1,7 +1,7 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import assertUp from "@/helpers/node/assert/assertUp";
 import { db } from "@/helpers/node/db";
-import { sendTextMessage } from "src/messageHelper";
+import { sendInteractiveMessage, sendTextMessage } from "src/messageHelper";
 import { handleHiResponse, handleQuestionResponses, handleWFResponse, handleCommentResponse, checkResponseTime } from "@/helpers/node/webhookHelpers";
 
 const webhook = new NextExpress();
@@ -119,6 +119,26 @@ webhook.post(async (req, res) => {
 
     if (textBody === "Hi") {
         try {
+            if(!user_session.has_accepted_policy) {
+                await sendInteractiveMessage(waID, {
+                    body: {
+                        text: "Welcome to Nirvanote! Please click on below link to accept security policy https://www.whatsapp.com/legal/privacy-policy-eea"
+                    },
+                    type: "button",
+                    action: {
+                        buttons: [
+                            {
+                                type: "reply",
+                                reply: {
+                                    title: "I agree",
+                                    id: JSON.stringify({ type: "PA" }),
+                                }
+                            }
+                        ]
+                    }
+                });
+            }
+
             await handleHiResponse(waID, assigneDetails, user_session)
             res.status(200).json({
                 message: "Response of Hi - successfull."
@@ -161,6 +181,30 @@ webhook.post(async (req, res) => {
     console.log("parsedMessageId type", parsedMessageId.type);
 
     switch (parsedMessageId.type) {
+        case "PA": {
+            console.log("Policy Accepted");
+            try {
+                await db.user_session.update({
+                    where: {
+                        id: user_session.id,
+                    },
+                    data: {
+                        has_accepted_policy: true,
+                    }
+                })
+            await sendTextMessage("Thanks for accepting the policy. Kindly restart your session.")
+            res.status(200).json({
+                message: "Policy Accepted"
+            });
+            return;
+            } catch (error) {
+                console.log(error);
+                res.status(403).json({
+                    message: "Could'nt able to update the Policy Accepted"
+                });
+                return;
+            }
+        }
         case "WF": {
             try {
                 console.log("Message type detected as worflow selection");
