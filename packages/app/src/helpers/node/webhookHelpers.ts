@@ -287,19 +287,19 @@ async function updateTask(waID: any,session: any) {
                     task_assignment_id: session.task_assignment_id,
                     question_id: questionID,
                     answer: answers[index],
-                    is_expected: expectedAnswers[index] ? answers[index] === expectedAnswers[index] : null
+                    is_expected: expectedAnswers[index]
                 }
             })
         }),
-        db.task_assignment.update({
-            where: {
-                id: session.task_assignment_id,
-            },
-            data: {
-                status: task_status.in_progress
-            }
-        })
     ]);
+    await db.task_assignment.update({
+        where: {
+            id: session.task_assignment_id,
+        },
+        data: {
+            status: task_status.in_progress
+        }
+    })
         console.log("Task Answers", writeStatus)
     } catch (e) {
         console.log(e);

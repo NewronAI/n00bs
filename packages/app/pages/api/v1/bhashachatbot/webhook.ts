@@ -63,7 +63,7 @@ webhook.post(async (req, res) => {
     console.log("Extracted important variables", waID, message, textBody, messageId);
     if(waID === undefined || message === undefined){
         res.status(403).json({
-            message: "It is a billing request"
+            message: "It is a Status"
         });
         return ;
     }
