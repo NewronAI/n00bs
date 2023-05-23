@@ -256,17 +256,16 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
                 responses: response
             }
         })
-        await updateTask(waID,session)
+        await updateTask(waID, session)
     }
 }
 
-async function updateTask(waID: any,session: any) {
+async function updateTask(waID: any, session: any) {
 
-    const questionIds : number[] = [];
-    const answers: string[] = []
     const expectedAnswers: (string | null)[] = []
-
+    const qandas : { question_id: number, answer: string }[] = []
     const responses = session.responses;
+
     Object.keys(responses).forEach(async questionUUID => {
         const question = await db.question.findFirstOrThrow({
             where: {
@@ -274,37 +273,38 @@ async function updateTask(waID: any,session: any) {
             }
         })
 
-        questionIds.push(question.id);
-        answers.push(responses[questionUUID]);
         expectedAnswers.push(question.expected_answer)
+        qandas.push({question_id: question.id, answer: responses[questionUUID]})
     })
 
     try {
-        const [writeStatus] = await db.$transaction([
-        db.task_answer.createMany({
-            data: questionIds.map((questionID, index) => {
-                return {
-                    task_assignment_id: session.task_assignment_id,
-                    question_id: questionID,
-                    answer: answers[index],
-                    is_expected: expectedAnswers[index]
-                }
-            })
-        }),
-    ]);
-    await db.task_assignment.update({
+        for (let i = 0; i < qandas.length; i++) {
+          await db.task_answer.create({
+            data: {
+              task_assignment: {
+                connect: { id: session.task_assignment_id }
+              },
+              question: {
+                connect: { id: qandas[i].question_id }
+              },
+              answer: qandas[i].answer
+            }
+          });
+        }
+      } catch (error) {
+        console.log("Error While updatig task answers, ERROR: ",error)
+        await sendTextMessage("Could'nt save the response faced internal error.")
+        return;
+      }
+      await db.task_assignment.update({
         where: {
             id: session.task_assignment_id,
         },
         data: {
-            status: task_status.in_progress
+            status: task_status.in_progress,
         }
-    })
-        console.log("Task Answers", writeStatus)
-    } catch (e) {
-        console.log(e);
-    }
-    await sendTextMessage(waID,"Your response have been saved.")
+      })
+    await sendTextMessage(waID, "Your response have been saved.")
 }
 
 export async function handleCommentResponse(waID: string, session: any, textBody: string) {
@@ -344,7 +344,7 @@ export async function handleCommentResponse(waID: string, session: any, textBody
             responses: response
         }
     })
-    await updateTask(waID,session)
+    await updateTask(waID, session)
     return true;
 }
 
