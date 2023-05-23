@@ -279,21 +279,19 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
 async function updateTask(waID: any, session: any) {
 
     const expectedAnswers: (string | null)[] = [];
-    const qandas: { question_id: number, answer: string }[] = [];
     const responses = session.responses;
 
     console.log("Responses recieved",responses);
 
-    Object.keys(responses).forEach(async questionUUID => {
+    const qandas = await Promise.all(Object.keys(responses).map(async questionUUID => {
         const question = await db.question.findFirstOrThrow({
             where: {
                 uuid: questionUUID,
             }
         })
-
         expectedAnswers.push(question.expected_answer);
-        qandas.push({ question_id: question.id, answer: responses[questionUUID] })
-    })
+        return { question_id: question.id, answer: responses[questionUUID] }
+    }))
 
     console.log("Question ID and Answers array created",qandas);
 
@@ -319,6 +317,8 @@ async function updateTask(waID: any, session: any) {
             }
         })
     ]);
+
+    console.log("Finished the Task Answer create process",writeStatus);
     await sendTextMessage(waID, "Your response have been saved.")
 }
 
