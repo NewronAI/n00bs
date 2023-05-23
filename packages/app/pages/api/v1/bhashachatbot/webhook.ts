@@ -137,6 +137,10 @@ webhook.post(async (req, res) => {
                         ]
                     }
                 });
+                res.status(200).json({
+                    message: "Policy sent for acceptance"
+                });
+                return;
             }
 
             await handleHiResponse(waID, assigneDetails, user_session)
