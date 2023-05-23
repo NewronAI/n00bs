@@ -3,17 +3,6 @@ import { db } from "@/helpers/node/db";
 import assertUp from "./assert/assertUp";
 import { task_status } from "@prisma/client";
 
-type QuestionAnswer = {
-    task_assignment_uuid: string,
-    responses: [
-        {
-            question_uuid: string,
-            answer: string
-        }
-    ]
-
-}
-
 async function clearSessionData(session: any) {
     try {
         const clearedSession = await db.user_session.update({
@@ -76,11 +65,11 @@ export async function handleHiResponse(waID: any, assigneDetails: any, session: 
         return `${name}  : ${countValues[index]}`
     }).join("\n")}`;
 
-    const buttons = workflows.map((flow: { id: number; }) => {
+    const buttons = workflows.map((flow: { id: number, name: string }) => {
         return {
             type: "reply",
             reply: {
-                title: flow.id === 1 ? "Single Audio Check" : "District Audio Check",
+                title: flow.name,
                 id: JSON.stringify({ type: "WF", wfID: flow.id }),
             }
         }
