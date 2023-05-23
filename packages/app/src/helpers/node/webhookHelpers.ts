@@ -279,7 +279,8 @@ async function updateTask(waID: any,session: any) {
         expectedAnswers.push(question.expected_answer)
     })
 
-    try {    const [writeStatus] = await db.$transaction([
+    try {
+        const [writeStatus] = await db.$transaction([
         db.task_answer.createMany({
             data: questionIds.map((questionID, index) => {
                 return {
@@ -299,7 +300,7 @@ async function updateTask(waID: any,session: any) {
             }
         })
     ]);
-        console.log("Task Assingment updated successfully");
+        console.log("Task Answers", writeStatus)
     } catch (e) {
         console.log(e);
     }
