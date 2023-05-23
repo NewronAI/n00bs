@@ -196,7 +196,7 @@ webhook.post(async (req, res) => {
                         has_accepted_policy: true,
                     }
                 })
-            await sendTextMessage("Thanks for accepting the policy. Kindly restart your session.")
+            await sendTextMessage(waID,"Thanks for accepting the policy. Kindly restart your session.")
             res.status(200).json({
                 message: "Policy Accepted"
             });
