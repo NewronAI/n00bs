@@ -122,7 +122,7 @@ webhook.post(async (req, res) => {
             if(!user_session.has_accepted_policy) {
                 await sendInteractiveMessage(waID, {
                     body: {
-                        text: "Welcome to Nirvanote! Please click on below link to accept security policy https://www.whatsapp.com/legal/privacy-policy-eea"
+                        text: "Welcome to Bhasha ChatBot! Please click on below link to accept security policy https://www.whatsapp.com/legal/privacy-policy-eea"
                     },
                     type: "button",
                     action: {
