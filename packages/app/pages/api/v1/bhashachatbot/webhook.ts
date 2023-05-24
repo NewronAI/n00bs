@@ -229,7 +229,11 @@ webhook.post(async (req, res) => {
             if(await checkResponseTime(user_session)) {
                 try {
                     console.log("Message type is of QA");
-                    await handleQuestionResponses(parsedMessageId, user_session, waID, textBody)
+                    const completed = await handleQuestionResponses(parsedMessageId, user_session, waID, textBody)
+                    if(completed) {
+                            const flowID = user_session.check_type;
+                            await handleWFResponse({ type: "WF", wfID: flowID }, user_session, waID)
+                    }
                     res.status(200).json({
                         message: "Question send successfully"
                     });

@@ -165,6 +165,8 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
     console.log("Workflow Id got ----------------------------------------------------", messageId.wfID)
     console.log("Check type", session.check_type)
 
+    await clearSessionData(session)
+
     const task_assignment = await getTaskAssingment(messageId.wfID, session.member_id)
 
     if (!task_assignment) {
@@ -262,7 +264,7 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
         });
 
         await updateTask(waID, session);
-        await handleWFResponse({ type: "WF", wfID: messageId.wfID }, session, waID)
+        return true;
     }
 }
 
