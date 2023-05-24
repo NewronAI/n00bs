@@ -262,6 +262,7 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
         });
 
         await updateTask(waID, session);
+        await handleWFResponse({ type: "WF", wfID: messageId.wfID }, session, waID)
     }
 }
 

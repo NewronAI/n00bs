@@ -249,9 +249,11 @@ assignTaskApi.put(async (req, res) => {
         },
         data: {
             assignee_id: assignee.id,
-            status: task_status.in_progress
+            status: task_status.pending
         }
     });
+
+    console.log("Updated Task assinment",status);
 
     const workflowUUID = req.query["workflow-uuid"] as string;
 
