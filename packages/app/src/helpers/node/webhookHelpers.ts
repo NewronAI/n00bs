@@ -246,6 +246,7 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
     } else if (messageId.expectedAns !== textBody && messageId.wfID === 1) {
 
         const response = session.responses;
+        response[session.current_question_uuid] = textBody;
         const responseKeys = Object.keys(response);
 
         responseKeys.forEach(key => {
@@ -263,7 +264,7 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
             }
         });
 
-        await updateTask(waID, session);
+        await updateTask(waID, upddatedSession);
         return true;
     }
 }

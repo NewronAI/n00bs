@@ -77,14 +77,17 @@ const Tasks = (_props: TaskFilesPage) => {
         setAssignModalError(null);
 
         const selectedMemberUUID: string = selectedMembers[0].uuid;
+        console.log("Selected Member ID: ", selectedMemberUUID)
+        console.log("Task Assingment UUID: ", delData.uuid)
 
         try {
-            await axios.put(`/api/v1/${workflowUUID}/task/assign`, null, {
+            const response = await axios.put(`/api/v1/${workflowUUID}/task/assign`, null, {
                 params: {
                     "task-assignment-uuid": delData.uuid,
                     "assignee-uuid": selectedMemberUUID,
                 }
             });
+            console.log(response)
             await mutate();
             setAssignDialogOpenEdit(false);
         } catch (e) {
