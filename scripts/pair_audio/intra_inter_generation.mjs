@@ -122,11 +122,11 @@ function findFolderByPrefix(directory,prefix) {
 
 async function findAudioFile(filename, vendor) {
     const state_districtParts = state_district.split("_");
-    console.log(stateAbbrev[state_districtParts[0]],"----", state_districtParts[1])
     if(vendor === "megdap") {
         const audioDirectory = `/data2/data_nginx/pair_audio/audio/megdap/${batch}/`;
         if (existsSync( audioDirectory + `${stateAbbrev[state_districtParts[0]]}`)) {
             const district = findFolderByPrefix(audioDirectory + `${stateAbbrev[state_districtParts[0]]}`, state_districtParts[1])
+            console.log(stateAbbrev[state_districtParts[0]],"----", district)
             if(district === null) {
                 console.log("Could'nt find the district name",state_districtParts[0], "in path:", audioDirectory + `${stateAbbrev[state_districtParts[0]]}`);
                 return null
