@@ -11,7 +11,7 @@ const inputPath = process.argv[3];
 const vendor = process.argv[4];
 const batch = process.argv[5];
 const state_district = process.argv[6];
-const outputPath = `/data2/data_nginx/pair_audio/result/${vendor}/${batch}/${state_district}/`
+const outputPath = `/data2/data_nginx/pair_audio/result/${vendor}/${batch}/${state_district}`
 
 console.log("inputPath:",inputPath)
 console.log("vendor:",vendor)
