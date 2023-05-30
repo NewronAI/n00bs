@@ -147,7 +147,7 @@ async function findAudioFile(filename, vendor) {
     }
 }
 
-async function generateLink(fileName) {
+function generateLink(fileName) {
     // const audioFilePath = await findAudioFile(fileName,vendor);
     // console.log(audioFilePath)
     // if(audioFilePath === null) {
@@ -167,8 +167,8 @@ function genrateInterFiles(inputFile, outputFolderPath) {
         row["Result"] = null ? "" : row["Result"];
         row["Confidence"] = null ? "" : row["Confidence"];
         row["Detailed sheet link"] = null ? "" : row["Detailed sheet link"];
-        row["File1_Link"] = await generateLink(row["File1"]);
-        row["File2_Link"] = await generateLink(row["File2"]);
+        row["File1_Link"] = generateLink(row["File1"]);
+        row["File2_Link"] = generateLink(row["File2"]);
     })
 
     const newSheet = xlsx.utils.json_to_sheet(jsonSheet);
@@ -196,7 +196,7 @@ async function generatePairAuido(inputFolderPath, outputFolderPath) {
         const jsonSheet = xlsx.utils.sheet_to_json(firstSheet);
         const newJsonsSheet = []
 
-        jsonSheet.forEach(async (row, index) => {
+        jsonSheet.forEach((row, index) => {
             const newRow = {};
             const firstRow = {};
             firstRow["FileName"] = "  "
@@ -205,18 +205,18 @@ async function generatePairAuido(inputFolderPath, outputFolderPath) {
             for (const key in row) {
                 if (index === 0 && key !== "FileName" && key !== "Minimum_Score" && key !== "Minimum_Score_Reference" && key !== "Result" && key !== "Confidence") {
                         console.log("Generating links for",firstRow[key])
-                        firstRow[key] = await generateLink(key);
+                        firstRow[key] = generateLink(key);
                         console.log("First key ---------",  firstRow[key])
                 }
                 if (key === "FileName") {
                     newRow[key] = row[key]
                     console.log("Generating links for",newRow[key])
-                    newRow["File_Link"] = await generateLink(row[key])
+                    newRow["File_Link"] = generateLink(row[key])
                     console.log("File Link --------", newRow["File_Link"])
                 }
                 else if (key === "Minimum_Score_Reference") {
                     newRow[key] = row[key]
-                    newRow["Minimum_Score_Reference_Link"] = await generateLink(row[key])
+                    newRow["Minimum_Score_Reference_Link"] = generateLink(row[key])
                     console.log("Generating links for",row[key])
                     console.log("Minimum_Score_Reference_Link", newRow["Minimum_Score_Reference_Link"])
                 }
