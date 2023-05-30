@@ -82,7 +82,11 @@ const stateAbbrev = {
     "TN": "TamilNadu",
     "TR": "Tripura",
     "CH": "Chandigarh",
-    "DL": "DL",
+    "DL": "Delhi",
+}
+
+const districtAbbrev = {
+    "NoSoGoa": "NorthSouthGoa"
 }
 
 const intraWorkbook = xlsx.utils.book_new();
@@ -173,7 +177,7 @@ function genrateInterFiles(inputFile, outputFolderPath) {
     fs.writeFileSync(outputFile, xlsx.write(interWorkbook, { type: 'buffer' }));
 }
 
-function generatePairAuido(inputFolderPath, outputFolderPath) {
+async function generatePairAuido(inputFolderPath, outputFolderPath) {
   const files = fs.readdirSync(inputFolderPath);
   for (const file of files) {
     if(file.slice(-5) !== ".xlsx") {
@@ -183,6 +187,7 @@ function generatePairAuido(inputFolderPath, outputFolderPath) {
         genrateInterFiles(inputFolderPath + "/" + file, outputFolderPath)
     }
     else {
+        console.log("Working on file --- ",file)
         const fileNameParts = file.split("_");
         const inputFile = inputPath + "/" + file;
         const workbook = xlsx.readFile(inputFile);
@@ -236,4 +241,4 @@ function generatePairAuido(inputFolderPath, outputFolderPath) {
   fs.writeFileSync(outputFile, xlsx.write(intraWorkbook, { type: 'buffer' }));
 }
 
-generatePairAuido(inputPath, outputPath);
+await generatePairAuido(inputPath, outputPath);
