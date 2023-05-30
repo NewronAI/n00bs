@@ -143,8 +143,8 @@ async function findAudioFile(filename, vendor) {
     }
 }
 
-function generateLink(fileName) {
-    const audioFilePath = findAudioFile(fileName,vendor);
+async function generateLink(fileName) {
+    const audioFilePath = await findAudioFile(fileName,vendor);
     console.log(audioFilePath)
     if(audioFilePath === null) {
         return null
@@ -158,13 +158,13 @@ function genrateInterFiles(inputFile, outputFolderPath) {
     const firstSheet = workbook.Sheets[firstSheetName];
     const jsonSheet = xlsx.utils.sheet_to_json(firstSheet);
 
-    jsonSheet.forEach((row) => {
+    jsonSheet.forEach(async (row) => {
         console.log(row)
         row["Result"] = null ? "" : row["Result"];
         row["Confidence"] = null ? "" : row["Confidence"];
         row["Detailed sheet link"] = null ? "" : row["Detailed sheet link"];
-        row["File1_Link"] = generateLink(row["File1"]);
-        row["File2_Link"] = generateLink(row["File2"]);
+        row["File1_Link"] = await generateLink(row["File1"]);
+        row["File2_Link"] = await generateLink(row["File2"]);
     })
 
     const newSheet = xlsx.utils.json_to_sheet(jsonSheet);
@@ -191,7 +191,7 @@ function generatePairAuido(inputFolderPath, outputFolderPath) {
         const jsonSheet = xlsx.utils.sheet_to_json(firstSheet);
         const newJsonsSheet = []
 
-        jsonSheet.forEach((row, index) => {
+        jsonSheet.forEach(async (row, index) => {
             const newRow = {};
             const firstRow = {};
             firstRow["FileName"] = "  "
@@ -199,7 +199,7 @@ function generatePairAuido(inputFolderPath, outputFolderPath) {
 
             for (const key in row) {
                 if (index === 0 && key !== "FileName" && key !== "Minimum_Score" && key !== "Minimum_Score_Reference" && key !== "Result" && key !== "Confidence") {
-                        firstRow[key] = generateLink(key);
+                        firstRow[key] = await generateLink(key);
                 }
                 if (key === "FileName") {
                     newRow[key] = row[key]
@@ -207,7 +207,7 @@ function generatePairAuido(inputFolderPath, outputFolderPath) {
                 }
                 else if (key === "Minimum_Score_Reference") {
                     newRow[key] = row[key]
-                    newRow["Minimum_Score_Reference_Link"] = generateLink(row[key])
+                    newRow["Minimum_Score_Reference_Link"] = await generateLink(row[key])
                 }
                 else {
                     newRow[key] = row[key]
@@ -233,4 +233,4 @@ function generatePairAuido(inputFolderPath, outputFolderPath) {
   fs.writeFileSync(outputFile, xlsx.write(intraWorkbook, { type: 'buffer' }));
 }
 
-generatePairAuido(inputPath, outputPath);
+await generatePairAuido(inputPath, outputPath);
