@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import xlsx from 'xlsx';
 import { existsSync } from "fs"
+const exec = promisify(child_process.exec);
 
 const inputPath = process.argv[3];
 const vendor = process.argv[4];
