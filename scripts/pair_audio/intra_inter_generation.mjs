@@ -112,7 +112,7 @@ function findFolderByPrefix(directory,prefix) {
     const files = fs.readdirSync(directory); // Read the current directory
 
     for (const file of files) {
-      if (file.startsWith(prefix) && fs.statSync(file).isDirectory()) {
+      if (file.startsWith(prefix)) {
         return file; // Return the matching folder name
       }
     }
