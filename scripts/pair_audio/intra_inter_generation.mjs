@@ -4,26 +4,144 @@ import xlsx from 'xlsx';
 import { existsSync } from "fs"
 
 const inputPath = process.argv[3];
-const outputPath = process.argv[4];
+const vendor = process.argv[4];
+const batch = process.argv[5];
+const state_district = process.argv[6];
+const outputPath = `/data2/data_nginx/pair_audio/result/${vendor}/${batch}/${state_district}`
 
 console.log(inputPath);
 console.log(outputPath);
 
-if (!existsSync(inputPath)) {
-  console.error('Error: Input path not found');
-  process.exit(1);
+if(!existsSync(`/data2/data_nginx/pair_audio/result/${vendor}/${batch}`)) {
+    console.error('Batch folder not found');
+    try {
+      await exec(`mkdir /data2/data_nginx/pair_audio/result/${vendor}/${batch}`)
+      console.log("Folder Created:" + `/data2/data_nginx/pair_audio/result/${vendor}/${batch}`)
+    } catch (e) {
+      console.error("Error", e);
+      process.exit(1);
+    }
 }
 
 if (!existsSync(outputPath)) {
-    console.error('Error: Output path not found');
+  console.error('Error: Input path not found');
+  try {
+    await exec(`mkdir outputPath`)
+  } catch (e) {
+    console.error("Error", e);
     process.exit(1);
+  }
+}
+
+if (!existsSync(inputPath)) {
+    console.error('Error: Input path not found');
+    process.exit(1);
+}
+
+if (!existsSync(`/data2/data_nginx/pair_audio/audio/${vendor}/${batch}`)) {
+    console.error('Error: Audios not found');
+    process.exit(1);
+}
+
+const stateAbbrev = {
+    "AP": "AP",
+    "AR": "ArunachalPradesh",
+    "AS": "Assam",
+    "BR": "Bihar",
+    "CG": "Chhattisgarh",
+    "GA": "Goa",
+    "GJ": "Gujarat",
+    "HR": "Haryana",
+    "HP": "HimachalPradesh",
+    "JH": "Jharkhand",
+    "KA": "Karnataka",
+    "KL": "Kerala",
+    "MP": "MadhyaPradesh",
+    "MH": "Maharashtra",
+    "MN": "Manipur",
+    "ML": "Meghalaya",
+    "MZ": "Mizoram",
+    "NL": "Nagaland",
+    "OR": "Orissa",
+    "PB": "Punjab",
+    "RJ": "Rajasthan",
+    "SK": "Sikkim",
+    "TN": "TamilNadu",
+    "TR": "Tripura",
+    "UK": "Uttarakhand",
+    "UP": "UttarPradesh",
+    "WB": "WestBengal",
+    "TN": "TamilNadu",
+    "TR": "Tripura",
+    "CH": "Chandigarh",
+    "DL": "DL",
 }
 
 const intraWorkbook = xlsx.utils.book_new();
 const interWorkbook = xlsx.utils.book_new();
 
+function findFileInDirectory(fileName, directory) {
+    const files = fs.readdirSync(directory); // Read the contents of the given directory
+
+    for (const file of files) {
+      const filePath = path.join(directory, file); // Get the absolute path of the file
+
+      if (fs.statSync(filePath).isDirectory()) {
+        const foundFile = findFileInDirectory(fileName, filePath); // Recursively search within subdirectories
+
+        if (foundFile) {
+          return foundFile; // Return the file location if found
+        }
+      } else if (file === fileName) {
+        return filePath; // Return the file location if the file name matches
+      }
+    }
+
+    return null; // Return null if the file is not found
+  }
+
+function findFolderByPrefix(directory,prefix) {
+    const files = fs.readdirSync(directory); // Read the current directory
+
+    for (const file of files) {
+      if (file.startsWith(prefix) && fs.statSync(file).isDirectory()) {
+        return file; // Return the matching folder name
+      }
+    }
+
+    return null; // Return null if no matching folder is found
+  }
+
+async function findAudioFile(filename, vendor) {
+    const state_districtParts = state_district.split("_");
+    console.log(state, district)
+    if(vendor === "megdap") {
+        const audioDirectory = `/data2/data_nginx/pair_audio/audio/megdap/${batch}/`;
+        if (existsSync( audioDirectory + `${stateAbbrev[state_districtParts[0]]}`)) {
+            const district = findFolderByPrefix(audioDirectory + `${stateAbbrev[state_districtParts[0]]}`, state_districtParts[1])
+            if(district === null) {
+                console.log("Could'nt find the district name",state_districtParts[0], "in path:", audioDirectory + `${stateAbbrev[state_districtParts[0]]}`);
+                return null
+            }
+            const filepath = findFileInDirectory(filename + ".wav", audioDirectory+ `${stateAbbrev[state_districtParts[0]]}` + "/" + district);
+            if(filepath === null) {
+                console.log("Could'nt find the file:", filename + ".wav" + "in location:", audioDirectory+ `${stateAbbrev[state_districtParts[0]]}` + "/" + district)
+                return null
+            }
+            else {
+                return filepath;
+            }
+        }
+    }
+}
+
 function generateLink(fileName) {
-    return `https://vaani.qc.artpark.in/pair_audio/${fileName}`;
+    const audioFilePath = findAudioFile(fileName,vendor);
+    console.log(audioFilePath)
+    if(audioFilePath === null) {
+        return null
+    }
+    return `https://vaani.qc.artpark.in/pair_audio/${audioFilePath}`;
 }
 
 function genrateInterFiles(inputFile, outputFolderPath) {
