@@ -3,7 +3,9 @@ import path from 'path';
 import xlsx from 'xlsx';
 import { existsSync } from "fs"
 const { promisify } = require("util");
+const child_process = require("child_process");
 const exec = promisify(child_process.exec);
+
 
 const inputPath = process.argv[3];
 const vendor = process.argv[4];
