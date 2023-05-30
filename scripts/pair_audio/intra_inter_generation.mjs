@@ -148,11 +148,11 @@ async function findAudioFile(filename, vendor) {
 }
 
 async function generateLink(fileName) {
-    const audioFilePath = await findAudioFile(fileName,vendor);
-    console.log(audioFilePath)
-    if(audioFilePath === null) {
-        return null
-    }
+    // const audioFilePath = await findAudioFile(fileName,vendor);
+    // console.log(audioFilePath)
+    // if(audioFilePath === null) {
+    //     return null
+    // }
     return `https://vaani.qc.artpark.in/pair_audio/${audioFilePath}`;
 }
 
