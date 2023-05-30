@@ -43,7 +43,7 @@ function genrateInterFiles(inputFile, outputFolderPath) {
 
     const newSheet = xlsx.utils.json_to_sheet(jsonSheet);
     xlsx.utils.book_append_sheet(interWorkbook, newSheet, "inter");
-    const outputFile = outputFolderPath + "\\" + "inter.xlsx"
+    const outputFile = outputFolderPath + "/" + "inter.xlsx"
     fs.writeFileSync(outputFile, xlsx.write(interWorkbook, { type: 'buffer' }));
 }
 
@@ -54,11 +54,11 @@ function generatePairAuido(inputFolderPath, outputFolderPath) {
         console.log(file, "file name is not in proper format");
     }
     else if (file === "inter.xlsx") {
-        genrateInterFiles(inputFolderPath + "\\" + file, outputFolderPath)
+        genrateInterFiles(inputFolderPath + "/" + file, outputFolderPath)
     }
     else {
         const fileNameParts = file.split("_");
-        const inputFile = inputPath + "\\" + file;
+        const inputFile = inputPath + "/" + file;
         const workbook = xlsx.readFile(inputFile);
         const firstSheetName = workbook.SheetNames[0];
         const firstSheet = workbook.Sheets[firstSheetName];
@@ -70,7 +70,7 @@ function generatePairAuido(inputFolderPath, outputFolderPath) {
             const firstRow = {};
             firstRow["FileName"] = "  "
             firstRow["File_Link"] = "  "
-        
+
             for (const key in row) {
                 if (index === 0 && key !== "FileName" && key !== "Minimum_Score" && key !== "Minimum_Score_Reference" && key !== "Result" && key !== "Confidence") {
                         firstRow[key] = generateLink(key);
@@ -96,14 +96,14 @@ function generatePairAuido(inputFolderPath, outputFolderPath) {
             }
             newJsonsSheet.push(newRow);
         });
-        
+
         const newSheet = xlsx.utils.json_to_sheet(newJsonsSheet);
         const sheetName = fileNameParts[2].slice(0, -5)
         xlsx.utils.book_append_sheet(intraWorkbook, newSheet, sheetName);
         console.log("Sheet Inserted")
     }
   }
-  const outputFile = outputPath + "\\" + "intra.xlsx"
+  const outputFile = outputPath + "/" + "intra.xlsx"
   fs.writeFileSync(outputFile, xlsx.write(intraWorkbook, { type: 'buffer' }));
 }
 
