@@ -200,14 +200,17 @@ function generatePairAuido(inputFolderPath, outputFolderPath) {
             for (const key in row) {
                 if (index === 0 && key !== "FileName" && key !== "Minimum_Score" && key !== "Minimum_Score_Reference" && key !== "Result" && key !== "Confidence") {
                         firstRow[key] = await generateLink(key);
+                        console.log("First key ---------",  firstRow[key])
                 }
                 if (key === "FileName") {
                     newRow[key] = row[key]
                     newRow["File_Link"] = await generateLink(row[key])
+                    console.log("File Link --------", newRow["File_Link"])
                 }
                 else if (key === "Minimum_Score_Reference") {
                     newRow[key] = row[key]
                     newRow["Minimum_Score_Reference_Link"] = await generateLink(row[key])
+                    console.log("Minimum_Score_Reference_Link", newRow["Minimum_Score_Reference_Link"])
                 }
                 else {
                     newRow[key] = row[key]
