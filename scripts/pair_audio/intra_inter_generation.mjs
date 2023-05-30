@@ -34,7 +34,7 @@ if(!existsSync(`/data2/data_nginx/pair_audio/result/${vendor}/${batch}`)) {
 if (!existsSync(outputPath)) {
   console.error('Error: Input path not found');
   try {
-    await exec(`mkdir outputPath`)
+    await exec(`mkdir ${outputPath}`)
   } catch (e) {
     console.error("Error", e);
     process.exit(1);
