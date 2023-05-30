@@ -233,4 +233,4 @@ function generatePairAuido(inputFolderPath, outputFolderPath) {
   fs.writeFileSync(outputFile, xlsx.write(intraWorkbook, { type: 'buffer' }));
 }
 
-await generatePairAuido(inputPath, outputPath);
+generatePairAuido(inputPath, outputPath);
