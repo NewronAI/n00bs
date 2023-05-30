@@ -203,7 +203,7 @@ function generatePairAuido(inputFolderPath, outputFolderPath) {
                 }
                 if (key === "FileName") {
                     newRow[key] = row[key]
-                    newRow["File_Link"] = generateLink(row[key])
+                    newRow["File_Link"] = await generateLink(row[key])
                 }
                 else if (key === "Minimum_Score_Reference") {
                     newRow[key] = row[key]
