@@ -7,7 +7,7 @@ const inputPath = process.argv[3];
 const vendor = process.argv[4];
 const batch = process.argv[5];
 const state_district = process.argv[6];
-const outputPath = `/data2/data_nginx/pair_audio/result/${vendor}/${batch}/${state_district}`
+const outputPath = `/data2/data_nginx/pair_audio/result/${vendor}/${batch}/${state_district}/`
 
 console.log(inputPath);
 console.log(outputPath);
@@ -16,7 +16,8 @@ if(!existsSync(`/data2/data_nginx/pair_audio/result/${vendor}/${batch}`)) {
     console.error('Batch folder not found');
     try {
       await exec(`mkdir /data2/data_nginx/pair_audio/result/${vendor}/${batch}`)
-      console.log("Folder Created:" + `/data2/data_nginx/pair_audio/result/${vendor}/${batch}`)
+      await exec(`mkdir /data2/data_nginx/pair_audio/result/${vendor}/${batch}/${state_district}`)
+      console.log("Folder Created:" + `/data2/data_nginx/pair_audio/result/${vendor}/${batch}/${state_district}`)
     } catch (e) {
       console.error("Error", e);
       process.exit(1);
