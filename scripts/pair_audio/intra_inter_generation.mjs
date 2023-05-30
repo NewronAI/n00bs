@@ -130,7 +130,6 @@ async function findAudioFile(filename, vendor) {
         const audioDirectory = `/data2/data_nginx/pair_audio/audio/megdap/${batch}/`;
         if (existsSync( audioDirectory + `${stateAbbrev[state_districtParts[0]]}`)) {
             const district = findFolderByPrefix(audioDirectory + `${stateAbbrev[state_districtParts[0]]}`, state_districtParts[1])
-            console.log(stateAbbrev[state_districtParts[0]],"----", district)
             if(district === null) {
                 console.log("Could'nt find the district name",state_districtParts[0], "in path:", audioDirectory + `${stateAbbrev[state_districtParts[0]]}`);
                 return null
@@ -141,6 +140,7 @@ async function findAudioFile(filename, vendor) {
                 return null
             }
             else {
+                console.log(stateAbbrev[state_districtParts[0]],"----", district)
                 return filepath;
             }
         }
@@ -148,11 +148,11 @@ async function findAudioFile(filename, vendor) {
 }
 
 async function generateLink(fileName) {
-    // const audioFilePath = await findAudioFile(fileName,vendor);
-    // console.log(audioFilePath)
-    // if(audioFilePath === null) {
-    //     return null
-    // }
+    const audioFilePath = await findAudioFile(fileName,vendor);
+    console.log(audioFilePath)
+    if(audioFilePath === null) {
+        return null
+    }
     return `https://vaani.qc.artpark.in/pair_audio/${audioFilePath}`;
 }
 
