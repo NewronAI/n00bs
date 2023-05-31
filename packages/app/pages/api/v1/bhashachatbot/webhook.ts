@@ -61,8 +61,8 @@ webhook.post(async (req, res) => {
 
     console.log("Extracted important variables", waID, message, textBody, messageId);
     if(waID === undefined || message === undefined){
-        res.status(403).json({
-            message: "It is a Status"
+        res.status(200).json({
+            message: "It is not a message."
         });
         return ;
     }
@@ -116,7 +116,9 @@ webhook.post(async (req, res) => {
 
     console.log("User Session", user_session)
 
-    if (textBody === "Hi") {
+    const textBodyLowerCase = textBody.toLowerCase()
+
+    if (textBodyLowerCase === "hi") {
         try {
             if(!user_session.has_accepted_policy) {
                 await sendInteractiveMessage(waID, {
@@ -154,7 +156,7 @@ webhook.post(async (req, res) => {
         }
     }
 
-    if (message?.type === "text" && textBody !== "Hi" && user_session.current_question_uuid) {
+    if (message?.type === "text" && textBodyLowerCase !== "hi" && user_session.current_question_uuid) {
 
         console.log("Entering in comment response flow");
         try {
