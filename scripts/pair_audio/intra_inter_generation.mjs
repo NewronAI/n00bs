@@ -124,7 +124,7 @@ function findFolderByPrefix(directory,prefix) {
     return null; // Return null if no matching folder is found
   }
 
-async function findAudioFile(filename, vendor) {
+function findAudioFile(filename, vendor) {
     const state_districtParts = state_district.split("_");
     if(vendor === "megdap") {
         const audioDirectory = `/data2/data_nginx/pair_audio/audio/megdap/${batch}/`;
@@ -147,8 +147,8 @@ async function findAudioFile(filename, vendor) {
     }
 }
 
-async function generateLink(fileName) {
-    const audioFilePath = await findAudioFile(fileName,vendor);
+function generateLink(fileName) {
+    const audioFilePath = findAudioFile(fileName,vendor);
     console.log(audioFilePath)
     if(audioFilePath === null) {
         return null
@@ -163,12 +163,12 @@ function genrateInterFiles(inputFile, outputFolderPath) {
     const firstSheet = workbook.Sheets[firstSheetName];
     const jsonSheet = xlsx.utils.sheet_to_json(firstSheet);
 
-    jsonSheet.forEach(async (row) => {
+    jsonSheet.forEach((row) => {
         row["Result"] = null ? "" : row["Result"];
         row["Confidence"] = null ? "" : row["Confidence"];
         row["Detailed sheet link"] = null ? "" : row["Detailed sheet link"];
-        row["File1_Link"] = await generateLink(row["File1"]);
-        row["File2_Link"] = await generateLink(row["File2"]);
+        row["File1_Link"] = generateLink(row["File1"]);
+        row["File2_Link"] = generateLink(row["File2"]);
         console.log("generating link for inter files FILE1:",row["File1_Link"])
         console.log("generating link for inter files FILE2:",row["File2_Link"])
     })
@@ -207,18 +207,18 @@ async function generatePairAuido(inputFolderPath, outputFolderPath) {
             for (const key in row) {
                 if (index === 0 && key !== "FileName" && key !== "Minimum_Score" && key !== "Minimum_Score_Reference" && key !== "Result" && key !== "Confidence") {
                         console.log("Generating links for",firstRow[key])
-                        firstRow[key] = await generateLink(key);
+                        firstRow[key] = generateLink(key);
                         console.log("First key ---------",  firstRow[key])
                 }
                 if (key === "FileName") {
                     newRow[key] = row[key]
                     console.log("Generating links for",newRow[key])
-                    newRow["File_Link"] = await generateLink(row[key])
+                    newRow["File_Link"] = generateLink(row[key])
                     console.log("File Link --------", newRow["File_Link"])
                 }
                 else if (key === "Minimum_Score_Reference") {
                     newRow[key] = row[key]
-                    newRow["Minimum_Score_Reference_Link"] = await generateLink(row[key])
+                    newRow["Minimum_Score_Reference_Link"] = generateLink(row[key])
                     console.log("Generating links for",row[key])
                     console.log("Minimum_Score_Reference_Link", newRow["Minimum_Score_Reference_Link"])
                 }
