@@ -169,6 +169,8 @@ function genrateInterFiles(inputFile, outputFolderPath) {
         row["Detailed sheet link"] = null ? "" : row["Detailed sheet link"];
         row["File1_Link"] = await generateLink(row["File1"]);
         row["File2_Link"] = await generateLink(row["File2"]);
+        console.log("generating link for inter files FILE1:",row["File1_Link"])
+        console.log("generating link for inter files FILE2:",row["File2_Link"])
     })
 
     const newSheet = xlsx.utils.json_to_sheet(jsonSheet);
