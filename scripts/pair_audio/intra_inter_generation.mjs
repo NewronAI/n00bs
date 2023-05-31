@@ -157,18 +157,18 @@ async function generateLink(fileName) {
 }
 
 function genrateInterFiles(inputFile, outputFolderPath) {
+    console.log("Working on inter file")
     const workbook = xlsx.readFile(inputFile);
     const firstSheetName = workbook.SheetNames[0];
     const firstSheet = workbook.Sheets[firstSheetName];
     const jsonSheet = xlsx.utils.sheet_to_json(firstSheet);
 
     jsonSheet.forEach(async (row) => {
-        console.log(row)
         row["Result"] = null ? "" : row["Result"];
         row["Confidence"] = null ? "" : row["Confidence"];
         row["Detailed sheet link"] = null ? "" : row["Detailed sheet link"];
-        row["File1_Link"] = generateLink(row["File1"]);
-        row["File2_Link"] = generateLink(row["File2"]);
+        row["File1_Link"] = await generateLink(row["File1"]);
+        row["File2_Link"] = await generateLink(row["File2"]);
     })
 
     const newSheet = xlsx.utils.json_to_sheet(jsonSheet);
