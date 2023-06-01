@@ -3,7 +3,13 @@ FROM node:alpine AS base
 
 WORKDIR /source
 
+COPY package.json ./package.json
+COPY yarn.lock ./yarn.lock
+
+COPY turbo.json ./turbo.json
+
 COPY packages/app/package.json ./packages/app/package.json
+#COPY packages/app/yarn.lock ./packages/app/yarn.lock
 
 WORKDIR /source/packages/app
 
@@ -60,13 +66,14 @@ ENV WEBHHOK_SECRET=$WEBHHOK_SECRET
 ENV NEXT_PUBLIC_HOTJAR_ID=$NEXT_PUBLIC_HOTJAR_ID
 ENV NEXT_PUBLIC_HOTJAR_SNIPPET_VERSION=$NEXT_PUBLIC_HOTJAR_SNIPPET_VERSION
 
-WORKDIR /source/packages/app
+WORKDIR /source
 
-RUN npx prisma generate
 RUN yarn build
 
-RUN npm prune --production
+#RUN npx prisma generate
+#RUN yarn build
+#
+#RUN npm prune --omit=dev
 
 EXPOSE 3000
-
-CMD ["yarn", "start"]
+ENTRYPOINT yarn start

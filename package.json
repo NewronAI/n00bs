@@ -2,7 +2,6 @@
   "name": "n00bs",
   "version": "1.0.0",
   "description": "Framework for Data Review on a mass scale.",
-  "main": "index.js",
   "directories": {
     "doc": "docs",
     "app": "packages/app"
@@ -30,10 +29,12 @@
   },
   "homepage": "https://github.com/NewronAI/datasetu#readme",
   "scripts": {
-    "dev": "turbo dev"
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "start": "turbo start"
   },
-  "packageManager": "yarn@1.22.19",
-  "dependencies": {
-    "clsx": "^1.2.1"
-  }
+  "devDependencies": {
+    "turbo": "^1.10.1"
+  },
+  "packageManager": "yarn@1.22.19"
 }
