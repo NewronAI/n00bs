@@ -62,6 +62,7 @@ ENV NEXT_PUBLIC_HOTJAR_SNIPPET_VERSION=$NEXT_PUBLIC_HOTJAR_SNIPPET_VERSION
 
 WORKDIR /source/packages/app
 
+RUN npx prisma generate
 RUN yarn build
 
 RUN npm prune --production
