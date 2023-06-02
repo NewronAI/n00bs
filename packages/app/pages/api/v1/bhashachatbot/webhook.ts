@@ -20,7 +20,7 @@ webhook.get(async (req, res) => {
     const challenge = req.query["hub.challenge"]
     const token = req.query["hub.verify_token"]
 
-    console.log(mode, challenge, token);
+    console.log(mode, challenge, token, webhookSecret);
 
     if (mode === "subscribe" && token === webhookSecret) {
         console.log("Mode = ",mode)
