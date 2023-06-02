@@ -17,13 +17,13 @@ interface MessageIdObj {
 
 webhook.get(async (req, res) => {
     const mode = req.query["hub.mode"]
-    const challange = req.query["hub.challenge"]
+    const challenge = req.query["hub.challenge"]
     const token = req.query["hub.verify_token"]
 
-    console.log(req.query, mode, challange, token);
+    console.log(req.query, mode, challenge, token);
 
     if (mode === "subscribe" && token === webhookSecret) {
-        res.status(200).send(challange);
+        res.status(200).send(challenge);
     }
     else {
         res.status(403).json({
