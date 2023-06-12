@@ -53,6 +53,10 @@ jobs:
             auth0_issuer_base_url:projects/447192648937/secrets/AUTH0_ISSUER_BASE_URL
             auth0_mgmt_api_client_id:projects/447192648937/secrets/AUTH0_MGMT_API_CLIENT_ID
             auth0_mgmt_api_client_secret:projects/447192648937/secrets/AUTH0_MGMT_API_CLIENT_SECRET
+            whatsapp_token:projects/447192648937/secrets/WHATSAPP_TOKEN
+            phone_number_id:projects/447192648937/secrets/PHONE_NUMBER_ID
+            webhook_api_version:projects/447192648937/secrets/WEBHOOK_API_VERSION
+            webhook_secret:projects/447192648937/secrets/WEBHHOK_SECRET
             auth0_secret:projects/447192648937/secrets/AUTH0_SECRET
             database_url:projects/447192648937/secrets/DATABASE_URL
             error_reporting_webhook:projects/447192648937/secrets/ERROR_REPORTING_WEBHOOK
@@ -70,6 +74,10 @@ jobs:
           --build-arg AUTH0_MGMT_API_CLIENT_SECRET="${{ steps.secrets.outputs.auth0_mgmt_api_client_secret }}" \
           --build-arg AUTH0_SECRET="${{ steps.secrets.outputs.auth0_secret }}" \
           --build-arg DATABASE_URL="${{ steps.secrets.outputs.database_url }}" \
+          --build-arg WHATSAPP_TOKEN="${{ steps.secrets.outputs.whatsapp_token }}" \
+          --build-arg PHONE_NUMBER_ID="${{ steps.secrets.outputs.phone_number_id }}" \
+          --build-arg WEBHOOK_API_VERSION="${{ steps.secrets.outputs.webhook_api_version }}" \
+          --build-arg WEBHHOK_SECRET="${{ steps.secrets.outputs.webhook_secret }}" \
           --build-arg FAILED_WEBHOOKURL="${{ steps.secrets.outputs.error_reporting_webhook }}" \
           --build-arg NEXT_PUBLIC_APP_ENV="${{ steps.secrets.outputs.next_public_app_env }}" \
           --build-arg NEXT_PUBLIC_HOTJAR_ID="${{ steps.secrets.outputs.next_public_hotjar_id }}" \

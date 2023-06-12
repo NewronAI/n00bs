@@ -1,6 +1,8 @@
 import axios from 'axios';
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
+const phoneNumberID = process.env.PHONE_NUMBER_ID;
+const apiVersion = process.env.WEBHOOK_API_VERSION;
 
 const commonWhatsappCallData =  {
     messaging_product: 'whatsapp',
@@ -13,7 +15,7 @@ async function rawWhatsappMessage(data){
         'Content-Type': 'application/json'
     };
 
-    return await axios.post('https://graph.facebook.com/v16.0/109457618815544/messages', data, { headers })
+    return await axios.post(`https://graph.facebook.com/${apiVersion}/${phoneNumberID}/messages`, data, { headers })
         .then(response => {
             console.log('Request successful:', response.data);
         })

@@ -1,12 +1,11 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import assertUp from "@/helpers/node/assert/assertUp";
 import { db } from "@/helpers/node/db";
-import { sendTextMessage } from "src/messageHelper";
+import { sendInteractiveMessage, sendTextMessage } from "src/messageHelper";
 import { handleHiResponse, handleQuestionResponses, handleWFResponse, handleCommentResponse, checkResponseTime } from "@/helpers/node/webhookHelpers";
 
 const webhook = new NextExpress();
-const webhookSecret = "2d464c63-249b-4c91-8698-45abda5d3b7b"
-
+const webhookSecret = process.env.WEBHHOK_SECRET;
 
 interface MessageIdObj {
     type?: string,
@@ -18,13 +17,15 @@ interface MessageIdObj {
 
 webhook.get(async (req, res) => {
     const mode = req.query["hub.mode"]
-    const challange = req.query["hub.challenge"]
+    const challenge = req.query["hub.challenge"]
     const token = req.query["hub.verify_token"]
 
-    console.log(req.query, mode, challange, token);
+    console.log(mode, challenge, token, webhookSecret);
 
     if (mode === "subscribe" && token === webhookSecret) {
-        res.status(200).send(challange);
+        console.log("Mode = ",mode)
+        console.log(token,"=",webhookSecret)
+        res.status(200).send(challenge);
     }
     else {
         res.status(403).json({
@@ -62,8 +63,8 @@ webhook.post(async (req, res) => {
 
     console.log("Extracted important variables", waID, message, textBody, messageId);
     if(waID === undefined || message === undefined){
-        res.status(403).json({
-            message: "It is a billing request"
+        res.status(200).json({
+            message: "It is not a message."
         });
         return ;
     }
@@ -90,7 +91,7 @@ webhook.post(async (req, res) => {
     if (assigneDetails === null) {
         console.log("user not registered");
 
-        await sendTextMessage(waID, "You are not registered. Please register your whats number")
+        await sendTextMessage(waID, "You are not registered. Please register your whats app number")
 
         res.status(200).json({
             message: "User not registered"
@@ -117,8 +118,34 @@ webhook.post(async (req, res) => {
 
     console.log("User Session", user_session)
 
-    if (textBody === "Hi") {
+    const textBodyLowerCase = textBody.toLowerCase()
+
+    if (textBodyLowerCase === "hi") {
         try {
+            if(!user_session.has_accepted_policy) {
+                await sendInteractiveMessage(waID, {
+                    body: {
+                        text: "Welcome to Bhasha ChatBot! Please click on below link to accept security policy https://www.whatsapp.com/legal/privacy-policy-eea"
+                    },
+                    type: "button",
+                    action: {
+                        buttons: [
+                            {
+                                type: "reply",
+                                reply: {
+                                    title: "I agree",
+                                    id: JSON.stringify({ type: "PA" }),
+                                }
+                            }
+                        ]
+                    }
+                });
+                res.status(200).json({
+                    message: "Policy sent for acceptance"
+                });
+                return;
+            }
+
             await handleHiResponse(waID, assigneDetails, user_session)
             res.status(200).json({
                 message: "Response of Hi - successfull."
@@ -131,7 +158,7 @@ webhook.post(async (req, res) => {
         }
     }
 
-    if (message?.type === "text" && textBody !== "Hi" && user_session.current_question_uuid) {
+    if (message?.type === "text" && textBodyLowerCase !== "hi" && user_session.current_question_uuid) {
 
         console.log("Entering in comment response flow");
         try {
@@ -161,6 +188,30 @@ webhook.post(async (req, res) => {
     console.log("parsedMessageId type", parsedMessageId.type);
 
     switch (parsedMessageId.type) {
+        case "PA": {
+            console.log("Policy Accepted");
+            try {
+                await db.user_session.update({
+                    where: {
+                        id: user_session.id,
+                    },
+                    data: {
+                        has_accepted_policy: true,
+                    }
+                })
+            await sendTextMessage(waID,"Thanks for accepting the policy. Kindly restart your session.")
+            res.status(200).json({
+                message: "Policy Accepted"
+            });
+            return;
+            } catch (error) {
+                console.log(error);
+                res.status(403).json({
+                    message: "Could'nt able to update the Policy Accepted"
+                });
+                return;
+            }
+        }
         case "WF": {
             try {
                 console.log("Message type detected as worflow selection");
@@ -181,7 +232,11 @@ webhook.post(async (req, res) => {
             if(await checkResponseTime(user_session)) {
                 try {
                     console.log("Message type is of QA");
-                    await handleQuestionResponses(parsedMessageId, user_session, waID, textBody)
+                    const completed = await handleQuestionResponses(parsedMessageId, user_session, waID, textBody)
+                    if(completed) {
+                            const flowID = user_session.check_type;
+                            await handleWFResponse({ type: "WF", wfID: flowID }, user_session, waID)
+                    }
                     res.status(200).json({
                         message: "Question send successfully"
                     });

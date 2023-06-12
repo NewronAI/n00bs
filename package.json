@@ -30,8 +30,7 @@
   },
   "homepage": "https://github.com/NewronAI/datasetu#readme",
   "devDependencies": {
-    "prisma": "^4.14.0",
-    "turbo": "^1.6.3"
+    "prisma": "^4.14.0"
   },
   "scripts": {
     "dev": "turbo dev"

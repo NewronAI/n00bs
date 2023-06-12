@@ -3,17 +3,6 @@ import { db } from "@/helpers/node/db";
 import assertUp from "./assert/assertUp";
 import { task_status } from "@prisma/client";
 
-type QuestionAnswer = {
-    task_assignment_uuid: string,
-    responses: [
-        {
-            question_uuid: string,
-            answer: string
-        }
-    ]
-
-}
-
 async function clearSessionData(session: any) {
     try {
         const clearedSession = await db.user_session.update({
@@ -76,11 +65,11 @@ export async function handleHiResponse(waID: any, assigneDetails: any, session: 
         return `${name}  : ${countValues[index]}`
     }).join("\n")}`;
 
-    const buttons = workflows.map((flow: { id: number; }) => {
+    const buttons = workflows.map((flow) => {
         return {
             type: "reply",
             reply: {
-                title: flow.id === 1 ? "Single Audio Check" : "District Audio Check",
+                title: flow.name,
                 id: JSON.stringify({ type: "WF", wfID: flow.id }),
             }
         }
@@ -175,13 +164,18 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
 
     console.log("Workflow Id got ----------------------------------------------------", messageId.wfID)
     console.log("Check type", session.check_type)
+
+    await clearSessionData(session)
+
     const task_assignment = await getTaskAssingment(messageId.wfID, session.member_id)
+
     if (!task_assignment) {
         await sendTextMessage(waID, `You have no assingments left`)
         return;
     }
 
     const questions = await getQuestions(messageId.wfID, task_assignment?.id);
+
     if (!questions) {
         assertUp(questions, {
             message: "Could Not fetch the questions",
@@ -189,6 +183,7 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
         })
         return;
     }
+
     let responseJSON: { [key: string]: string } = {};
     questions.map((question: { uuid: string | number; }) => {
         responseJSON[question.uuid] = "null";
@@ -211,24 +206,30 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
 }
 
 export async function handleQuestionResponses(messageId: any, session: any, waID: number, textBody: any) {
+
     console.log("Current Question UUID: ", session.current_question_uuid);
     console.log("Recived answer question UUID: ", messageId.questionUUID);
+
     if (session.current_question_uuid !== messageId.questionUUID) {
         console.log("Couldn't match the question uuid")
         await sendTextMessage("Please answer the current question only.")
         return;
     }
+
     if (messageId.expectedAns === textBody || messageId.wfID === 2 || messageId.expectedAns === "") {
-        console.log("Answer recieved is expected answer")
+
+        console.log("Answer recieved is expected answer");
         const task_assignment_id = session.task_assignment_id
         const response = session.responses;
         response[messageId.questionUUID] = textBody;
-        const questions = await getQuestions(messageId.wfID, task_assignment_id)
+        const questions = await getQuestions(messageId.wfID, task_assignment_id);
+
         const filteredQuestions = questions?.filter((question: { uuid: string | number; }) => {
             if (response[question.uuid] === "null") {
                 return question;
             }
         })
+
         if (!filteredQuestions) {
             return;
         }
@@ -239,15 +240,21 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
             await sendTextMessage(waID, filteredQuestions[0].text)
             return;
         }
+
         await sendQuestion(waID, filteredQuestions[0].text, filteredQuestions[0].options, filteredQuestions[0].uuid, filteredQuestions[0].expected_answer, messageId.wfID);
+
     } else if (messageId.expectedAns !== textBody && messageId.wfID === 1) {
+
         const response = session.responses;
-        const responseKeys = Object.keys(response)
+        response[session.current_question_uuid] = textBody;
+        const responseKeys = Object.keys(response);
+
         responseKeys.forEach(key => {
             if (response[key] === "null") {
                 response[key] = "NA"
             }
         });
+
         const upddatedSession = await db.user_session.update({
             where: {
                 id: session.id,
@@ -255,59 +262,61 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
             data: {
                 responses: response
             }
-        })
-        await updateTask(waID,session)
+        });
+
+        await updateTask(waID, upddatedSession);
+        return true;
     }
 }
 
-async function updateTask(waID: any,session: any) {
+async function updateTask(waID: any, session: any) {
 
-    const questionIds : number[] = [];
-    const answers: string[] = []
-    const expectedAnswers: (string | null)[] = []
-
+    const expectedAnswers: (string | null)[] = [];
     const responses = session.responses;
-    Object.keys(responses).forEach(async questionUUID => {
+
+    console.log("Responses recieved",responses);
+
+    const qandas = await Promise.all(Object.keys(responses).map(async questionUUID => {
         const question = await db.question.findFirstOrThrow({
             where: {
                 uuid: questionUUID,
             }
         })
+        expectedAnswers.push(question.expected_answer);
+        return { question_id: question.id, answer: responses[questionUUID] }
+    }))
 
-        questionIds.push(question.id);
-        answers.push(responses[questionUUID]);
-        expectedAnswers.push(question.expected_answer)
-    })
+    console.log("Question ID and Answers array created",qandas);
 
-    try {
-        const [writeStatus] = await db.$transaction([
+    console.log("Started the creating task answer process for this session",session);
+
+    const [writeStatus] = await db.$transaction([
         db.task_answer.createMany({
-            data: questionIds.map((questionID, index) => {
+            data: qandas.map((response, i) => {
                 return {
                     task_assignment_id: session.task_assignment_id,
-                    question_id: questionID,
-                    answer: answers[index],
-                    is_expected: expectedAnswers[index] ? answers[index] === expectedAnswers[index] : null
+                    question_id: response.question_id,
+                    answer: response.answer,
+                    is_expected: expectedAnswers[i] ? response.answer === expectedAnswers[i] : null
                 }
             })
         }),
         db.task_assignment.update({
             where: {
-                id: session.task_assignment_id,
+                id: session.task_assignment_id
             },
             data: {
                 status: task_status.in_progress
             }
         })
     ]);
-        console.log("Task Answers", writeStatus)
-    } catch (e) {
-        console.log(e);
-    }
-    await sendTextMessage(waID,"Your response have been saved.")
+
+    console.log("Finished the Task Answer create process",writeStatus);
+    await sendTextMessage(waID, "Your response have been saved.")
 }
 
 export async function handleCommentResponse(waID: string, session: any, textBody: string) {
+
     const questions = await getQuestions(1, session.task_assignment_id)
     console.log("Question :", questions)
 
@@ -334,7 +343,7 @@ export async function handleCommentResponse(waID: string, session: any, textBody
     console.log("Last question", question?.question_type)
     const response = session.responses;
     response[session.current_question_uuid] = textBody;
-    console.log("Responses", response)
+    console.log("Responses", response);
 
     const upddatedSession = await db.user_session.update({
         where: {
@@ -343,8 +352,9 @@ export async function handleCommentResponse(waID: string, session: any, textBody
         data: {
             responses: response
         }
-    })
-    await updateTask(waID,session)
+    });
+
+    await updateTask(waID, upddatedSession);
     return true;
 }
 
