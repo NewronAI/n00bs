@@ -29,7 +29,7 @@ const AssignedFilesPage = (_props: assignedFilesPageProps) => {
 
     const { data, error, isLoading } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/file/assigned`, (url) => fetch(url).then(res => res.json()));
     const files = data || [];
-    console.log(files)
+    console.log("files",files)
 
     if (error) {
         return <div>Error fetching data: {error.message}</div>
@@ -67,6 +67,7 @@ const AssignedFilesPage = (_props: assignedFilesPageProps) => {
                             defaultColDef={{
                                 flex: 1,
                                 minWidth: 100,
+                                // maxWidth:400,
                                 // allow every column to be aggregated
                                 enableValue: true,
                                 // allow every column to be grouped
@@ -90,6 +91,9 @@ const AssignedFilesPage = (_props: assignedFilesPageProps) => {
                                 { headerName: "File Path", field: "file", sortable: true, filter: true, width: 500, cellRenderer: UrlRenderer },
                                 { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
                                 { headerName: "Created at", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 150 },
+                                ...(files.some((file: any) => file.metadata) ? [
+                                    { headerName: "Transcription", field: "metadata.transcription_text", width: 200 }
+                                ] : [])
                             ]} />
                     </div>
                 </Loader>

@@ -398,6 +398,9 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                                     },
                                     width: 150
                                 },
+                                ...(files.some((file: any) => file.metadata) ? [
+                                    { headerName: "Transcription", field: "metadata.transcription_text", width: 200 }
+                                ] : [])
 
 
                             ]}
