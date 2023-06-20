@@ -225,10 +225,11 @@ const Tasks = (_props: TaskFilesPage) => {
                                     },
                                     width: 120
                                 },
-                                { headerName: 'Name', field: 'assignee.name' },
-                                { headerName: 'Email', field: 'assignee.email' },
-                                { headerName: 'Member District', field: 'assignee.district' },
-                                { headerName: 'Member State', field: 'assignee.state' },
+                                { headerName: 'Assignee Name', field: 'assignee.name' },
+                                { headerName: 'Assignee Email', field: 'assignee.email' },
+                                { headerName: 'Assignee Ph.no', field: 'assignee.phone' },
+                                { headerName: 'Assignee District', field: 'assignee.district' },
+                                { headerName: 'Assignee State', field: 'assignee.state' },
                             ]}
                         />
                     </div>
