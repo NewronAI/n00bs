@@ -17,13 +17,15 @@ interface MessageIdObj {
 
 webhook.get(async (req, res) => {
     const mode = req.query["hub.mode"]
-    const challange = req.query["hub.challenge"]
+    const challenge = req.query["hub.challenge"]
     const token = req.query["hub.verify_token"]
 
-    console.log(req.query, mode, challange, token);
+    console.log(mode, challenge, token, webhookSecret);
 
     if (mode === "subscribe" && token === webhookSecret) {
-        res.status(200).send(challange);
+        console.log("Mode = ",mode)
+        console.log(token,"=",webhookSecret)
+        res.status(200).send(challenge);
     }
     else {
         res.status(403).json({
@@ -197,7 +199,7 @@ webhook.post(async (req, res) => {
                         has_accepted_policy: true,
                     }
                 })
-            await sendTextMessage(waID,"Thanks for accepting the policy. Kindly restart your session.")
+            await sendTextMessage(waID,"Thanks for accepting the policy. Please start the session again by sending ‘Hi’.")
             res.status(200).json({
                 message: "Policy Accepted"
             });

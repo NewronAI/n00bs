@@ -41,7 +41,7 @@ const FlattenedView = () => {
 
   const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer`, { refreshInterval: 24 * 60 * 60 * 1000 });
   const files = data || [];
-  console.log("files", files);
+  // console.log("files", files);
 
   const flattendData: any = []
 
@@ -53,10 +53,10 @@ const FlattenedView = () => {
     }
   })
 
-  console.log("FlattendData", flattendData)
+  // console.log("FlattendData", flattendData)
 
   const { data: questionData, error: questionFetchError, isLoading: questionFetchLoading } = useSWRImmutable(`/api/v1/${workflowUUID}/question`)
-  console.log("question", questionData)
+  // console.log("question", questionData)
 
   async function onCellValueChanged(event: any, questionUUID: string) {
     const newValue = event.newValue;
@@ -123,14 +123,17 @@ const FlattenedView = () => {
     ...dynamicColumnDef,
     ...[{
       headerName: "Rating ", field: "rating", width: 400, cellRenderer: (props: any) => (<RatingRenderer onRatingChange={(rating, data) => {
-        updatedLocalRating(data.uuid, rating)
+        updatedLocalRating(data.task_assignments.uuid, rating)
+        console.log("data--------------", data);
       }}
-        {...props} oldRating={(data: { uuid: string; }) => taskRatings.get(data?.uuid)} />)
+        {...props} oldRating={(data: {
+          task_assignments: any; uuid: string;
+        }) => taskRatings.get(data.task_assignments.uuid)} />)
     }]
   ];
 
   const handleRate = () => {
-    console.log(taskRatings)
+    console.log("taskRatings", taskRatings)
     setUpdatingReviews(true);
     axios.post(`/api/v1/${workflowUUID}/review_answers`, Array.from(taskRatings))
       .then(_response => {
@@ -138,9 +141,7 @@ const FlattenedView = () => {
         mutate().then(() => {
           console.log("files updated");
           toast("Review Posted", { type: "success" });
-
         });
-
       })
       .catch(error => {
         console.error(error);
@@ -148,7 +149,12 @@ const FlattenedView = () => {
         toast("Error posting review", { type: "error" });
       })
     setTaskRatings(new Map<string, number>())
+    console.log(taskRatings)
   }
+  if (error || questionFetchError) {
+    return <div>Error fetching</div>
+  }
+
 
   const ActionItem = () => <div>
     <button className={clsx("btn", { "btn-secondary": true })} onClick={handleRate}>
@@ -165,7 +171,7 @@ const FlattenedView = () => {
         <div className={"mt-2 flex justify-between"}>
           <div className={"p-0 md:pl-4"}>
             <h1 id={""} className={"text-xl font-semibold"}>
-              Flattened View
+              Unreviewed Flattened View
             </h1>
             <p className={"font-thin text-sm"}>
               In the Flattened View, tasks addressed by a team member
