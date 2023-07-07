@@ -4,10 +4,11 @@ const path = require('path');
 const directoryPath = '/data2/data_nginx/single_audio/dummy'; // Replace with the actual directory path
 
 function getFileLink(relativePath) {
-  // Implement your logic to generate the file link based on the relative path
-  // For example, if the files are accessible through a web server, you can prepend the server URL to the relative path
-  return `https://example.com/files/${relativePath}`;
-}
+    const fileLocation = "dummy/" + relativePath;
+    const encodedFileLocation = encodeURIComponent(fileLocation)
+    const fileLink = `http://vaani.qc.artpark.in/single_audio/?a=${encodedFileLocation}`;
+    return fileLink
+  }
 
 function createLinksAndPostRequest(directoryPath) {
   const filesData = [];
