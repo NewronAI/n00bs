@@ -11,7 +11,7 @@ function getFileLink(relativePath) {
     return fileLink
   }
 
-function createLinksAndPostRequest(directoryPath) {
+async function createLinksAndPostRequest(directoryPath) {
   const filesData = [];
 
   // Read the state folders in the directory
@@ -60,7 +60,7 @@ function createLinksAndPostRequest(directoryPath) {
     data: filesData
   };
 
-  axios.post('https://qc.artpark.in/api/v1/2ddba7f3-798c-40bb-b687-d25a7180982a/public/file', requestBody)
+  const response = await axios.post('https://qc.artpark.in/api/v1/2ddba7f3-798c-40bb-b687-d25a7180982a/public/file', requestBody)
     .then((response) => {
       console.log('POST request successful:', response.data);
     })
@@ -70,4 +70,4 @@ function createLinksAndPostRequest(directoryPath) {
   console.log("Making request", filesData)
 }
 
-createLinksAndPostRequest(directoryPath);
+await createLinksAndPostRequest(directoryPath);
