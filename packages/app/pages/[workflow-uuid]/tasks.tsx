@@ -180,41 +180,57 @@ const Tasks = (_props: TaskFilesPage) => {
                                 { headerName: 'File District', field: 'workflow_file.district', rowGroup: true },
                                 { headerName: 'File Name', field: 'workflow_file.file_name', cellRenderer: FilenameRenderer, width: 450, rowGroup: true },
                                 { headerName: "Vendor", field: "workflow_file.vendor", sortable: true, filter: true, width: 150 },
-                                { headerName: 'Created At', field: 'createdAt', cellRenderer: DateFromNowRenderer },
-                                { headerName: "Received at", field: "workflow_file.receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
-                                // {
-                                //     headerName: "Received at",
-                                //     field: "workflow_file.receivedAt",
-                                //     sortable: true,
-                                //     filter: true,
-                                //     cellRenderer: function (params: any) {
-                                //         var receivedAt = params.value;
-                                //         var formattedDate = '';
-
-                                //         if (receivedAt) {
-                                //             var date = new Date(receivedAt);
-                                //             var day = date.getDate().toString().padStart(2, '0');
-                                //             var month = (date.getMonth() + 1).toString().padStart(2, '0');
-                                //             var year = date.getFullYear();
-                                //             formattedDate = day + '/' + month + '/' + year;
-                                //         }
-
-                                //         return formattedDate;
-                                //     },
-                                //     width: 120
-                                // },
-
                                 {
-                                    headerName: "File Received at",
-                                    field: "workflow_file.receivedAt",
-                                    sortable: true,
-                                    filter: true,
+                                    headerName: 'Created At', field: 'createdAt',
+                                    // cellRenderer: DateFromNowRenderer
+                                    cellRenderer: (params: any) => {
+                                        const createdAt: string = params.value;
+                                        let formattedDate: string = '';
+
+                                        if (createdAt) {
+                                            const date: Date = new Date(createdAt);
+                                            const day: string = date.getDate().toString().padStart(2, '0');
+                                            const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+                                            const year: number = date.getFullYear();
+                                            formattedDate = `${day}/${month}/${year}`;
+                                        }
+
+                                        return formattedDate;
+                                    },
+                                    width: 120
+                                },
+                                {
+                                    headerName: "Received at", field: "workflow_file.receivedAt", sortable: true, filter: true,
+                                    // cellRenderer: DateFromNowRenderer, width: 120
                                     cellRenderer: (params: any) => {
                                         const receivedAt: string = params.value;
                                         let formattedDate: string = '';
 
                                         if (receivedAt) {
                                             const date: Date = new Date(receivedAt);
+                                            const day: string = date.getDate().toString().padStart(2, '0');
+                                            const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+                                            const year: number = date.getFullYear();
+                                            formattedDate = `${day}/${month}/${year}`;
+                                        }
+
+                                        return formattedDate;
+                                    },
+                                    width: 120
+                                },
+                            
+
+                                {
+                                    headerName: "File Received at",
+                                    field: "updatedAt",
+                                    sortable: true,
+                                    filter: true,
+                                    cellRenderer: (params: any) => {
+                                        const updatedAt: string = params.value;
+                                        let formattedDate: string = '';
+
+                                        if (updatedAt) {
+                                            const date: Date = new Date(updatedAt);
                                             const day: string = date.getDate().toString().padStart(2, '0');
                                             const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
                                             const year: number = date.getFullYear();

@@ -17,6 +17,7 @@ import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import useSWRImmutable from 'swr/immutable';
 import UrlRenderer from "@/components/renderer/UrlRenderer";
 import RatingViewer from '@/components/renderer/RatingViewer';
+import moment from 'moment';
 
 
 interface UnassignedFilesPageProps {
@@ -46,7 +47,25 @@ const AcceptedFilesPage = (_props: UnassignedFilesPageProps) => {
         const staticColumnDefs = [
             { headerName: "Assignee Name", field: 'assignee.name', tooltipField: 'assignee.name', tooltipEnable: true },
             { headerName: "Assignee Ph. No", field: 'assignee.phone' },
-            { headerName: "Answered At", field: 'createdAt', cellRenderer: DateFromNowRenderer },
+            {
+                headerName: "Answered At", field: 'createdAt',
+                // cellRenderer: DateFromNowRenderer
+                cellRenderer: (params: any) => {
+                    const createdAt: string = params.value;
+                    let formattedDate: string = '';
+
+                    if (createdAt) {
+                        const date: Date = new Date(createdAt);
+                        const day: string = date.getDate().toString().padStart(2, '0');
+                        const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+                        const year: number = date.getFullYear();
+                        formattedDate = `${day}/${month}/${year}`;
+                    }
+
+                    return formattedDate;
+                },
+                width: 120
+            },
         ]
 
         const dynamicColumnDef = questionData?.map((question: any) => {
@@ -181,11 +200,21 @@ const AcceptedFilesPage = (_props: UnassignedFilesPageProps) => {
                                     cellRenderer: UrlRenderer
                                 },
                                 {
-                                    headerName: "Created At",
+                                    headerName: " Assign At",
                                     field: "createdAt",
-                                    cellRenderer: DateFromNowRenderer
+                                    // cellRenderer: DateFromNowRenderer
+                                    cellRenderer: (data: any) => {
+                                        return moment(data.createdAt).format('MM/DD/YYYY')
+                                    },
+                                    width: 120
                                 },
-                                { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130 },
+                                {
+                                    headerName: "Reviewed at", field: "updatedAt", sortable: true, filter: true,
+                                    cellRenderer: (data: any) => {
+                                        return moment(data.updateAt).format('MM/DD/YYYY')
+                                    }
+                                    , width: 130
+                                },
                                 {
                                     headerName: "File Received at",
                                     field: "receivedAt",

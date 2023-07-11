@@ -232,7 +232,22 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                                 {
                                     headerName: "Recived At",
                                     field: "receivedAt",
-                                    cellRenderer: DateFromNowRenderer
+                                    // cellRenderer: DateFromNowRenderer
+                                    cellRenderer: (params: any) => {
+                                        const receivedAt: string = params.value;
+                                        let formattedDate: string = '';
+
+                                        if (receivedAt) {
+                                            const date: Date = new Date(receivedAt);
+                                            const day: string = date.getDate().toString().padStart(2, '0');
+                                            const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+                                            const year: number = date.getFullYear();
+                                            formattedDate = `${day}/${month}/${year}`;
+                                        }
+
+                                        return formattedDate;
+                                    },
+                                    width: 120
                                 },
 
                                 {

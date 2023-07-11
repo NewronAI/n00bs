@@ -17,6 +17,7 @@ import withAuthorizedPageAccess from "@/helpers/react/withAuthorizedPageAccess";
 import useSWRImmutable from 'swr/immutable';
 import UrlRenderer from "@/components/renderer/UrlRenderer";
 import RatingViewer from '@/components/renderer/RatingViewer';
+import moment from 'moment';
 
 
 
@@ -56,31 +57,34 @@ const Flattened_approved_answer = (_props: UnassignedFilesPageProps) => {
     { headerName: "State", field: "state", },
     { headerName: "File", field: "file", cellRenderer: UrlRenderer },
     { headerName: "Created At", field: "createdAt", cellRenderer: DateFromNowRenderer },
-    { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130 },
+    {
+      headerName: "Received at", field: "receivedAt", sortable: true, filter: true,
+      cellRenderer: (data: any) => {
+        return moment(data.receivedAt).format('MM/DD/YYYY')
+      }
+      , width: 130
+
+    },
     {
       headerName: "File Received at",
       field: "receivedAt",
       sortable: true,
       filter: true,
-      cellRenderer: (params: any) => {
-        const receivedAt: string = params.value;
-        let formattedDate: string = '';
 
-        if (receivedAt) {
-          const date: Date = new Date(receivedAt);
-          const day: string = date.getDate().toString().padStart(2, '0');
-          const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
-          const year: number = date.getFullYear();
-          formattedDate = `${day}/${month}/${year}`;
-        }
-        return formattedDate;
-      },
-
-      width: 120
+      cellRenderer: (data: any) => {
+        return moment(data.updateAt).format('MM/DD/YYYY')
+      }
+      , width: 130
     },
     { headerName: "Assignee Name", field: 'task_assignments.assignee.name', width: 120 },
     { headerName: "Assignee Ph. No", field: 'task_assignments.assignee.phone' },
-    { headerName: "Answered At", field: 'createdAt', cellRenderer: DateFromNowRenderer },
+    {
+      headerName: "Answered At", field: 'createdAt',
+      cellRenderer: (data: any) => {
+        return moment(data.createdAt).format('MM/DD/YYYY')
+      }
+      , width: 130
+    },
   ]
 
 
