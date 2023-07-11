@@ -71,27 +71,20 @@ async function checkFile(filename, filepath) {
 
   if (existsSync(`${directory}/${filename}`)) {
     logStream.write(`Audio file is present\n `);
-    return true
+    return true;
   } else {
     logStream.write(`Audio file is not present \n`);
-    return false
+    return false;
   }
 }
 
 async function copyAndCheckImage(imageName) {
   if(existsSync(`${imagesDirPath}/${imageName}.jpg`)) {
     console.log("Image found in local directory")
-    return true
+    return true;
   } else {
-    try {
-      await exec(`scp -r -i $HOME/.ssh/id_rsa_ldai artpark@34.93.48.56:/data2/Database/2023-03-22/Images/Images_Mar23/${imageName}.jpg /home/Anshul/files/images/Images_Mar23
-      `);
-      console.log(imageName, "Image found in artpark instance and downloaded")
-      return true
-    } catch (e) {
       console.log(imageName, "Image not in local and artpark instance found")
-      return false
-    }
+      return false;
   }
 }
 
@@ -101,7 +94,7 @@ function getFileLink(fileLocation, imageLocation) {
   const encodedFileLocation = encodeURIComponent(fileLocation)
   const encodedImageLocation = encodeURIComponent(imageLocationParts[4] + "/" + imageLocationParts[5] + "/" + imageLocationParts[6] + ".jpg")
   const fileLink = `http://35.222.19.219/?a=${encodedFileLocation}&i=${encodedImageLocation}`
-  return fileLink
+  return fileLink;
 }
 
 logStream.write(`Reading CSV file located in ${csvFilePath} \n `);

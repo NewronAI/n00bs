@@ -1,23 +1,12 @@
 const { promisify } = require("util");
 const fs = require('fs');
-const Papa = require('papaparse');
 const child_process = require("child_process");
 import { existsSync } from "fs";
 
-const csvFilename = process.argv[3];
-const batch = process.argv[4];
-const vendor = process.argv[5];
+const batch = process.argv[3];
+const vendor = process.argv[4];
 
 const exec = promisify(child_process.exec);
-
-if(csvFilename.slice(-3) !== "csv") {
-    throw new Error(`File ${csvFilename} is not csv format. The format is ${csvFilename.slice(0,-3)}`);
-}
-
-const csvContents = fs.readFileSync(csvFilename, 'utf-8');
-const { data: csvData } = Papa.parse(csvContents)
-
-console.log(csvData);
 
 if(!existsSync(`/data2/data_nginx/single_audio/${vendor}/audios/${batch}`)) {
     await exec(`mkdir /data2/data_nginx/single_audio/${vendor}/audios/${batch}`)
