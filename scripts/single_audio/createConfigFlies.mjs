@@ -2,9 +2,11 @@ const { promisify } = require("util");
 const fs = require('fs');
 const Papa = require('papaparse');
 const child_process = require("child_process");
-import { existsSync } from "fs"
+import { existsSync } from "fs";
 
 const csvFilename = process.argv[3];
+const batch = process.argv[4];
+const vendor = process.argv[5];
 
 const exec = promisify(child_process.exec);
 
@@ -15,18 +17,14 @@ if(csvFilename.slice(-3) !== "csv") {
 const csvContents = fs.readFileSync(csvFilename, 'utf-8');
 const { data: csvData } = Papa.parse(csvContents)
 
-console.log(csvData)
+console.log(csvData);
 
-// const parts = csvData[0][1].split("/");
-// const vendor = parts[0];
-// const batchDate = parts[2];
-
-// if(!existsSync(`/home/Anshul/files/videos/${vendor}/single_audios/${batchDate}`)) {
-//     await exec(`sudo mkdir /home/Anshul/files/videos/${vendor}/single_audios/${batchDate}`)
-//     console.log(`${batchDate} folder created in /home/Anshul/files/videos/${vendor}/single_audios/`)
-// } else {
-//     console.log(`Directory is already there /home/Anshul/files/videos/${vendor}/single_audios/${batchDate}`)
-// }
+if(!existsSync(`/data2/data_nginx/single_audio/${vendor}/audios/${batchDate}`)) {
+    await exec(`mkdir /data2/data_nginx/single_audio/${vendor}/audios/${batchDate}`)
+    console.log(`${batchDate} folder created in /data2/data_nginx/single_audio/${vendor}/audios/${batchDate}`)
+} else {
+    console.log(`Directory is already there /data2/data_nginx/single_audio/${vendor}/audios/${batchDate}`)
+}
 
 // if(!existsSync(`/home/Anshul/files/${vendor}/single_audio/${batchDate}`)) {
 //     console.log(`Copying the audio files`)
