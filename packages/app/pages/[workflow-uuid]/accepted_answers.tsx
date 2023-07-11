@@ -58,7 +58,7 @@ const AcceptedFilesPage = (_props: UnassignedFilesPageProps) => {
             ...staticColumnDefs,
             ...dynamicColumnDef,
             ...[{
-                headerName: "Rating", field: "review_rating", cellRenderer: RatingViewer
+                headerName: "Rating", field: "review_rating", minWidth: 100, cellRenderer: RatingViewer
             }]
         ];
 

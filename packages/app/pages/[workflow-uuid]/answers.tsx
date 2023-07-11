@@ -78,7 +78,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
             ...staticColumnDefs,
             ...dynamicColumnDef,
             ...[{
-                headerName: "Rating", field: "rating", cellRenderer: (props: any) => (<RatingRenderer onRatingChange={(rating, data) => {
+                headerName: "Rating", field: "rating", minWidth: 150, cellRenderer: (props: any) => (<RatingRenderer onRatingChange={(rating, data) => {
                     updatedLocalRating(data.uuid, rating)
                 }}
                     {...props} oldRating={(data: { uuid: string; }) => taskRatings.get(data.uuid)} />)
@@ -90,6 +90,9 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                 columnDefs: colDef,
                 defaultColDef: {
                     flex: 1,
+                    overflow: 'auto'
+
+
                 },
             },
             getDetailRowData: function (params: any) {
