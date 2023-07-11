@@ -48,14 +48,52 @@ const AcceptedFilesPage = (_props: UnassignedFilesPageProps) => {
             { headerName: "Assignee Name", field: 'assignee.name', tooltipField: 'assignee.name', tooltipEnable: true },
             { headerName: "Assignee Ph. No", field: 'assignee.phone' },
             {
-                headerName: "Answered At", field: 'createdAt',
+                headerName: "Assinged At", field: 'createdAt',
                 // cellRenderer: DateFromNowRenderer
                 cellRenderer: (params: any) => {
-                    const createdAt: string = params.value;
+                    const receivedAt: string = params.value;
                     let formattedDate: string = '';
 
-                    if (createdAt) {
-                        const date: Date = new Date(createdAt);
+                    if (receivedAt) {
+                        const date: Date = new Date(receivedAt);
+                        const day: string = date.getDate().toString().padStart(2, '0');
+                        const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+                        const year: number = date.getFullYear();
+                        formattedDate = `${day}/${month}/${year}`;
+                    }
+
+                    return formattedDate;
+                },
+                width: 120
+            },
+            {
+                headerName: "Answered At", field: 'answerAt',
+                // cellRenderer: DateFromNowRenderer
+                cellRenderer: (params: any) => {
+                    const receivedAt: string = params.value;
+                    let formattedDate: string = '';
+
+                    if (receivedAt) {
+                        const date: Date = new Date(receivedAt);
+                        const day: string = date.getDate().toString().padStart(2, '0');
+                        const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+                        const year: number = date.getFullYear();
+                        formattedDate = `${day}/${month}/${year}`;
+                    }
+
+                    return formattedDate;
+                },
+                width: 120
+            },
+            {
+                headerName: "Reviewd At", field: 'updatedAt',
+                // cellRenderer: DateFromNowRenderer
+                cellRenderer: (params: any) => {
+                    const receivedAt: string = params.value;
+                    let formattedDate: string = '';
+
+                    if (receivedAt) {
+                        const date: Date = new Date(receivedAt);
                         const day: string = date.getDate().toString().padStart(2, '0');
                         const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
                         const year: number = date.getFullYear();
@@ -199,22 +237,22 @@ const AcceptedFilesPage = (_props: UnassignedFilesPageProps) => {
                                     field: "file",
                                     cellRenderer: UrlRenderer
                                 },
-                                {
-                                    headerName: " Assign At",
-                                    field: "createdAt",
-                                    // cellRenderer: DateFromNowRenderer
-                                    cellRenderer: (data: any) => {
-                                        return moment(data.createdAt).format('MM/DD/YYYY')
-                                    },
-                                    width: 120
-                                },
-                                {
-                                    headerName: "Reviewed at", field: "updatedAt", sortable: true, filter: true,
-                                    cellRenderer: (data: any) => {
-                                        return moment(data.updateAt).format('MM/DD/YYYY')
-                                    }
-                                    , width: 130
-                                },
+                                // {
+                                //     headerName: " Assigned At",
+                                //     field: "createdAt",
+                                //     // cellRenderer: DateFromNowRenderer
+                                //     cellRenderer: (data: any) => {
+                                //         return moment(data.createdAt).format('MM/DD/YYYY')
+                                //     },
+                                //     width: 120
+                                // },
+                                // {
+                                //     headerName: "Reviewed at", field: "updatedAt", sortable: true, filter: true,
+                                //     cellRenderer: (data: any) => {
+                                //         return moment(data.updateAt).format('MM/DD/YYYY')
+                                //     }
+                                //     , width: 130
+                                // },
                                 {
                                     headerName: "File Received at",
                                     field: "receivedAt",

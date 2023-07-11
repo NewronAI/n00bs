@@ -41,6 +41,7 @@ const RejectedFilesPage = (_props: UnassignedFilesPageProps) => {
     const workflowUUID = router.query["workflow-uuid"] as string;
     const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer/answer_rejected`);
     const files = data || [];
+    console.log({files})
 
 
     const { data: questionData, error: questionFetchError, isLoading: questionFetchLoading } = useSWRImmutable(`/api/v1/${workflowUUID}/question`)
@@ -63,7 +64,48 @@ const RejectedFilesPage = (_props: UnassignedFilesPageProps) => {
             },
             { headerName: "Assignee Name", field: 'assignee.name', tooltipField: 'assignee.name', tooltipEnable: true },
             { headerName: "Assignee Ph. No", field: 'assignee.phone' },
-            { headerName: "Answered At", field: 'createdAt', cellRenderer: DateFromNowRenderer },
+            { headerName: "Assinged At", field: 'createdAt', cellRenderer:  (params: any) => {
+                const receivedAt: string = params.value;
+                let formattedDate: string = '';
+          
+                if (receivedAt) {
+                    const date: Date = new Date(receivedAt);
+                    const day: string = date.getDate().toString().padStart(2, '0');
+                    const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+                    const year: number = date.getFullYear();
+                    formattedDate = `${day}/${month}/${year}`;
+                }
+          
+                return formattedDate;
+             } },
+             { headerName: "Answered At", field: 'answerAt', cellRenderer:  (params: any) => {
+                const receivedAt: string = params.value;
+                let formattedDate: string = '';
+          
+                if (receivedAt) {
+                    const date: Date = new Date(receivedAt);
+                    const day: string = date.getDate().toString().padStart(2, '0');
+                    const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+                    const year: number = date.getFullYear();
+                    formattedDate = `${day}/${month}/${year}`;
+                }
+          
+                return formattedDate;
+             } },
+             { headerName: "Reviewed At", field: 'updatedAt', cellRenderer:  (params: any) => {
+                const receivedAt: string = params.value;
+                let formattedDate: string = '';
+          
+                if (receivedAt) {
+                    const date: Date = new Date(receivedAt);
+                    const day: string = date.getDate().toString().padStart(2, '0');
+                    const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+                    const year: number = date.getFullYear();
+                    formattedDate = `${day}/${month}/${year}`;
+                }
+          
+                return formattedDate;
+             } },
         ]
 
         const dynamicColumnDef = questionData?.map((question: any) => {
@@ -236,12 +278,6 @@ const RejectedFilesPage = (_props: UnassignedFilesPageProps) => {
                                     field: "file",
                                     cellRenderer: UrlRenderer
                                 },
-                                {
-                                    headerName: "Created At",
-                                    field: "createdAt",
-                                    cellRenderer: DateFromNowRenderer
-                                },
-                                { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130 },
                                 {
                                     headerName: "File Received at",
                                     field: "receivedAt",

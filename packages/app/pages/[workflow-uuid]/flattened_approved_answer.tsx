@@ -56,35 +56,81 @@ const Flattened_approved_answer = (_props: UnassignedFilesPageProps) => {
     { headerName: "District", field: "district", },
     { headerName: "State", field: "state", },
     { headerName: "File", field: "file", cellRenderer: UrlRenderer },
-    { headerName: "Created At", field: "createdAt", cellRenderer: DateFromNowRenderer },
-    {
-      headerName: "Received at", field: "receivedAt", sortable: true, filter: true,
-      cellRenderer: (data: any) => {
-        return moment(data.receivedAt).format('MM/DD/YYYY')
-      }
-      , width: 130
+    { headerName: "Assinged At", field: "task_assignments.createdAt", cellRenderer: (params: any) => {
+      const receivedAt: string = params.value;
+      let formattedDate: string = '';
 
-    },
+      if (receivedAt) {
+          const date: Date = new Date(receivedAt);
+          const day: string = date.getDate().toString().padStart(2, '0');
+          const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+          const year: number = date.getFullYear();
+          formattedDate = `${day}/${month}/${year}`;
+      }
+
+      return formattedDate;
+  }, },
+    // {
+    //   headerName: "Received at", field: "receivedAt", sortable: true, filter: true,
+    //   cellRenderer: (data: any) => {
+    //     return moment(data.receivedAt).format('MM/DD/YYYY')
+    //   }
+    //   , width: 130
+
+    // },
     {
       headerName: "File Received at",
       field: "receivedAt",
       sortable: true,
       filter: true,
 
-      cellRenderer: (data: any) => {
-        return moment(data.updateAt).format('MM/DD/YYYY')
-      }
-      , width: 130
-    },
+      cellRenderer: (params: any) => {
+        const receivedAt: string = params.value;
+        let formattedDate: string = '';
+
+        if (receivedAt) {
+            const date: Date = new Date(receivedAt);
+            const day: string = date.getDate().toString().padStart(2, '0');
+            const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year: number = date.getFullYear();
+            formattedDate = `${day}/${month}/${year}`;
+        }
+
+        return formattedDate;
+    }, width: 130 },
     { headerName: "Assignee Name", field: 'task_assignments.assignee.name', width: 120 },
     { headerName: "Assignee Ph. No", field: 'task_assignments.assignee.phone' },
     {
-      headerName: "Answered At", field: 'createdAt',
-      cellRenderer: (data: any) => {
-        return moment(data.createdAt).format('MM/DD/YYYY')
-      }
-      , width: 130
+      headerName: "Answered At", field: 'task_assignments.answerAt',
+      cellRenderer: (params: any) => {
+        const receivedAt: string = params.value;
+        let formattedDate: string = '';
+
+        if (receivedAt) {
+            const date: Date = new Date(receivedAt);
+            const day: string = date.getDate().toString().padStart(2, '0');
+            const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year: number = date.getFullYear();
+            formattedDate = `${day}/${month}/${year}`;
+        }
+
+        return formattedDate;
+    }, width: 130
     },
+    { headerName: "Reviewd At", field: "task_assignments.updatedAt", cellRenderer: (params: any) => {
+      const receivedAt: string = params.value;
+      let formattedDate: string = '';
+
+      if (receivedAt) {
+          const date: Date = new Date(receivedAt);
+          const day: string = date.getDate().toString().padStart(2, '0');
+          const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+          const year: number = date.getFullYear();
+          formattedDate = `${day}/${month}/${year}`;
+      }
+
+      return formattedDate;
+  }, },
   ]
 
 
@@ -100,7 +146,7 @@ const Flattened_approved_answer = (_props: UnassignedFilesPageProps) => {
       headerName: "Rating", field: "task_assignments.review_rating", cellRenderer: RatingViewer
     }]
   ];
-
+console.log(approvedflattendData);
 
 
   return (

@@ -48,15 +48,16 @@ answersAPI.get(async (req, res) => {
             ...taskAssignmentRejecte,
             task_assignments: taskAssignmentRejecte.task_assignments.map((taskAssignment) => {
                 const processedTaskAnswer = new Map<string, string>();
-
+                let answerAt;
                 taskAssignment.task_answers.forEach((taskAnswer) => {
                     processedTaskAnswer.set(taskAnswer.question.uuid, taskAnswer.answer);
+                    answerAt = taskAnswer.createdAt;
                 });
-
 
                 return {
                     ...taskAssignment,
-                    task_answers: Object.fromEntries(processedTaskAnswer)
+                    task_answers: Object.fromEntries(processedTaskAnswer),
+                    answerAt
                 }
             })
         }
