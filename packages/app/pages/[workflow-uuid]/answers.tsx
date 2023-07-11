@@ -67,7 +67,21 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
         const staticColumnDefs = [
             { headerName: "Assignee Name", field: 'assignee.name', tooltipField: 'assignee.name', tooltipEnable: true },
             { headerName: "Assignee Ph. No", field: 'assignee.phone' },
-            { headerName: "Answered At", field: 'createdAt', cellRenderer: (params: any) => {
+            { headerName: "Assinged At", field: 'createdAt', cellRenderer: (params: any) => {
+                const receivedAt: string = params.value;
+                let formattedDate: string = '';
+
+                if (receivedAt) {
+                    const date: Date = new Date(receivedAt);
+                    const day: string = date.getDate().toString().padStart(2, '0');
+                    const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+                    const year: number = date.getFullYear();
+                    formattedDate = `${day}/${month}/${year}`;
+                }
+
+                return formattedDate;
+            }},
+            { headerName: "Answered At", field: 'updatedAt', cellRenderer: (params: any) => {
                 const receivedAt: string = params.value;
                 let formattedDate: string = '';
 
@@ -237,32 +251,6 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                                     field: "file",
                                     cellRenderer: UrlRenderer
                                 },
-                                {
-                                    headerName: "Created At",
-                                    field: "createdAt",
-                                    cellRenderer: DateFromNowRenderer
-                                },
-                                {
-                                    headerName: "Recived At",
-                                    field: "receivedAt",
-                                    // cellRenderer: DateFromNowRenderer
-                                    cellRenderer: (params: any) => {
-                                        const receivedAt: string = params.value;
-                                        let formattedDate: string = '';
-
-                                        if (receivedAt) {
-                                            const date: Date = new Date(receivedAt);
-                                            const day: string = date.getDate().toString().padStart(2, '0');
-                                            const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
-                                            const year: number = date.getFullYear();
-                                            formattedDate = `${day}/${month}/${year}`;
-                                        }
-
-                                        return formattedDate;
-                                    },
-                                    width: 120
-                                },
-
                                 {
                                     headerName: "File Received at",
                                     field: "receivedAt",
