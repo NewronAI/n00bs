@@ -19,11 +19,11 @@ const { data: csvData } = Papa.parse(csvContents)
 
 console.log(csvData);
 
-if(!existsSync(`/data2/data_nginx/single_audio/${vendor}/audios/${batchDate}`)) {
-    await exec(`mkdir /data2/data_nginx/single_audio/${vendor}/audios/${batchDate}`)
-    console.log(`${batchDate} folder created in /data2/data_nginx/single_audio/${vendor}/audios/${batchDate}`)
+if(!existsSync(`/data2/data_nginx/single_audio/${vendor}/audios/${batch}`)) {
+    await exec(`mkdir /data2/data_nginx/single_audio/${vendor}/audios/${batch}`)
+    console.log(`${batch} folder created in /data2/data_nginx/single_audio/${vendor}/audios/${batch}`)
 } else {
-    console.log(`Directory is already there /data2/data_nginx/single_audio/${vendor}/audios/${batchDate}`)
+    console.log(`Directory is already there /data2/data_nginx/single_audio/${vendor}/audios/${batch}`)
 }
 
 // if(!existsSync(`/home/Anshul/files/${vendor}/single_audio/${batchDate}`)) {
