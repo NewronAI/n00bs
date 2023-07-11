@@ -64,7 +64,7 @@ const filename = `${batch}_${vendor}_config.json`;
 
 // Create the JSON file
 console.log("Creating Config file")
-fs.writeFile(`/data2/data_nginx/single_audio/${vendor}/configFiles`, JSON.stringify(data), err => {
+fs.writeFile(`/data2/data_nginx/single_audio/${vendor}/configFiles/${filename}`, JSON.stringify(data), err => {
   if (err) throw err;
   console.log('JSON file has been saved!');
 });
