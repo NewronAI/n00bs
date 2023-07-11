@@ -33,36 +33,38 @@ if(!existsSync(`/data2/data_nginx/single_audio/${vendor}/audios/${batch}`)) {
 //     console.log("Audio files are already present")
 // }
 
-// if(!existsSync(`/home/Anshul/files/Logs/ImageNotFound/${batchDate}_${vendor}`)) {
-//     console.log(`Creating the directory /home/Anshul/files/Logs/ImageNotFound/${batchDate}_${vendor}`)
-//     await exec(`mkdir /home/Anshul/files/Logs/ImageNotFound/${batchDate}_${vendor}`)
-//     await exec(`sudo chmod 777 /home/Anshul/files/Logs/ImageNotFound/${batchDate}_${vendor}`)
-// }
+if(!existsSync(`/data2/data_nginx/single_audio/${vendor}/notFoundImages/${batch}`)) {
+    await exec(`mkdir /data2/data_nginx/single_audio/${vendor}/notFoundImages/${batch}`)
+    console.log(`Created Folder /data2/data_nginx/single_audio/${vendor}/notFoundImages/${batch}`)
+}
 
-// if(!existsSync(`/home/Anshul/files/result/single_audio/${vendor}/${batchDate}`)) {
-//     console.log(`Creating the directory /home/Anshul/files/result/single_audio/${vendor}/${batchDate}`)
-//     await exec(`sudo mkdir /home/Anshul/files/result/single_audio/${vendor}/${batchDate}`)
-//     await exec(`sudo chmod 777 /home/Anshul/files/result/single_audio/${vendor}/${batchDate}`)
-// }
+if(!existsSync(`/data2/data_nginx/single_audio/${vendor}/injestionCSV/${batch}`)) {
+    await exec(`mkdir /data2/data_nginx/single_audio/${vendor}/injestionCSV/${batch}`)
+    console.log(`Created the directory /data2/data_nginx/single_audio/${vendor}/injestionCSV/${batch}`)
+}
 
-// let data = {
-//     "vendor": vendor,
-//     "batch": batchDate,
-//     "baseLocation": "/home/Anshul/files",
-//     "imagesDirPath": "/home/Anshul/files/images/Images_Mar23",
-//     "videosDirPath": `/home/Anshul/files/videos/${vendor}/single_audios/${batchDate}`,
-//     "csvFilePath" : csvFilename,
-//     "imageNotFoundDataCsvPath" : `/home/Anshul/files/Logs/ImageNotFound/${batchDate}_${vendor}`,
-//     "logsPath" : "/home/Anshul/Logs",
-//     "resultCSV" : `/home/Anshul/files/result/single_audio/${vendor}/${batchDate}`
-// }
+if(!existsSync(`/data2/data_nginx/single_audio/${vendor}/logs/${batch}`)) {
+    await exec(`mkdir /data2/data_nginx/single_audio/${vendor}/logs/${batch}`)
+    console.log(`Created the directory /data2/data_nginx/single_audio/${vendor}/logs/${batch}`)
+}
 
-// // Define the filename for the JSON file
-// const filename = `${batchDate}_${vendor}_config.json`;
+let data = {
+    "vendor": vendor,
+    "batch": batch,
+    "baseLocation": "/data2/data_nginx/single_audio",
+    "imagesDirPath": "/data2/data_nginx/Images/Images_Mar23",
+    "csvFilePath" : csvFilename,
+    "imageNotFoundDataCsvPath" : `/data2/data_nginx/single_audio/${vendor}/notFoundImages/${batch}`,
+    "logsPath" : `/data2/data_nginx/single_audio/${vendor}/logs/${batch}`,
+    "resultCSV" : `/data2/data_nginx/single_audio/${vendor}/injestionCSV/${batch}`
+}
 
-// // Create the JSON file
-// console.log("Creating Config file")
-// fs.writeFile(`/home/Anshul/files/configFiles/${filename}`, JSON.stringify(data), err => {
-//   if (err) throw err;
-//   console.log('JSON file has been saved!');
-// });
+// Define the filename for the JSON file
+const filename = `${batchDate}_${vendor}_config.json`;
+
+// Create the JSON file
+console.log("Creating Config file")
+fs.writeFile(`/data2/data_nginx/single_audio/${vendor}/configFiles`, JSON.stringify(data), err => {
+  if (err) throw err;
+  console.log('JSON file has been saved!');
+});
