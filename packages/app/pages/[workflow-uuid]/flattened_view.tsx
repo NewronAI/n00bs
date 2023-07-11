@@ -40,6 +40,8 @@ const FlattenedView = () => {
   const [updatingReview, setUpdatingReviews] = useState(false);
 
   const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer`, { refreshInterval: 24 * 60 * 60 * 1000 });
+  console.log("Data:",data)
+
   const files = data || [];
   // console.log("files", files);
 
@@ -52,6 +54,8 @@ const FlattenedView = () => {
       })
     }
   })
+
+  console.log("Answers Data",flattendData)
 
   // console.log("FlattendData", flattendData)
 
@@ -77,7 +81,7 @@ const FlattenedView = () => {
     { headerName: "District", field: "district", },
     { headerName: "State", field: "state", },
     { headerName: "File", field: "file", cellRenderer: UrlRenderer },
-    { headerName: "Created At", field: "createdAt", cellRenderer: DateFromNowRenderer },
+    { headerName: "Assingment Created At", field: "task_assignments.createdAt", cellRenderer: DateFromNowRenderer },
     { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130 },
     {
       headerName: "File Received at",
@@ -102,7 +106,7 @@ const FlattenedView = () => {
     },
     { headerName: "Assignee Name", field: 'task_assignments.assignee.name', width: 120 },
     { headerName: "Assignee Ph. No", field: 'task_assignments.assignee.phone' },
-    { headerName: "Answered At", field: 'createdAt', cellRenderer: DateFromNowRenderer },
+    { headerName: "Answered At", field: 'task_assignments.updatedAt', cellRenderer: DateFromNowRenderer },
   ]
 
   const dynamicColumnDef = Array.isArray(questionData) ?
