@@ -16,7 +16,7 @@ if (csvData === null) {
 }
 console.log(`Read CSV file successfully\n `);
 
-async function createLinksAndPostRequest(directoryPath) {
+async function createLinksAndPostRequest() {
   const filesData = [];
 
   for (const row of csvData) {
@@ -47,4 +47,4 @@ async function createLinksAndPostRequest(directoryPath) {
 //   console.log("Making request", filesData)
 }
 
-await createLinksAndPostRequest(directoryPath);
+await createLinksAndPostRequest();
