@@ -18,9 +18,11 @@ console.log(`Read CSV file successfully\n `);
 
 async function createLinksAndPostRequest() {
   const filesData = [];
-
+    let i = 0;
   for (const row of csvData) {
-    console.log(row);
+     if (i === 0 || i == 1 || i=== 2) {
+        console.log(row);
+    }
     // const fileData = {
     //     file_name: file,
     //     file_type: 'audio',
@@ -28,7 +30,7 @@ async function createLinksAndPostRequest() {
     //     district: district,
     //     state: state
     //   };
-
+    i++;
     //   filesData.push(fileData);
   }
 
