@@ -108,9 +108,13 @@ async function copyAndCheckImage(imageName) {
 
 function getFileLink(fileLocation, imageLocation) {
   console.log("fileDetails", fileLocation, "imageLocation", imageLocation)
-  const imageLocationParts = imageLocation.split("/")
-  const encodedFileLocation = encodeURIComponent(fileLocation)
-  const encodedImageLocation = encodeURIComponent(imageLocationParts[4] + "/" + imageLocationParts[5] + "/" + imageLocationParts[6] + ".jpg")
+  const relevantFileLocation = fileLocation.split("/").slice(3).join("/");
+  const relevantImageLocation = imageLocation.split("/").slice(3).join("/");
+  console.log("File Locaton Given", relevantFileLocation);
+  console.log("Image Locaton Given", relevantImageLocation)
+  const encodedFileLocation = encodeURIComponent(relevantFileLocation)
+  //const encodedImageLocation = encodeURIComponent(imageLocationParts[4] + "/" + imageLocationParts[5] + "/" + imageLocationParts[6] + ".jpg")
+  const encodedImageLocation = encodeURIComponent(relevantImageLocation + ".jpg")
   const fileLink = `http://vaani.qc.artpark.in/single_audio/?a=${encodedFileLocation}&i=${encodedImageLocation}`
   return fileLink;
 }

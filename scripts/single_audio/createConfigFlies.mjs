@@ -54,7 +54,7 @@ let data = {
     "baseLocation": "/data2/data_nginx/single_audio",
     "audioLocation": `/data2/data_nginx/single_audio/${vendor}/audios/${batch}`,
     "baseAudioLocation": `/data/Database/manual_qc/SingleAudio_QC/${vendor}/${batch}/Audios`,
-    "imagesDirPath": "/data2/data_nginx/Images/Images_Mar23",
+    "imagesDirPath": "/data2/data_nginx/single_audio/Images/Images_Mar23",
     "csvFilePath" : csvFilename,
     "imageNotFoundDataCsvPath" : `/data2/data_nginx/single_audio/${vendor}/notFoundImages/${batch}`,
     "logsPath" : `/data2/data_nginx/single_audio/${vendor}/logs/${batch}`,
