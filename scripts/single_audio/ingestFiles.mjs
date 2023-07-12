@@ -23,7 +23,7 @@ async function createLinksAndPostRequest() {
                 file: row[3],
                 district: row[1],
                 state: row[0],
-                file_duration: float(row[4]),
+                file_duration: parseFloat(row[4]),
                 vendor: vendor
             };
             filesData.push(fileData);
