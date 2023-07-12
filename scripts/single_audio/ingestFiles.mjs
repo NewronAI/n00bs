@@ -19,14 +19,14 @@ async function createLinksAndPostRequest() {
         if (i !== 0 && i !== 1) {
             const file_duration = row[4]
             console.log("Type of file duration", typeof file_duration)
-            console.log("Type", typeof float(row[4]) )
+            console.log("Type", typeof parseFloat(row[4]) )
             const fileData = {
                 file_name: row[2],
                 file_type: 'audio',
                 file: row[3],
                 district: row[1],
                 state: row[0],
-                file_duration: float(row[4]),
+                file_duration: parseFloat(row[4]),
                 vendor: vendor
             };
             filesData.push(fileData);
