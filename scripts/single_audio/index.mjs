@@ -108,8 +108,8 @@ async function copyAndCheckImage(imageName) {
 
 function getFileLink(fileLocation, imageLocation) {
   console.log("fileDetails", fileLocation, "imageLocation", imageLocation)
-  const relevantFileLocation = fileLocation.split("/").slice(3).join("/");
-  const relevantImageLocation = imageLocation.split("/").slice(3).join("/");
+  const relevantFileLocation = fileLocation.split("/").slice(4).join("/");
+  const relevantImageLocation = imageLocation.split("/").slice(4).join("/");
   console.log("File Locaton Given", relevantFileLocation);
   console.log("Image Locaton Given", relevantImageLocation)
   const encodedFileLocation = encodeURIComponent(relevantFileLocation)
