@@ -12,9 +12,9 @@ const csvContents = await fs.promises.readFile(csvFilePath, 'utf-8')
 
 const { data: csvData } = Papa.parse(csvContents)
 if (csvData === null) {
-  logStream.write(`Could'nt read the CSV file successfully\n `);
+  console.log(`Could'nt read the CSV file successfully\n `);
 }
-logStream.write(`Read CSV file successfully\n `);
+console.log(`Read CSV file successfully\n `);
 
 async function createLinksAndPostRequest(directoryPath) {
   const filesData = [];
