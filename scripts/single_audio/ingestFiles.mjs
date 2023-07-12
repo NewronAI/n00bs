@@ -21,6 +21,10 @@ async function createLinksAndPostRequest() {
     const filesData = [];
     let i = 0;
     for (const row of csvData) {
+        if (i !== 0 || i !== 1) {
+            console.log(fileData);
+            continue;
+        }
 
         const fileData = {
             file_name: row[2],
@@ -31,28 +35,23 @@ async function createLinksAndPostRequest() {
             file_duration: row[4],
             vendor: vendor
         };
-
-        if (i === 0 || i == 1) {
-            console.log(fileData);
-        }
-
-        i++;
         filesData.push(fileData);
+        i++;
     }
+    console.log("Making request", filesData)
+      const requestBody = {
+        secret: '636eebcef989e94113c5d91c6b493cbd3a17c8df5737fcb7bce7fe90f03787c3',
+        data: filesData
+      };
 
-    //   const requestBody = {
-    //     secret: '636eebcef989e94113c5d91c6b493cbd3a17c8df5737fcb7bce7fe90f03787c3',
-    //     data: filesData
-    //   };
-
-    //   const response = await axios.post('https://qc.artpark.in/api/v1/2ddba7f3-798c-40bb-b687-d25a7180982a/public/file', requestBody)
-    //     .then((response) => {
-    //       console.log('POST request successful:', response.data);
-    //     })
-    //     .catch((error) => {
-    //       console.error('Error making POST request:', error);
-    //     });
-    //   console.log("Making request", filesData)
+      const response = await axios.post('https://qc.artpark.in/api/v1/2ddba7f3-798c-40bb-b687-d25a7180982a/public/file', requestBody)
+        .then((response) => {
+          console.log('POST request successful:', response.data);
+        })
+        .catch((error) => {
+          console.error('Error making POST request:', error);
+        });
+      console.log(response);
 }
 
 await createLinksAndPostRequest();
