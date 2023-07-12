@@ -23,13 +23,13 @@ async function createLinksAndPostRequest() {
                 file: row[3],
                 district: row[1],
                 state: row[0],
-                file_duration: row[4],
+                file_duration: float(row[4]),
                 vendor: vendor
             };
             filesData.push(fileData);
         }
 
-        if(i === 1000) {
+        if(i === 1000 && i === (filesData.length - 1)) {
             // console.log("Making request", filesData)
             const requestBody = {
               secret: '636eebcef989e94113c5d91c6b493cbd3a17c8df5737fcb7bce7fe90f03787c3',
