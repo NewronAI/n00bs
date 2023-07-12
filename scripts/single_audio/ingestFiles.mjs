@@ -17,9 +17,6 @@ async function createLinksAndPostRequest() {
     let i = 0;
     for (const row of csvData) {
         if (i !== 0 && i !== 1) {
-            const file_duration = row[4]
-            console.log("Type of file duration", typeof file_duration)
-            console.log("Type", typeof parseFloat(row[4]),  parseFloat(row[4])  )
             const fileData = {
                 file_name: row[2],
                 file_type: 'audio',
@@ -32,40 +29,42 @@ async function createLinksAndPostRequest() {
             filesData.push(fileData);
         }
 
-        if(i === 1000) {
-            // console.log("Making request", filesData)
+        if (i === 1000) {
+            console.log("Total files ingesting", filesData.length);
             const requestBody = {
-              secret: '636eebcef989e94113c5d91c6b493cbd3a17c8df5737fcb7bce7fe90f03787c3',
-              data: filesData
+                secret: '636eebcef989e94113c5d91c6b493cbd3a17c8df5737fcb7bce7fe90f03787c3',
+                data: filesData
             };
 
             const response = await axios.post('https://qc.artpark.in/api/v1/2ddba7f3-798c-40bb-b687-d25a7180982a/public/file', requestBody)
-              .then((response) => {
-                console.log('POST request successful:', response.data);
-              })
-              .catch((error) => {
-                console.error('Error making POST request:', error);
-              });
+                .then((response) => {
+                    console.log('POST request successful:', response.data);
+                })
+                .catch((error) => {
+                    console.error('Error making POST request:', error);
+                });
             console.log(response);
             console.log("Successfull");
             filesData = []
-            i = 0;
+            i = 2;
         }
+
         i++;
     }
+
     const requestBody = {
         secret: '636eebcef989e94113c5d91c6b493cbd3a17c8df5737fcb7bce7fe90f03787c3',
         data: filesData
-      };
-
-      const response = await axios.post('https://qc.artpark.in/api/v1/2ddba7f3-798c-40bb-b687-d25a7180982a/public/file', requestBody)
+    };
+    console.log("Total files ingesting", filesData.length);
+    const response = await axios.post('https://qc.artpark.in/api/v1/2ddba7f3-798c-40bb-b687-d25a7180982a/public/file', requestBody)
         .then((response) => {
-          console.log('POST request successful:', response.data);
+            console.log('POST request successful:', response.data);
         })
         .catch((error) => {
-          console.error('Error making POST request:', error);
+            console.error('Error making POST request:', error);
         });
-      console.log(response);
+    console.log(response);
 }
 
 await createLinksAndPostRequest();
