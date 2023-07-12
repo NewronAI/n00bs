@@ -14,15 +14,16 @@ const config = JSON.parse(fs.readFileSync(configFile));
 const logsPath = config.logsPath;
 const baseLocation = config.baseLocation;
 const imagesDirPath = config.imagesDirPath;
-const videosDirPath = config.videosDirPath;
 const csvFilePath = config.csvFilePath;
+const audioLocation = config.audioLocation;
 const imageNotFoundDataCsvPath = config.imageNotFoundDataCsvPath;
-const resultPath = config.resultCSV
-const vendor = config.vendor
-const batch = config.batch
+const resultPath = config.resultCSV;
+const vendor = config.vendor;
+const batch = config.batch;
+const audioBaseLocation = config.baseAudioLocation;
 
 const now = new Date();
-const logFileName = `${logsPath}/log-${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.txt`;
+const logFileName = `${logsPath}/log-${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.txt`;
 const logStream = fs.createWriteStream(logFileName, { flags: 'a' });
 logStream.write('Started running the script\n');
 
@@ -34,6 +35,8 @@ logStream.write(`Base Location is ${baseLocation}\n`);
 logStream.write(`Images Dir Path is ${imagesDirPath}\n`);
 logStream.write(`Single Audio Videos Dir Path is ${videosDirPath}\n`);
 logStream.write(`CSV File Path is ${csvFilePath}\n`);
+logStream.write(`Base Dir Audio Path is ${audioBaseLocation}\n`);
+logStream.write(`Audio Path is ${audioLocation}\n`);
 
 console.log('Getting Directories location from config file\n');
 console.log(`Base Location is ${baseLocation}\n`);
@@ -42,11 +45,11 @@ console.log(`Single Audio Videos Dir Path is ${videosDirPath}\n`);
 console.log(`CSV File Path is ${csvFilePath}\n`);
 
 const imageNotFoundData = [
-  {fileName: "File Name", imageName: "Image Name"}
+  { fileName: "File Name", imageName: "Image Name" }
 ];
 
 const resuldData = [
-  {state: "State", district: "District", fileName: "File Name", fileLink: "File Link", duration: "Duration of audio(s)"}
+  { state: "State", district: "District", fileName: "File Name", fileLink: "File Link", duration: "Duration of audio(s)" }
 ];
 
 function extractFileInfo(filename) {
@@ -55,12 +58,12 @@ function extractFileInfo(filename) {
   const district = parts[1];
   const speakerID = parts[2];
   const utteranceID = parts[3].split("-")[0];
-  const imageName = parts[4] !== "IMG" ? (parts[4].slice(0, 3) === "IMG" ? parts[4] : parts[4] + '_' + parts[5] ): parts[4] + '_' + parts[5] + '_' + parts[6];
+  const imageName = parts[4] !== "IMG" ? (parts[4].slice(0, 3) === "IMG" ? parts[4] : parts[4] + '_' + parts[5]) : parts[4] + '_' + parts[5] + '_' + parts[6];
   const secondLastNumber = parseInt(parts[parts.length - 2]);
-  const lastNumber = parseInt(parts[parts.length - 1].slice(0,-4));
+  const lastNumber = parseInt(parts[parts.length - 1].slice(0, -4));
   console.log(parts[parts.length - 2], "-----", parts[parts.length - 1])
-  const duration =  (lastNumber - secondLastNumber) / 1000;
-  console.log(duration)
+  const duration = (lastNumber - secondLastNumber) / 1000;
+  console.log({state, district, speakerID, utteranceID, imageName, duration})
   return { state, district, speakerID, utteranceID, imageName, duration };
 }
 
@@ -78,13 +81,30 @@ async function checkFile(filename, filepath) {
   }
 }
 
+async function checkAndCopyAudioFile(fileName) {
+  if (!existsSync(`${audioLocation}/${fileName}`)) {
+    console.log(`Could'nt find the file ${fileName} in ${audioLocation}`)
+    try {
+      await exec(`scp -r ${audioBaseLocation}/${fileName} ${audioLocation}`)
+      console.log(`Copied the file ${fileName}`)
+      return true;
+    }catch (e) {
+     console.log("Error", e)
+     return false;
+    }
+  }
+  else {
+    return true;
+  }
+}
+
 async function copyAndCheckImage(imageName) {
-  if(existsSync(`${imagesDirPath}/${imageName}.jpg`)) {
+  if (existsSync(`${imagesDirPath}/${imageName}.jpg`)) {
     console.log("Image found in local directory")
     return true;
   } else {
-      console.log(imageName, "Image not in local and artpark instance found")
-      return false;
+    console.log(imageName, "Image not in local and artpark instance found")
+    return false;
   }
 }
 
@@ -93,7 +113,7 @@ function getFileLink(fileLocation, imageLocation) {
   const imageLocationParts = imageLocation.split("/")
   const encodedFileLocation = encodeURIComponent(fileLocation)
   const encodedImageLocation = encodeURIComponent(imageLocationParts[4] + "/" + imageLocationParts[5] + "/" + imageLocationParts[6] + ".jpg")
-  const fileLink = `http://35.222.19.219/?a=${encodedFileLocation}&i=${encodedImageLocation}`
+  const fileLink = `http://vaani.qc.artpark.in/?a=${encodedFileLocation}&i=${encodedImageLocation}`
   return fileLink;
 }
 
@@ -101,7 +121,7 @@ logStream.write(`Reading CSV file located in ${csvFilePath} \n `);
 const csvContents = await fs.promises.readFile(csvFilePath, 'utf-8')
 
 const { data: csvData } = Papa.parse(csvContents)
-if(csvData === null) {
+if (csvData === null) {
   logStream.write(`Could'nt read the CSV file successfully\n `);
 }
 logStream.write(`Read CSV file successfully\n `);
@@ -111,27 +131,27 @@ for (const row of csvData) {
   const fileDetails = row[1]
 
   if (fileDetails !== undefined) {
-    logStream.write(`Working on this file ${fileDetails} \n `);
+    logStream.write(`Working on this audio file ${fileDetails} \n `);
 
     const separatorIndex = fileDetails.lastIndexOf('/');
-    const fileLocation = fileDetails.substring(0, separatorIndex);
     const fileName = fileDetails.substring(separatorIndex + 1);
+    console.log("File Name", fileName);
 
     const { state, district, speakerID, utteranceID, imageName, duration } = extractFileInfo(fileName)
     logStream.write(`Extracted the files details successfully\n `);
 
-    const checkAudioFile = await checkFile(fileName, fileLocation)
+    const checkAudioFile = await checkAndCopyAudioFile(fileName)
     const checkImageFile = await copyAndCheckImage(imageName)
 
-    console.log("checkAudioFile",checkAudioFile," checkImageFile",checkImageFile)
-    if(!checkImageFile) {
-      imageNotFoundData.push({fileName: fileName, imageName: imageName})
+    console.log("checkAudioFile", checkAudioFile, " checkImageFile", checkImageFile)
+    if (!checkImageFile) {
+      imageNotFoundData.push({ fileName: fileName, imageName: imageName })
     }
 
-    if(checkAudioFile && checkImageFile) {
-      const fileLink = getFileLink( fileDetails, imagesDirPath + "/" + imageName)
+    if (checkAudioFile && checkImageFile) {
+      const fileLink = getFileLink(fileDetails, imagesDirPath + "/" + imageName)
       console.log(fileLink)
-      resuldData.push({state: state, district:district, fileName: fileDetails, fileLink: fileLink, duration: duration})
+      resuldData.push({ state: state, district: district, fileName: fileName, fileLink: fileLink, duration: duration })
     }
   }
 }
