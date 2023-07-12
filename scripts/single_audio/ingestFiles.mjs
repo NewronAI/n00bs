@@ -1,10 +1,5 @@
 const fs = require('fs');
-const path = require('path');
 const axios = require('axios');
-import { existsSync } from "fs"
-import { clearScreenDown } from "readline";
-const { promisify } = require("util");
-const child_process = require("child_process");
 const Papa = require("papaparse");
 
 const csvFilePath = process.argv[3];
