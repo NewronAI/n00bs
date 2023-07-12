@@ -30,7 +30,7 @@ async function createLinksAndPostRequest() {
         }
 
         if(i === 1000) {
-            console.log("Making request", filesData)
+            // console.log("Making request", filesData)
             const requestBody = {
               secret: '636eebcef989e94113c5d91c6b493cbd3a17c8df5737fcb7bce7fe90f03787c3',
               data: filesData
@@ -46,6 +46,7 @@ async function createLinksAndPostRequest() {
             console.log(response);
             console.log("Successfull");
             filesData = []
+            i = 0;
         }
         i++;
     }
