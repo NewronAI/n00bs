@@ -45,6 +45,7 @@ async function createLinksAndPostRequest() {
           console.error('Error making POST request:', error);
         });
       console.log(response);
+      console.log("Successfull");
 }
 
 await createLinksAndPostRequest();
