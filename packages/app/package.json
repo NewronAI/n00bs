@@ -13,7 +13,7 @@
     "studio": "npx dotenv -e .env.local -- npx prisma studio"
   },
   "dependencies": {
-    "@ag-grid-enterprise/row-grouping": "^29.2.0",
+    "@ag-grid-enterprise/row-grouping": "^30.0.3",
     "@auth0/nextjs-auth0": "^2.2.1",
     "@headlessui/react": "^1.7.4",
     "@heroicons/react": "1.0.6",
@@ -22,9 +22,9 @@
     "@types/node": "18.11.18",
     "@types/react": "18.0.26",
     "@types/react-dom": "18.0.10",
-    "ag-grid-community": "29.2.0",
-    "ag-grid-enterprise": "^29.2.0",
-    "ag-grid-react": "29.2.0",
+    "ag-grid-community": "^30.0.3",
+    "ag-grid-enterprise": "^30.0.3",
+    "ag-grid-react": "^30.0.3",
     "axios": "^1.2.0",
     "clsx": "^1.2.1",
     "crypto-hash": "^2.0.1",

@@ -231,6 +231,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                                 ref={memberGridRef}
                                 rowSelection='single'
                                 paginationPageSize={6}
+                                groupSelectsChildren={true}
                                 groupDefaultExpanded={-1}
                                 defaultColDef={{
                                     flex: 1,
@@ -327,6 +328,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                             suppressMenuHide={true}
                             pagination={true}
                             groupDefaultExpanded={-1}
+                            groupSelectsFiltered={true}
                             ref={fileGridRef}
                             rowGroupPanelShow={"onlyWhenGrouping"}
                             sideBar={{ toolPanels: ["columns", "filters"], hiddenByDefault: false }}
