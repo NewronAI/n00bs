@@ -1,6 +1,6 @@
 import NextExpress from "@/helpers/node/NextExpress";
-import {db} from "@/helpers/node/db";
-import {task_status} from "@prisma/client";
+import { db } from "@/helpers/node/db";
+import { task_status } from "@prisma/client";
 import getLogger from "@/helpers/node/getLogger";
 
 const openTasksApi = new NextExpress();
@@ -34,7 +34,31 @@ openTasksApi.get(async (req, res) => {
         ]
     });
 
-    logger.debug(`task : ${JSON.stringify(tasks)}`);
+    // const assignee = await db.member.findFirst({
+    //     where: {
+    //         id: 142
+    //     }
+    // })
+
+    // console.log("Kasmi Details", assignee);
+
+    // const kasmiTasks = await db.task_assignment.deleteMany({
+    //     where: {
+    //         status: task_status.pending,
+    //         assignee_id: 142,
+    //         workflow_file: {
+    //             state: 'Bihar'
+    //         },
+    //         task: {
+    //             workflow: {
+    //                 uuid: workflowUUID
+    //             }
+    //         }
+    //     }
+    // })
+    // console.log("Kasmi total Task ------------------------------------------------------------------------------------------------------------------", kasmiTasks.length);
+
+    //logger.debug(`task : ${JSON.stringify(tasks)}`);
 
     res.status(200).json(tasks);
 
