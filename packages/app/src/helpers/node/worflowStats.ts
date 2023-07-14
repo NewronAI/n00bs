@@ -95,7 +95,11 @@ export async function getCompletedFilesCount(id: number, vendor? : string) {
                 id: id
             },
             vendor: vendor,
-            calculated: true
+            task_assignments: {
+                some: {
+                    status: "accepted"
+                }
+            }
         }
     });
     return completedFilesCount;
