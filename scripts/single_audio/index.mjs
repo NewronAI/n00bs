@@ -99,15 +99,18 @@ async function checkAndCopyAudioFile(fileName) {
 
 async function copyAndCheckImage(imageName) {
   if (existsSync(`${imagesDirPath}/${imageName}.jpg`)) {
-    console.log("Image found in local directory")
-    return true;
+    console.log("Image found in local directory. Image format is JPG")
+    return ".jpg";
+  } else if(existsSync(`${imagesDirPath}/${imageName}.jpeg`)) {
+    console.log("Image found in local directory. Image format is JPEG")
+    return ".jpeg";
   } else {
-    console.log(imageName, "Image not in local and artpark instance found")
+    console.log(imageName, "Image not in Local Directory.")
     return false;
   }
 }
 
-function getFileLink(fileLocation, imageLocation) {
+function getFileLink(fileLocation, imageLocation, imageFormat) {
   console.log("fileDetails", fileLocation, "imageLocation", imageLocation)
   const relevantFileLocation = fileLocation.split("/").slice(4).join("/");
   const relevantImageLocation = imageLocation.split("/").slice(4).join("/");
@@ -115,7 +118,7 @@ function getFileLink(fileLocation, imageLocation) {
   console.log("Image Locaton Given", relevantImageLocation)
   const encodedFileLocation = encodeURIComponent(relevantFileLocation)
   //const encodedImageLocation = encodeURIComponent(imageLocationParts[4] + "/" + imageLocationParts[5] + "/" + imageLocationParts[6] + ".jpg")
-  const encodedImageLocation = encodeURIComponent(relevantImageLocation + ".jpg")
+  const encodedImageLocation = encodeURIComponent(relevantImageLocation + imageFormat)
   const fileLink = `http://vaani.qc.artpark.in/single_audio/?a=${encodedFileLocation}&i=${encodedImageLocation}`
   return fileLink;
 }
@@ -152,7 +155,7 @@ for (const row of csvData) {
     }
 
     if (checkAudioFile && checkImageFile) {
-      const fileLink = getFileLink(`${audioLocation}/${fileName}`, imagesDirPath + "/" + imageName)
+      const fileLink = getFileLink(`${audioLocation}/${fileName}`, imagesDirPath + "/" + imageName, checkImageFile)
       console.log(fileLink)
       resuldData.push({ state: state, district: district, fileName: fileName, fileLink: fileLink, duration: duration })
     }
