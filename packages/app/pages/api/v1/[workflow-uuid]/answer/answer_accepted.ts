@@ -13,7 +13,7 @@ answersAPI.get(async (req, res) => {
     const logger = getLogger(`/api/v1/${workflowUUID}/answer/answer_accepted`);
 
     // accepted: 'accepted',
-    const taskAssignmentAccepted = await db.workflow_file.findMany({
+    const itemCount  = await db.workflow_file.count({
         where: {
             workflow: {
                 uuid: workflowUUID
@@ -24,22 +24,48 @@ answersAPI.get(async (req, res) => {
                 }
             }
         },
-        include: {
-            task_assignments: {
-                include: {
-                    task_answers: {
-                        include: {
-                            question: true
-                        }
-                    },
-                    assignee: true
-                },
-                where: {
-                    status: task_status.accepted
-                }
-            }
-        }
     });
+
+    logger.debug(`Total task assignment : ${itemCount}`)
+
+    const batchCount = 10000;
+
+    const itemFetchPromises = [];
+
+    for(let i = 0; i < Math.ceil(itemCount / batchCount); i++) {
+
+        itemFetchPromises.push(db.workflow_file.findMany({
+            where: {
+                workflow: {
+                    uuid: workflowUUID
+                },
+                task_assignments: {
+                    some: {
+                        status: task_status.accepted,
+                    }
+                }
+            },
+            include: {
+                task_assignments: {
+                    include: {
+                        task_answers: {
+                            include: {
+                                question: true
+                            }
+                        },
+                        assignee: true
+                    },
+                    where: {
+                        status: task_status.accepted
+                    }
+                }
+            },
+            skip: i * batchCount,
+            take: batchCount
+        }));
+    }
+
+    const taskAssignmentAccepted = (await Promise.all(itemFetchPromises)).flat();
 
     logger.debug(`Accepted task assignment : ${taskAssignmentAccepted.length}`)
 
