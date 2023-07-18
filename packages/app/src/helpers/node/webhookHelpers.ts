@@ -107,6 +107,9 @@ async function getTaskAssingment(workflowID: number, assigneeID: any) {
                     file: true,
                 }
             }
+        },
+        orderBy: {
+            createdAt: "asc"
         }
     })
 
