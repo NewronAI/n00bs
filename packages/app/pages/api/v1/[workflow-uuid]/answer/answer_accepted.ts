@@ -4,6 +4,11 @@ import assertUp from "@/helpers/node/assert/assertUp";
 import { task_status } from "@prisma/client";
 import getLogger from "@/helpers/node/getLogger";
 
+export const config = {
+    api: {
+        responseLimit: false,
+    },
+}
 
 const answersAPI = new NextExpress();
 
@@ -13,7 +18,7 @@ answersAPI.get(async (req, res) => {
     const logger = getLogger(`/api/v1/${workflowUUID}/answer/answer_accepted`);
 
     // accepted: 'accepted',
-    const itemCount  = await db.workflow_file.count({
+    const itemCount = await db.workflow_file.count({
         where: {
             workflow: {
                 uuid: workflowUUID
@@ -32,7 +37,7 @@ answersAPI.get(async (req, res) => {
 
     const itemFetchPromises = [];
 
-    for(let i = 0; i < Math.ceil(itemCount / batchCount); i++) {
+    for (let i = 0; i < Math.ceil(itemCount / batchCount); i++) {
 
         itemFetchPromises.push(db.workflow_file.findMany({
             where: {
