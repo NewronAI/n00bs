@@ -3,6 +3,12 @@ import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
 import getLogger from "@/helpers/node/getLogger";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 const workflowApi = new NextExpress();
 
 const logger = getLogger("/api/v1/workflow/index");

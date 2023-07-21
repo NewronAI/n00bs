@@ -3,6 +3,12 @@ import assertUp from "@/helpers/node/assert/assertUp";
 import getPublicWorkflowAPISecret from "@/helpers/getPublicWorkflowAPISecret";
 import {db} from "@/helpers/node/db";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 const questionsApi = new NextExpress();
 
 

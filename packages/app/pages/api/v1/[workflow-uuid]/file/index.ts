@@ -3,6 +3,12 @@ import {db} from "@/helpers/node/db";
 import {NextApiRequest, NextApiResponse} from "next";
 import assertUp from "@/helpers/node/assert/assertUp";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 const fileApi = new NextExpress();
 
 const pageSize = 10;

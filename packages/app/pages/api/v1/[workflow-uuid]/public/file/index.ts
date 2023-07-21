@@ -6,6 +6,12 @@ import {NextApiRequest, NextApiResponse} from "next";
 import getPublicWorkflowAPISecret from "@/helpers/getPublicWorkflowAPISecret";
 import getLogger from "@/helpers/node/getLogger";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 const fileApi = new NextExpress();
 
 fileApi.post(async (req: NextApiRequest, res: NextApiResponse) => {

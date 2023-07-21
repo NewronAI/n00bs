@@ -2,6 +2,12 @@ import NextExpress from "@/helpers/node/NextExpress";
 import assertUp from "@/helpers/node/assert/assertUp";
 import {db} from "@/helpers/node/db";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 const questionWorkflowApi = new NextExpress();
 
 questionWorkflowApi.get(async (req, res) => {

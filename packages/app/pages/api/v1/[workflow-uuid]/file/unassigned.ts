@@ -2,6 +2,12 @@ import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 const unassignedFilesApi = new NextExpress();
 
 unassignedFilesApi.get(async (req, res) => {

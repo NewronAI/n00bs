@@ -3,6 +3,12 @@ import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
 import getLogger from "@/helpers/node/getLogger";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 const assignOneTaskApi = new NextExpress();
 
 

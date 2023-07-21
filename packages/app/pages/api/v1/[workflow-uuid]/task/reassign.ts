@@ -6,6 +6,12 @@ import {events} from "@prisma/client";
 import getLogger from "@/helpers/node/getLogger";
 // import getLogger from "@/helpers/node/getLogger";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 const assignTaskApi = new NextExpress();
 
 

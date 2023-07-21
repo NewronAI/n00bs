@@ -7,6 +7,12 @@ import {
     getPendingJobsCount
 } from "@/helpers/node/worflowStats";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 const slicedReportAPI = new NextExpress();
 
 slicedReportAPI.get(async (req, res) => {

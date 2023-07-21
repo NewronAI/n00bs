@@ -3,8 +3,13 @@ import assertUp from "@/helpers/node/assert/assertUp";
 import {db} from "@/helpers/node/db";
 import getLogger from "@/helpers/node/getLogger";
 
-const fileAssigneeApi = new NextExpress();
+export const config = {
+  api: {
+    responseLimit: false,
+  },
+}
 
+const fileAssigneeApi = new NextExpress();
 
 fileAssigneeApi.get(async (req, res) => {
 

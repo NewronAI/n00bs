@@ -3,6 +3,12 @@ import {db} from "@/helpers/node/db";
 import assertUp from "@/helpers/node/assert/assertUp";
 import {Prisma} from "@prisma/client";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 const taskApi = new NextExpress();
 
 // API will return the list of current task in the workflow

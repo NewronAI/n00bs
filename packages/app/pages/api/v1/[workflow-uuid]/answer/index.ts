@@ -4,6 +4,12 @@ import assertUp from "@/helpers/node/assert/assertUp";
 import { task_status } from "@prisma/client";
 import getLogger from "@/helpers/node/getLogger";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 
 const answersAPI = new NextExpress();
 

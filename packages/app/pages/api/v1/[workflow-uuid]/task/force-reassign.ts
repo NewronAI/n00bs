@@ -4,6 +4,12 @@ import {db} from "@/helpers/node/db";
 import webhookHandler from "@/helpers/node/webhookHandler";
 import {events, task_status} from "@prisma/client";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 const forceReassignApi = new NextExpress();
 
 forceReassignApi.post(async (req, res) => {

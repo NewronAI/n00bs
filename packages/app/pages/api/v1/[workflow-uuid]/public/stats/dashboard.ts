@@ -4,6 +4,12 @@ import {db} from "@/helpers/node/db";
 import {task_status} from "@prisma/client"
 import {getAssignedFilesCount} from "@/helpers/node/worflowStats";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 const dashboardStatsApi = new NextExpress()
 
 

@@ -4,6 +4,12 @@ import {db} from "@/helpers/node/db";
 import {task_status} from "@prisma/client";
 import {getSession} from "@auth0/nextjs-auth0";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+  
 const review_answers = new NextExpress();
 
 review_answers.post(async (req, res) => {

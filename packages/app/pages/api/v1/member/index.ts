@@ -6,6 +6,12 @@ import getLogger from "@/helpers/node/getLogger";
 import {member_role, obj_status} from "@prisma/client";
 import {getSession} from "@auth0/nextjs-auth0";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 const memberApi = new NextExpress();
 
 memberApi.get(async (req: NextApiRequest, res: NextApiResponse) => {

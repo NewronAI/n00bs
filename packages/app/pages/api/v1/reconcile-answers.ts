@@ -3,6 +3,12 @@ import {MongoClient} from "mongodb";
 import {db} from "@/helpers/node/db";
 import getPublicWorkflowAPISecret from "@/helpers/getPublicWorkflowAPISecret";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 const mongodbClient = new MongoClient(process.env.CHATBOT_MONGO_URL as string);
 
 const workflow_uuids = ['2ddba7f3-798c-40bb-b687-d25a7180982a', 'e95bf9c5-8689-4731-abcd-49bc267e9607'];

@@ -1,6 +1,12 @@
 import NextExpress from "@/helpers/node/NextExpress";
 import {db} from "@/helpers/node/db";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 const allAnswersApi = new NextExpress();
 
 allAnswersApi.get(async (req,res) => {

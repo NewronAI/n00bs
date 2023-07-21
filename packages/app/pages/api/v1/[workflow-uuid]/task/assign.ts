@@ -5,6 +5,12 @@ import webhookHandler from "@/helpers/node/webhookHandler";
 import {events, task_status} from "@prisma/client";
 import getLogger from "@/helpers/node/getLogger";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 const logger = getLogger("/task/assign");
 
 const assignTaskApi = new NextExpress();

@@ -5,6 +5,12 @@ import getPublicWorkflowAPISecret from "@/helpers/getPublicWorkflowAPISecret";
 import {obj_status, task_status} from "@prisma/client";
 import getLogger from "@/helpers/node/getLogger";
 
+export const config = {
+    api: {
+      responseLimit: false,
+    },
+  }
+
 const getAllAssignmentsApi = new NextExpress();
 
 getAllAssignmentsApi.get(async (req, res) => {
