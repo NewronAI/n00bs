@@ -16,7 +16,7 @@ answersAPI.get(async (req, res) => {
 
     const workflowUUID = req.query["workflow-uuid"] as string;
     const logger = getLogger(`/api/v1/${workflowUUID}/answer/answer_accepted`);
-
+    logger.debug("WORKFLOE id", workflowUUID);
     // accepted: 'accepted',
     const itemCount = await db.task_assignment.count({
         where: {
@@ -118,6 +118,7 @@ answersAPI.get(async (req, res) => {
         }
     })
 
+    logger.debug("returning reponse of size : " + acceptedTaskAssignmentResponses.length);
     res.status(200).json(acceptedTaskAssignmentResponses);
 
 });
