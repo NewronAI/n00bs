@@ -24,39 +24,36 @@ import moment from 'moment';
 interface UnassignedFilesPageProps {
   files: any[]
 }
-
-
 const Flattened_approved_answer = (_props: UnassignedFilesPageProps) => {
-
 
   const fileGridRef = useRef<AgGridReactType>(null);
   const router = useRouter();
 
   const workflowUUID = router.query["workflow-uuid"] as string;
-  const { data, error, isLoading } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer/answer_accepted`);
-  const files = data || [];
-  // console.log("files", files)
+  const { data: approvedflattendData, error, isLoading } = useSWRImmutable<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer/anwers_accepted_flat`);
+  const files = approvedflattendData || [];
+  console.log("files", files)
 
   const { data: questionData, error: questionFetchError, isLoading: questionFetchLoading } = useSWRImmutable(`/api/v1/${workflowUUID}/question`)
   console.log('questionData', questionData)
 
-  const approvedflattendData: any = []
-  files.forEach(file => {
-    if (Array.isArray(file.task_assignments)) {
-      file.task_assignments?.forEach((task: any) => {
-        approvedflattendData.push({ ...file, task_assignments: task });
-      })
-    }
-  })
-  console.log("FlattendData", approvedflattendData)
+  // const approvedflattendData: any = []
+  // files.forEach(file => {
+  //   if (Array.isArray(file.task_assignments)) {
+  //     file.task_assignments?.forEach((task: any) => {
+  //       approvedflattendData.push({ ...file, task_assignments: task });
+  //     })
+  //   }
+  // })
+  // console.log("FlattendData", approvedflattendData)
 
   const staticColumnDefs = [
-    { headerName: "File", field: "file_name", cellRenderer: 'agGroupCellRenderer', tooltipField: 'file_name', rowGroup: true },
-    { headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150 },
-    { headerName: "District", field: "district", },
-    { headerName: "State", field: "state", },
-    { headerName: "File", field: "file", cellRenderer: UrlRenderer },
-    { headerName: "Assinged At", field: "task_assignments.createdAt", cellRenderer: (params: any) => {
+    { headerName: "File", field: "workflow_file.file_name", cellRenderer: 'agGroupCellRenderer', tooltipField: 'file_name', rowGroup: true },
+    { headerName: "Vendor", field: "workflow_file.vendor", sortable: true, filter: true, width: 150 },
+    { headerName: "District", field: "workflow_file.district", },
+    { headerName: "State", field: "workflow_file.state", },
+    { headerName: "File", field: "workflow_file.file", cellRenderer: UrlRenderer },
+    { headerName: "Assinged At", field: "createdAt", cellRenderer: (params: any) => {
       const receivedAt: string = params.value;
       let formattedDate: string = '';
 
@@ -80,7 +77,7 @@ const Flattened_approved_answer = (_props: UnassignedFilesPageProps) => {
     // },
     {
       headerName: "File Received at",
-      field: "receivedAt",
+      field: "workflow_file.createdAt",
       sortable: true,
       filter: true,
 
@@ -98,10 +95,10 @@ const Flattened_approved_answer = (_props: UnassignedFilesPageProps) => {
 
         return formattedDate;
     }, width: 130 },
-    { headerName: "Assignee Name", field: 'task_assignments.assignee.name', width: 120 },
-    { headerName: "Assignee Ph. No", field: 'task_assignments.assignee.phone' },
+    { headerName: "Assignee Name", field: 'assignee.name', width: 120 },
+    { headerName: "Assignee Ph. No", field: 'assignee.phone' },
     {
-      headerName: "Answered At", field: 'task_assignments.answerAt',
+      headerName: "Answered At", field: 'answerAt',
       cellRenderer: (params: any) => {
         const receivedAt: string = params.value;
         let formattedDate: string = '';
@@ -117,7 +114,7 @@ const Flattened_approved_answer = (_props: UnassignedFilesPageProps) => {
         return formattedDate;
     }, width: 130
     },
-    { headerName: "Reviewd At", field: "task_assignments.updatedAt", cellRenderer: (params: any) => {
+    { headerName: "Reviewd At", field: "updatedAt", cellRenderer: (params: any) => {
       const receivedAt: string = params.value;
       let formattedDate: string = '';
 
@@ -135,7 +132,7 @@ const Flattened_approved_answer = (_props: UnassignedFilesPageProps) => {
 
 
   const dynamicColumnDef = questionData?.map((question: any) => {
-    return { headerName: question.name, field: `task_assignments.task_answers.${question.uuid}` }
+    return { headerName: question.name, field: `task_answers.${question.uuid}` }
   }) || [];
 
 
@@ -143,7 +140,7 @@ const Flattened_approved_answer = (_props: UnassignedFilesPageProps) => {
     ...staticColumnDefs,
     ...dynamicColumnDef,
     ...[{
-      headerName: "Rating", field: "task_assignments.review_rating", cellRenderer: RatingViewer
+      headerName: "Rating", field: "review_rating", cellRenderer: RatingViewer
     }]
   ];
 console.log(approvedflattendData);
@@ -171,7 +168,7 @@ console.log(approvedflattendData);
         <Loader isLoading={isLoading || questionFetchLoading}>
           <div className={"w-full h-[760px] p-4 ag-theme-alpine-dark"}>
             <AgGridReact
-              rowData={approvedflattendData}
+              rowData={files}
               pagination={true}
               columnDefs={colDef}
 
@@ -183,7 +180,7 @@ console.log(approvedflattendData);
                 flex: 1,
                 minWidth: 200,
                 enableValue: true,
-                enableRowGroup: true,
+                enableRowGroup: false,
                 enablePivot: true,
                 sortable: true,
                 filter: true,
