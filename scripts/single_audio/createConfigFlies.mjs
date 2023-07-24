@@ -6,7 +6,7 @@ import { existsSync } from "fs";
 
 const csvFilename = process.argv[3];
 const batch = process.argv[4];
-const vendor = process.argv[6];
+const vendor = process.argv[5];
 
 const exec = promisify(child_process.exec);
 
