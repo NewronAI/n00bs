@@ -41,28 +41,49 @@ const Flattened_approved_answer = (_props: UnassignedFilesPageProps) => {
 
   //const { data: questionData, error: questionFetchError, isLoading: questionFetchLoading } = useSWRImmutable(`/api/v1/${workflowUUID}/question`)
   //console.log('questionData', questionData)
-  useEffect(() => {
-    setLoadingAnswers(true);
-    axios.get(`/api/v1/${workflowUUID}/question`)
-      .then((response) => {
-        setQuestionData(response.data);
-      }).catch((error) => {
-        console.error("Error while fetching questions : ", error);
-        setLoadingAnswers(true);
-      })
 
-    axios.get(`/api/v1/${workflowUUID}/answer/anwers_accepted_flat`)
-      .then((response) => {
-        if (response.data.length !== 0) {
-          setFiles(response.data);
+  useEffect(() => {
+    const MAX_RETRIES = 5;
+    const RETRY_DELAY = 1000; // 1 second
+    setLoadingAnswers(true);
+
+    const fetchQuestions = () => {
+      axios.get(`/api/v1/${workflowUUID}/question`)
+        .then((response) => {
+          setQuestionData(response.data);
+        }).catch((error) => {
+          console.error("Error while fetching questions : ", error);
+          setLoadingAnswers(true);
+        });
+    };
+
+    const fetchAnswers = (retryCount: number) => {
+      console.log("Retrying Request", retryCount);
+      axios.get(`/api/v1/${workflowUUID}/answer/anwers_accepted_flat`)
+        .then((response) => {
+          if (response.data.length !== 0) {
+            setFiles(response.data);
+            setLoadingAnswers(false);
+          }
+        }).catch((error) => {
+          console.error("Flattened Approved Fetch Error : ", error);
           setLoadingAnswers(false);
-        }
-      }).catch((error) => {
-        console.error("Flattened Approved Fetch Error : ", error);
-        setLoadingAnswers(false);
-        toast.error("Failed to fetch approved answers data");
-      })
-  }, [workflowUUID])
+          if (retryCount < MAX_RETRIES && error.response.status === 500) {
+            // Retry the request after a delay
+            setTimeout(() => fetchAnswers(retryCount + 1), RETRY_DELAY);
+          } else {
+            toast.error("Failed to fetch approved answers data. Error Code: " + `${error.response.status}`);
+          }
+        });
+    };
+
+    const fetchQuestionsAndAnswers = () => {
+      fetchQuestions();
+      fetchAnswers(0); // Start with retryCount = 0
+    };
+
+    fetchQuestionsAndAnswers();
+  }, [workflowUUID]);
 
   // const approvedflattendData: any = []
   // files.forEach(file => {
