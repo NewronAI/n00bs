@@ -6,7 +6,6 @@ import { existsSync } from "fs";
 
 const csvFilename = process.argv[3];
 const batch = process.argv[4];
-const subBatch = process.argv[5];
 const vendor = process.argv[6];
 
 const exec = promisify(child_process.exec);
@@ -63,7 +62,7 @@ let data = {
 }
 
 // Define the filename for the JSON file
-const filename = `${batch}_${vendor}_${subBatch}_config.json`;
+const filename = `${batch}_${vendor}_config.json`;
 
 // Create the JSON file
 console.log("Creating Config file")

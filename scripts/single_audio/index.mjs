@@ -7,7 +7,6 @@ const child_process = require("child_process");
 const Papa = require("papaparse");
 
 const configFile = process.argv[3];
-const subBatch = process.argv[4];
 console.log(configFile)
 //const configFilePath = path.join(__dirname, configFile);
 const config = JSON.parse(fs.readFileSync(configFile));
@@ -163,11 +162,11 @@ for (const row of csvData) {
 }
 
 const imageNotFoundString = Papa.unparse(imageNotFoundData);
-fs.writeFileSync(`${imageNotFoundDataCsvPath}/ImageNotFound-${vendor}-${batch}_${subBatch}.csv`, imageNotFoundString);
+fs.writeFileSync(`${imageNotFoundDataCsvPath}/ImageNotFound-${vendor}-${batch}.csv`, imageNotFoundString);
 
 console.log("Creating resultant csv")
 const resultDataString = Papa.unparse(resuldData);
-fs.writeFileSync(`${resultPath}/${batch}_${vendor}_${subBatch}.csv`, resultDataString);
+fs.writeFileSync(`${resultPath}/${batch}_${vendor}.csv`, resultDataString);
 console.log("Created")
 
 logStream.write(`Execution Done\n `);
