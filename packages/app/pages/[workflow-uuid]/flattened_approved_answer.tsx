@@ -44,7 +44,7 @@ const Flattened_approved_answer = (_props: UnassignedFilesPageProps) => {
 
   useEffect(() => {
     const MAX_RETRIES = 5;
-    const RETRY_DELAY = 1000; // 1 second
+    const RETRY_DELAY = 100; // 1 second
     setLoadingAnswers(true);
 
     const fetchQuestions = () => {
@@ -67,11 +67,10 @@ const Flattened_approved_answer = (_props: UnassignedFilesPageProps) => {
           }
         }).catch((error) => {
           console.error("Flattened Approved Fetch Error : ", error);
-          setLoadingAnswers(false);
           if (retryCount < MAX_RETRIES && error.response.status === 500) {
-            // Retry the request after a delay
             setTimeout(() => fetchAnswers(retryCount + 1), RETRY_DELAY);
           } else {
+            setLoadingAnswers(false);
             toast.error("Failed to fetch approved answers data. Error Code: " + `${error.response.status}`);
           }
         });
