@@ -209,33 +209,22 @@ assignTaskApi.post(async (req, res) => {
 
 });
 
- 
 
 assignTaskApi.put(async (req, res) => {
     // API to update the task assignment and reassign the task to another assignee
 
-    const task_assignmentUUID = req.query["task-assignment-uuid"] as string;
-    const assigneeUUID = req.query["assignee-uuid"] as string;
+    const assigneeUUID = req.body["assignee-uuid"] as string;
+    const task_assignmentUUIDs = req.body["taskAssingments-uuids"] as string[];
+    console.log({task_assignmentUUIDs})
 
-    assertUp(task_assignmentUUID, {
+    assertUp(task_assignmentUUIDs, {
         status: 400,
-        message: "task-assignment-uuid: Param is required. Should contain the uuid of the task assignment"
+        message: "task-assignment-uuids: Param is required. Should contain the uuids of the task assignments"
     });
 
     assertUp(assigneeUUID, {
         status: 400,
         message: "assignee-uuid: Param is required. Should contain the uuid of the assignee"
-    });
-
-    const task_assignment = await db.task_assignment.findFirst({
-        where: {
-            uuid: task_assignmentUUID
-        }
-    });
-
-    assertUp(task_assignment, {
-        status: 404,
-        message: "Task assignment not found"
     });
 
     const assignee = await db.member.findFirst({
@@ -249,56 +238,15 @@ assignTaskApi.put(async (req, res) => {
         message: "Assignee not found"
     });
 
-    const status = await db.task_assignment.update({
-        where: {
-            uuid: task_assignmentUUID
-        },
+    const status = await db.task_assignment.updateMany({
+        where: { uuid: { in: task_assignmentUUIDs } },
         data: {
-            assignee_id: assignee.id,
-            status: task_status.pending
-        }
-    });
-
-    console.log("Updated Task assinment",status);
-
-    const workflowUUID = req.query["workflow-uuid"] as string;
-
-    const workflow = await db.workflow.findFirst({
-        where: {
-            uuid: workflowUUID
-        }
-    });
-
-    const task = await db.task.findFirstOrThrow({
-        where: {
-            id: task_assignment.task_id
+          assignee_id: assignee.id,
+          status: task_status.pending,
         },
-        include: {
-            task_questions: {
-                include: {
-                    questions: true
-                }
-            }
-        }
-    });
+      });
 
-    webhookHandler(events.task_assignment_created, workflowUUID, {
-        workflow,
-        task: {
-            uuid: task.uuid,
-            title: task.name,
-            createdAt: task.createdAt,
-            district: task.district,
-            state: task.state,
-            minReqAssignmentsPerFile: task.min_assignments,
-        },
-        questions: task.task_questions.map((taskQuestion) => taskQuestion.questions),
-        isUpdate: true,
-        "task_assignments":  [status]
-
-    }).then(() => {
-        logger.debug(`webhook triggered`);
-    });
+    console.log("Updated Task assinments",status);
 
     res.status(200).json(status);
 
@@ -306,35 +254,27 @@ assignTaskApi.put(async (req, res) => {
 
 assignTaskApi.delete(async (req, res) => {
    // API to delete the task assignment
+   console.log("API called!");
+   console.log("Query Parameters:", req.query);
+   const task_assignmentUUIDs = req.query["task-assignment-uuids[]"] as string[];
+   console.log("UUIDS", task_assignmentUUIDs);
 
-    const task_assignmentUUID = req.query["task-assignment-uuid"] as string;
+   assertUp(task_assignmentUUIDs, {
+     status: 400,
+     message: "Task Assignment UUID: Param is required. Should contain the uuid of the task assignment",
+   });
 
-    assertUp(task_assignmentUUID, {
-        status: 400,
-        message: "Task Assignment UUID: Param is required. Should contain the uuid of the task assignment"
-    });
-
-
-    const task_assignment = await db.task_assignment.findFirst({
+    try {
+        const status = await db.task_assignment.deleteMany({
         where: {
-            uuid: task_assignmentUUID
-        }
-    });
-
-    assertUp(task_assignment, {
-        status: 404,
-        message: "Task assignment not found"
-    });
-
-    const status = await db.task_assignment.delete({
-        where: {
-            uuid: task_assignmentUUID
+            uuid: { in: task_assignmentUUIDs}
         },
-
     });
-
     res.status(200).json(status);
-
+    } catch(e) {
+        console.log(e);
+        res.status(401).json({});
+    }
 })
 
 export default assignTaskApi.handler;
