@@ -38,6 +38,7 @@ const FlattenedView = () => {
   }
 
   const [updatingReview, setUpdatingReviews] = useState(false);
+  const [rateBulk, setRateBulk] = useState(true);
 
   const { data, error, isLoading, mutate } = useSWR<Prisma.workflow_fileSelect[]>(`/api/v1/${workflowUUID}/answer`, { refreshInterval: 24 * 60 * 60 * 1000 });
   console.log("Data:",data)

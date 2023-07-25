@@ -183,6 +183,7 @@ const TaskPage = (_props: TaskPageProps) => {
             }, 100);
         } catch (e) {
             console.log(e);
+            toast.error("Failed");
         }
         setAssignDialogOpen(false);
     }
@@ -259,6 +260,7 @@ const TaskPage = (_props: TaskPageProps) => {
             setAssignDialogOpenDelete(false)
         }
         catch (error) {
+            toast.error("Failed");
             console.log(error)
         }
     }

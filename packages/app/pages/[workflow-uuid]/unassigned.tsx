@@ -71,6 +71,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
     const [selectionCount, setSelectionCount] = React.useState<number>(0);
     const [selectedItems, setSelectedItems] = React.useState<any[]>([]);
     const [currentPage, setCurrentPage] = React.useState<number>(0);
+    const [assignLimit, setAssignLimit] = React.useState(50);
     const selectionTimer = useRef<any>(null);
 
     const workflowUUID = router.query["workflow-uuid"] as string;
@@ -158,8 +159,6 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
             setAssignModalError("Please select some member | task");
             return null;
         }
-
-
 
         setAssignModalError(null);
 
