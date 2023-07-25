@@ -71,7 +71,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
     const [selectionCount, setSelectionCount] = React.useState<number>(0);
     const [selectedItems, setSelectedItems] = React.useState<any[]>([]);
     const [currentPage, setCurrentPage] = React.useState<number>(0);
-    const [assignLimit, setAssignLimit] = React.useState(50);
+    const [assignLimit, setAssignLimit] = React.useState(10);
     const selectionTimer = useRef<any>(null);
 
     const workflowUUID = router.query["workflow-uuid"] as string;
@@ -285,6 +285,12 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                             />
                         </div>
                     </Loader>
+                    <div className='mt-2'>
+                        <div className='flex flex-col'>
+                            <span>Assign only <input type="number" max={assignLimit} value={assignLimit} onChange={(e) => setAssignLimit(Number(e.target.value))} className='w-12 rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'></input> out of {fileGridRef.current?.api.getSelectedRows().length} selected files.</span>
+                            <span className='mt-2'>Assign all <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" /></span>
+                        </div>
+                    </div>
                     <div className={"flex justify-between mt-4 btn-group"}>
                         <div className={"text-sm text-error"}>
                             {assignModalError}
