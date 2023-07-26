@@ -153,12 +153,14 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
         const selectedRows = fileGridRef.current?.api.getSelectedRows();
         const selectedMembers = memberGridRef.current?.api.getSelectedRows();
 
-
-
         if (selectedRows.length === 0 || selectedMembers.length === 0) {
             setAssignModalError("Please select some member | task");
             return null;
         }
+
+        const filteredRows = selectedRows.slice(0,assignLimit);
+
+        console.log({filteredRows});
 
         setAssignModalError(null);
 
@@ -166,7 +168,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
 
         try {
             await axios.post(`/api/v1/${workflowUUID}/task/assign`, {
-                "workflow-file-uuids": selectedRows.map((row) => row.uuid),
+                "workflow-file-uuids": filteredRows.map((row) => row.uuid),
                 "assignee-uuid": selectedMemberUUID,
             });
             await mutate();
@@ -285,12 +287,11 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                             />
                         </div>
                     </Loader>
-                    <div className='mt-2'>
+                    { fileGridRef.current?.api.getSelectedRows().length > assignLimit && <div className='mt-2'>
                         <div className='flex flex-col'>
-                            <span>Assign only <input type="number" max={assignLimit} value={assignLimit} onChange={(e) => setAssignLimit(Number(e.target.value))} className='w-12 rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'></input> out of {fileGridRef.current?.api.getSelectedRows().length} selected files.</span>
-                            <span className='mt-2'>Assign all <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" /></span>
+                            <span>Assigning only {assignLimit} out of {fileGridRef.current?.api.getSelectedRows().length} selected files.</span>
                         </div>
-                    </div>
+                    </div>}
                     <div className={"flex justify-between mt-4 btn-group"}>
                         <div className={"text-sm text-error"}>
                             {assignModalError}
