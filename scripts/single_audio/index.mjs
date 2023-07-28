@@ -154,7 +154,6 @@ for (const row of csvData) {
     const checkAudioFile = await checkAndCopyAudioFile(fileName)
     let checkImageFile = await copyAndCheckImage(image_name)
 
-    console.log("checkAudioFile", checkAudioFile, " checkImageFile", checkImageFile)
     if (!checkImageFile) {
       image_name = extractImageName(fileName);
       checkImageFile = await copyAndCheckImage(extractImageName(fileName));
@@ -162,6 +161,8 @@ for (const row of csvData) {
         imageNotFoundData.push({ fileName: fileName, imageName: imageName });
       }
     }
+
+    console.log("checkAudioFile", checkAudioFile, " checkImageFile", checkImageFile)
 
     if (checkAudioFile && checkImageFile) {
       const fileLink = getFileLink(`${audioLocation}/${fileName}`, imagesDirPath + "/" + image_name, checkImageFile)
