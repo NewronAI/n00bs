@@ -65,6 +65,11 @@ function extractFileInfo(filename) {
   return { state, district, speakerID, utteranceID, imageName, duration };
 }
 
+function extractImageName(filename) {
+  const parts = filename.split("_");
+  return parts[4];
+}
+
 async function checkFile(filename, filepath) {
   logStream.write(`Checking if the audio file (${filename}) is present in ${filepath}\n`);
 
@@ -146,11 +151,14 @@ for (const row of csvData) {
     logStream.write(`Extracted the files details successfully\n `);
 
     const checkAudioFile = await checkAndCopyAudioFile(fileName)
-    const checkImageFile = await copyAndCheckImage(imageName)
+    let checkImageFile = await copyAndCheckImage(imageName)
 
     console.log("checkAudioFile", checkAudioFile, " checkImageFile", checkImageFile)
     if (!checkImageFile) {
-      imageNotFoundData.push({ fileName: fileName, imageName: imageName })
+      checkImageFile = await copyAndCheckImage(extractImageName(fileName));
+      if(!checkImageFile) {
+        imageNotFoundData.push({ fileName: fileName, imageName: imageName });
+      }
     }
 
     if (checkAudioFile && checkImageFile) {
