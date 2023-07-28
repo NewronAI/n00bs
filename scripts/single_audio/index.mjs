@@ -148,13 +148,15 @@ for (const row of csvData) {
     console.log("File Name", fileName);
 
     const { state, district, speakerID, utteranceID, imageName, duration } = extractFileInfo(fileName)
+    let image_name = imageName
     logStream.write(`Extracted the files details successfully\n `);
 
     const checkAudioFile = await checkAndCopyAudioFile(fileName)
-    let checkImageFile = await copyAndCheckImage(imageName)
+    let checkImageFile = await copyAndCheckImage(image_name)
 
     console.log("checkAudioFile", checkAudioFile, " checkImageFile", checkImageFile)
     if (!checkImageFile) {
+      image_name = extractImageName(fileName);
       checkImageFile = await copyAndCheckImage(extractImageName(fileName));
       if(!checkImageFile) {
         imageNotFoundData.push({ fileName: fileName, imageName: imageName });
@@ -162,7 +164,7 @@ for (const row of csvData) {
     }
 
     if (checkAudioFile && checkImageFile) {
-      const fileLink = getFileLink(`${audioLocation}/${fileName}`, imagesDirPath + "/" + imageName, checkImageFile)
+      const fileLink = getFileLink(`${audioLocation}/${fileName}`, imagesDirPath + "/" + image_name, checkImageFile)
       console.log(fileLink)
       resuldData.push({ state: state, district: district, fileName: fileName, fileLink: fileLink, duration: duration })
     }
