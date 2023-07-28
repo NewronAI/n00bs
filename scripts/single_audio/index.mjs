@@ -128,7 +128,7 @@ async function copyAndCheckImage(imageName) {
   }
 }
 
-function getFileLink(fileLocation, imageLocation, imageFormat) {
+function getFileLink(fileLocation, imageLocation) {
   console.log("fileDetails", fileLocation, "imageLocation", imageLocation)
   const relevantFileLocation = fileLocation.split("/").slice(4).join("/");
   const relevantImageLocation = imageLocation.split("/").slice(4).join("/");
@@ -136,7 +136,7 @@ function getFileLink(fileLocation, imageLocation, imageFormat) {
   console.log("Image Locaton Given", relevantImageLocation)
   const encodedFileLocation = encodeURIComponent(relevantFileLocation)
   //const encodedImageLocation = encodeURIComponent(imageLocationParts[4] + "/" + imageLocationParts[5] + "/" + imageLocationParts[6] + ".jpg")
-  const encodedImageLocation = encodeURIComponent(relevantImageLocation + imageFormat)
+  const encodedImageLocation = encodeURIComponent(relevantImageLocation)
   const fileLink = `http://vaani.qc.artpark.in/single_audio/?a=${encodedFileLocation}&i=${encodedImageLocation}`
   return fileLink;
 }
