@@ -102,12 +102,26 @@ async function checkAndCopyAudioFile(fileName) {
 }
 
 async function copyAndCheckImage(imageName) {
+  const parts = imageName.split("_");
+  const sliced = imageName.slice(0, -1);
   if (existsSync(`${imagesDirPath}/${imageName}.jpg`)) {
     console.log("Image found in local directory. Image format is JPG")
-    return ".jpg";
+    return imageName + ".jpg";
   } else if(existsSync(`${imagesDirPath}/${imageName}.jpeg`)) {
     console.log("Image found in local directory. Image format is JPEG")
-    return ".jpeg";
+    return imageName + ".jpeg";
+  } else if(existsSync(`${imagesDirPath}/${sliced}.jpg`)) {
+    console.log("Image found in local directory. Image format is JPG")
+    return sliced + ".jpeg";
+  } else if(existsSync(`${imagesDirPath}/${sliced}.jpeg`)) {
+    console.log("Image found in local directory. Image format is JPEG")
+    return sliced + ".jpeg";
+  } else if(existsSync(`${imagesDirPath}/${parts[0]}.jpeg`)) {
+    console.log("Image found in local directory. Image format is JPEG")
+    return parts[0] + ".jpeg";
+  } else if(existsSync(`${imagesDirPath}/${parts[0]}.jpg`)) {
+    console.log("Image found in local directory. Image format is JPG")
+    return parts[0] + ".jpg";
   } else {
     console.log(imageName, "Image not in Local Directory.")
     return false;
@@ -155,17 +169,13 @@ for (const row of csvData) {
     let checkImageFile = await copyAndCheckImage(image_name)
 
     if (!checkImageFile) {
-      image_name = extractImageName(fileName);
-      checkImageFile = await copyAndCheckImage(extractImageName(fileName));
-      if(!checkImageFile) {
-        imageNotFoundData.push({ fileName: fileName, imageName: imageName });
-      }
+      imageNotFoundData.push({ fileName: fileName, imageName: imageName });
     }
 
     console.log("checkAudioFile", checkAudioFile, " checkImageFile", checkImageFile)
 
     if (checkAudioFile && checkImageFile) {
-      const fileLink = getFileLink(`${audioLocation}/${fileName}`, imagesDirPath + "/" + image_name, checkImageFile)
+      const fileLink = getFileLink(`${audioLocation}/${fileName}`, imagesDirPath + "/" + checkImageFile)
       console.log(fileLink)
       resuldData.push({ state: state, district: district, fileName: fileName, fileLink: fileLink, duration: duration })
     }
