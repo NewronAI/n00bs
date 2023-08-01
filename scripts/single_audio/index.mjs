@@ -103,7 +103,7 @@ async function checkAndCopyAudioFile(fileName) {
 
 function getImageName(filename) {
   const parts = filename.split("_");
-  let imageName;
+  let imageName = "";
   for(let i=0; i<parts.length; i++) {
     if(i >= 4 && i<(parts.length - 2)) {
       imageName = imageName + parts[i];
