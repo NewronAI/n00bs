@@ -124,7 +124,7 @@ async function copyAndCheckImage(imageName) {
     return imageName + ".jpeg";
   } else if(existsSync(`${imagesDirPath}/${sliced}.jpg`)) {
     console.log("Image found in local directory. Image format is JPG")
-    return sliced + ".jpeg";
+    return sliced + ".jpg";
   } else if(existsSync(`${imagesDirPath}/${sliced}.jpeg`)) {
     console.log("Image found in local directory. Image format is JPEG")
     return sliced + ".jpeg";
