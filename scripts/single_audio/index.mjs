@@ -184,7 +184,7 @@ for (const row of csvData) {
       imageNotFoundData.push({ fileName: fileName, imageName: image_name });
     }
 
-    console.log("checkAudioFile", checkAudioFile, " checkImageFile", checkImageFile)
+    console.log("checkAudioFile", checkAudioFile, " checkImageFile", checkImageFile);
 
     if (checkAudioFile && checkImageFile) {
       const fileLink = getFileLink(`${audioLocation}/${fileName}`, imagesDirPath + "/" + checkImageFile)
