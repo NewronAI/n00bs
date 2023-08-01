@@ -101,6 +101,18 @@ async function checkAndCopyAudioFile(fileName) {
   }
 }
 
+function getImageName(filename) {
+  const parts = filename.split("_");
+  let imageName;
+  for(let i=0; i<parts.length; i++) {
+    if(i >= 4 && i<(parts.length - 2)) {
+      imageName = imageName + parts[i];
+    }
+  }
+  console.log("Image Name :", imageName.slice(1));
+  return imageName.slice(1);
+}
+
 async function copyAndCheckImage(imageName) {
   const parts = imageName.split("_");
   const sliced = imageName.slice(0, -1);
@@ -162,14 +174,14 @@ for (const row of csvData) {
     console.log("File Name", fileName);
 
     const { state, district, speakerID, utteranceID, imageName, duration } = extractFileInfo(fileName)
-    let image_name = imageName
+    let image_name = getImageName(fileName);
     logStream.write(`Extracted the files details successfully\n `);
 
     const checkAudioFile = await checkAndCopyAudioFile(fileName)
     let checkImageFile = await copyAndCheckImage(image_name)
 
     if (!checkImageFile) {
-      imageNotFoundData.push({ fileName: fileName, imageName: imageName });
+      imageNotFoundData.push({ fileName: fileName, imageName: image_name });
     }
 
     console.log("checkAudioFile", checkAudioFile, " checkImageFile", checkImageFile)
