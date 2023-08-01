@@ -106,7 +106,7 @@ function getImageName(filename) {
   let imageName = "";
   for(let i=0; i<parts.length; i++) {
     if(i >= 4 && i<(parts.length - 2)) {
-      imageName = imageName + parts[i];
+      imageName = imageName + "_" + parts[i];
     }
   }
   console.log("Image Name :", imageName.slice(1));
