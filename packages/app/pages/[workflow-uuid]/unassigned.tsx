@@ -71,7 +71,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
     const [selectionCount, setSelectionCount] = React.useState<number>(0);
     const [selectedItems, setSelectedItems] = React.useState<any[]>([]);
     const [currentPage, setCurrentPage] = React.useState<number>(0);
-    const [assignLimit, setAssignLimit] = React.useState(10);
+    const [assignLimit, setAssignLimit] = React.useState(50);
     const selectionTimer = useRef<any>(null);
 
     const workflowUUID = router.query["workflow-uuid"] as string;
@@ -83,6 +83,20 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
 
     const { data: members, error: membersError, isLoading: membersLoading } = useSWR<Prisma.memberSelect[]>(`/api/v1/member`, (url) => fetch(url).then(res => res.json()));
     console.log("members", members)
+
+    clearTimeout(filterTimerRef.current);
+    filterTimerRef.current = setTimeout(() => {
+        fileGridRef.current?.api?.setFilterModel(null);
+        fileGridRef.current?.api?.setFilterModel({
+            assignment_count: {
+                filterType: "text",
+                type: "startsWith",
+                values: ["0"]
+            }
+        });
+    }, 100);
+
+
     useEffect(() => {
         return () => {
             clearTimeout(filterTimerRef.current);
@@ -158,9 +172,9 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
             return null;
         }
 
-        const filteredRows = selectedRows.slice(0,assignLimit);
+        const filteredRows = selectedRows.slice(0, assignLimit);
 
-        console.log({filteredRows});
+        console.log({ filteredRows });
 
         setAssignModalError(null);
 
@@ -287,7 +301,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                             />
                         </div>
                     </Loader>
-                    { fileGridRef.current?.api.getSelectedRows().length > assignLimit && <div className='mt-2'>
+                    {fileGridRef.current?.api.getSelectedRows().length > assignLimit && <div className='mt-2'>
                         <div className='flex flex-col'>
                             <span>Assigning only {assignLimit} out of {fileGridRef.current?.api.getSelectedRows().length} selected files.</span>
                         </div>
