@@ -301,9 +301,9 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                             />
                         </div>
                     </Loader>
-                    {fileGridRef.current?.api.getSelectedRows().length > assignLimit && <div className='mt-2'>
+                    {selectionCount > assignLimit && <div className='mt-2'>
                         <div className='flex flex-col'>
-                            <span>Assigning only {assignLimit} out of {fileGridRef.current?.api.getSelectedRows().length} selected files.</span>
+                            <span>Assigning only {assignLimit} out of {selectionCount} selected files.</span>
                         </div>
                     </div>}
                     <div className={"flex justify-between mt-4 btn-group"}>
