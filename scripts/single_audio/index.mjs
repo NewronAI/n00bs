@@ -199,7 +199,7 @@ fs.writeFileSync(`${imageNotFoundDataCsvPath}/ImageNotFound-${vendor}-${batch}.c
 
 console.log("Creating resultant csv")
 const resultDataString = Papa.unparse(resuldData);
-fs.writeFileSync(`${resultPath}/${batch}_${vendor}.csv`, resultDataString);
+fs.writeFileSync(`${resultPath}/${batch}_${vendor}_missing.csv`, resultDataString);
 console.log("Created")
 
 logStream.write(`Execution Done\n `);
