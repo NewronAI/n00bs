@@ -23,7 +23,7 @@ const batch = config.batch;
 const audioBaseLocation = config.baseAudioLocation;
 
 const now = new Date();
-const logFileName = `${logsPath}/log-${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.txt`;
+const logFileName = `${logsPath}/log-${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}_missing.txt`;
 const logStream = fs.createWriteStream(logFileName, { flags: 'a' });
 logStream.write('Started running the script\n');
 
@@ -195,7 +195,7 @@ for (const row of csvData) {
 }
 
 const imageNotFoundString = Papa.unparse(imageNotFoundData);
-fs.writeFileSync(`${imageNotFoundDataCsvPath}/ImageNotFound-${vendor}-${batch}.csv`, imageNotFoundString);
+fs.writeFileSync(`${imageNotFoundDataCsvPath}/ImageNotFound-${vendor}-${batch}_missing.csv`, imageNotFoundString);
 
 console.log("Creating resultant csv")
 const resultDataString = Papa.unparse(resuldData);
