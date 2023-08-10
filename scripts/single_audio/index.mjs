@@ -40,6 +40,8 @@ console.log('Getting Directories location from config file\n');
 console.log(`Base Location is ${baseLocation}\n`);
 console.log(`Images Dir Path is ${imagesDirPath}\n`);
 console.log(`CSV File Path is ${csvFilePath}\n`);
+console.log(`Result Dir Path is ${resultPath}\n`);
+console.log(`Not found Images File Path is ${imageNotFoundDataCsvPath}\n`);
 
 const imageNotFoundData = [
   { fileName: "File Name", imageName: "Image Name" }
