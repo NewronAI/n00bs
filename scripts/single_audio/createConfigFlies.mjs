@@ -62,7 +62,7 @@ let data = {
 }
 
 // Define the filename for the JSON file
-const filename = `${batch}_${vendor}_config.json`;
+const filename = `${batch}_${vendor}_temp_config.json`;
 
 // Create the JSON file
 console.log("Creating Config file")
