@@ -33,14 +33,14 @@ if(!existsSync(`/data2/data_nginx/single_audio/${vendor}/audios/${batch}`)) {
 //     console.log("Audio files are already present")
 // }
 
-if(!existsSync(`/data2/data_nginx/single_audio/${vendor}/notFoundImages/${batch}`)) {
-    await exec(`mkdir /data2/data_nginx/single_audio/${vendor}/notFoundImages/${batch}`)
-    console.log(`Created Folder /data2/data_nginx/single_audio/${vendor}/notFoundImages/${batch}`)
+if(!existsSync(`/data2/data_nginx/single_audio/${vendor}/notFoundImages/${batch}_temp`)) {
+    await exec(`mkdir /data2/data_nginx/single_audio/${vendor}/notFoundImages/${batch}_temp`)
+    console.log(`Created Folder /data2/data_nginx/single_audio/${vendor}/notFoundImages/${batch}_temp`)
 }
 
-if(!existsSync(`/data2/data_nginx/single_audio/${vendor}/injestionCSV/${batch}`)) {
-    await exec(`mkdir /data2/data_nginx/single_audio/${vendor}/injestionCSV/${batch}`)
-    console.log(`Created the directory /data2/data_nginx/single_audio/${vendor}/injestionCSV/${batch}`)
+if(!existsSync(`/data2/data_nginx/single_audio/${vendor}/injestionCSV/${batch}_temp`)) {
+    await exec(`mkdir /data2/data_nginx/single_audio/${vendor}/injestionCSV/${batch}_temp`)
+    console.log(`Created the directory /data2/data_nginx/single_audio/${vendor}/injestionCSV/${batch}_temp`)
 }
 
 if(!existsSync(`/data2/data_nginx/single_audio/${vendor}/logs/${batch}`)) {
@@ -56,9 +56,9 @@ let data = {
     "baseAudioLocation": `/data/Database/manual_qc/SingleAudio_QC/${vendor}/${batch}/Audios`,
     "imagesDirPath": "/data2/data_nginx/single_audio/Images/Images_Mar23",
     "csvFilePath" : csvFilename,
-    "imageNotFoundDataCsvPath" : `/data2/data_nginx/single_audio/${vendor}/notFoundImages/${batch}`,
+    "imageNotFoundDataCsvPath" : `/data2/data_nginx/single_audio/${vendor}/notFoundImages/${batch}_temp`,
     "logsPath" : `/data2/data_nginx/single_audio/${vendor}/logs/${batch}`,
-    "resultCSV" : `/data2/data_nginx/single_audio/${vendor}/injestionCSV/${batch}`
+    "resultCSV" : `/data2/data_nginx/single_audio/${vendor}/injestionCSV/${batch}_temp`
 }
 
 // Define the filename for the JSON file
