@@ -17,9 +17,9 @@ if (csvData === null) {
 }
 
 for(const row of csvData) {
-    console.log(row);
     const fileName = row[1];
     if(fileName != undefined) {
-        console.log("FileName", fileName);
+        const location = await exec(`find ${csvFilePath} -print | grep -i ${fileName}`)
+        console.log("Location :", location);
     }
 }
