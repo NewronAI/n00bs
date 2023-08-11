@@ -16,7 +16,8 @@ if (csvData === null) {
   console.log(`Could'nt read the CSV file successfully\n `);
 }
 
-for(row in csvData) {
+for(const row of csvData) {
+    console.log(row);
     const fileName = row[1];
     if(fileName != undefined) {
         console.log("FileName", fileName);
