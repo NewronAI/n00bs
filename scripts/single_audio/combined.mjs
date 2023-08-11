@@ -68,6 +68,7 @@ for (const row of csvData) {
             resuldData.push({ state: state, district: district, fileName: fileName, fileLink: link, duration: duration })
         }
         else{
+            console.log("File Not found:", fileName)
             fileNotFound.push({fileName: fileName});
         }
     }
