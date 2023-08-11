@@ -64,6 +64,7 @@ for (const row of csvData) {
         if (location) {
             const { state, district, speakerID, utteranceID, imageName, duration } = extractFileInfo(fileName);
             const link = getFileLink(fileName);
+            console.log({ state, district, duration, link})
             resuldData.push({ state: state, district: district, fileName: fileName, fileLink: link, duration: duration })
         }
         else{
