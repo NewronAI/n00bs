@@ -16,10 +16,21 @@ if (csvData === null) {
   console.log(`Could'nt read the CSV file successfully\n `);
 }
 
+async function locateFile(fileName) {
+    try {
+        const location = await exec(`find ${baseDirectory} -print | grep -i ${fileName}`)
+        console.log("Location :", location);
+        return location;
+    } catch(e) {
+        console.log("Error", e);
+        return false;
+    }
+}
+
 for(const row of csvData) {
     const fileName = row[1];
     if(fileName != undefined) {
-        const location = await exec(`find ${baseDirectory} -print | grep -i ${fileName}`)
+        const location = await locateFile(fileName);
         console.log("Location :", location);
     }
 }
