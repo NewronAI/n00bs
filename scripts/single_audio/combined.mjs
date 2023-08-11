@@ -17,7 +17,7 @@ if (csvData === null) {
 }
 
 const fileNotFound = [
-    { fileName: "File Name"}
+    { index: 0, fileName: "File Name"}
 ];
 
 const resuldData = [
@@ -69,7 +69,7 @@ for (const row of csvData) {
         }
         else{
             console.log("File Not found:", fileName)
-            fileNotFound.push({fileName: fileName});
+            fileNotFound.push({index: fileNotFound.length ,fileName: fileName});
         }
     }
 }
