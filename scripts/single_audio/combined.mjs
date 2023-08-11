@@ -49,6 +49,7 @@ function getFileLink(fileName) {
 async function locateFile(fileName) {
     try {
         const output = await exec(`find ${baseDirectory} -print | grep -i ${fileName}`);
+        console.log(output);
         const location = output.stdout;
         console.log("Copying the file", location)
         try {
