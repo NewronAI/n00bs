@@ -50,7 +50,7 @@ async function locateFile(fileName) {
     try {
         const output = await exec(`find ${baseDirectory} -print | grep -i ${fileName}`);
         console.log(output);
-        const location = output.stdout.slice(0,-2);
+        const location = output.stdout.slice(0,-1);
         console.log("Copying the file", location)
         try {
             await exec(`cp ${location} /data2/data_nginx/single_audio/combined/audios`)
