@@ -61,6 +61,7 @@ for (const row of csvData) {
     const fileName = row[1];
     if (fileName != undefined) {
         const location = await locateFile(fileName);
+        console.log("Location", location)
         if (location) {
             const { state, district, speakerID, utteranceID, imageName, duration } = extractFileInfo(fileName);
             const link = getFileLink(fileName);
