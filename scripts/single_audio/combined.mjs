@@ -40,7 +40,7 @@ function extractFileInfo(filename) {
 }
 
 function getFileLink(fileName) {
-    const fileLocation = `/combined/audios/${fileName}.wav`
+    const fileLocation = `combined/audios/${fileName}.wav`
     const encodedFileLocation = encodeURIComponent(fileLocation)
     const fileLink = `http://vaani.qc.artpark.in/single_audio/?a=${encodedFileLocation}`
     return fileLink;
