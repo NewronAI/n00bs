@@ -7,7 +7,7 @@ const Papa = require("papaparse");
 const exec = promisify(child_process.exec);
 
 const csvFilePath = process.argv[3];
-const baseDirectory = '/data/Database/manual_qc/SingleAudio_QC';
+const baseDirectory = '/data2/Database/15k_read_spon_annotation';
 
 const csvContents = await fs.promises.readFile(csvFilePath, 'utf-8')
 
@@ -83,7 +83,7 @@ for (const row of csvData) {
 }
 
 const fileNotFoundString = Papa.unparse(fileNotFound);
-fs.writeFileSync(`/data2/data_nginx/single_audio/combined/notFoundImages/FileNotFound.csv`, fileNotFoundString);
+fs.writeFileSync(`/data2/data_nginx/single_audio/combined/notFoundImages/FileNotFound2.csv`, fileNotFoundString);
 
 const resultDataString = Papa.unparse(resuldData);
-fs.writeFileSync(`/data2/data_nginx/single_audio/combined/injestionCSV/filesFound.csv`, resultDataString);
+fs.writeFileSync(`/data2/data_nginx/single_audio/combined/injestionCSV/filesFound2.csv`, resultDataString);
