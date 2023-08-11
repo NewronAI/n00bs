@@ -1,10 +1,10 @@
-import { existsSync } from "fs"
-import { clearScreenDown } from "readline";
 const { promisify } = require("util");
 const fs = require("fs");
 const path = require("path");
 const child_process = require("child_process");
 const Papa = require("papaparse");
+
+const exec = promisify(child_process.exec);
 
 const csvFilePath = process.argv[3];
 const baseDirectory = '/data/Database/manual_qc/SingleAudio_QC';
