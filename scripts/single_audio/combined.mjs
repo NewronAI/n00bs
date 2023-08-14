@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const child_process = require("child_process");
 const Papa = require("papaparse");
+import { existsSync } from "fs";
 
 const exec = promisify(child_process.exec);
 
