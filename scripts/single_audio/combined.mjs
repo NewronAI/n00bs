@@ -47,6 +47,9 @@ function getFileLink(fileName) {
 }
 
 async function locateFile(fileName) {
+    if(existsSync(`/data2/data_nginx/single_audio/combined/audios/${fileName}.wav`)) {
+        return `/data2/data_nginx/single_audio/combined/audios/${fileName}`
+    }
     try {
         const output = await exec(`find ${baseDirectory} -print | grep -i ${fileName}`);
         console.log(output);
