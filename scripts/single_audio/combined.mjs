@@ -49,8 +49,10 @@ function getFileLink(fileName) {
 
 async function locateFile(fileName) {
     if(existsSync(`/data2/data_nginx/single_audio/combined/audios/${fileName}.wav`)) {
+        console.log(`File alreeady present in  : combined/audios/${fileName}.wav` )
         return `/data2/data_nginx/single_audio/combined/audios/${fileName}.wav`
     }
+    console.log("Could'nt find the file in local directory")
     try {
         const output = await exec(`find ${baseDirectory} -print | grep -i ${fileName}`);
         console.log(output);
@@ -72,15 +74,15 @@ for (const row of csvData) {
     const fileName = row[1];
     if (fileName != undefined) {
         const location = await locateFile(fileName);
-        console.log("Location", location)
+        console.log("Location", location);
         if (location) {
             const { state, district, speakerID, utteranceID, imageName, duration } = extractFileInfo(fileName);
             const link = getFileLink(fileName);
-            console.log({ state, district, duration, link})
-            resuldData.push({ state: state, district: district, fileName: fileName, fileLink: link, duration: duration })
+            console.log({ state, district, duration, link});
+            resuldData.push({ state: state, district: district, fileName: fileName, fileLink: link, duration: duration });
         }
         else{
-            console.log("File Not found:", fileName)
+            console.log("File Not found:", fileName);
             fileNotFound.push({index: fileNotFound.length ,fileName: fileName});
         }
     }
