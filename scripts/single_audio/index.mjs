@@ -194,14 +194,13 @@ for (const row of csvData) {
   }
 }
 
-const csvName = csvFilePath.lastIndexOf('/').slice(0,-4);
 const imageNotFoundString = Papa.unparse(imageNotFoundData);
-fs.writeFileSync(`${imageNotFoundDataCsvPath}/ImageNotFound-${csvName}-${vendor}-${batch}.csv`, imageNotFoundString);
+fs.writeFileSync(`${imageNotFoundDataCsvPath}/ImageNotFound-${vendor}-${batch}.csv`, imageNotFoundString);
 
 console.log("Creating resultant csv")
 const resultDataString = Papa.unparse(resuldData);
-fs.writeFileSync(`${resultPath}/${csvName}_${batch}_${vendor}.csv`, resultDataString);
-console.log("Created");
+fs.writeFileSync(`${resultPath}/${batch}_${vendor}.csv`, resultDataString);
+console.log("Created")
 
 logStream.write(`Execution Done\n `);
 logStream.end();
