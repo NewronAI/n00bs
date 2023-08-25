@@ -5,7 +5,7 @@ function addVideoElement () {
 
     console.log('Page loaded, adding video element to DOM');
 
-    // Format of links required : http://{server url / ip}/?a={path of audio from root}&i={path of image from root}
+    // Format of links required : http://{server url}/?a={path of audio from root}&i={path of image from root}
 
     const usp = new URLSearchParams(window.location.search);
     const pathToFile = usp.get('a');

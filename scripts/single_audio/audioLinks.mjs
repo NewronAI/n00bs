@@ -19,6 +19,7 @@ const resultPath = config.resultCSV;
 const vendor = config.vendor;
 const batch = config.batch;
 const audioBaseLocation = config.baseAudioLocation;
+const imageNotFoundDataCsvPath = config.imageNotFoundDataCsvPath;
 
 const now = new Date();
 const logFileName = `${logsPath}/log-${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.txt`;
@@ -95,7 +96,7 @@ for (const row of csvData) {
     console.log("checkAudioFile", checkAudioFile);
 
     if (checkAudioFile) {
-      const fileLink = getFileLink(`${audioLocation}/${fileName}`, imagesDirPath + "/" + checkImageFile)
+      const fileLink = getFileLink(`${audioLocation}/${fileName}`)
       console.log(fileLink)
       resuldData.push({fileName: fileName, fileLink: fileLink})
     }
