@@ -194,10 +194,9 @@ for (const row of csvData) {
   }
 }
 
-const imageNotFoundString = Papa.unparse(imageNotFoundData);
-fs.writeFileSync(`${imageNotFoundDataCsvPath}/ImageNotFound-${vendor}-${batch}.csv`, imageNotFoundString);
-
 const csvName = csvFilePath.lastIndexOf('/').slice(0,-4);
+const imageNotFoundString = Papa.unparse(imageNotFoundData);
+fs.writeFileSync(`${imageNotFoundDataCsvPath}/ImageNotFound-${csvName}-${vendor}-${batch}.csv`, imageNotFoundString);
 
 console.log("Creating resultant csv")
 const resultDataString = Papa.unparse(resuldData);
