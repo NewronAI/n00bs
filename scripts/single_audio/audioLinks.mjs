@@ -91,7 +91,7 @@ for (const row of csvData) {
     const fileName = fileDetails.substring(separatorIndex + 1);
     console.log("File Name", fileName);
 
-    const checkAudioFile = await checkAndCopyAudioFile(fileName+"wav")
+    const checkAudioFile = await checkAndCopyAudioFile(fileName+".wav")
 
     console.log("checkAudioFile", checkAudioFile);
 
