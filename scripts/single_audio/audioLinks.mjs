@@ -49,7 +49,7 @@ async function checkAndCopyAudioFile(fileName) {
   if (!existsSync(`${audioLocation}/${fileName}`)) {
     console.log(`Could'nt find the file ${fileName} in ${audioLocation}`)
     try {
-      await exec(`scp -r ${audioBaseLocation}/${fileName}.wav ${audioLocation}`)
+      await exec(`scp -r ${audioBaseLocation}/${fileName} ${audioLocation}`)
       console.log(`Copied the file ${fileName}`)
       return true;
     }catch (e) {
