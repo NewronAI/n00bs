@@ -92,10 +92,6 @@ for (const row of csvData) {
 
     const checkAudioFile = await checkAndCopyAudioFile(fileName)
 
-    if (!checkImageFile) {
-      imageNotFoundData.push({ fileName: fileName, imageName: image_name });
-    }
-
     console.log("checkAudioFile", checkAudioFile);
 
     if (checkAudioFile) {
