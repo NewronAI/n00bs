@@ -91,12 +91,12 @@ for (const row of csvData) {
     const fileName = fileDetails.substring(separatorIndex + 1);
     console.log("File Name", fileName);
 
-    const checkAudioFile = await checkAndCopyAudioFile(fileName)
+    const checkAudioFile = await checkAndCopyAudioFile(fileName + ".wav")
 
     console.log("checkAudioFile", checkAudioFile);
 
     if (checkAudioFile) {
-      const fileLink = getFileLink(`${audioLocation}/${fileName}.wav`)
+      const fileLink = getFileLink(`${audioLocation}/${fileName}`)
       console.log(fileLink)
       resuldData.push({fileName: fileName, fileLink: fileLink})
     }
