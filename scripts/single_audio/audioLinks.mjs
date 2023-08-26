@@ -100,6 +100,9 @@ for (const row of csvData) {
       console.log(fileLink)
       resuldData.push({fileName: fileName, fileLink: fileLink})
     }
+    else {
+      filenotFound({fileName: fileName});
+    }
   }
 }
 
