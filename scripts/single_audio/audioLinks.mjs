@@ -96,7 +96,7 @@ for (const row of csvData) {
     console.log("checkAudioFile", checkAudioFile);
 
     if (checkAudioFile) {
-      const fileLink = getFileLink(`${audioLocation}/${fileName}`)
+      const fileLink = getFileLink(`${audioLocation}/${fileName}.wav`)
       console.log(fileLink)
       resuldData.push({fileName: fileName, fileLink: fileLink})
     }
