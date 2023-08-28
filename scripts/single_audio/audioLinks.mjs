@@ -66,7 +66,7 @@ function getFileLink(fileLocation) {
   console.log("fileDetails", fileLocation)
   const relevantFileLocation = fileLocation.split("/").slice(4).join("/");
   console.log("File Locaton Given", relevantFileLocation);
-  const encodedFileLocation = encodeURIComponent(relevantFileLocation + ".wav")
+  const encodedFileLocation = encodeURIComponent(relevantFileLocation)
   const fileLink = `http://vaani.qc.artpark.in/single_audio/?a=${encodedFileLocation}`
   return fileLink;
 }
@@ -91,7 +91,7 @@ for (const row of csvData) {
     const fileName = fileDetails.substring(separatorIndex + 1);
     console.log("File Name", fileName);
 
-    const checkAudioFile = await checkAndCopyAudioFile(fileName + ".wav")
+    const checkAudioFile = await checkAndCopyAudioFile(fileName)
 
     console.log("checkAudioFile", checkAudioFile);
 
