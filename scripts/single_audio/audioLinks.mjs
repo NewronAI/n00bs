@@ -82,7 +82,7 @@ logStream.write(`Read CSV file successfully\n `);
 
 for (const row of csvData) {
 
-  const fileDetails = row[1]
+  const fileDetails = row[2]
 
   if (fileDetails !== undefined) {
     logStream.write(`Working on this audio file ${fileDetails} \n `);
