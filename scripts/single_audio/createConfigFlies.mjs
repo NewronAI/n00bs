@@ -62,7 +62,7 @@ let data = {
 }
 
 const lastIndex = csvFilename.lastIndexOf('/');
-const filename = csvFilename.slice(lastIndex + 1, -3) + "_config.json";
+const filename = csvFilename.slice(lastIndex + 1, -4) + "_config.json";
 // Define the filename for the JSON file;
 //const filename = `${batch}_${vendor}_config.json`;
 
