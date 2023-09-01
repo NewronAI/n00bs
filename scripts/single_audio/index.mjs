@@ -197,7 +197,8 @@ for (const row of csvData) {
   }
 }
 
-const csvFileName = csvFilePath.lastIndexOf('/').slice(0, -3);
+const lastIndex = csvFilePath.lastIndexOf('/');
+const csvFileName = csvFilePath.slice(lastIndex + 1, -3) + "_config.json";
 
 const imageNotFoundString = Papa.unparse(imageNotFoundData);
 fs.writeFileSync(`${imageNotFoundDataCsvPath}/${csvFileName}_images_not_found.csv`, imageNotFoundString);
