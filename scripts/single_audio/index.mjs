@@ -168,7 +168,8 @@ for (const row of csvData) {
   const fileDetails = row[1]
 
   if (fileDetails !== undefined) {
-    logStream.write(`Working on this audio file ${fileDetails} \n `);
+    //logStream.write(`Working on this audio file ${fileDetails} \n `);
+    console.log(`Working on this audio file ${fileDetails} \n `);
 
     const separatorIndex = fileDetails.lastIndexOf('/');
     const fileName = fileDetails.substring(separatorIndex + 1);
@@ -176,7 +177,7 @@ for (const row of csvData) {
 
     const { state, district, speakerID, utteranceID, imageName, duration } = extractFileInfo(fileName)
     let image_name = getImageName(fileName);
-    logStream.write(`Extracted the files details successfully\n `);
+    //logStream.write(`Extracted the files details successfully\n `);
 
     const checkAudioFile = await checkAndCopyAudioFile(fileName)
     let checkImageFile = await copyAndCheckImage(image_name)
@@ -206,5 +207,5 @@ const resultDataString = Papa.unparse(resuldData);
 fs.writeFileSync(`${resultPath}/${csvFileName}_${vendor}.csv`, resultDataString);
 console.log("Created");
 
-logStream.write(`Execution Done\n `);
-logStream.end();
+// logStream.write(`Execution Done\n `);
+// logStream.end();
