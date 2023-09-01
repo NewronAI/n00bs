@@ -61,7 +61,7 @@ let data = {
     "resultCSV" : `/data2/data_nginx/single_audio/${vendor}/injestionCSV/${batch}`
 }
 
-const filename = csvFilename.lastIndexOf('/').slice(0, -3) + "_config.json";
+const filename = String(csvFilename.lastIndexOf('/')).slice(0, -3) + "_config.json";
 // Define the filename for the JSON file;
 //const filename = `${batch}_${vendor}_config.json`;
 
