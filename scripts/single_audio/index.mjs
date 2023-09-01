@@ -22,20 +22,20 @@ const vendor = config.vendor;
 const batch = config.batch;
 const audioBaseLocation = config.baseAudioLocation;
 
-const now = new Date();
-const logFileName = `${logsPath}/log-${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.txt`;
-const logStream = fs.createWriteStream(logFileName, { flags: 'a' });
-logStream.write('Started running the script\n');
+// const now = new Date();
+// const logFileName = `${logsPath}/log-${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.txt`;
+// const logStream = fs.createWriteStream(logFileName, { flags: 'a' });
+// logStream.write('Started running the script\n');
 
 // const readdir = promisify(fs.readdir);
 const exec = promisify(child_process.exec);
 
-logStream.write('Getting Directories location from config file\n');
-logStream.write(`Base Location is ${baseLocation}\n`);
-logStream.write(`Images Dir Path is ${imagesDirPath}\n`);
-logStream.write(`CSV File Path is ${csvFilePath}\n`);
-logStream.write(`Base Dir Audio Path is ${audioBaseLocation}\n`);
-logStream.write(`Audio Path is ${audioLocation}\n`);
+// logStream.write('Getting Directories location from config file\n');
+// logStream.write(`Base Location is ${baseLocation}\n`);
+// logStream.write(`Images Dir Path is ${imagesDirPath}\n`);
+// logStream.write(`CSV File Path is ${csvFilePath}\n`);
+// logStream.write(`Base Dir Audio Path is ${audioBaseLocation}\n`);
+// logStream.write(`Audio Path is ${audioLocation}\n`);
 
 console.log('Getting Directories location from config file\n');
 console.log(`Base Location is ${baseLocation}\n`);
@@ -71,15 +71,15 @@ function extractImageName(filename) {
 }
 
 async function checkFile(filename, filepath) {
-  logStream.write(`Checking if the audio file (${filename}) is present in ${filepath}\n`);
+  // logStream.write(`Checking if the audio file (${filename}) is present in ${filepath}\n`);
 
   const directory = baseLocation + '/' + filepath
 
   if (existsSync(`${directory}/${filename}`)) {
-    logStream.write(`Audio file is present\n `);
+   // logStream.write(`Audio file is present\n `);
     return true;
   } else {
-    logStream.write(`Audio file is not present \n`);
+    //logStream.write(`Audio file is not present \n`);
     return false;
   }
 }
@@ -153,14 +153,15 @@ function getFileLink(fileLocation, imageLocation) {
   return fileLink;
 }
 
-logStream.write(`Reading CSV file located in ${csvFilePath} \n `);
+//logStream.write(`Reading CSV file located in ${csvFilePath} \n `);
 const csvContents = await fs.promises.readFile(csvFilePath, 'utf-8')
 
 const { data: csvData } = Papa.parse(csvContents)
 if (csvData === null) {
-  logStream.write(`Could'nt read the CSV file successfully\n `);
+  console.log("Could'nt read the CSV file successfully.")
+  //logStream.write(`Could'nt read the CSV file successfully\n `);
 }
-logStream.write(`Read CSV file successfully\n `);
+//logStream.write(`Read CSV file successfully\n `);
 
 for (const row of csvData) {
 
