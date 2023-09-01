@@ -181,6 +181,7 @@ for (const row of csvData) {
     let checkImageFile = await copyAndCheckImage(image_name)
 
     if (!checkImageFile) {
+      console.log("Image not found");
       imageNotFoundData.push({ fileName: fileName, imageName: image_name });
     }
 
@@ -194,13 +195,15 @@ for (const row of csvData) {
   }
 }
 
-const imageNotFoundString = Papa.unparse(imageNotFoundData);
-fs.writeFileSync(`${imageNotFoundDataCsvPath}/ImageNotFound-${vendor}-${batch}.csv`, imageNotFoundString);
+const csvFileName = csvFilePath.lastIndexOf('/').slice(0, -3);
 
-console.log("Creating resultant csv")
+const imageNotFoundString = Papa.unparse(imageNotFoundData);
+fs.writeFileSync(`${imageNotFoundDataCsvPath}/${csvFileName}_images_not_found.csv`, imageNotFoundString);
+
+console.log("Creating resultant csv");
 const resultDataString = Papa.unparse(resuldData);
-fs.writeFileSync(`${resultPath}/${batch}_${vendor}.csv`, resultDataString);
-console.log("Created")
+fs.writeFileSync(`${resultPath}/${csvFileName}_${vendor}.csv`, resultDataString);
+console.log("Created");
 
 logStream.write(`Execution Done\n `);
 logStream.end();
