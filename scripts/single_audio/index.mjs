@@ -109,7 +109,7 @@ function getImageName(filename) {
       imageName = imageName + "_" + parts[i];
     }
   }
-  console.log("Image Name :", imageName.slice(1));
+  console.log("Image Name :", imageName);
   return imageName.slice(1);
 }
 
