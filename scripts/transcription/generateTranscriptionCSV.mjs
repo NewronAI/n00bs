@@ -121,7 +121,11 @@ for (let i = 0; i < csvData.length; i++) {
         } else {
             const fileLink = getFileLink(`${audioLocation}/${fileName}.wav`);
             //console.log(fileLink);
-            rowData = { state: state, district: district, fileName: fileName, fileLink: fileLink, duration: duration };
+            rowData["State"] = state;
+            rowData["District"] = district;
+            rowData["fileName"] = fileName;
+            rowData["filelink"] = fileLink;
+            rowData["duration"] = duration;
         }
     }
 
