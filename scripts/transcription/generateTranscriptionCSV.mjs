@@ -126,9 +126,9 @@ for (let i = 0; i < csvData.length; i++) {
             rowData["fileName"] = fileName;
             rowData["filelink"] = fileLink;
             rowData["duration"] = duration;
-            rowData["transcription"] = row[1];
-            rowData["q1"] = "";
-            rowData["q2"] = "";
+            rowData["Transcription"] = row[1];
+            rowData["Does the transcribed text exactly match the audio? (Y/N)"] = "";
+            rowData["If not, please type the correct transcription."] = "";
             console.log(rowData);
             resuldData.push(rowData);
         }
