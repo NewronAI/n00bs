@@ -94,7 +94,7 @@ function getFileLink(fileLocation) {
     const relevantFileLocation = fileLocation.split("/").slice(4).join("/");
     //console.log("File Locaton Given", relevantFileLocation);
     const encodedFileLocation = encodeURIComponent(relevantFileLocation)
-    const fileLink = `http://vaani.qc.artpark.in/single_audio/?a=${encodedFileLocation}`
+    const fileLink = `http://vaani.qc.artpark.in/transcription/?a=${encodedFileLocation}`
     return fileLink;
 }
 
