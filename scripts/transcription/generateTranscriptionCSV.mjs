@@ -126,14 +126,13 @@ for (let i = 0; i < csvData.length; i++) {
             rowData["fileName"] = fileName;
             rowData["filelink"] = fileLink;
             rowData["duration"] = duration;
+            rowData["transcription"] = row[1];
+            rowData["q1"] = "";
+            rowData["q2"] = "";
+            console.log(rowData);
+            resuldData.push(rowData);
         }
     }
-
-    rowData["transcription"] = row[1];
-    rowData["q1"] = "";
-    rowData["q2"] = "";
-    console.log(rowData);
-    resuldData.push(rowData);
 }
 
 
