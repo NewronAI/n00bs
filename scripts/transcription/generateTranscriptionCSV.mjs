@@ -101,13 +101,12 @@ function getFileLink(fileLocation) {
 for (let i = 0; i < csvData.length; i++) {
     const row = csvData[i];
     const fileDetails = row[0];
-    console.log("file details", fileDetails)
     let rowData = {};
 
     if (i > 0 && fileDetails != undefined) {
         // Skip the execution for the first element
         //console.log(`Working on this audio file ${fileDetails} \n `);
-
+        console.log("file details", fileDetails)
         const separatorIndex = fileDetails.lastIndexOf('/');
         const fileName = fileDetails.substring(separatorIndex + 1);
         //console.log("File Name", fileName);
