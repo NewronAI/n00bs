@@ -101,6 +101,10 @@ function getFileLink(fileLocation) {
 for (const row of csvData) {
 
     const fileDetails = row[0]
+    if (fileDetails === "File Name") {
+        continue;
+    }
+
     let rowData = {};
 
     if (fileDetails !== undefined) {
