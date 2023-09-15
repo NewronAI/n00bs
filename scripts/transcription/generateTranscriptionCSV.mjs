@@ -132,6 +132,7 @@ for (let i = 0; i < csvData.length; i++) {
     rowData["transcription"] = row[1];
     rowData["q1"] = "";
     rowData["q2"] = "";
+    console.log(rowData);
     resuldData.push(rowData);
 }
 
