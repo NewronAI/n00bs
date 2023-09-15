@@ -130,8 +130,8 @@ for (const row of csvData) {
         }
     }
     rowData["transcription"] = row[1];
-    rowData[q1] = "";
-    rowData[q2] = "";
+    rowData["q1"] = "";
+    rowData["q2"] = "";
     resuldData.push(rowData);
 }
 
