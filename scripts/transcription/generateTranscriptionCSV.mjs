@@ -59,6 +59,9 @@ function extractFileInfo(filename) {
         console.log({ state, district, speakerID, imageName, duration });
         return { state, district, speakerID, imageName, duration };
     }
+    else {
+        return { state: "", district: "", speakerID: "", imageName: "", duration: "" }
+    }
 }
 
 async function checkAndCopyAudioFile(fileName) {
