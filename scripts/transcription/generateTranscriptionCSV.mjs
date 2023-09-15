@@ -151,5 +151,5 @@ if (fileNoteFound != []) {
 
 //console.log("Creating resultant csv");
 const resultDataString = Papa.unparse(resuldData);
-fs.writeFileSync(`${resultPath}/${csvFileName}_${vendor}.csv`, resultDataString);
+fs.writeFileSync(`${resultPath}/${csvFileName}_${vendor}.csv`, resultDataString, 'utf-8');
 //console.log("Created");
