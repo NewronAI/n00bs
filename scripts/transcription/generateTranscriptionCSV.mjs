@@ -103,7 +103,7 @@ for (let i = 0; i < csvData.length; i++) {
     const fileDetails = row[0];
     let rowData = {};
 
-    if (i > 0 && fileDetails !== undefined) {
+    if (i > 0 && fileDetails !== "") {
         // Skip the execution for the first element
         //console.log(`Working on this audio file ${fileDetails} \n `);
         console.log("file details", typeof(fileDetails))
