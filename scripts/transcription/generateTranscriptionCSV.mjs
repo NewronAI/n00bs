@@ -132,8 +132,8 @@ for (let i = 0; i < csvData.length; i++) {
 }
 
 
-const lastIndex = csvFilePath.lastIndexOf('/');
-const csvFileName = csvFilePath.slice(lastIndex + 1, -4);
+const lastIndex = csvFilename.lastIndexOf('/');
+const csvFileName = csvFilename.slice(lastIndex + 1, -4);
 
 if (fileNoteFound != []) {
     if (!existsSync(`/data2/data_nginx/transcription/${vendor}/notFoundFiles/${batch}`)) {
