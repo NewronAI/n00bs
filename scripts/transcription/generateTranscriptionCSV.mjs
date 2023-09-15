@@ -46,6 +46,7 @@ const resuldData = [];
 const fileNoteFound = [];
 
 function extractFileInfo(filename) {
+    console.log("FileName = ", filename)
     const parts = filename.split("_");
     const state = parts[0];
     const district = parts[1];
