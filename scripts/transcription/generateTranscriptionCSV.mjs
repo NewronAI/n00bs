@@ -106,7 +106,7 @@ for (let i = 0; i < csvData.length; i++) {
     if (i > 0 && fileDetails !== undefined) {
         // Skip the execution for the first element
         //console.log(`Working on this audio file ${fileDetails} \n `);
-        console.log("file details", fileDetails)
+        console.log("file details", typeof(fileDetails))
         const separatorIndex = fileDetails.lastIndexOf('/');
         const fileName = fileDetails.substring(separatorIndex + 1);
         //console.log("File Name", fileName);
