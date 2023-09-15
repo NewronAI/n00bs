@@ -98,17 +98,13 @@ function getFileLink(fileLocation) {
     return fileLink;
 }
 
-for (const row of csvData) {
-
-    const fileDetails = row[0]
-    if (fileDetails === "File Name") {
-        continue;
-    }
-
+for (let i = 0; i < csvData.length; i++) {
+    const row = csvData[i];
+    const fileDetails = row[0];
     let rowData = {};
 
-    if (fileDetails !== undefined) {
-        //logStream.write(`Working on this audio file ${fileDetails} \n `);
+    if (i > 0) {
+        // Skip the execution for the first element
         console.log(`Working on this audio file ${fileDetails} \n `);
 
         const separatorIndex = fileDetails.lastIndexOf('/');
@@ -122,18 +118,19 @@ for (const row of csvData) {
         if (!checkAudioFile) {
             console.log("Audio not found");
             fileNoteFound.push({ fileName: fileName });
-        }
-        else {
+        } else {
             const fileLink = getFileLink(`${audioLocation}/${fileName}.wav`);
             console.log(fileLink);
             rowData = { state: state, district: district, fileName: fileName, fileLink: fileLink, duration: duration };
         }
     }
+
     rowData["transcription"] = row[1];
     rowData["q1"] = "";
     rowData["q2"] = "";
     resuldData.push(rowData);
 }
+
 
 const lastIndex = csvFilePath.lastIndexOf('/');
 const csvFileName = csvFilePath.slice(lastIndex + 1, -4);
