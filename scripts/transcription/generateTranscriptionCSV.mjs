@@ -17,6 +17,7 @@ if (csvFilename.slice(-3) !== "csv") {
 
 // const csvContents = fs.readFileSync(, 'utf-8');
 const { data: csvData } = Papa.parse(csvFilename, {encoding : "utf-8"});
+console.log(csvData)
 
 if (csvData === null) {
     //console.log("Could'nt read the CSV file successfully.");
