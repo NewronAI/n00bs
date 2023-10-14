@@ -15,8 +15,8 @@ if (csvFilename.slice(-3) !== "csv") {
     throw new Error(`File ${csvFilename} is not csv format. The format is ${csvFilename.slice(0, -3)}`);
 }
 
-const csvContents = fs.readFileSync(csvFilename, 'utf-8');
-const { data: csvData } = Papa.parse(csvContents)
+// const csvContents = fs.readFileSync(, 'utf-8');
+const { data: csvData } = Papa.parse(csvFilename, {encoding : "utf-8"});
 
 if (csvData === null) {
     //console.log("Could'nt read the CSV file successfully.");
