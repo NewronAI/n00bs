@@ -11,9 +11,9 @@ const csvFilename = process.argv[3];
 const batch = process.argv[4];
 const vendor = process.argv[5];
 
-if (csvFilename.slice(-3) !== "csv" || csvFilename.slice(-3) !== "tsv") {
-    throw new Error(`File ${csvFilename} is not csv or tsv format.`);
-}
+// if (csvFilename.slice(-3) !== "csv" || csvFilename.slice(-3) !== "tsv") {
+//     throw new Error(`File ${csvFilename} is not csv or tsv format.`);
+// }
 
 const csvContents = fs.readFileSync(csvFilename, 'utf-8');
 
