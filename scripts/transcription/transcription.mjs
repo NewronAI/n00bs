@@ -70,9 +70,7 @@ function extractFileInfo(filename) {
 }
 
 function getFileLink(fileLocation) {
-    //console.log("fileDetails", fileLocation)
     const relevantFileLocation = fileLocation.split("/").slice(4).join("/");
-    //console.log("File Locaton Given", relevantFileLocation);
     const encodedFileLocation = encodeURIComponent(relevantFileLocation);
     const fileLink = `http://vaani.qc.artpark.in/transcription/?a=${encodedFileLocation}`;
     return fileLink;
@@ -83,10 +81,10 @@ async function checkAndCopyAudioFile(fileName) {
         //console.log(`Could'nt find the file ${fileName} in ${audioLocation}`)
         try {
             await exec(`scp -r -i "/home/artpark_user1/.ssh/id_rsa" ${audioBaseLocation}/${fileName} ${audioLocation}`)
-            //console.log(`Copied the file ${fileName}`)
+            console.log(`Copied the file ${fileName}`)
             return true;
         } catch (e) {
-            //console.log("Error", e)
+            console.log("Error", e)
             return false;
         }
     }
