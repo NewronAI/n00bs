@@ -28,11 +28,11 @@ const tsvArray = Papa.parse(tsvData, {
     header: false,
 }).data;
 
-if (csvData === null) {
-    //console.log("Could'nt read the CSV file successfully.");
-    exit(1)
-    //logStream.write(`Could'nt read the CSV file successfully\n `);
-}
+// if (csvData === null) {
+//     //console.log("Could'nt read the CSV file successfully.");
+//     exit(1)
+//     //logStream.write(`Could'nt read the CSV file successfully\n `);
+// }
 
 if (!existsSync(`/data2/data_nginx/transcription/${vendor}/audios/${batch}`)) {
     await exec(`mkdir /data2/data_nginx/transcription/${vendor}/audios/${batch}`)
