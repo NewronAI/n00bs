@@ -101,21 +101,21 @@ const newTsvArray = tsvArray.map(async (row, index) => {
             fileNoteFound.push({ fileName: fileName });
         }
         else {
-            const link = getFileLink(audioLocation + fileName);
+            const link = getFileLink(audioLocation + fileName + ".wav");
             console.log(link);
-            return [row[0], row[1], link, state, district]
+            return [row[0], row[1], link, state, district];
         }
     }
 });
 
-// console.log("new Tsv Array Created", tsvArray);
+console.log("new Tsv Array Created", tsvArray);
 
 const resultedCSV = Papa.unparse(newTsvArray, {
     delimiter: ",",
     header: true,
 });
 
-console.log(resultedCSV);
+//console.log(resultedCSV);
 
 fs.writeFileSync(`${resultPath}/output_${vendor}.csv`, resultedCSV, 'utf-8');
 
