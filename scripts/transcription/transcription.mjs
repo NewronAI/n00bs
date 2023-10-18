@@ -28,12 +28,6 @@ const tsvArray = Papa.parse(tsvData, {
     header: false,
 }).data;
 
-// if (csvData === null) {
-//     //console.log("Could'nt read the CSV file successfully.");
-//     exit(1)
-//     //logStream.write(`Could'nt read the CSV file successfully\n `);
-// }
-
 if (!existsSync(`/data2/data_nginx/transcription/${vendor}/audios/${batch}`)) {
     await exec(`mkdir /data2/data_nginx/transcription/${vendor}/audios/${batch}`)
     //console.log(`${batch} folder created in /data2/data_nginx/transcription/${vendor}/audios/${batch}`)
@@ -50,7 +44,7 @@ const baseLocation = "/data2/data_nginx/transcription";
 const audioLocation = `/data2/data_nginx/transcription/${vendor}/audios/${batch}`;
 const audioNotFound = `/data2/data_nginx/transcription/${vendor}/notFoundFiles/${batch}`;
 const resultPath = `/data2/data_nginx/transcription/${vendor}/injestionCSV/${batch}`;
-const audioBaseLocation = `artpark_user5@34.93.122.66:/home/check_instance/Transcription_QC/${vendor}/${batch}`;
+const audioBaseLocation = `/data1/Database/raw/${vendor}_scripts/${vendor}_QC_SHARE_DATA/${batch}`;
 
 const fileNoteFound = [];
 
@@ -80,7 +74,7 @@ async function checkAndCopyAudioFile(fileName) {
     if (!existsSync(`${audioLocation}/${fileName}`)) {
         //console.log(`Could'nt find the file ${fileName} in ${audioLocation}`)
         try {
-            await exec(`scp -r -i "/home/artpark_user1/.ssh/id_rsa" ${audioBaseLocation}/${fileName} ${audioLocation}`)
+            await exec(`scp -r ${audioBaseLocation}/${fileName} ${audioLocation}`)
             console.log(`Copied the file ${fileName}`)
             return true;
         } catch (e) {
