@@ -145,7 +145,7 @@ for (let i = 0; i < tsvArray.length; i++) {
     }
 }
 
-const resultedCSV = Papa.unparse(resuldData, {
+const resultedCSV = Papa.unparse(newTsvArray, {
     delimiter: ",",
     header: true,
 });
