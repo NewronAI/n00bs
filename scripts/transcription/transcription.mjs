@@ -102,6 +102,7 @@ const newTsvArray = tsvArray.map(async (row, index) => {
         }
         else {
             const link = getFileLink(audioLocation + fileName);
+            console.log(link);
             return [row[0], row[1], link, state, district]
         }
     }
@@ -113,6 +114,8 @@ const resultedCSV = Papa.unparse(newTsvArray, {
     delimiter: ",",
     header: true,
 });
+
+console.log(resultedCSV);
 
 fs.writeFileSync(`${resultPath}/output_${vendor}.csv`, resultedCSV, 'utf-8');
 
