@@ -159,6 +159,7 @@ if(fileNoteFound.length === 0) {
     });
 
     fs.writeFileSync(`${audioNotFound}/not_found_audios${vendor}.csv`, notFoundData, 'utf-8');
+    console.log("Total Audios not found - ", fileNoteFound.length);
 }
 
 console.log("Output file created");
