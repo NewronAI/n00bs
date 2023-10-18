@@ -150,10 +150,15 @@ const resultedCSV = Papa.unparse(newTsvArray, {
     header: true,
 });
 
-console.log('Resulted Array', resultedCSV)
-
-//console.log(resultedCSV);
-
 fs.writeFileSync(`${resultPath}/output_${vendor}.csv`, resultedCSV, 'utf-8');
+
+if(fileNoteFound.length === 0) {
+    const notFoundData = Papa.unparse(fileNoteFound, {
+        delimiter: ",",
+        header: true,
+    });
+
+    fs.writeFileSync(`${audioNotFound}/not_found_audios${vendor}.csv`, notFoundData, 'utf-8');
+}
 
 console.log("Output file created");
