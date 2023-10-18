@@ -78,7 +78,7 @@ async function checkAndCopyAudioFile(fileName) {
             console.log(`Copied the file ${fileName}`)
             return true;
         } catch (e) {
-            console.log("Error", e)
+            console.log("Error", e);
             return false;
         }
     }
@@ -87,30 +87,67 @@ async function checkAndCopyAudioFile(fileName) {
     }
 }
 
-const newTsvArray = tsvArray.map(async (row, index) => {
+// const newTsvArray = tsvArray.map(async (row, index) => {
 
-    const fileName = row[0];
-    if (index === 0) {
-        console.log("ROW", row);
-    }
-    if (fileName !== "") {
+//     const fileName = row[0];
+//     if (index === 0) {
+//         console.log("ROW", row);
+//     }
+//     if (fileName !== "") {
+//         const { state, district, speakerID, utteranceID, imageName, duration } = extractFileInfo(fileName);
+//         const checkAudioFile = await checkAndCopyAudioFile(fileName + ".wav");
+//         if (!checkAudioFile) {
+//             console.log("Audio not found");
+//             fileNoteFound.push({ fileName: fileName });
+//         }
+//         else {
+//             const link = getFileLink(audioLocation + fileName + ".wav");
+//             console.log(link);
+//             return [row[0], row[1], link, state, district];
+//         }
+//     }
+// });
+
+const newTsvArray = [];
+
+for (let i = 0; i < tsvArray.length; i++) {
+    const row = tsvArray[i];
+    const fileDetails = row[0];
+    let rowData = {};
+
+    if (i > 0 && fileDetails !== "") {
+
+        console.log("file details", typeof (fileDetails))
+        const separatorIndex = fileDetails.lastIndexOf('/');
+        const fileName = fileDetails.substring(separatorIndex + 1);
+        console.log("File Name - ", fileName);
+
         const { state, district, speakerID, utteranceID, imageName, duration } = extractFileInfo(fileName);
         const checkAudioFile = await checkAndCopyAudioFile(fileName + ".wav");
+
         if (!checkAudioFile) {
             console.log("Audio not found");
             fileNoteFound.push({ fileName: fileName });
-        }
-        else {
-            const link = getFileLink(audioLocation + fileName + ".wav");
-            console.log(link);
-            return [row[0], row[1], link, state, district];
+        } else {
+            const fileLink = getFileLink(`${audioLocation}/${fileName}.wav`);
+            console.log(fileLink);
+            rowData["State"] = state;
+            rowData["District"] = district;
+            rowData["fileName"] = fileName;
+            rowData["filelink"] = fileLink;
+            rowData["duration"] = duration;
+            rowData["Transcription"] = row[1];
+            rowData["Does the transcribed text exactly match the audio? (Y/N)"] = "";
+            rowData["If not, please type the correct transcription."] = "";
+            console.log(rowData);
+            resuldData.push(rowData);
         }
     }
-});
+}
 
 console.log("new Tsv Array Created", tsvArray);
 
-const resultedCSV = Papa.unparse(newTsvArray, {
+const resultedCSV = Papa.unparse(resuldData, {
     delimiter: ",",
     header: true,
 });
