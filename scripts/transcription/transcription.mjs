@@ -152,7 +152,7 @@ const resultedCSV = Papa.unparse(newTsvArray, {
 
 fs.writeFileSync(`${resultPath}/output_${vendor}.csv`, resultedCSV, 'utf-8');
 
-if(fileNoteFound.length === 0) {
+if(fileNoteFound.length !== 0) {
     const notFoundData = Papa.unparse(fileNoteFound, {
         delimiter: ",",
         header: true,
