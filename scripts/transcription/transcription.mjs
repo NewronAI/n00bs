@@ -140,17 +140,17 @@ for (let i = 0; i < tsvArray.length; i++) {
             rowData["Does the transcribed text exactly match the audio? (Y/N)"] = "";
             rowData["If not, please type the correct transcription."] = "";
             console.log(rowData);
-            resuldData.push(rowData);
+            newTsvArray.push(rowData);
         }
     }
 }
-
-console.log("new Tsv Array Created", tsvArray);
 
 const resultedCSV = Papa.unparse(resuldData, {
     delimiter: ",",
     header: true,
 });
+
+console.log('Resulted Array', resultedCSV)
 
 //console.log(resultedCSV);
 
