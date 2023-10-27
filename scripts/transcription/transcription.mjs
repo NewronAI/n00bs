@@ -133,9 +133,9 @@ for (let i = 0; i < tsvArray.length; i++) {
             console.log(fileLink);
             rowData["State"] = state;
             rowData["District"] = district;
-            rowData["fileName"] = fileName;
-            rowData["filelink"] = fileLink;
-            rowData["duration"] = duration;
+            rowData["File Name"] = fileName;
+            rowData["File link"] = fileLink;
+            rowData["Duration"] = duration;
             rowData["Transcription"] = row[1];
             rowData["Does the transcribed text exactly match the audio? (Y/N)"] = "";
             rowData["If not, please type the correct transcription."] = "";
