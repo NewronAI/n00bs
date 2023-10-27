@@ -204,6 +204,8 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
         }
     });
 
+    await sendTextMessage(waID, `${messageId.wfID} ${questions[0].uuid}`);
+
     await sendTextMessage(waID, `File Name - ${task_assignment?.workflow_file.file_name.split("/").pop()}\n\n Please visit the below link to view the file\n\n${task_assignment?.workflow_file.file}`)
     await sendQuestion(waID, questions[0].text, questions[0].options, questions[0].uuid, questions[0].expected_answer, messageId.wfID);
 }
@@ -212,6 +214,8 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
 
     console.log("Current Question UUID: ", session.current_question_uuid);
     console.log("Recived answer question UUID: ", messageId.questionUUID);
+
+    await sendTextMessage(waID, `Answer Recieved is ${textBody}`);
 
     if (session.current_question_uuid !== messageId.questionUUID) {
         console.log("Couldn't match the question uuid")
