@@ -227,6 +227,8 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
         response[messageId.questionUUID] = textBody;
         const questions = await getQuestions(messageId.wfID, task_assignment_id);
 
+        await sendTextMessage(waID, "Answer Recieved is expected answer");
+
         const filteredQuestions = questions?.filter((question: { uuid: string | number; }) => {
             if (response[question.uuid] === "null") {
                 return question;
@@ -239,7 +241,7 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
 
         const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid)
 
-        if (filteredQuestions.length === 1 && filteredQuestions[0].name.slice(0, 8) === "Comments") {
+        if (filteredQuestions.length === 1 && (filteredQuestions[0].name.slice(0, 8) === "Comments" || filteredQuestions[0].name.slice(0, 7) === "Correct")) {
             await sendTextMessage(waID, filteredQuestions[0].text)
             return;
         }
