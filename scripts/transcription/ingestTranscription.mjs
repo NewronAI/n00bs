@@ -20,7 +20,6 @@ async function createLinksAndPostRequest() {
     let filesData = [];
     let i = 0;
     for (const row of tsvArray) {
-        console.log(row)
         if (i !== 0) {
             const fileData = {
                 file_name: row[2],
@@ -29,9 +28,12 @@ async function createLinksAndPostRequest() {
                 district: row[1],
                 state: row[0],
                 file_duration: parseFloat(row[4]),
-                vendor: vendor
+                vendor: vendor,
+                metadata: {
+                    "transcriptionText" : row[5]
+                }
             };
-            //console.log(fileData);
+            console.log(fileData);
             filesData.push(fileData);
         }
 
