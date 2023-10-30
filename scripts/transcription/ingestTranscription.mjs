@@ -14,12 +14,13 @@ const tsvArray = Papa.parse(csvContents, {
 if (tsvArray === null) {
     console.log(`Could'nt read the CSV file successfully\n `);
 }
-console.log(`Read CSV file successfully\n `, tsvArray);
+console.log(`Read CSV file successfully\n `);
 
 async function createLinksAndPostRequest() {
     let filesData = [];
     let i = 0;
     for (const row of tsvArray) {
+        console.log(row)
         if (i !== 0) {
             const fileData = {
                 file_name: row[2],
