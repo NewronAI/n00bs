@@ -62,7 +62,7 @@ async function createLinksAndPostRequest() {
     }
 
     const requestBody = {
-        secret: '636eebcef989e94113c5d91c6b493cbd3a17c8df5737fcb7bce7fe90f03787c3',
+        secret: '0e32e9313c1f71f0da8969c9bc828a9d62e1f7251a39197e48b4ebef1eda2da2',
         data: filesData
     };
     console.log("Total files ingesting", filesData.length);
