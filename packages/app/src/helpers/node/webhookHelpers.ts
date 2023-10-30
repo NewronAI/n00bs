@@ -291,6 +291,8 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
             if(filteredQuestions) {
                 await sendTextMessage(waID, filteredQuestions[0].text);
             }
+
+            return;
         }
 
         responseKeys.forEach(key => {
