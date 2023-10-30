@@ -57,7 +57,7 @@ function extractFileInfo(filename) {
     const imageName = parts[4] !== "IMG" ? (parts[4].slice(0, 3) === "IMG" ? parts[4] : parts[4] + '_' + parts[5]) : parts[4] + '_' + parts[5] + '_' + parts[6];
     const secondLastNumber = parseInt(parts[parts.length - 2]);
     const lastNumber = parseInt(parts[parts.length - 1].slice(0, -4));
-    //console.log(parts[parts.length - 2], "-----", parts[parts.length - 1])
+    console.log({lastNumber,secondLastNumber})
     const duration = (lastNumber - secondLastNumber) / 1000;
     //console.log({ state, district, speakerID, utteranceID, imageName, duration })
     return { state, district, speakerID, utteranceID, imageName, duration };
