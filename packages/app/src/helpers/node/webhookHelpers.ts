@@ -202,7 +202,24 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
         }
     });
 
-    await sendTextMessage(waID, `File Name - ${task_assignment?.workflow_file.file_name.split("/").pop()}\n\n Please visit the below link to view the file\n\n${task_assignment?.workflow_file.file}`)
+    if (messageId.wfID === 3) {
+        const workflowFile = task_assignment?.workflow_file as {metadata: { transcriptionText: string }, file: string, uuid: string, file_name: string };
+
+        if (workflowFile?.metadata?.transcriptionText) {
+            const transcriptionText = workflowFile?.metadata["transcriptionText"];
+
+            if (typeof transcriptionText === 'string') {
+                await sendTextMessage(waID, `File Name - ${workflowFile.file_name.split("/").pop()}\n\n Please visit the below link to view the file\n\n${workflowFile.file}\n\nTranscription : ${transcriptionText}`);
+            } else {
+                await sendTextMessage(waID, "Failed");
+            }
+        } else {
+            await sendTextMessage(waID, "Failed 2");
+        }
+    } else {
+        await sendTextMessage(waID, `File Name - ${task_assignment?.workflow_file.file_name.split("/").pop()}\n\n Please visit the below link to view the file\n\n${task_assignment?.workflow_file.file}`)
+    }
+
     await sendQuestion(waID, questions[0].text, questions[0].options, questions[0].uuid, questions[0].expected_answer, messageId.wfID);
 }
 
@@ -275,12 +292,9 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
         const task_assignment_id = session.task_assignment_id
         response[session.current_question_uuid] = textBody;
         const responseKeys = Object.keys(response);
-        await sendTextMessage(waID, "Answer recieved is expected answer")
 
         if (messageId.wfID === 3) {
             const questions = await getQuestions(messageId.wfID, task_assignment_id);
-
-            await sendTextMessage(waID, "Answer is not expected")
 
             const filteredQuestions = questions?.filter((question: { uuid: string | number; }) => {
                 if (response[question.uuid] === "null") {
@@ -288,11 +302,9 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
                 }
             })
 
-            await sendTextMessage(waID, "Trying to send 2nd question");
-
             console.log(filteredQuestions);
 
-            if(filteredQuestions) {
+            if (filteredQuestions) {
                 await sendTextMessage(waID, filteredQuestions[0].text);
             }
 
