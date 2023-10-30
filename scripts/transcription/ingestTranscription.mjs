@@ -16,6 +16,7 @@ async function createLinksAndPostRequest() {
     let filesData = [];
     let i = 0;
     for (const row of csvData) {
+        console.log(row)
         if (i !== 0) {
             const fileData = {
                 file_name: row[2],
@@ -26,7 +27,7 @@ async function createLinksAndPostRequest() {
                 file_duration: parseFloat(row[4]),
                 vendor: vendor
             };
-            console.log(fileData);
+            //console.log(fileData);
             filesData.push(fileData);
         }
 
