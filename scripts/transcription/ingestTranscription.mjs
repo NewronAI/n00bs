@@ -10,13 +10,12 @@ const { data: csvData } = Papa.parse(csvContents)
 if (csvData === null) {
     console.log(`Could'nt read the CSV file successfully\n `);
 }
-console.log(`Read CSV file successfully\n `);
+console.log(`Read CSV file successfully\n `, csvData);
 
 async function createLinksAndPostRequest() {
     let filesData = [];
     let i = 0;
     for (const row of csvData) {
-        console.log(row)
         if (i !== 0) {
             const fileData = {
                 file_name: row[2],
