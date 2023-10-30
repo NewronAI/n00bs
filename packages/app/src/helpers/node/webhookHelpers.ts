@@ -253,13 +253,11 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
             });
 
             await updateTask(waID, upddatedSession);
-
-            await sendTextMessage(waID, "Updated the task")
-
+            await sendTextMessage(waID, "Updated the task");
             await handleWFResponse({ type: "WF", wfID: 3 }, upddatedSession, waID);
         }
 
-        const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid)
+        const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid);
 
         if (filteredQuestions.length === 1 && filteredQuestions[0].name.slice(0, 8) === "Comments") {
             await sendTextMessage(waID, filteredQuestions[0].text)
@@ -277,6 +275,8 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
 
         if (messageId === 3) {
             const questions = await getQuestions(messageId.wfID, task_assignment_id);
+
+            await sendTextMessage(waID, "Answer is not expected")
 
             const filteredQuestions = questions?.filter((question: { uuid: string | number; }) => {
                 if (response[question.uuid] === "null") {
