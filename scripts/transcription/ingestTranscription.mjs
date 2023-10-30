@@ -21,16 +21,17 @@ async function createLinksAndPostRequest() {
     let i = 0;
     for (const row of tsvArray) {
         if (i !== 0) {
+            const fileInfo = row[0].split(',');
             const fileData = {
-                file_name: row[2],
+                file_name: fileInfo[2],
                 file_type: 'audio',
-                file: row[3],
-                district: row[1],
-                state: row[0],
-                file_duration: parseFloat(row[4]),
+                file: fileInfo[3],
+                district: fileInfo[1],
+                state: fileInfo[0],
+                file_duration: parseFloat(fileInfo[4]),
                 vendor: vendor,
                 metadata: {
-                    "transcriptionText" : row[5]
+                    "transcriptionText" : fileInfo[5]
                 }
             };
             console.log(fileData);
