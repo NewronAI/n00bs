@@ -16,7 +16,7 @@ async function createLinksAndPostRequest() {
     let filesData = [];
     let i = 0;
     for (const row of csvData) {
-        if (i !== 0 && i !== 1) {
+        if (i !== 0) {
             const fileData = {
                 file_name: row[2],
                 file_type: 'audio',
@@ -50,7 +50,7 @@ async function createLinksAndPostRequest() {
         //     i = 2;
         // }
 
-        // i++;
+        i++;
     }
 
     // const requestBody = {
