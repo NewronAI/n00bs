@@ -225,10 +225,6 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
         response[messageId.questionUUID] = textBody;
         const questions = await getQuestions(messageId.wfID, task_assignment_id);
 
-        if (messageId === 3) {
-            return;
-        }
-
         const filteredQuestions = questions?.filter((question: { uuid: string | number; }) => {
             if (response[question.uuid] === "null") {
                 return question;
@@ -237,6 +233,30 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
 
         if (!filteredQuestions) {
             return;
+        }
+
+        if (messageId === 3) {
+            const responseKeys = Object.keys(response);
+            responseKeys.forEach(key => {
+                if (response[key] === "null") {
+                    response[key] = "NA"
+                }
+            });
+
+            const upddatedSession = await db.user_session.update({
+                where: {
+                    id: session.id,
+                },
+                data: {
+                    responses: response
+                }
+            });
+
+            await updateTask(waID, upddatedSession);
+
+            await sendTextMessage(waID, "Updated the task")
+
+            await handleWFResponse({ type: "WF", wfID: 3 }, upddatedSession, waID);
         }
 
         const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid)
