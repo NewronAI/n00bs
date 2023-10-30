@@ -105,11 +105,9 @@ async function getTaskAssingment(workflowID: number, assigneeID: any) {
                     uuid: true,
                     file_name: true,
                     file: true,
+                    metadata: true
                 }
             }
-        },
-        orderBy: {
-            createdAt: "asc"
         }
     })
 
@@ -204,8 +202,6 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
         }
     });
 
-    await sendTextMessage(waID, `${messageId.wfID} ${questions[0].uuid}`);
-
     await sendTextMessage(waID, `File Name - ${task_assignment?.workflow_file.file_name.split("/").pop()}\n\n Please visit the below link to view the file\n\n${task_assignment?.workflow_file.file}`)
     await sendQuestion(waID, questions[0].text, questions[0].options, questions[0].uuid, questions[0].expected_answer, messageId.wfID);
 }
@@ -214,8 +210,6 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
 
     console.log("Current Question UUID: ", session.current_question_uuid);
     console.log("Recived answer question UUID: ", messageId.questionUUID);
-
-    await sendTextMessage(waID, `Answer Recieved is ${textBody}`);
 
     if (session.current_question_uuid !== messageId.questionUUID) {
         console.log("Couldn't match the question uuid")
@@ -231,7 +225,9 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
         response[messageId.questionUUID] = textBody;
         const questions = await getQuestions(messageId.wfID, task_assignment_id);
 
-        await sendTextMessage(waID, "Answer Recieved is expected answer");
+        if (messageId === 3) {
+            return;
+        }
 
         const filteredQuestions = questions?.filter((question: { uuid: string | number; }) => {
             if (response[question.uuid] === "null") {
@@ -245,18 +241,32 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
 
         const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid)
 
-        if (filteredQuestions.length === 1 && (filteredQuestions[0].name.slice(0, 8) === "Comments" || filteredQuestions[0].name.slice(0, 7) === "Correct")) {
+        if (filteredQuestions.length === 1 && filteredQuestions[0].name.slice(0, 8) === "Comments") {
             await sendTextMessage(waID, filteredQuestions[0].text)
             return;
         }
 
         await sendQuestion(waID, filteredQuestions[0].text, filteredQuestions[0].options, filteredQuestions[0].uuid, filteredQuestions[0].expected_answer, messageId.wfID);
 
-    } else if (messageId.expectedAns !== textBody && messageId.wfID === 1) {
+    } else if (messageId.expectedAns !== textBody && messageId.wfID === 1 && messageId === 3) {
 
         const response = session.responses;
+        const task_assignment_id = session.task_assignment_id
         response[session.current_question_uuid] = textBody;
         const responseKeys = Object.keys(response);
+
+        if (messageId === 3) {
+            const questions = await getQuestions(messageId.wfID, task_assignment_id);
+
+            const filteredQuestions = questions?.filter((question: { uuid: string | number; }) => {
+                if (response[question.uuid] === "null") {
+                    return question;
+                }
+            })
+
+            if(filteredQuestions)
+            await sendTextMessage(waID, filteredQuestions[0].text);
+        }
 
         responseKeys.forEach(key => {
             if (response[key] === "null") {
@@ -283,7 +293,7 @@ async function updateTask(waID: any, session: any) {
     const expectedAnswers: (string | null)[] = [];
     const responses = session.responses;
 
-    console.log("Responses recieved",responses);
+    console.log("Responses recieved", responses);
 
     const qandas = await Promise.all(Object.keys(responses).map(async questionUUID => {
         const question = await db.question.findFirstOrThrow({
@@ -295,9 +305,9 @@ async function updateTask(waID: any, session: any) {
         return { question_id: question.id, answer: responses[questionUUID] }
     }))
 
-    console.log("Question ID and Answers array created",qandas);
+    console.log("Question ID and Answers array created", qandas);
 
-    console.log("Started the creating task answer process for this session",session);
+    console.log("Started the creating task answer process for this session", session);
 
     const [writeStatus] = await db.$transaction([
         db.task_answer.createMany({
@@ -320,7 +330,7 @@ async function updateTask(waID: any, session: any) {
         })
     ]);
 
-    console.log("Finished the Task Answer create process",writeStatus);
+    console.log("Finished the Task Answer create process", writeStatus);
     await sendTextMessage(waID, "Your response have been saved.")
 }
 

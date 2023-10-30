@@ -200,12 +200,52 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
         }
 
         setAssignDialogOpen(false);
-
-
     }
 
+    const columnDefs = [
+        { headerName: "", checkboxSelection: true, width: 80, headerCheckboxSelection: true, headerCheckboxSelectionFilteredOnly: true },
+        { headerName: "File Duration", field: "file_duration", sortable: true, filter: true, aggFunc: 'sum', valueFormatter: fileDurationFormatter, width: 150 },
+        { headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 100 },
+        { headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 400, cellRenderer: FilenameRenderer, tooltipField: "file_name" },
+        { headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150 },
+        {
+            headerName: "Assignments", field: "assignment_count", sortable: true, filter: true, width: 170,
+            tooltipField: "assignment_count",
+            tooltipComponent: (props: ITooltipParams) => (<FileAssignmentTooltip {...props} workflowUUID={workflowUUID} />)
+        },
+        { headerName: "File Path", field: "file", sortable: true, filter: true, width: 500, cellRenderer: UrlRenderer },
+        // {headerName: "File Status", field: "status", sortable: true, filter: true, width: 120},
+        // {headerName: "File UUID", field: "uuid", sortable: true, filter: true, width: 330},
+        { headerName: "State", field: "state", sortable: true, filter: true, rowGroup: true },
+        { headerName: "District", field: "district", sortable: true, filter: true, rowGroup: true, },
+        { headerName: "Created at", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
+        { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130 },
+        {
+            headerName: "File Received at",
+            field: "receivedAt",
+            sortable: true,
+            filter: true,
+            cellRenderer: (params: any) => {
+                const receivedAt: string = params.value;
+                let formattedDate: string = '';
 
+                if (receivedAt) {
+                    const date: Date = new Date(receivedAt);
+                    const day: string = date.getDate().toString().padStart(2, '0');
+                    const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+                    const year: number = date.getFullYear();
+                    formattedDate = `${day}/${month}/${year}`;
+                }
 
+                return formattedDate;
+            },
+            width: 150
+        },
+    ]
+
+    if(workflowDetails?.id === 3) {
+        columnDefs.splice(5, 0, {headerName: "Transcription", field: "metadata.transcriptionText", sortable: true, filter: true, width: 150})
+    }
 
     return (
         <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"unassigned files"} workflowUUID={workflowUUID} />}>
@@ -381,48 +421,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                                 sortable: true,
                                 filter: true,
                             }}
-                            columnDefs={[
-                                { headerName: "", checkboxSelection: true, width: 80, headerCheckboxSelection: true, headerCheckboxSelectionFilteredOnly: true },
-                                { headerName: "File Duration", field: "file_duration", sortable: true, filter: true, aggFunc: 'sum', valueFormatter: fileDurationFormatter, width: 150 },
-                                { headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 100 },
-                                { headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 400, cellRenderer: FilenameRenderer, tooltipField: "file_name" },
-                                { headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150 },
-                                {
-                                    headerName: "Assignments", field: "assignment_count", sortable: true, filter: true, width: 170,
-                                    tooltipField: "assignment_count",
-                                    tooltipComponent: (props: ITooltipParams) => (<FileAssignmentTooltip {...props} workflowUUID={workflowUUID} />)
-                                },
-                                { headerName: "File Path", field: "file", sortable: true, filter: true, width: 500, cellRenderer: UrlRenderer },
-                                // {headerName: "File Status", field: "status", sortable: true, filter: true, width: 120},
-                                // {headerName: "File UUID", field: "uuid", sortable: true, filter: true, width: 330},
-                                { headerName: "State", field: "state", sortable: true, filter: true, rowGroup: true },
-                                { headerName: "District", field: "district", sortable: true, filter: true, rowGroup: true, },
-                                { headerName: "Created at", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
-                                { headerName: "Received at", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 130 },
-                                {
-                                    headerName: "File Received at",
-                                    field: "receivedAt",
-                                    sortable: true,
-                                    filter: true,
-                                    cellRenderer: (params: any) => {
-                                        const receivedAt: string = params.value;
-                                        let formattedDate: string = '';
-
-                                        if (receivedAt) {
-                                            const date: Date = new Date(receivedAt);
-                                            const day: string = date.getDate().toString().padStart(2, '0');
-                                            const month: string = (date.getMonth() + 1).toString().padStart(2, '0');
-                                            const year: number = date.getFullYear();
-                                            formattedDate = `${day}/${month}/${year}`;
-                                        }
-
-                                        return formattedDate;
-                                    },
-                                    width: 150
-                                },
-
-
-                            ]}
+                            columnDefs={columnDefs}
                         />
                     </div>
                 </Loader>

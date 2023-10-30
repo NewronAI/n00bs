@@ -33,6 +33,22 @@ const AllFilesPage = () => {
         return <div>Error fetching</div>
     }
 
+    const columnDefs = [
+        {headerName: "State", field: "state", sortable: true, filter: true,rowGroup:true, hide: true, width: 130,},
+        {headerName: "District", field: "district", sortable: true, rowGroup: true, hide: true, filter: true, width: 150,},
+        {headerName: "Duration", field: "file_duration", sortable: true, filter: true, width: 135, valueFormatter: fileDurationFormatter, aggFunc: 'sum'},
+        {headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 100,},
+        {headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150},
+        {headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 300, tooltipField: "file_name", cellRenderer: FilenameRenderer},
+        {headerName: "File Path", field: "file", sortable: true, filter: true, cellRenderer: UrlRenderer },
+        {headerName: "Created", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
+        {headerName: "Received", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
+    ]
+
+    if(data && data[0]?.workflow_id === 3) {
+        columnDefs.splice(5, 0, {headerName: "Transcription", field: "metadata.transcriptionText", sortable: true, filter: true, width: 150})
+    }
+
     return (
         <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"all files"} workflowUUID={workflowUUID}/> }>
             <Head>
@@ -64,7 +80,6 @@ const AllFilesPage = () => {
                             sideBar={{toolPanels:["columns", "filters"], hiddenByDefault: false}}
                             defaultColDef={{
                                 flex: 1,
-                                minWidth: 100,
                                 // allow every column to be aggregated
                                 enableValue: true,
                                 // allow every column to be grouped
@@ -75,18 +90,7 @@ const AllFilesPage = () => {
                                 filter: true,
                                 resizable : true,
                             }}
-                            columnDefs={[
-                                {headerName: "State", field: "state", sortable: true, filter: true,rowGroup:true, hide: true, width: 130,},
-                                {headerName: "District", field: "district", sortable: true, rowGroup: true, hide: true, filter: true, width: 150,},
-                                {headerName: "Duration", field: "file_duration", sortable: true, filter: true, width: 135, valueFormatter: fileDurationFormatter, aggFunc: 'sum'},
-                                {headerName: "Type", field: "file_type", sortable: true, cellRenderer: FileTypeRenderer, width: 100,},
-                                {headerName: "Vendor", field: "vendor", sortable: true, filter: true, width: 150},
-                                {headerName: "File Name", field: "file_name", sortable: true, filter: true, width: 300, tooltipField: "file_name", cellRenderer: FilenameRenderer},
-                                {headerName: "File Path", field: "file", sortable: true, filter: true, cellRenderer: UrlRenderer },
-                                {headerName: "File UUID", field: "uuid", sortable: true, filter: true},
-                                {headerName: "Created", field: "createdAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
-                                {headerName: "Received", field: "receivedAt", sortable: true, filter: true, cellRenderer: DateFromNowRenderer, width: 120 },
-                            ]}
+                            columnDefs={columnDefs}
                         />
                     </div>
                 </Loader>
