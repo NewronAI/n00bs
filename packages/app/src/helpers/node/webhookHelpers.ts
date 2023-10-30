@@ -301,6 +301,12 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
 
             console.log(filteredQuestions);
 
+            if(!filteredQuestions) {
+                return;
+            }
+
+            const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid);
+
             if (filteredQuestions) {
                 await sendTextMessage(waID, filteredQuestions[0].text);
             }
