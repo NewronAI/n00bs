@@ -6,16 +6,20 @@ const csvFilePath = process.argv[3];
 const vendor = process.argv[4];
 const csvContents = await fs.promises.readFile(csvFilePath, 'utf-8')
 
-const { data: csvData } = Papa.parse(csvContents)
-if (csvData === null) {
+const tsvArray = Papa.parse(csvContents, {
+    delimiter: "\t",
+    header: false,
+}).data;
+
+if (tsvArray === null) {
     console.log(`Could'nt read the CSV file successfully\n `);
 }
-console.log(`Read CSV file successfully\n `, csvData);
+console.log(`Read CSV file successfully\n `, tsvArray);
 
 async function createLinksAndPostRequest() {
     let filesData = [];
     let i = 0;
-    for (const row of csvData) {
+    for (const row of tsvArray) {
         if (i !== 0) {
             const fileData = {
                 file_name: row[2],
