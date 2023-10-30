@@ -220,6 +220,7 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
     if (messageId.expectedAns === textBody || messageId.wfID === 2 || messageId.expectedAns === "") {
 
         console.log("Answer recieved is expected answer");
+        send
         const task_assignment_id = session.task_assignment_id
         const response = session.responses;
         response[messageId.questionUUID] = textBody;
@@ -255,6 +256,8 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
             await updateTask(waID, upddatedSession);
             await sendTextMessage(waID, "Updated the task");
             await handleWFResponse({ type: "WF", wfID: 3 }, upddatedSession, waID);
+
+            return;
         }
 
         const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid);
@@ -273,7 +276,7 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
         response[session.current_question_uuid] = textBody;
         const responseKeys = Object.keys(response);
 
-        if (messageId === 3) {
+        if (messageId.wfID === 3) {
             const questions = await getQuestions(messageId.wfID, task_assignment_id);
 
             await sendTextMessage(waID, "Answer is not expected")
