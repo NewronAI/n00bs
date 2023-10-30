@@ -248,7 +248,7 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
 
         await sendQuestion(waID, filteredQuestions[0].text, filteredQuestions[0].options, filteredQuestions[0].uuid, filteredQuestions[0].expected_answer, messageId.wfID);
 
-    } else if (messageId.expectedAns !== textBody && (messageId.wfID === 1 || messageId === 3)) {
+    } else if (messageId.expectedAns !== textBody && (messageId.wfID === 1 || messageId.wfID === 3)) {
 
         const response = session.responses;
         const task_assignment_id = session.task_assignment_id
