@@ -38,42 +38,42 @@ async function createLinksAndPostRequest() {
             filesData.push(fileData);
         }
 
-        // if (i === 1000) {
-        //     console.log("Total files ingesting", filesData.length);
-        //     const requestBody = {
-        //         secret: '0e32e9313c1f71f0da8969c9bc828a9d62e1f7251a39197e48b4ebef1eda2da2',
-        //         data: filesData
-        //     };
+        if (i === 1000) {
+            console.log("Total files ingesting", filesData.length);
+            const requestBody = {
+                secret: '0e32e9313c1f71f0da8969c9bc828a9d62e1f7251a39197e48b4ebef1eda2da2',
+                data: filesData
+            };
 
-        //     const response = await axios.post('https://qc.artpark.in/api/v1/ca7e71ba-4f4e-4da5-a00e-3289c18aaad0/public/file', requestBody)
-        //         .then((response) => {
-        //             console.log('POST request successful:', response.data);
-        //         })
-        //         .catch((error) => {
-        //             console.error('Error making POST request:', error);
-        //         });
-        //     console.log(response);
-        //     console.log("Successfull");
-        //     filesData = []
-        //     i = 2;
-        // }
+            const response = await axios.post('https://qc.artpark.in/api/v1/ca7e71ba-4f4e-4da5-a00e-3289c18aaad0/public/file', requestBody)
+                .then((response) => {
+                    console.log('POST request successful:', response.data);
+                })
+                .catch((error) => {
+                    console.error('Error making POST request:', error);
+                });
+            console.log(response);
+            console.log("Successfull");
+            filesData = []
+            i = 2;
+        }
 
         i++;
     }
 
-    // const requestBody = {
-    //     secret: '636eebcef989e94113c5d91c6b493cbd3a17c8df5737fcb7bce7fe90f03787c3',
-    //     data: filesData
-    // };
-    // console.log("Total files ingesting", filesData.length);
-    // const response = await axios.post('https://qc.artpark.in/api/v1/ca7e71ba-4f4e-4da5-a00e-3289c18aaad0/public/file', requestBody)
-    //     .then((response) => {
-    //         console.log('POST request successful:', response.data);
-    //     })
-    //     .catch((error) => {
-    //         console.error('Error making POST request:', error);
-    //     });
-    // console.log(response);
+    const requestBody = {
+        secret: '636eebcef989e94113c5d91c6b493cbd3a17c8df5737fcb7bce7fe90f03787c3',
+        data: filesData
+    };
+    console.log("Total files ingesting", filesData.length);
+    const response = await axios.post('https://qc.artpark.in/api/v1/ca7e71ba-4f4e-4da5-a00e-3289c18aaad0/public/file', requestBody)
+        .then((response) => {
+            console.log('POST request successful:', response.data);
+        })
+        .catch((error) => {
+            console.error('Error making POST request:', error);
+        });
+    console.log(response);
 }
 
 await createLinksAndPostRequest();
