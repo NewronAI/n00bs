@@ -288,7 +288,7 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
         const response = session.responses;
         const task_assignment_id = session.task_assignment_id
         response[session.current_question_uuid] = textBody;
-        const responseKeys = Object.keys(response);
+        const responseKeys = Object.keys(response); 
 
         if (messageId.wfID === 3) {
             const questions = await getQuestions(messageId.wfID, task_assignment_id);
