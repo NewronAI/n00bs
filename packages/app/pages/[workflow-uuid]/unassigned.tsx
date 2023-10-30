@@ -243,10 +243,6 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
         },
     ]
 
-    if(workflowDetails?.id === 3) {
-        columnDefs.splice(5, 0, {headerName: "Transcription", field: "metadata.transcriptionText", sortable: true, filter: true, width: 150})
-    }
-
     return (
         <DashboardLayout currentPage={""} secondaryNav={<WorkflowNav currentPage={"unassigned files"} workflowUUID={workflowUUID} />}>
             <Head>
