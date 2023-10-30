@@ -235,9 +235,6 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
     }
 
     if (messageId.expectedAns === textBody || messageId.wfID === 2 || messageId.expectedAns === "") {
-
-        console.log("Answer recieved is expected answer");
-        await sendTextMessage(waID, "Answer recieved is expected answer")
         const task_assignment_id = session.task_assignment_id
         const response = session.responses;
         response[messageId.questionUUID] = textBody;
@@ -253,7 +250,7 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
             return;
         }
 
-        if (messageId === 3) {
+        if (messageId.wfID === 3) {
             const responseKeys = Object.keys(response);
             responseKeys.forEach(key => {
                 if (response[key] === "null") {
