@@ -264,8 +264,11 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
                 }
             })
 
-            if(filteredQuestions)
-            await sendTextMessage(waID, filteredQuestions[0].text);
+            await sendTextMessage(waID, "Trying to send 2nd question");
+
+            if(filteredQuestions) {
+                await sendTextMessage(waID, filteredQuestions[0].text);
+            }
         }
 
         responseKeys.forEach(key => {
