@@ -393,6 +393,7 @@ export async function handleCommentResponse(waID: string, session: any, textBody
     })
 
     console.log("Question type", question?.question_type)
+    await sendTextMessage(waID, `Question Type ${question?.question_type}. UUID - ${question?.uuid}`)
     if (question?.question_type !== "text") {
         console.log("Comments question type is different than expected. Question ID", question?.text, question?.question_type)
         await sendTextMessage(waID, "Please select from the options")
