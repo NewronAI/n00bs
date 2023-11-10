@@ -18,16 +18,15 @@ if (!existsSync(`${audioFileName}`)) {
 }
 
 function getFileLink(fileLocation, imageLocation) {
-    console.log("fileDetails", fileLocation, "imageLocation", imageLocation)
-    const relevantFileLocation = fileLocation.split("/").slice(4).join("/");
-    const relevantImageLocation = imageLocation.split("/").slice(4).join("/");
-    console.log("File Locaton Given", relevantFileLocation);
-    console.log("Image Locaton Given", relevantImageLocation);
-    const encodedFileLocation = encodeURIComponent(relevantFileLocation);
-    //const encodedImageLocation = encodeURIComponent(imageLocationParts[4] + "/" + imageLocationParts[5] + "/" + imageLocationParts[6] + ".jpg")
-    const encodedImageLocation = encodeURIComponent(relevantImageLocation);
-    const fileLink = `http://vaani.qc.artpark.in/iisc/?a=${encodedFileLocation}&i=${encodedImageLocation}`
-    return fileLink;
+    const encodedFileLocation = encodeURIComponent(fileLocation.split("/").slice(4).join("/"));
+    const encodedImageLocation = encodeURIComponent(imageLocation.split("/").slice(4).join("/"));
+    if(fileLocation === "NULL") {
+        return `http://vaani.qc.artpark.in/iisc/?i=${encodedImageLocation}`;
+    }
+    if(imageLocation === "NULL") {
+        return `http://vaani.qc.artpark.in/iisc/?a=${encodedFileLocation}`;
+    }
+    return `http://vaani.qc.artpark.in/iisc/?a=${encodedFileLocation}&i=${encodedImageLocation}`;
 }
 
 const link = getFileLink(audioFileName, imageName);
