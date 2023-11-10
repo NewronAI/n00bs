@@ -20,7 +20,7 @@ function getFileLink(fileLocation, imageLocation) {
     const encodedFileLocation = encodeURIComponent(relevantFileLocation);
     //const encodedImageLocation = encodeURIComponent(imageLocationParts[4] + "/" + imageLocationParts[5] + "/" + imageLocationParts[6] + ".jpg")
     const encodedImageLocation = encodeURIComponent(relevantImageLocation);
-    const fileLink = `http://vaani.qc.artpark.in/single_audio/?a=${encodedFileLocation}&i=${encodedImageLocation}`
+    const fileLink = `http://vaani.qc.artpark.in/iisc/?a=${encodedFileLocation}&i=${encodedImageLocation}`
     return fileLink;
   }
 

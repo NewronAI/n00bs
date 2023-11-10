@@ -38,7 +38,7 @@ function addVideoElement () {
 
     if(!pathToFile && !imageFile) {
         const errorElement = document.createElement('p');
-        errorElement.innerText = 'No file path provided';
+        errorElement.innerText = 'Audio or Image is not available';
         container.appendChild(errorElement);
     }
 }
