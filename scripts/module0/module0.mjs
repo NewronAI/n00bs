@@ -1,3 +1,5 @@
+import { existsSync } from "fs"
+
 const imageName = process.argv[3];
 const audioFileName = process.argv[4];
 
