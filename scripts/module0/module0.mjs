@@ -5,14 +5,14 @@ const imageName = process.argv[4];
 
 if (!existsSync(`${imageName}`)) {
     if (imageName !== "NULL") {
-        console.log(`Could not find the image file.`);
+        console.log(`Could not find the image file.`, imageName);
         exit(1);
     }
 }
 
 if (!existsSync(`${audioFileName}`)) {
     if (audioFileName !== "NULL") {
-        console.log(`Could not find the audio file.`);
+        console.log(`Could not find the audio file.`, audioFileName);
         exit(1);
     }
 }
