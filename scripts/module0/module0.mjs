@@ -5,12 +5,12 @@ const imageName = process.argv[4];
 
 if(!existsSync(`${imageName}`)) {
     console.log(`Could not find the image file.`);
-    exit(0);
+    exit(1);
 }
 
 if(!existsSync(`${audioFileName}`)) {
     console.log(`Could not find the audio file.`);
-    exit(0);
+    exit(1);
 }
 
 function getFileLink(fileLocation, imageLocation) {
