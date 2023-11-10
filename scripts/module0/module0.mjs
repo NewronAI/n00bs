@@ -1,7 +1,7 @@
 import { existsSync } from "fs"
 
-const imageName = process.argv[3];
-const audioFileName = process.argv[4];
+const audioFileName = process.argv[3];
+const imageName = process.argv[4];
 
 if(!existsSync(`${imageName}`)) {
     console.log(`Could not find the image file.`);
