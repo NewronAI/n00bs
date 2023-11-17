@@ -44,7 +44,7 @@ function getFileLink(fileLocation, imageLocation) {
     return `http://vaani.qc.artpark.in/iisc/?a=${encodedFileLocation}&i=${encodedImageLocation}`;
 }
 
-for(row in csvData) {
+for(const row in csvData) {
     const audioLocation = row[0];
     const imageLocation = row[1];
 
