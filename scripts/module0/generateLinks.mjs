@@ -76,6 +76,8 @@ for(const row of csvData) {
     }
 }
 
+const fileName = csvFilePath.split('/').pop();
+console.log(fileName)
 const resultDataString = Papa.unparse(resuldData);
-fs.writeFileSync(`${resultPath}/${csvFilePath}_links.csv`, resultDataString);
+fs.writeFileSync(`${resultPath}/${fileName}_links.csv`, resultDataString);
 console.log("Link CSV Created");
