@@ -47,8 +47,9 @@ function getFileLink(fileLocation, imageLocation) {
 }
 
 for(const row in csvData) {
-    const audioLocation = row[1];
-    const imageLocation = row[2];
+    console.log("Row", row);
+    const audioLocation = row[0];
+    const imageLocation = row[1];
 
     console.log(audioLocation, imageLocation)
 
