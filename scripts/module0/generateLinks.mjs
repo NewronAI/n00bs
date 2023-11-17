@@ -48,6 +48,8 @@ for(const row in csvData) {
     const audioLocation = row[1];
     const imageLocation = row[2];
 
+    console.log(audioLocation, imageLocation)
+
     let checkAudio = true, checkImage = true;
 
     console.log(audioLocation.slice(1,6))
