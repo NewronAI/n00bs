@@ -22,8 +22,6 @@ if (csvData === null) {
   console.log("Could'nt read the CSV file successfully.")
 }
 
-console.log(csvData)
-
 const resuldData = [];
 
 async function checkFile (filePath) {
