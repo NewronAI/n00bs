@@ -75,4 +75,4 @@ for(row in csvData) {
 
 const resultDataString = Papa.unparse(resuldData);
 fs.writeFileSync(`${resultPath}/${csvFileName}_links.csv`, resultDataString);
-console.log("Created");
+console.log("Link CSV Created");
