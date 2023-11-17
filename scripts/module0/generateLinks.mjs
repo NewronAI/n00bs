@@ -45,15 +45,10 @@ function getFileLink(fileLocation, imageLocation) {
 }
 
 for(const row of csvData) {
-    console.log("Row", row);
     const audioLocation = row[0];
     const imageLocation = row[1];
 
-    console.log(audioLocation, imageLocation)
-
     let checkAudio = true, checkImage = true;
-
-    console.log(audioLocation.slice(1,6))
 
     if (audioLocation !== "NULL") {
         checkAudio = await checkFile(audioLocation);
@@ -66,7 +61,7 @@ for(const row of csvData) {
     if(checkAudio && checkImage) {
         const link = getFileLink(audioLocation,imageLocation)
         console.log(link);
-        resuldData.push({audioLocation, imageLocation, link})
+        resuldData.push({ "Audio Path":audioLocation, "Image Path":imageLocation, "Link": link})
     }
     else if(checkAudio === false) {
         console.log("Can't find the audio file", audioLocation);
@@ -77,7 +72,6 @@ for(const row of csvData) {
 }
 
 const fileName = csvFilePath.split('/').pop().slice(0,-4);
-console.log(fileName)
 const resultDataString = Papa.unparse(resuldData);
 fs.writeFileSync(`${resultPath}/${fileName}_links.csv`, resultDataString);
 console.log("Link CSV Created");
