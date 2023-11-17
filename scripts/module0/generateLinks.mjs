@@ -10,7 +10,7 @@ const exec = promisify(child_process.exec);
 const csvFilePath = process.argv[3];
 const resultPath = process.argv[4];
 
-if (!existsSync(configFile)) {
+if (!existsSync(csvFilePath)) {
     console.log("Can't find the the CSV.")
     exit(0)
 }
