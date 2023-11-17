@@ -45,8 +45,8 @@ function getFileLink(fileLocation, imageLocation) {
 }
 
 for(const row in csvData) {
-    const audioLocation = row[0];
-    const imageLocation = row[1];
+    const audioLocation = row[1];
+    const imageLocation = row[2];
 
     let checkAudio = true, checkImage = true;
 
@@ -74,5 +74,5 @@ for(const row in csvData) {
 }
 
 const resultDataString = Papa.unparse(resuldData);
-fs.writeFileSync(`${resultPath}/${csvFileName}_links.csv`, resultDataString);
+fs.writeFileSync(`${resultPath}/${csvFilePath}_links.csv`, resultDataString);
 console.log("Link CSV Created");
