@@ -50,6 +50,8 @@ for(row in csvData) {
 
     let checkAudio = true, checkImage = true;
 
+    console.log(audioLocation.slice(1,6))
+
     if (audioLocation !== "NULL") {
         checkAudio = await checkFile(audioLocation);
     }
