@@ -43,6 +43,8 @@ for (const row of csvData) {
     const audioLocation = row[0];
     const imageLocation = row[1];
 
+    console.log(audioLocation.slice(0,22))
+
     if (audioLocation.slice(0,22) === "/data2/data_nginx/iisc" && imageLocation.slice(0.10) === "/data2/data_nginx/iisc") {
         let checkAudio = true, checkImage = true;
 
