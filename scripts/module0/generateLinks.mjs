@@ -1,11 +1,6 @@
 import { existsSync } from "fs"
-import { clearScreenDown } from "readline";
-const { promisify } = require("util");
 const fs = require("fs");
-const path = require("path");
-const child_process = require("child_process");
 const Papa = require("papaparse");
-const exec = promisify(child_process.exec);
 
 const csvFilePath = process.argv[3];
 const resultPath = process.argv[4];
@@ -55,7 +50,7 @@ for(const row of csvData) {
     }
 
     if (imageLocation !== "NULL") {
-        checkAudio = await checkFile(imageLocation);
+        checkImage = await checkFile(imageLocation);
     }
 
     if(checkAudio && checkImage) {
