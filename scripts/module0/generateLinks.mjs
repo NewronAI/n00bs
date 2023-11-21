@@ -45,11 +45,11 @@ for(const row of csvData) {
 
     let checkAudio = true, checkImage = true;
 
-    if (audioLocation !== "NULL") {
+    if (audioLocation !== "NULL" && !audioLocation.startsWith("/data2/data_nginx/iisc")) {
         checkAudio = await checkFile(audioLocation);
     }
 
-    if (imageLocation !== "NULL") {
+    if (imageLocation !== "NULL" && !imageLocation.startsWith("/data2/data_nginx/iisc")) {
         checkImage = await checkFile(imageLocation);
     }
 
