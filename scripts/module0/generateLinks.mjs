@@ -43,32 +43,28 @@ for (const row of csvData) {
     const audioLocation = row[0];
     const imageLocation = row[1];
 
-    console.log(audioLocation.slice(0,22))
+    console.log(audioLocation.slice(0, 22))
 
-    if (audioLocation.slice(0,22) === "/data2/data_nginx/iisc" && imageLocation.slice(0.10) === "/data2/data_nginx/iisc") {
-        let checkAudio = true, checkImage = true;
+    let checkAudio = true, checkImage = true;
 
-        if (audioLocation !== "NULL") {
-            checkAudio = false;
-        }
+    if (audioLocation !== "NULL") {
+        checkAudio = false;
+    }
 
-        if (imageLocation !== "NULL") {
-            checkImage = false;
-        }
+    if (imageLocation !== "NULL") {
+        checkImage = false;
+    }
 
-        if (checkAudio && checkImage) {
-            const link = getFileLink(audioLocation, imageLocation)
-            console.log(link);
-            resuldData.push({ "Audio Path": audioLocation, "Image Path": imageLocation, "Link": link })
-        }
-        else if (checkAudio === false) {
-            console.log("Can't find the audio file", audioLocation);
-        }
-        else if (checkImage === false) {
-            console.log("Can't find the Image file", imageLocation);
-        }
-    } else {
-        console.log("Either Audio location or image Location does't starts with /data2/")
+    if (checkAudio && checkImage) {
+        const link = getFileLink(audioLocation, imageLocation)
+        console.log(link);
+        resuldData.push({ "Audio Path": audioLocation, "Image Path": imageLocation, "Link": link })
+    }
+    else if (checkAudio === false) {
+        console.log("Can't find the audio file", audioLocation);
+    }
+    else if (checkImage === false) {
+        console.log("Can't find the Image file", imageLocation);
     }
 }
 
