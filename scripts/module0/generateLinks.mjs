@@ -81,5 +81,5 @@ try {
     fs.writeFileSync(`${resultPath}/${fileName}_links.csv`, resultDataString);
     console.log("Link CSV Created");
 } catch (e) {
-    console.log("Trouble creating the links CSV.", e.Error)
+    console.log("Trouble creating the links CSV.", e.code)
 }
