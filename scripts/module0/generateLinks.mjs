@@ -27,7 +27,7 @@ async function checkFile(filePath) {
             return false
         }
     } catch (e) {
-        console.error("Trouble executing the command to find the given file.")
+        console.error("Trouble executing the command to find the given file. Error Code:", e.code)
         return false;
     }
 }
