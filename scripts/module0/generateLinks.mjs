@@ -49,6 +49,7 @@ for (const row of csvData) {
     const imageLocation = row[1];
 
     let checkAudio = true, checkImage = true;
+    console.log(audioLocation, imageLocation);
 
     if (audioLocation !== "NULL") {
         checkAudio = checkFile(audioLocation);
