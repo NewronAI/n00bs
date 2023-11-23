@@ -20,10 +20,15 @@ if (csvData === null) {
 const resuldData = [];
 
 async function checkFile(filePath) {
-    if (existsSync(filePath)) {
-        return true;
-    } else {
-        return false
+    try {
+        if (existsSync(filePath)) {
+            return true;
+        } else {
+            return false
+        }
+    } catch (e) {
+        console.error("Trouble executing the command to find the given file.")
+        return false;
     }
 }
 
@@ -43,16 +48,14 @@ for (const row of csvData) {
     const audioLocation = row[0];
     const imageLocation = row[1];
 
-    console.log(audioLocation.slice(0, 22))
-
     let checkAudio = true, checkImage = true;
 
     if (audioLocation !== "NULL") {
-        checkAudio = false;
+        checkAudio = checkFile(audioLocation);
     }
 
     if (imageLocation !== "NULL") {
-        checkImage = false;
+        checkImage = checkFile(imageLocation);
     }
 
     if (checkAudio && checkImage) {
@@ -70,5 +73,10 @@ for (const row of csvData) {
 
 const fileName = csvFilePath.split('/').pop().slice(0, -4);
 const resultDataString = Papa.unparse(resuldData);
-fs.writeFileSync(`${resultPath}/${fileName}_links.csv`, resultDataString);
-console.log("Link CSV Created");
+
+try {
+    fs.writeFileSync(`${resultPath}/${fileName}_links.csv`, resultDataString);
+    console.log("Link CSV Created");
+} catch (e) {
+    console.log("Trouble creating the links CSV.", e)
+}
