@@ -57,6 +57,7 @@ webhook.post(async (req, res) => {
     console.log("Extracting values");
 
     const waID = data.entry?.[0]?.changes?.[0]?.value.contacts?.[0]?.wa_id;
+    console.log({waID})
     const message = data.entry?.[0]?.changes?.[0]?.value.messages?.[0];
     const textBody: string = message?.type === "interactive" ? message?.interactive?.button_reply?.title : message?.text?.body;
     const messageId = message?.type === "interactive" ? data.entry?.[0]?.changes?.[0]?.value?.messages?.[0].interactive?.button_reply?.id : undefined;
