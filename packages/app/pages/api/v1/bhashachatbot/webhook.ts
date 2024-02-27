@@ -63,7 +63,7 @@ webhook.post(async (req, res) => {
     const messageId = message?.type === "interactive" ? data.entry?.[0]?.changes?.[0]?.value?.messages?.[0].interactive?.button_reply?.id : undefined;
 
     console.log({waID, messageId})
-    sendTextMessage(waID, message)
+    sendTextMessage(waID, "Testing Done Successfully")
     
     res.status(200).json({message : "sent successfull"})
 

@@ -22,7 +22,6 @@ async function rawWhatsappMessage(data){
         .catch(error => {
             console.error('Error:', error.response.data);
     });
-
 }
 
 export async function sendInteractiveMessage(to,data){
