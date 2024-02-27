@@ -64,6 +64,8 @@ webhook.post(async (req, res) => {
 
     console.log({waID, messageId})
     sendTextMessage(waID, message)
+    
+    res.status(200).json({message : "sent successfull"})
 
     // console.log("Extracted important variables", waID, message, textBody, messageId);
     // if(waID === undefined || message === undefined){
