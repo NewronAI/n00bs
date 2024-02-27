@@ -62,209 +62,212 @@ webhook.post(async (req, res) => {
     const textBody: string = message?.type === "interactive" ? message?.interactive?.button_reply?.title : message?.text?.body;
     const messageId = message?.type === "interactive" ? data.entry?.[0]?.changes?.[0]?.value?.messages?.[0].interactive?.button_reply?.id : undefined;
 
-    console.log("Extracted important variables", waID, message, textBody, messageId);
-    if(waID === undefined || message === undefined){
-        res.status(200).json({
-            message: "It is not a message."
-        });
-        return ;
-    }
+    console.log({waID, messageId})
+    sendTextMessage(waID, message)
 
-    let parsedMessageId: MessageIdObj = {};
+    // console.log("Extracted important variables", waID, message, textBody, messageId);
+    // if(waID === undefined || message === undefined){
+    //     res.status(200).json({
+    //         message: "It is not a message."
+    //     });
+    //     return ;
+    // }
 
-    try {
-        parsedMessageId = JSON.parse(messageId);
-    }
-    catch (e) {
-        console.log("could not parse the id string", "treating as normal message");
-    }
+    // let parsedMessageId: MessageIdObj = {};
 
-    console.log("Message Type", parsedMessageId.type);
+    // try {
+    //     parsedMessageId = JSON.parse(messageId);
+    // }
+    // catch (e) {
+    //     console.log("could not parse the id string", "treating as normal message");
+    // }
 
-    const assigneDetails = await db.member.findFirst({
-        where: {
-            phone: `+${waID}`,
-        }
-    });
+    // console.log("Message Type", parsedMessageId.type);
 
-    console.log("Fetched assignee details");
+    // const assigneDetails = await db.member.findFirst({
+    //     where: {
+    //         phone: `+${waID}`,
+    //     }
+    // });
 
-    if (assigneDetails === null) {
-        console.log("user not registered");
+    // console.log("Fetched assignee details");
 
-        await sendTextMessage(waID, "You are not registered. Please register your whats app number")
+    // if (assigneDetails === null) {
+    //     console.log("user not registered");
 
-        res.status(200).json({
-            message: "User not registered"
-        });
+    //     await sendTextMessage(waID, "You are not registered. Please register your whats app number")
 
-        return;
-    }
+    //     res.status(200).json({
+    //         message: "User not registered"
+    //     });
 
-    let user_session = await db.user_session.findFirst({
-        where: {
-            member_id: assigneDetails.id
-        }
-    })
-    console.log("Searched for user session. Found : ", !!user_session);
+    //     return;
+    // }
 
-    if (!user_session) {
-        console.log("user session not found");
-        user_session = await db.user_session.create({
-            data: {
-                member_id: assigneDetails.id,
-            }
-        })
-    }
+    // let user_session = await db.user_session.findFirst({
+    //     where: {
+    //         member_id: assigneDetails.id
+    //     }
+    // })
+    // console.log("Searched for user session. Found : ", !!user_session);
 
-    console.log("User Session", user_session)
+    // if (!user_session) {
+    //     console.log("user session not found");
+    //     user_session = await db.user_session.create({
+    //         data: {
+    //             member_id: assigneDetails.id,
+    //         }
+    //     })
+    // }
 
-    const textBodyLowerCase = textBody.toLowerCase()
+    // console.log("User Session", user_session)
 
-    if (textBodyLowerCase === "hi") {
-        try {
-            if(!user_session.has_accepted_policy) {
-                await sendInteractiveMessage(waID, {
-                    body: {
-                        text: "Welcome to Bhasha ChatBot! Please click on below link to accept security policy https://www.whatsapp.com/legal/privacy-policy-eea"
-                    },
-                    type: "button",
-                    action: {
-                        buttons: [
-                            {
-                                type: "reply",
-                                reply: {
-                                    title: "I agree",
-                                    id: JSON.stringify({ type: "PA" }),
-                                }
-                            }
-                        ]
-                    }
-                });
-                res.status(200).json({
-                    message: "Policy sent for acceptance"
-                });
-                return;
-            }
+    // const textBodyLowerCase = textBody.toLowerCase()
 
-            await handleHiResponse(waID, assigneDetails, user_session)
-            res.status(200).json({
-                message: "Response of Hi - successfull."
-            });
+    // if (textBodyLowerCase === "hi") {
+    //     try {
+    //         if(!user_session.has_accepted_policy) {
+    //             await sendInteractiveMessage(waID, {
+    //                 body: {
+    //                     text: "Welcome to Bhasha ChatBot! Please click on below link to accept security policy https://www.whatsapp.com/legal/privacy-policy-eea"
+    //                 },
+    //                 type: "button",
+    //                 action: {
+    //                     buttons: [
+    //                         {
+    //                             type: "reply",
+    //                             reply: {
+    //                                 title: "I agree",
+    //                                 id: JSON.stringify({ type: "PA" }),
+    //                             }
+    //                         }
+    //                     ]
+    //                 }
+    //             });
+    //             res.status(200).json({
+    //                 message: "Policy sent for acceptance"
+    //             });
+    //             return;
+    //         }
 
-            return;
-        } catch (e) {
-            console.log("Error while handling Hi response :", e);
-            return;
-        }
-    }
+    //         await handleHiResponse(waID, assigneDetails, user_session)
+    //         res.status(200).json({
+    //             message: "Response of Hi - successfull."
+    //         });
 
-    if (message?.type === "text" && textBodyLowerCase !== "hi" && user_session.current_question_uuid) {
+    //         return;
+    //     } catch (e) {
+    //         console.log("Error while handling Hi response :", e);
+    //         return;
+    //     }
+    // }
 
-        console.log("Entering in comment response flow");
-        try {
-            console.log("Handling Comment response");
-            const checkResponse = await handleCommentResponse(waID, user_session, textBody);
-            if(checkResponse) {
-                const flowID = user_session.check_type;
-                console.log("----------Flow ID--------------",flowID);
+    // if (message?.type === "text" && textBodyLowerCase !== "hi" && user_session.current_question_uuid) {
 
-                await handleWFResponse({ type: "WF", wfID: flowID }, user_session, waID)
-            }
-        }
-        catch (e) {
-            console.log(e)
-            res.status(403).json({
-                message: e
-            });
-            return;
-        }
+    //     console.log("Entering in comment response flow");
+    //     try {
+    //         console.log("Handling Comment response");
+    //         const checkResponse = await handleCommentResponse(waID, user_session, textBody);
+    //         if(checkResponse) {
+    //             const flowID = user_session.check_type;
+    //             console.log("----------Flow ID--------------",flowID);
 
-        res.status(200).json({
-            message: "Completed the task assingment, Moving to next one"
-        });
-        return;
-    }
+    //             await handleWFResponse({ type: "WF", wfID: flowID }, user_session, waID)
+    //         }
+    //     }
+    //     catch (e) {
+    //         console.log(e)
+    //         res.status(403).json({
+    //             message: e
+    //         });
+    //         return;
+    //     }
 
-    console.log("parsedMessageId type", parsedMessageId.type);
+    //     res.status(200).json({
+    //         message: "Completed the task assingment, Moving to next one"
+    //     });
+    //     return;
+    // }
 
-    switch (parsedMessageId.type) {
-        case "PA": {
-            console.log("Policy Accepted");
-            try {
-                await db.user_session.update({
-                    where: {
-                        id: user_session.id,
-                    },
-                    data: {
-                        has_accepted_policy: true,
-                    }
-                })
-            await sendTextMessage(waID,"Thanks for accepting the policy. Please start the session again by sending ‘Hi’.")
-            res.status(200).json({
-                message: "Policy Accepted"
-            });
-            return;
-            } catch (error) {
-                console.log(error);
-                res.status(403).json({
-                    message: "Could'nt able to update the Policy Accepted"
-                });
-                return;
-            }
-        }
-        case "WF": {
-            try {
-                console.log("Message type detected as worflow selection");
-                await handleWFResponse(parsedMessageId, user_session, waID)
-                res.status(200).json({
-                    message: "First question successfully"
-                });
-                return;
-            } catch (e) {
-                console.log(e)
-                res.status(403).json({
-                    message: e
-                });
-                return;
-            }
-        }
-        case "QA": {
-            if(await checkResponseTime(user_session)) {
-                try {
-                    console.log("Message type is of QA");
-                    const completed = await handleQuestionResponses(parsedMessageId, user_session, waID, textBody)
-                    if(completed) {
-                            const flowID = user_session.check_type;
-                            await handleWFResponse({ type: "WF", wfID: flowID }, user_session, waID)
-                    }
-                    res.status(200).json({
-                        message: "Question send successfully"
-                    });
-                    return;
-                } catch (e) {
-                    console.log(e)
-                    res.status(403).json({
-                        message: e
-                    });
-                    return;
-                }
-            } else {
-                await sendTextMessage(waID,"You have not responded within time limit. Please try again.")
-                res.status(200).json({
-                    message: "Session expired. Not responded within time limit"
-                });
-                return;
-            }
-        }
-        default: {
-            sendTextMessage(waID, "Invalid Response")
-            res.status(200).json({
-                message: "Invalid Response"
-            });
-            return;
-        }
-    }
+    // console.log("parsedMessageId type", parsedMessageId.type);
+
+    // switch (parsedMessageId.type) {
+    //     case "PA": {
+    //         console.log("Policy Accepted");
+    //         try {
+    //             await db.user_session.update({
+    //                 where: {
+    //                     id: user_session.id,
+    //                 },
+    //                 data: {
+    //                     has_accepted_policy: true,
+    //                 }
+    //             })
+    //         await sendTextMessage(waID,"Thanks for accepting the policy. Please start the session again by sending ‘Hi’.")
+    //         res.status(200).json({
+    //             message: "Policy Accepted"
+    //         });
+    //         return;
+    //         } catch (error) {
+    //             console.log(error);
+    //             res.status(403).json({
+    //                 message: "Could'nt able to update the Policy Accepted"
+    //             });
+    //             return;
+    //         }
+    //     }
+    //     case "WF": {
+    //         try {
+    //             console.log("Message type detected as worflow selection");
+    //             await handleWFResponse(parsedMessageId, user_session, waID)
+    //             res.status(200).json({
+    //                 message: "First question successfully"
+    //             });
+    //             return;
+    //         } catch (e) {
+    //             console.log(e)
+    //             res.status(403).json({
+    //                 message: e
+    //             });
+    //             return;
+    //         }
+    //     }
+    //     case "QA": {
+    //         if(await checkResponseTime(user_session)) {
+    //             try {
+    //                 console.log("Message type is of QA");
+    //                 const completed = await handleQuestionResponses(parsedMessageId, user_session, waID, textBody)
+    //                 if(completed) {
+    //                         const flowID = user_session.check_type;
+    //                         await handleWFResponse({ type: "WF", wfID: flowID }, user_session, waID)
+    //                 }
+    //                 res.status(200).json({
+    //                     message: "Question send successfully"
+    //                 });
+    //                 return;
+    //             } catch (e) {
+    //                 console.log(e)
+    //                 res.status(403).json({
+    //                     message: e
+    //                 });
+    //                 return;
+    //             }
+    //         } else {
+    //             await sendTextMessage(waID,"You have not responded within time limit. Please try again.")
+    //             res.status(200).json({
+    //                 message: "Session expired. Not responded within time limit"
+    //             });
+    //             return;
+    //         }
+    //     }
+    //     default: {
+    //         sendTextMessage(waID, "Invalid Response")
+    //         res.status(200).json({
+    //             message: "Invalid Response"
+    //         });
+    //         return;
+    //     }
+    // }
 })
 
 export default webhook.handler;
