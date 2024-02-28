@@ -39,7 +39,7 @@ export default function Home() {
                                 <button className={"mt-4 w-40 md:w-52 btn btn-primary normal-case rounded-lg  font-semibold text-base md:text-lg"}>
                                     Dive in Now 🚀
                                 </button>
-                            </Link>00
+                            </Link>
                         </div>
                         {/*<div className={"flex justify-between hidden lg:block"}>*/}
                         {/*    /!*<div*!/*/}
