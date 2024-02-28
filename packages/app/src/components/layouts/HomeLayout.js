@@ -21,7 +21,7 @@ const MainLayout = ({stickyHeader,children,footer, enforceWidthRestraint = true}
                                 <Link href={"/"}>
                                     <h1 className={"text-xl tracking-wider font-bold"}>
                                         <span className={"bg-gradient-to-br from-primary to-secondary bg-clip-text text-transparent"}>
-                                            noOBS
+                                            Bhasha
                                         </span>
                                     {/*<span className={"text-green-500"} >fresh</span>Ink*/}
                                     </h1>

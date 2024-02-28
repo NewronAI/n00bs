@@ -7,7 +7,7 @@ export default function ServerError() {
                 <main className="mx-auto flex w-full max-w-7xl flex-grow flex-col justify-center px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-shrink-0 justify-center">
                         <Link href="/" className="inline-flex">
-                            <span className="sr-only">{"NoOBS"}</span>
+                            <span className="sr-only">{"Bhasha"}</span>
                             {/*<img*/}
                             {/*    className="h-12 w-auto"*/}
                             {/*    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"*/}

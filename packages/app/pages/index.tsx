@@ -25,7 +25,7 @@ export default function Home() {
                                 Data quality control?
                                 Here is the solution.
                                 <span className={"bg-gradient-to-br from-primary to-secondary bg-clip-text text-transparent"}>
-                                    &nbsp;noOBS!&nbsp;
+                                    &nbsp;Bhasha!&nbsp;
                                 </span>
 
                             </h1>
@@ -33,7 +33,7 @@ export default function Home() {
                                 Get saved from doing hours of repetitive work. No more copy-pasting between sheets, no more manual calculations, no more manual data entry. Let us do the work for you.
                             </p>
                             <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-                                noOBS stands for No OBS (Obstruction , Blockage and Slowness). We are here to help you get rid of all the obstacles in your way.
+                                No OBS (Obstruction , Blockage and Slowness). We are here to help you get rid of all the obstacles in your way.
                             </p>
                             <Link href={"/api/auth/login"}>
                                 <button className={"mt-4 w-40 md:w-52 btn btn-primary normal-case rounded-lg  font-semibold text-base md:text-lg"}>

@@ -74,7 +74,7 @@ export default function DashboardLayout({
                                             <Link href={"/"}>
                                                 <h1 className={"text-3xl tracking-wider font-bold"}>
                                                     <span className={"text-secondary "}>
-                                                        noOBS
+                                                        Bh
                                                     </span>
                                                 </h1>
                                             </Link>
