@@ -64,7 +64,7 @@ export default function DashboardLayout({
                 </title>
             </Head>
             <div className="min-h-full">
-                <Disclosure as="nav" className="border-b border-zinc-900">
+                <Disclosure as="nav" className="border-b border-zinc-200">
                     {({ open }) => (
                         <>
                             <div className="mx-auto max-w-[1550px] px-2 sm:px-4">
@@ -86,9 +86,9 @@ export default function DashboardLayout({
                                                     href={item.href}
                                                     className={clsx(
                                                         item.name.toLowerCase() === currentPage
-                                                            ? 'border-indigo-500 text-zinc-800 dark:text-zinc-100'
-                                                            : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:border-gray-300 hover:text-zinc-200',
-                                                        'inline-flex items-center px-1 pt-1 border-b-2 text-normal font-medium'
+                                                            ? 'border-indigo-500 text-zinc-800 dark:text-zinc-900'
+                                                            : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:border-gray-300 hover:text-zinc-600',
+                                                        'inline-flex items-center px-1 pt-1 border-b-2 text-normal font-medium text-zinc-900'
                                                     )}
                                                     aria-current={item.name === currentPage ? 'page' : undefined}
                                                 >
@@ -208,7 +208,7 @@ export default function DashboardLayout({
                     )}
                 </Disclosure>
 
-                <div className="py-4">
+                <div className="">
                     {/*<header>
                         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                             <h1 className="text-xl font-bold leading-6 pl-0">{currentPage}</h1>

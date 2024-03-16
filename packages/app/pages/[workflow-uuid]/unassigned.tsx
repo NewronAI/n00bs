@@ -274,7 +274,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                         </p>
                     </div>
                     <Loader isLoading={membersLoading}>
-                        <div className="mt-2 flex flex-col h-60 ag-theme-balham-dark">
+                        <div className="mt-2 flex flex-col h-60 ag-theme-alpine ">
                             <AgGridReact
                                 rowData={members}
                                 suppressMenuHide={true}
@@ -378,7 +378,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                     </div>
                 </div>
                 <Loader isLoading={isLoading}>
-                    <div className={"w-full h-[760px] p-4 ag-theme-alpine-dark"}>
+                    <div className={"w-full h-[760px] p-4 ag-theme-alpine "}>
                         <AgGridReact
                             rowData={files}
                             suppressMenuHide={true}

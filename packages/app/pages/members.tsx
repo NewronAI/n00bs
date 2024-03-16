@@ -146,11 +146,11 @@ const Members = () => {
                 </div>
 
                 <form onSubmit={handleSearch}>
-                    <div className={"w-full flex gap-4 mb-2"}>
+                    <div className={"w-full flex gap-4 mb-2 my-4"}>
 
                         <div className={"flex grow"}>
                             <input type="search"
-                                className={"input input-md w-full "}
+                                className={"input input-md w-full border-zinc-300"}
                                 placeholder={"Search members"}
                                 name={"search"}
                                 autoComplete={"off"}
@@ -158,7 +158,7 @@ const Members = () => {
                             />
                         </div>
                         <div className={""}>
-                            <select className={"input input-md w-full"} name={"searchBy"} defaultValue={"district"}>
+                            <select className={"input input-md w-full border-zinc-300"} name={"searchBy"} defaultValue={"district"}>
                                 <option value={"district"}>Filter by District</option>
                                 <option value={"state"}>Filter by State</option>
                                 <option value={"name"}>Filter by Name</option>
@@ -184,7 +184,7 @@ const Members = () => {
 
                 <div className={"w-full min-w-96 h-[600px] dark-theme"}>
                     <div className="overflow-x-auto w-full">
-                        <table className="table w-full">
+                        <table className="table w-full border-xl">
 
                             <thead>
                                 <tr>
@@ -241,12 +241,12 @@ const Members = () => {
                                                     <a href={`mailto:${member.email}`} className="text-sm opacity-50">{member.email}</a>
                                                 </td>
                                                 <td className={""}>
-                                                    <div className="text-sm opacity-50 max-w-md whitespace-pre-wrap">{member.address} <span className="badge badge-ghost badge-sm text-white">{member.pincode}</span></div>
+                                                    <div className="text-sm opacity-50 text-zinc-700 max-w-md whitespace-pre-wrap">{member.address} <span className="badge badge-ghost badge-sm text-white">{member.pincode}</span></div>
 
                                                 </td>
                                                 <td>
                                                     <span className="">{member.added_by_member?.name || "God himself"}</span>
-                                                    <div className="text-sm opacity-50">{member.added_by_member?.email || "god@heaven.peace"}</div>
+                                                    <div className="text-sm text-zinc-700 opacity-50">{member.added_by_member?.email || "god@heaven.peace"}</div>
                                                 </td>
                                             </tr>)
                                     })

@@ -64,7 +64,7 @@ export default function Example() {
                             actionIdx === 1 ? 'sm:rounded-tr-lg' : '',
                             actionIdx === actions.length - 2 ? 'sm:rounded-bl-lg' : '',
                             actionIdx === actions.length - 1 ? 'rounded-bl-lg rounded-br-lg sm:rounded-bl-none' : '',
-                            'relative group  p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-500 bg-zinc-700 hover:bg-zinc-900 bg-opacity-5'
+                            'relative group  p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-500 bg-zinc-700 hover:bg-zinc-200 bg-opacity-5'
                         )}
                     >
                         <div>

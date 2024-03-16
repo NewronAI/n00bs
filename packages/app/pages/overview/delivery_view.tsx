@@ -31,13 +31,13 @@ const SecNav = () => {
     const [currentPage, setCurrentPage] = useState("Report")
 
     return (
-        <div className="flex flex-grow flex-col overflow-y-auto  border-r border-gray-800 pt-5 pb-4">
-            <div className="mt-5 flex flex-grow flex-col">
-                <nav className="flex-1 space-y-1 px-2" aria-label="Sidebar">
+        <div className="flex flex-grow flex-col overflow-y-auto  shadow border-gray-800 pt-5 pb-4">
+            <div className=" flex flex-grow flex-col">
+                <nav className="flex-1 space-y-1 px-2 w-40 " aria-label="Sidebar">
                     {tabs.map((item) => (
                         <div key={item.name}>
                             <a
-                                className={'text-gray-300 hover:bg-gray-50 hover:text-gray-900 group flex w-full items-center rounded-md py-2 pl-7 pr-5 text-sm font-medium'}
+                                className={'text-zinc-400 hover:bg-gray-200 hover:text-gray-900 group flex w-full items-center rounded-md py-2 pl-7 pr-5 text-sm font-medium'}
                                 href={item.href}
                             >
                                 {item.name}
@@ -142,7 +142,7 @@ const DeliveryPage = (props: any) => {
                             Combined delivery view of all the workflows.
                         </p>
                     </div>
-                    <div className={"w-full h-[760px] p-4 ag-theme-alpine-dark"}>
+                    <div className={"w-full h-[760px] p-4 ag-theme-alpine"}>
                         <AgGridReact
                             rowData={data}
                             ref={fileGridRef}

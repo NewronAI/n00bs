@@ -6,7 +6,7 @@ const MainLayout = ({stickyHeader,children,footer, enforceWidthRestraint = true}
 
 
     return (
-        <div className={"pt-1"} >
+        <div className={"pt-1 "} >
             <div className={"flex flex-col gap-2 items-center"}>
                 <nav className={clsx("max-w-7xl w-full pb-2 z-10 dark:border-zinc-800 px-2",
                     // "border-b border-zinc-200 ",

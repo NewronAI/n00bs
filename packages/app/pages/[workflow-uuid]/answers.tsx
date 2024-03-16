@@ -196,7 +196,7 @@ const UnassignedFilesPage = (_props: UnassignedFilesPageProps) => {
                     </div>
                 </div>
                 <Loader isLoading={isLoading || questionFetchLoading}>
-                    <div className={"w-full h-[760px] p-4 ag-theme-alpine-dark"}>
+                    <div className={"w-full h-[760px] p-4 ag-theme-alpine"}>
                         <AgGridReact
                             rowData={files}
                             suppressMenuHide={true}

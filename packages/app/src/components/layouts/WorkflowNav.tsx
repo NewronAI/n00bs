@@ -87,18 +87,18 @@ const WorkflowNav = (props: WorkflowNavProps) => {
 
 
         //----------------------------------------------------------------------------------------------------------------------------------
-        <div className="flex flex-grow flex-col overflow-y-auto  border-r border-gray-800 pt-5 pb-4">
-            <div className="bg-gray-200 text-gray-800 group flex w-48 items-center rounded-md py-2 pl-5 pr-1 text-sm font-medium px-4 mr-1">
+        <div className="flex flex-grow flex-col overflow-y-auto shadow-xl border-gray-800 pt-5 ">
+            <div className="bg-gray-100 text-gray-800 group flex w-48 items-center rounded-md py-2 pl-5 pr-1 text-sm font-medium px-4 mr-1">
                 <a href="#" >{workflow?.name}</a>
             </div>
             <div className="mt-5 flex flex-grow flex-col">
-                <nav className="flex-1 space-y-1 px-2" aria-label="Sidebar">
+                <nav className="flex-1 space-y-1 px-2" >
                     {navigation.map((item) =>
                         !item.children ? (
                             <div key={item.name}>
                                 <a
                                     href={`/${workflowUUID}${item.href}`}
-                                    className={'text-gray-300  hover:bg-gray-50 hover:text-gray-900 group flex w-full items-center rounded-md py-2 pl-7 pr-2 text-sm font-medium'}
+                                    className={'text-gray-900  hover:bg-gray-50 hover:text-gray-900 group flex w-full items-center rounded-md py-2 pl-7 pr-2 text-sm font-medium'}
                                 >
                                     {item.name}
                                 </a>
@@ -110,9 +110,9 @@ const WorkflowNav = (props: WorkflowNavProps) => {
                                         <Disclosure.Button
                                             className={clsx(
                                                 item.current
-                                                    ? 'bg-gray-100 text-gray-900'
+                                                    ? ' text-gray-900'
                                                     : ' text-gray-300 hover:bg-gray-50 hover:text-gray-900',
-                                                'group flex w-full items-center rounded-md py-2 pr-2 text-left text-sm font-medium focus:outline-none focus:ring-2'
+                                                'group flex w-full items-center rounded-md py-2 pr-2 text-left text-zinc-900 text-sm font-medium focus:outline-none focus:ring-2'
                                             )}
                                         >
                                             <svg
@@ -133,7 +133,7 @@ const WorkflowNav = (props: WorkflowNavProps) => {
                                                     key={subItem.name}
                                                     as="a"
                                                     href={`/${workflowUUID}${subItem.href}`}
-                                                    className="group flex w-full items-center rounded-md py-2 pl-10 pr-2 text-sm font-medium text-gray-300 hover:bg-gray-50 hover:text-gray-900"
+                                                    className="group flex w-full items-center rounded-md py-2 pl-10 pr-2 text-sm font-medium text-zinc-600 hover:bg-gray-50 hover:text-gray-900"
                                                 >
                                                     {subItem.name}
                                                 </Disclosure.Button>

@@ -17,11 +17,11 @@ export default function Home() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <main className={"flex justify-center text-center"}>
+            <main className={"flex justify-center text-center "}>
                 <div className=" mt-8 md:mt-16 flex justify-center">
                     <div className={"flex justify-between max-w-7xl w-full"}>
                         <div className="max-w-2xl md:mt-16">
-                            <h1 className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-7xl">
+                            <h1 className="text-4xl font-bold tracking-tight  dark:text-zinc-700 sm:text-7xl">
                                 Data quality control?
                                 Here is the solution.
                                 <span className={"bg-gradient-to-br from-primary to-secondary bg-clip-text text-transparent"}>
@@ -29,10 +29,10 @@ export default function Home() {
                                 </span>
 
                             </h1>
-                            <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
+                            <p className="mt-6 text-base text-zinc-600 dark:text-zinc-600">
                                 Get saved from doing hours of repetitive work. No more copy-pasting between sheets, no more manual calculations, no more manual data entry. Let us do the work for you.
                             </p>
-                            <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
+                            <p className="mt-6 text-base text-zinc-600 dark:text-zinc-600">
                                 noOBS stands for No OBS (Obstruction , Blockage and Slowness). We are here to help you get rid of all the obstacles in your way.
                             </p>
                             <Link href={"/api/auth/login"}>

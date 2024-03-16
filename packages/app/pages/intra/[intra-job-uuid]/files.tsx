@@ -60,7 +60,7 @@ const CreateNewIntraPair = () => {
 
                 <div>
                     <Loader isLoading={intraJobIsLoading} error={(!intraJobData) && !intraJobIsLoading ? "Failed to load data" : undefined}>
-                        <div className={"w-full h-[760px] p-4 ag-theme-alpine-dark"}>
+                        <div className={"w-full h-[760px] p-4 "}>
                             <AgGridReact
                                 rowData={data}
                                 suppressMenuHide={true}

@@ -59,13 +59,13 @@ const Workflows = (props: WorkflowProps) => {
                     <h1 className={"text-2xl font-bold"}>
                         Workflows
                     </h1>
-                    <p className={"font-thin text-sm"}>
+                    <p className={"font-thin text-sm text-zinc-700"}>
                         Workflows are a series of steps that you can use to automate your work.
                         Select a workflow to which you are interested in.
                     </p>
                 </div>
 
-                <div className="mt-8 divide-y divide-gray-200 overflow-hidden rounded-lg  shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0">
+                <div className="mt-8 divide-y divide-gray-200 overflow-hidden rounded-lg  shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0 ">
                     {allWorkflows.map((action, actionIdx) => (
                         <div
                             key={action.title}
@@ -74,7 +74,7 @@ const Workflows = (props: WorkflowProps) => {
                                 actionIdx === 1 ? 'sm:rounded-tr-lg' : '',
                                 actionIdx === actions.length - 2 ? 'sm:rounded-bl-lg' : '',
                                 actionIdx === actions.length - 1 ? 'rounded-bl-lg rounded-br-lg sm:rounded-bl-none' : '',
-                                'relative group p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-500 bg-zinc-700 hover:bg-zinc-900 bg-opacity-5'
+                                'relative group p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-500 bg-gray-600 hover:bg-zinc-200 bg-opacity-5'
                             )}
                         >
                             <div>

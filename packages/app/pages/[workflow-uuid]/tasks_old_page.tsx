@@ -152,7 +152,7 @@ const Tasks = (_props: TaskFilesPage) => {
                     </div>
                 </div>
                 <Loader isLoading={isLoading} >
-                    <div className={"w-full h-[760px] p-4  ag-theme-alpine-dark"}>
+                    <div className={"w-full h-[760px] p-4  "}>
                         <AgGridReact
                             rowData={task}
                             defaultColDef={defaultColDef}

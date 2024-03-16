@@ -37,7 +37,7 @@ const Modal = ({open, onClose ,afterLeave, title, description, children}: ModalP
                         leaveFrom="opacity-100 scale-100"
                         leaveTo="opacity-0 scale-95"
                     >
-                        <Dialog.Panel className="mx-auto max-w-2xl transform rounded-xl bg-black p-4 shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
+                        <Dialog.Panel className="mx-auto max-w-2xl transform rounded-xl  p-4 bg-slate-100 shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
                             {
                                 title &&
                                 <Dialog.Title as="h3" className="text-lg font-medium leading-6">

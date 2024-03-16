@@ -24,13 +24,13 @@ const SecNav = () => {
         const [currentPage, setCurrentPage] = useState("Report")
 
     return (
-        <div className="flex flex-grow flex-col overflow-y-auto  border-r border-gray-800 pt-5 pb-4 min-w-[200px]">
-            <div className="mt-5 flex flex-grow flex-col">
+        <div className="flex flex-grow flex-col overflow-y-auto shadow-lg h-full  pb-4 min-w-[200px]">
+            <div className=" flex flex-grow flex-col">
                 <nav className="flex-1 space-y-1 px-2" aria-label="Sidebar">
                     {tabs.map((item) => (
                             <div key={item.name}>
                             <a
-                                className={'text-gray-300 hover:bg-gray-50 hover:text-gray-900 group flex w-full items-center rounded-md py-2 pl-7 pr-5 text-sm font-medium'}
+                                className={'text-zinc-400 hover:bg-gray-100 hover:text-gray-500 group flex w-full items-center rounded-md py-2 pl-7 pr-5 text-sm font-medium'}
                                 href={item.href}
                             >
                                 {item.name}
@@ -78,7 +78,7 @@ const ReportPage = (props : any) => {
                                 <div className='grid grid-cols-4 gap-7 justify-center items-center mt-10 border-hidden'>
                                     {
                                         statsKeys.map((key : string) => {
-                                            return <div key={key} className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>
+                                            return <div key={key} className='text-center rounded-xl text-3xl bg-gray-50 p-7 shadow-xl'>
                                                 {wf.stats[key]}
                                                 <p className='text-lg font-bold capitalize'>
                                                     {key.replaceAll(/([A-Z])/g," $1" )}

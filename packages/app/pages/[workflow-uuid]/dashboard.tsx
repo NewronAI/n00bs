@@ -75,7 +75,7 @@ const DashboardPage = (props: DashboardProps) => {
                                     {workflow?.desc}
                                 </p>
                             </div>
-                            <div className={"flex items-center"}>
+                            <div className={"flex items-center shadow p-2 rounded"}>
                                 <span className={"text-sm mr-2 "}>
                                     {workflowUUID}
                                 </span>
@@ -84,11 +84,11 @@ const DashboardPage = (props: DashboardProps) => {
                         </div>
 
                         <div className='grid grid-cols-4 gap-7 justify-center items-center mt-10 border-hidden'>
-                            <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.filesCount}<p className='text-lg font-bold'>Total Files</p></div>
-                            <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.assignedFilesCount}<p className='text-lg font-bold'>Total Assigned Files</p></div>
-                            <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.assignedJobsCount}<p className='text-lg font-bold'>Total Assigned Tasks</p></div>
-                            <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.pendingJobsCount}<p className='text-lg font-bold'>Total Pending Tasks</p></div>
-                            <div className='text-center rounded-xl text-3xl bg-zinc-900 p-7 shadow-xl'>{file.completedJobsCount}<p className='text-lg font-bold'>Total Completed Tasks</p></div>
+                            <div className='text-center rounded-xl text-3xl bg-gray-50 p-7 shadow-xl'>{file.filesCount}<p className='text-lg font-bold'>Total Files</p></div>
+                            <div className='text-center rounded-xl text-3xl bg-gray-50 p-7 shadow-xl'>{file.assignedFilesCount}<p className='text-lg font-bold'>Total Assigned Files</p></div>
+                            <div className='text-center rounded-xl text-3xl bg-gray-50 p-7 shadow-xl'>{file.assignedJobsCount}<p className='text-lg font-bold'>Total Assigned Tasks</p></div>
+                            <div className='text-center rounded-xl text-3xl bg-gray-50 p-7 shadow-xl'>{file.pendingJobsCount}<p className='text-lg font-bold'>Total Pending Tasks</p></div>
+                            <div className='text-center rounded-xl text-3xl bg-gray-50 p-7 shadow-xl'>{file.completedJobsCount}<p className='text-lg font-bold'>Total Completed Tasks</p></div>
                         </div>
                     </div>
                 }

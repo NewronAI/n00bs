@@ -277,7 +277,7 @@ const TaskPage = (_props: TaskPageProps) => {
                 <div>
                     <h2 className='pb-2'>Are you sure you want to delete these assignments?</h2>
                     <Loader isLoading={membersLoading}>
-                        <div className="mt-2 flex flex-col h-60 ag-theme-balham-dark">
+                        <div className="mt-2 flex flex-col h-60 ag-theme-alpine">
                             <AgGridReact
                                 rowData={delData}
                                 suppressMenuHide={true}
@@ -374,7 +374,7 @@ const TaskPage = (_props: TaskPageProps) => {
                         </p>
                     </div>
                     <Loader isLoading={membersLoading}>
-                        <div className="mt-2 flex flex-col h-60 ag-theme-balham-dark">
+                        <div className="mt-2 flex flex-col h-60 ag-theme-alpine">
                             <AgGridReact
                                 rowData={members}
                                 suppressMenuHide={true}
@@ -476,7 +476,7 @@ const TaskPage = (_props: TaskPageProps) => {
                     </div>
                 </div>
                 <Loader isLoading={isLoading}>
-                    <div className={"w-full h-[760px] p-4 ag-theme-alpine-dark"}>
+                    <div className={"w-full h-[760px] p-4 ag-theme-alpine "}>
                         <AgGridReact
                             rowData={files}
                             suppressMenuHide={true}
