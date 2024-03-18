@@ -43,19 +43,23 @@ questionApi.post(async (req, res) => {
     const questionOptions = req.body.options as string[];
     const expectedAnswer = req.body.expected_answer as string | undefined;
 
-    const question = await db.question.create({
-        data: {
-            name: questionName,
-            text: questionText,
-            question_type: questionType,
-            options: questionOptions,
-            order: Number(order),
-            required: required,
-            expected_answer: expectedAnswer,
-        }
-    });
-
-    res.status(200).json(question);
+    try {
+        const question = await db.question.create({
+            data: {
+                name: questionName,
+                text: questionText,
+                question_type: questionType,
+                options: questionOptions,
+                order: Number(order),
+                required: required,
+                expected_answer: expectedAnswer,
+            }
+        });
+        res.status(200).json(question);
+    } catch(e) {
+        console.log(e)
+        res.status(500).json({error : e});
+    }
 });
 
 questionApi.put(async (req, res) => {

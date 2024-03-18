@@ -116,7 +116,7 @@ model question {
   uuid                String                     @unique @default(uuid()) @db.Char(36)
   name                String
   text                String
-  order               Int                        @default(autoincrement())
+  order               Int?
   required            Boolean                    @default(true) // Required to match with expected answer to continue
   createdAt           DateTime                   @default(now())
   updatedAt           DateTime                   @updatedAt
