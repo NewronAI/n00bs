@@ -133,6 +133,7 @@ async function getQuestions(wfID: number, task_assignmentID: any) {
                                     text: true,
                                     question_type: true,
                                     options: true,
+                                    order: true,
                                 }
                             }
                         }
@@ -146,7 +147,9 @@ async function getQuestions(wfID: number, task_assignmentID: any) {
         return question.questions
     })
 
-    return questions;
+    const sortedQuestions = questions?.sort((a: { order: number }, b: { order: number }) => a.order - b.order);
+
+    return sortedQuestions;
 }
 
 async function updateSession(responses: any, sessionID: any, current_question_uuid: string) {
