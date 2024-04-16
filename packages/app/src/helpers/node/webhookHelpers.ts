@@ -253,28 +253,28 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
             return;
         }
 
-        if (messageId.wfID === 3) {
-            const responseKeys = Object.keys(response);
-            responseKeys.forEach(key => {
-                if (response[key] === "null") {
-                    response[key] = "NA"
-                }
-            });
+        // if (messageId.wfID === 3) {
+        //     const responseKeys = Object.keys(response);
+        //     responseKeys.forEach(key => {
+        //         if (response[key] === "null") {
+        //             response[key] = "NA"
+        //         }
+        //     });
 
-            const upddatedSession = await db.user_session.update({
-                where: {
-                    id: session.id,
-                },
-                data: {
-                    responses: response
-                }
-            });
+        //     const upddatedSession = await db.user_session.update({
+        //         where: {
+        //             id: session.id,
+        //         },
+        //         data: {
+        //             responses: response
+        //         }
+        //     });
 
-            await updateTask(waID, upddatedSession);
-            await handleWFResponse({ type: "WF", wfID: 3 }, upddatedSession, waID);
+        //     await updateTask(waID, upddatedSession);
+        //     await handleWFResponse({ type: "WF", wfID: 3 }, upddatedSession, waID);
 
-            return;
-        }
+        //     return;
+        // }
 
         const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid);
 
