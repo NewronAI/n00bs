@@ -237,7 +237,7 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
         return;
     }
 
-    if (messageId.expectedAns === textBody || messageId.wfID === 2 || messageId.expectedAns === "") {
+    if (messageId.expectedAns === textBody || messageId.wfID === 2 || messageId.wfID === 3 || messageId.expectedAns === "") {
         const task_assignment_id = session.task_assignment_id
         const response = session.responses;
         response[messageId.questionUUID] = textBody;
@@ -285,7 +285,7 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
 
         await sendQuestion(waID, filteredQuestions[0].text, filteredQuestions[0].options, filteredQuestions[0].uuid, filteredQuestions[0].expected_answer, messageId.wfID);
 
-    } else if (messageId.expectedAns !== textBody && (messageId.wfID === 1 || messageId.wfID === 3)) {
+    } else if (messageId.expectedAns !== textBody && (messageId.wfID === 1)) {
 
         const response = session.responses;
         const task_assignment_id = session.task_assignment_id
