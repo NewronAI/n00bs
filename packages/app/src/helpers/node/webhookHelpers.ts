@@ -217,7 +217,7 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
                 await sendTextMessage(waID, "Failed");
             }
         } else {
-            await sendTextMessage(waID, "Failed 2");
+            await sendTextMessage(waID, "Failed");
         }
     } else {
         await sendTextMessage(waID, `File Name - ${task_assignment?.workflow_file.file_name.split("/").pop()}\n\n Please visit the below link to view the file\n\n${task_assignment?.workflow_file.file}`)
@@ -237,7 +237,7 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
         return;
     }
 
-    if (messageId.expectedAns === textBody || messageId.wfID === 2 || messageId.wfID === 3 || messageId.expectedAns === "") {
+    if (messageId.expectedAns === textBody || messageId.wfID === 2 || (messageId.wfID === 3 )) {
         const task_assignment_id = session.task_assignment_id
         const response = session.responses;
         response[messageId.questionUUID] = textBody;
@@ -253,32 +253,9 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
             return;
         }
 
-        // if (messageId.wfID === 3) {
-        //     const responseKeys = Object.keys(response);
-        //     responseKeys.forEach(key => {
-        //         if (response[key] === "null") {
-        //             response[key] = "NA"
-        //         }
-        //     });
-
-        //     const upddatedSession = await db.user_session.update({
-        //         where: {
-        //             id: session.id,
-        //         },
-        //         data: {
-        //             responses: response
-        //         }
-        //     });
-
-        //     await updateTask(waID, upddatedSession);
-        //     await handleWFResponse({ type: "WF", wfID: 3 }, upddatedSession, waID);
-
-        //     return;
-        // }
-
         const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid);
 
-        if (filteredQuestions.length === 1 && filteredQuestions[0].name.slice(0, 8) === "Comments") {
+        if (filteredQuestions.length === 1) {
             await sendTextMessage(waID, filteredQuestions[0].text)
             return;
         }
@@ -431,10 +408,6 @@ export async function checkResponseTime(session: any) {
 
     if (lastUpdate) {
         const differenceInMinutes = Math.floor(Math.abs(currentDateTime.getTime() - lastUpdate.getTime()) / (1000 * 60));
-        console.log("lastUpdate", lastUpdate);
-        console.log("currentDateTime", currentDateTime);
-        console.log("differenceInMinutes", differenceInMinutes);
-
         if (differenceInMinutes <= 15) {
             return true;
         } else {
@@ -442,8 +415,6 @@ export async function checkResponseTime(session: any) {
             return false;
         }
     } else {
-        // Handle the case when lastUpdate is null
-        // For example, return false or perform some other logic
         return true;
     }
 

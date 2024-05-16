@@ -44,8 +44,6 @@ webhook.post(async (req, res) => {
     })
 
     const data = req.body;
-    console.log(JSON.stringify(req.body, null, 2));
-
     if (data.entry[0].changes[0].field !== "messages") {
         res.status(403).json({
             message: "Request is not from the messages webhook"
