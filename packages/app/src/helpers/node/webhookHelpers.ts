@@ -212,7 +212,8 @@ export async function handleWFResponse(messageId: any, session: any, waID: numbe
             const transcriptionText = workflowFile?.metadata["transcriptionText"];
 
             if (typeof transcriptionText === 'string') {
-                await sendTextMessage(waID, `File Name - ${workflowFile.file_name.split("/").pop()}\n\n Please visit the below link to view the file\n\n${workflowFile.file}\n\nTranscription : ${transcriptionText}`);
+                await sendTextMessage(waID, `File Name - ${workflowFile.file_name.split("/").pop()}\n\n Please visit the below link to view the file\n\n${workflowFile.file}`);
+                await sendTextMessage(waID, `Transcription : ${transcriptionText}`)
             } else {
                 await sendTextMessage(waID, "Failed");
             }
