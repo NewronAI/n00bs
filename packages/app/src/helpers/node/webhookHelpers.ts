@@ -238,7 +238,7 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
         return;
     }
 
-    if (messageId.expectedAns === textBody || messageId.wfID === 2 || (messageId.wfID === 3 )) {
+    if ((messageId.expectedAns === textBody && messageId.questionUUID !== "7faae01e-faed-4679-902b-d6901e8e4fbf") || messageId.wfID === 2 || (messageId.wfID === 3 && messageId.questionUUID !== "7faae01e-faed-4679-902b-d6901e8e4fbf") || (messageId.wfID === 3 && (messageId.questionUUID === "7faae01e-faed-4679-902b-d6901e8e4fbf" && messageId.expectedAns !== textBody) )) {
         const task_assignment_id = session.task_assignment_id
         const response = session.responses;
         response[messageId.questionUUID] = textBody;
@@ -263,36 +263,36 @@ export async function handleQuestionResponses(messageId: any, session: any, waID
 
         await sendQuestion(waID, filteredQuestions[0].text, filteredQuestions[0].options, filteredQuestions[0].uuid, filteredQuestions[0].expected_answer, messageId.wfID);
 
-    } else if (messageId.expectedAns !== textBody && (messageId.wfID === 1)) {
+    } else if ((messageId.expectedAns !== textBody && (messageId.wfID === 1)) || (messageId.expectedAns === textBody && messageId.questionUUID === "7faae01e-faed-4679-902b-d6901e8e4fbf")) {
 
         const response = session.responses;
-        const task_assignment_id = session.task_assignment_id
+        const task_assignment_id = session.task_assignment_id;
         response[session.current_question_uuid] = textBody;
-        const responseKeys = Object.keys(response); 
+        const responseKeys = Object.keys(response);
 
-        if (messageId.wfID === 3) {
-            const questions = await getQuestions(messageId.wfID, task_assignment_id);
+        // if (messageId.wfID === 3) {
+        //     const questions = await getQuestions(messageId.wfID, task_assignment_id);
 
-            const filteredQuestions = questions?.filter((question: { uuid: string | number; }) => {
-                if (response[question.uuid] === "null") {
-                    return question;
-                }
-            })
+        //     const filteredQuestions = questions?.filter((question: { uuid: string | number; }) => {
+        //         if (response[question.uuid] === "null") {
+        //             return question;
+        //         }
+        //     })
 
-            console.log(filteredQuestions);
+        //     console.log(filteredQuestions);
 
-            if(!filteredQuestions) {
-                return;
-            }
+        //     if(!filteredQuestions) {
+        //         return;
+        //     }
 
-            const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid);
+        //     const updatedSesssion = await updateSession(response, session.id, filteredQuestions[0].uuid);
 
-            if (filteredQuestions) {
-                await sendTextMessage(waID, filteredQuestions[0].text);
-            }
+        //     if (filteredQuestions) {
+        //         await sendTextMessage(waID, filteredQuestions[0].text);
+        //     }
 
-            return;
-        }
+        //     return;
+        // }
 
         responseKeys.forEach(key => {
             if (response[key] === "null") {

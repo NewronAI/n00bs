@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from "next/link";
 import clsx from "clsx";
+import Image from 'next/image';
+import ArtparkLogo from "../../assests/ARTPARK.png";
 
 const MainLayout = ({stickyHeader,children,footer, enforceWidthRestraint = true}) => {
 
@@ -13,13 +15,13 @@ const MainLayout = ({stickyHeader,children,footer, enforceWidthRestraint = true}
                     {"sticky top-0 bg-white dark:bg-black": stickyHeader},
 
                 )}>
-                    <div className={"w-full flex justify-between"}>
+                    <div className={"w-full flex justify-between py-1"}>
                         <div className={"flex gap-2"}>
                             {/* Logo Side*/}
                             <div className={"flex gap-2 items-center rounded-full"}>
                                     {/*<Image src={vinciImage} alt={"Da Vinci"} width={50} height={50} className={"rounded-full "}/>*/}
                                 <Link href={"/"}>
-                                    <h1 className={"text-xl tracking-wider font-bold"}>
+                                    <h1 className={"text-2xl tracking-wider font-bold"}>
                                         <span className={"bg-gradient-to-br from-primary to-secondary bg-clip-text text-transparent"}>
                                             Bhasha
                                         </span>
@@ -37,6 +39,7 @@ const MainLayout = ({stickyHeader,children,footer, enforceWidthRestraint = true}
                             {/*<Suspense fallback={<>...</>} >*/}
                             {/*    <ThemeSelector />*/}
                             {/*</Suspense>*/}
+                            <Link href={'https://artpark.in/language-data-ai'} ><Image className={'h-auto w-64'} src={ArtparkLogo} alt="Artpark Logo" /></Link>
                         </div>
                     </div>
                 </nav>

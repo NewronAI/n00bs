@@ -2,11 +2,13 @@ import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { MenuIcon as Bars3Icon, XIcon as XMarkIcon, } from '@heroicons/react/outline';
 import clsx from "clsx";
+import Image from 'next/image';
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
-import {useUser} from "@auth0/nextjs-auth0/client";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import ArtparkLogo from "../../assests/ARTPARK.png";
 import Head from "next/head";
-import {capitalize} from "lodash";
+import { capitalize } from "lodash";
 
 // import ThemeSelector from "../ThemeSelector";
 
@@ -99,9 +101,12 @@ export default function DashboardLayout({
 
                                     </div>
 
-                                    <div className="hidden sm:ml-6 sm:flex sm:items-center">
+                                    <div className="hidden sm:ml-6 sm:flex sm:items-center gap-5">
                                         {/*<ThemeSelector />*/}
                                         {/* Profile dropdown */}
+                                        <Link href={'https://artpark.in/language-data-ai'} >
+                                            <Image className={'h-auto w-56'} src={ArtparkLogo} alt="Artpark Logo" />
+                                        </Link>
                                         <Menu as="div" className="relative ml-3">
                                             <div>
                                                 <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
@@ -150,8 +155,6 @@ export default function DashboardLayout({
                                         </Disclosure.Button>
                                     </div>
                                 </div>
-
-
                             </div>
 
                             <Disclosure.Panel className="sm:hidden">

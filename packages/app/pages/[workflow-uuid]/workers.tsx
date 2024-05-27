@@ -43,9 +43,6 @@ function Workers() {
     console.log(data,error);
     const member = data || [];
 
-
- 
-
     // @ts-ignore
     return (
 
@@ -88,7 +85,7 @@ function Workers() {
                             { headerName: 'Name', field: 'name', sortable: true, filter: true, },
                             { headerName: 'Email', field: 'email', sortable: true, filter: true, },
                             { headerName: 'Phone No.', field: 'phone', sortable: true, filter: true, },
-                            { headerName: 'Total Assignments', field: 'task_counts', sortable: true, filter: true },
+                            { headerName: 'Total', field: 'task_counts', sortable: true, filter: true },
                             // @ts-ignore
                             { headerName: 'Avg Rating', field: 'rating', sortable: true, filter: true , cellRenderer: RatingViewer, valueFormatter: (value : string | number) => typeof value === "string" ? parseFloat(value) : Math.round(value)},
                             { headerName: 'Role', field: 'role', sortable: true, filter: true, },
@@ -99,17 +96,12 @@ function Workers() {
                             { headerName: 'State', field: 'state', sortable: true, filter: true, },
                             { headerName: 'Address', field: 'address', sortable: true, filter: true, },
                             { headerName: 'Pin', field: 'pincode', sortable: true, filter: true, },
-                            // { headerName: 'Payment', field: 'payment_details', sortable: true, filter: true, },
-
-
-
                         ]}
                     />
                 </div>
             </Loader>
             {/* <pre>{JSON.stringify(member, null, 2)}</pre> */}
         </DashboardLayout>
-
     )
 }
 
