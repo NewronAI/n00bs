@@ -3,6 +3,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import Image from 'next/image';
 import ArtparkLogo from "../../assests/ARTPARK.png";
+import BhashaSetuLogo from "../../assests/BhashaSetu.png"
 
 const MainLayout = ({stickyHeader,children,footer, enforceWidthRestraint = true}) => {
 
@@ -21,12 +22,12 @@ const MainLayout = ({stickyHeader,children,footer, enforceWidthRestraint = true}
                             <div className={"flex gap-2 items-center rounded-full"}>
                                     {/*<Image src={vinciImage} alt={"Da Vinci"} width={50} height={50} className={"rounded-full "}/>*/}
                                 <Link href={"/"}>
-                                    <h1 className={"text-2xl tracking-wider font-bold"}>
+                                    {/* <h1 className={"text-2xl tracking-wider font-bold"}>
                                         <span className={"bg-gradient-to-br from-primary to-secondary bg-clip-text text-transparent"}>
                                             Bhasha
                                         </span>
-                                    {/*<span className={"text-green-500"} >fresh</span>Ink*/}
-                                    </h1>
+                                    </h1> */}
+                                    <Image className={'h-auto w-24'} src={BhashaSetuLogo} alt="Bhasha Setu" />
                                     {/*<div className={"h-6 bg-gray-800 dark:bg-gray-200 inline-block blink-around -mb-1"} style={{width: 2}}/>*/}
                                 </Link>
                                 <span className={"text-xs mt-2 text-gray-500 sr-only"}>

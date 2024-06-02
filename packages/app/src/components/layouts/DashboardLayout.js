@@ -7,6 +7,7 @@ import Link from "next/link";
 import Avatar from "@/components/Avatar";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import ArtparkLogo from "../../assests/ARTPARK.png";
+import BhashaSetuLogo from "../../assests/BhashaSetu.png"
 import Head from "next/head";
 import { capitalize } from "lodash";
 
@@ -66,7 +67,7 @@ export default function DashboardLayout({
                 </title>
             </Head>
             <div className="min-h-full">
-                <Disclosure as="nav" className="border-b border-zinc-200">
+                <Disclosure as="nav" className="border-b border-zinc-200 py-2">
                     {({ open }) => (
                         <>
                             <div className="mx-auto max-w-[1550px] px-2 sm:px-4">
@@ -74,11 +75,12 @@ export default function DashboardLayout({
                                     <div className="flex">
                                         <div className="flex flex-shrink-0 items-center">
                                             <Link href={"/"}>
-                                                <h1 className={"text-3xl tracking-wider font-bold"}>
+                                                {/* <h1 className={"text-3xl tracking-wider font-bold"}>
                                                     <span className={"text-secondary "}>
                                                         Bhasha
                                                     </span>
-                                                </h1>
+                                                </h1> */}
+                                                <Image className={'h-auto w-20'} src={BhashaSetuLogo} alt="Bhasha Setu" />
                                             </Link>
                                         </div>
                                         <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
@@ -98,7 +100,6 @@ export default function DashboardLayout({
                                                 </a>
                                             ))}
                                         </div>
-
                                     </div>
 
                                     <div className="hidden sm:ml-6 sm:flex sm:items-center gap-5">

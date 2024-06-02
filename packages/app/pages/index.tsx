@@ -24,10 +24,9 @@ export default function Home() {
                             <h1 className="text-4xl font-bold tracking-tight  dark:text-zinc-700 sm:text-7xl">
                                 Data quality control?
                                 Here is the solution.
-                                <span className={"bg-gradient-to-br from-blue-500 to-secondary bg-clip-text text-transparent"}>
-                                    &nbsp;Bhasha!&nbsp;
+                                <span className={"text-orange-500"}>
+                                    Bhasha <span className='text-green-600'>Setu</span>
                                 </span>
-
                             </h1>
                             <p className="mt-6 text-base text-zinc-600 dark:text-zinc-600">
                                 Get saved from doing hours of repetitive work. No more copy-pasting between sheets, no more manual calculations, no more manual data entry. Let us do the work for you.
