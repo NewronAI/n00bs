@@ -22,8 +22,8 @@ export default function Home() {
                     <div className={"flex justify-between max-w-7xl w-full"}>
                         <div className="max-w-2xl md:mt-16">
                             <h1 className="text-4xl font-bold tracking-tight  dark:text-zinc-700 sm:text-7xl">
-                                Data quality control?
-                                Here is the solution.
+                                {/* Data quality control?
+                                Here is the solution. */}
                                 <span className={"text-orange-500"}>
                                     Bhasha <span className='text-green-600'>Setu</span>
                                 </span>
@@ -33,7 +33,7 @@ export default function Home() {
                             </p>
                             <Link href={"/api/auth/login"}>
                                 <button className={"mt-4 w-40 md:w-52 btn btn-primary normal-case rounded-lg  font-semibold text-base md:text-lg"}>
-                                    Dive in Now 🚀
+                                    Get Started
                                 </button>
                             </Link>
                         </div>
